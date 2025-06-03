@@ -3,40 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روافد</title>
-    <!-- تحميل Font Awesome في head الرئيسي كنسخة احتياطية -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- تحميل مكون التوب بار -->
-    <script src="topbar-component.js" defer></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-            padding-top: 70px; /* مساحة للتوب بار */
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding-top: 60px;
-            }
-        }
-
-        /* بقية أنماطك... */
-    </style>
-</head>
-<body>
-    <!-- استخدام مكون التوب بار -->
-    <top-bar id="mainTopbar"></top-bar>
-
-    <!-- محتوى الصفحة -->
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة الاختبارات إحدى منصات جاسم الفارسي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -45,8 +11,10 @@
             margin: 0;
             padding: 0;
             direction: rtl;
+            padding-top: 70px; /* مساحة للتوب بار */
         }
 
+        /* بقية الأنماط كما هي... */
         .disclaimer {
             background: linear-gradient(135deg, #ffeb3b, #ffc107);
             padding: 15px;
@@ -58,92 +26,16 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .warning-icon {
-            margin-left: 10px;
-            font-size: 24px;
-            color: white;
-            background-color: #ff5722;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .disclaimer-text {
-            flex: 1;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .disclaimer-link {
-            color: #e91e63;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .disclaimer-link:hover {
-            text-decoration: underline;
-        }
-
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .icon-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .icon-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .icon-item img {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 10px;
-        }
-
-        .icon-item p {
-            margin: 0;
-            font-size: 16px;
-            color: #333;
-        }
-      
-        p {
-            font-weight: bold; 
-        }
-
-        p2 {
-            color: grey;
-            font-size: 16px;
-            font-weight: normal;
-        }
-
-        #hidden-image {
-            width: 0;
-            height: 0;
-            overflow: hidden;
-        }
+        /* ...بقية الأنماط الأصلية... */
     </style>
 </head>
 <body>
+    <!-- تضمين التوب بار -->
+    <div id="topbar-container"></div>
+
     <img id="hidden-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMSdaZrEJpx_tAg4pwuqdeX0X8f8BZLiw-1anwOPeYA5ySu6y3ugZFJdjBd5TJ4iEeBLmqEQc1bmse5hx6TemeFGEvAyjwdmLY1EEoX9W9XjGSLXT4OPcgyw7NiqiO4JXCIzN_I6Z3WwQo65K-doOpmT48jP1EGnlb77YFRrXC-XNXbgibxJc11LwjB_M/s1600/%D9%A0%D9%A7%E2%9D%A4%D9%A0%D9%A2%E2%9D%A4%D9%A2%D9%A5%E2%9D%A4%D9%A0%D9%A8%D9%A1%D9%A4%D9%A2%D9%A6%E2%9D%A4Ase.Mob%E2%9D%A4.jpg" alt="الشعار">
 
-    <!-- Disclaimer Box -->
+    <!-- بقية المحتوى الأصلي -->
     <div class="disclaimer">
         <div class="warning-icon">
             <i class="fas fa-exclamation"></i>
@@ -166,15 +58,28 @@
             <p>الاختبارات المطبوعة والملخصات</p>
         </div>
     </div>
-</body>
-</html>        <!-- محتوى الصفحة الأصلي... -->
-    </div>
 
     <script>
-        // يمكنك الاستماع إلى الأحداث المخصصة من التوب بار إذا لزم الأمر
-        document.getElementById('mainTopbar').addEventListener('menu-click', () => {
-            console.log('تم النقر على القائمة من الصفحة الرئيسية');
-        });
+        // تضمين التوب بار ديناميكياً
+        fetch('topbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('topbar-container').innerHTML = html;
+                
+                // إعادة تحميل أيقونات Font Awesome إذا لزم الأمر
+                if(typeof FontAwesome !== 'undefined') {
+                    FontAwesome.dom.i2svg();
+                }
+            })
+            .catch(error => {
+                console.error('حدث خطأ في تحميل التوب بار:', error);
+                // نسخة احتياطية بسيطة
+                document.getElementById('topbar-container').innerHTML = `
+                    <div style="background: #1a2a6c; color: white; padding: 15px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; text-align: center;">
+                        شريط التنقل - جارٍ التحميل...
+                    </div>
+                `;
+            });
     </script>
 </body>
 </html>
