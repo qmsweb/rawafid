@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>روافد</title>
+    <!-- تحميل Font Awesome في head الرئيسي كنسخة احتياطية -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- استيراد مكون التوب بار -->
-    <script src="topbar-component.js"></script>
+    <!-- تحميل مكون التوب بار -->
+    <script src="topbar-component.js" defer></script>
     <style>
         body {
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
             direction: rtl;
             padding-top: 70px; /* مساحة للتوب بار */
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
         }
 
         @media (max-width: 768px) {
@@ -21,49 +24,23 @@
             }
         }
 
-        /* بقية الأنماط كما هي */
-        .disclaimer {
-            background: linear-gradient(135deg, #ffeb3b, #ffc107);
-            padding: 15px;
-            margin: 20px auto;
-            border-radius: 10px;
-            max-width: 800px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        /* ... بقية الأنماط كما هي ... */
+        /* بقية أنماطك... */
     </style>
 </head>
 <body>
-    <!-- إضافة التوب بار -->
-    <top-bar></top-bar>
+    <!-- استخدام مكون التوب بار -->
+    <top-bar id="mainTopbar"></top-bar>
 
-    <img id="hidden-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMSdaZrEJpx_tAg4pwuqdeX0X8f8BZLiw-1anwOPeYA5ySu6y3ugZFJdjBd5TJ4iEeBLmqEQc1bmse5hx6TemeFGEvAyjwdmLY1EEoX9W9XjGSLXT4OPcgyw7NiqiO4JXCIzN_I6Z3WwQo65K-doOpmT48jP1EGnlb77YFRrXC-XNXbgibxJc11LwjB_M/s1600/%D9%A0%D9%A7%E2%9D%A4%D9%A0%D9%A2%E2%9D%A4%D9%A2%D9%A5%E2%9D%A4%D9%A0%D9%A8%D9%A1%D9%A4%D9%A2%D9%A6%E2%9D%A4Ase.Mob%E2%9D%A4.jpg" alt="الشعار">
-
-    <!-- Disclaimer Box -->
+    <!-- محتوى الصفحة -->
     <div class="disclaimer">
-        <div class="warning-icon">
-            <i class="fas fa-exclamation"></i>
-        </div>
-        <div class="disclaimer-text">
-            إخلاء المسؤولية القانونية: بوابة الاختبارات تقدم موادًا للاستخدام التعليمي فقط. للمزيد من المعلومات <a href="https://exam.jassim.one/p/disclaimer.html" class="disclaimer-link" target="_blank">انقر هنا</a>.
-        </div>
+        <!-- محتوى الصفحة الأصلي... -->
     </div>
 
-    <div class="icon-grid">
-        <!-- العنصر الأول -->
-        <div class="icon-item" onclick="window.location.href=">
-            <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" alt="مجلد">
-            <p>الاختبارات التفاعلية</p>
-            <p2>قريبًا</p2>
-        </div>
-        <!-- العنصر الثاني -->
-        <div class="icon-item" onclick="window.location.href='https://exam.jassim.one/p/printed.html'">
-            <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" alt="مجلد">
-            <p>الاختبارات المطبوعة والملخصات</p>
-        </div>
-    </div>
+    <script>
+        // يمكنك الاستماع إلى الأحداث المخصصة من التوب بار إذا لزم الأمر
+        document.getElementById('mainTopbar').addEventListener('menu-click', () => {
+            console.log('تم النقر على القائمة من الصفحة الرئيسية');
+        });
+    </script>
 </body>
 </html>
