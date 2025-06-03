@@ -32,8 +32,142 @@
     <top-bar id="mainTopbar"></top-bar>
 
     <!-- محتوى الصفحة -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الاختبارات إحدى منصات جاسم الفارسي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
+            padding: 15px;
+            margin: 20px auto;
+            border-radius: 10px;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .warning-icon {
+            margin-left: 10px;
+            font-size: 24px;
+            color: white;
+            background-color: #ff5722;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .disclaimer-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .disclaimer-link {
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .disclaimer-link:hover {
+            text-decoration: underline;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .icon-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icon-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .icon-item p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+      
+        p {
+            font-weight: bold; 
+        }
+
+        p2 {
+            color: grey;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        #hidden-image {
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <img id="hidden-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMSdaZrEJpx_tAg4pwuqdeX0X8f8BZLiw-1anwOPeYA5ySu6y3ugZFJdjBd5TJ4iEeBLmqEQc1bmse5hx6TemeFGEvAyjwdmLY1EEoX9W9XjGSLXT4OPcgyw7NiqiO4JXCIzN_I6Z3WwQo65K-doOpmT48jP1EGnlb77YFRrXC-XNXbgibxJc11LwjB_M/s1600/%D9%A0%D9%A7%E2%9D%A4%D9%A0%D9%A2%E2%9D%A4%D9%A2%D9%A5%E2%9D%A4%D9%A0%D9%A8%D9%A1%D9%A4%D9%A2%D9%A6%E2%9D%A4Ase.Mob%E2%9D%A4.jpg" alt="الشعار">
+
+    <!-- Disclaimer Box -->
     <div class="disclaimer">
-        <!-- محتوى الصفحة الأصلي... -->
+        <div class="warning-icon">
+            <i class="fas fa-exclamation"></i>
+        </div>
+        <div class="disclaimer-text">
+            إخلاء المسؤولية القانونية: بوابة الاختبارات تقدم موادًا للاستخدام التعليمي فقط. للمزيد من المعلومات <a href="https://exam.jassim.one/p/disclaimer.html" class="disclaimer-link" target="_blank">انقر هنا</a>.
+        </div>
+    </div>
+
+    <div class="icon-grid">
+        <!-- العنصر الأول -->
+        <div class="icon-item" onclick="window.location.href=">
+            <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" alt="مجلد">
+            <p>الاختبارات التفاعلية</p>
+            <p2>قريبًا</p2>
+        </div>
+        <!-- العنصر الثاني -->
+        <div class="icon-item" onclick="window.location.href='https://exam.jassim.one/p/printed.html'">
+            <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" alt="مجلد">
+            <p>الاختبارات المطبوعة والملخصات</p>
+        </div>
+    </div>
+</body>
+</html>        <!-- محتوى الصفحة الأصلي... -->
     </div>
 
     <script>
