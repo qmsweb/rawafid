@@ -4,49 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الصفحة الرئيسية</title>
-    
-    <!-- خطأ شائع: تأكد من أن Font Awesome مضاف قبل CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CSS يجب أن يأتي بعد مكتبات الخطوط -->
     <link rel="stylesheet" href="topbar.css">
-    
     <style>
-        /* أنماط مؤقتة للجسم */
         body {
             margin: 0;
-            padding: 0;
             font-family: 'Arial', sans-serif;
-            opacity: 0; /* سيتم إظهاره بعد التحميل */
-            transition: opacity 0.5s ease;
+            transition: padding-top 0.3s ease;
         }
-        
-        /* تعديل هامش المحتوى الرئيسي */
-        .main-content {
-            padding-top: 80px; /* يتناسب مع ارتفاع التوب بار */
-            padding-right: 20px;
-            padding-left: 20px;
+        .content {
+            padding: 20px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <!-- مكان التوب بار -->
     <div id="topbar-container"></div>
     
-    <!-- المحتوى الرئيسي -->
-    <main class="main-content">
-        <h1>مرحباً بك في موقعنا</h1>
-        <p>هذا المحتوى سيظهر بعد تحميل التوب بار بشكل صحيح.</p>
-    </main>
+    <div class="content">
+        <h1>مرحباً بك في الصفحة الرئيسية</h1>
+        <p>هذا مثال على استخدام التوب بار الجديد المميز.</p>
+    </div>
 
-    <!-- تحميل JS في نهاية الجسم -->
     <script src="loadTopbar.js"></script>
-    
-    <script>
-        // تأكد من تحميل كل العناصر قبل الظهور
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '1';
-        });
-    </script>
 </body>
 </html>
