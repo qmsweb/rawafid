@@ -6,6 +6,8 @@
     
     font-family: 'Arial', sans-serif;
     direction: rtl;
+    transition: all 0.3s ease-out;
+
 }
 
 .topbar {
