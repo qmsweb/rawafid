@@ -1,105 +1,93 @@
-// دالة لمنع التخزين المؤقت بإضافة طابع زمني
-function getWithTimestamp(url) {
-    const timestamp = new Date().getTime();
-    return `${url}?v=${timestamp}`;
+// دالة لتحميل الموارد بشكل متسلسل
+async function loadResources() {
+    try {
+        // 1. إظهار شاشة تحميل
+        showLoadingIndicator();
+        
+        // 2. تحميل التوب بار مع منع التخزين المؤقت
+        const topbarHtml = await fetch(getWithTimestamp('topbar.html'))
+            .then(validateResponse);
+        
+        // 3. إدراج التوب بار في الصفحة
+        document.getElementById('topbar-container').innerHTML = topbarHtml;
+        
+        // 4. تحميل CSS بشكل غير متزامن
+        await loadCSS(getWithTimestamp('topbar.css'));
+        
+        // 5. تهيئة التوب بار
+        initializeTopbar();
+        
+    } catch (error) {
+        console.error('فشل تحميل الموارد:', error);
+        showErrorUI();
+    } finally {
+        // 6. إخفاء شاشة التحمل بعد الانتهاء
+        hideLoadingIndicator();
+        // 7. إظهار المحتوى الرئيسي
+        document.body.style.visibility = 'visible';
+    }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. تحميل التوب بار مع منع التخزين المؤقت
-    fetch(getWithTimestamp('topbar.html'))
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(html => {
-            // 2. إدراج التوب بار في الصفحة
-            const container = document.getElementById('topbar-container');
-            if (!container) {
-                throw new Error('Container element not found');
-            }
-            container.innerHTML = html;
-            
-            // 3. تحميل CSS مع منع التخزين المؤقت
-            loadCSS(getWithTimestamp('topbar.css'));
-            
-            // 4. ربط الأحداث
-            bindTopbarEvents();
-            adjustBodyPadding();
-        })
-        .catch(error => {
-            console.error('Failed to load topbar:', error);
-            showErrorUI();
-        });
+// الدوال المساعدة
+function getWithTimestamp(url) {
+    return `${url}?v=${new Date().getTime()}`;
+}
 
-    // دالة لتحميل CSS ديناميكياً
-    function loadCSS(cssUrl) {
+function validateResponse(response) {
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return response.text();
+}
+
+async function loadCSS(url) {
+    return new Promise((resolve, reject) => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = cssUrl;
-        link.onload = () => console.log('CSS loaded successfully');
-        link.onerror = () => console.error('Failed to load CSS');
+        link.href = url;
+        link.onload = resolve;
+        link.onerror = () => reject(new Error(`فشل تحميل CSS: ${url}`));
         document.head.appendChild(link);
-    }
+    });
+}
 
-    // دالة لربط أحداث التوب بار
-    function bindTopbarEvents() {
-        // تأخير الربط لضمان تحميل العناصر
-        setTimeout(() => {
-            const menuBtn = document.getElementById('menuBtn');
-            const searchBtn = document.getElementById('searchBtn');
-            const logoBtn = document.getElementById('logoBtn');
-            
-            if (menuBtn) {
-                menuBtn.addEventListener('click', handleMenuClick);
-            }
-            
-            if (searchBtn) {
-                searchBtn.addEventListener('click', handleSearchClick);
-            }
-            
-            if (logoBtn) {
-                logoBtn.addEventListener('click', () => {
-                    window.location.href = getWithTimestamp('index.html');
-                });
-            }
-        }, 100);
-    }
+function initializeTopbar() {
+    // ربط الأحداث
+    document.getElementById('menuBtn')?.addEventListener('click', handleMenuClick);
+    document.getElementById('searchBtn')?.addEventListener('click', handleSearchClick);
+    document.getElementById('logoBtn')?.addEventListener('click', () => {
+        window.location.href = getWithTimestamp('index.html');
+    });
+    
+    // ضبط الهوامش
+    adjustBodyPadding();
+}
 
-    function handleMenuClick() {
-        console.log('تم فتح القائمة الجانبية');
-        // أضف هنا كود فتح القائمة
-    }
+function showLoadingIndicator() {
+    const loader = document.createElement('div');
+    loader.id = 'page-loader';
+    loader.style = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    `;
+    loader.innerHTML = `<div style="font-family: Arial; font-size: 18px;">جاري التحميل...</div>`;
+    document.body.prepend(loader);
+}
 
-    function handleSearchClick() {
-        console.log('تم فتح شريط البحث');
-        // أضف هنا كود البحث
-    }
+function hideLoadingIndicator() {
+    const loader = document.getElementById('page-loader');
+    if (loader) loader.remove();
+}
 
-    function adjustBodyPadding() {
-        const topbar = document.querySelector('.topbar');
-        if (topbar) {
-            const height = topbar.offsetHeight;
-            document.body.style.paddingTop = `${height}px`;
-            console.log(`تم ضبط الهوامش: ${height}px`);
-        }
-    }
-
-    function showErrorUI() {
-        const container = document.getElementById('topbar-container') || document.body;
-        container.innerHTML = `
-            <div style="
-                background: #ffebee;
-                color: #c62828;
-                padding: 15px;
-                border-left: 4px solid #c62828;
-                margin: 10px;
-                font-family: Arial, sans-serif;
-            ">
-                <strong>خطأ في تحميل التوب بار:</strong> يرجى تحديث الصفحة (F5)
-            </div>
-            ${container.innerHTML}
-        `;
-    }
+// بدء التحميل عند اكتمال DOM
+document.addEventListener('DOMContentLoaded', () => {
+    // إخفاء المحتوى حتى اكتمال التحميل
+    document.body.style.visibility = 'hidden';
+    loadResources();
 });
