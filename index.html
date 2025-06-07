@@ -3,219 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روافد</title>
-    
-    <!-- خطوط جوجل -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&family=Markazi+Text:wght@400..700&family=Readex+Pro:wght@160..700&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+    <title>الصفحة الرئيسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="topbar.css">
     <style>
-        /* الأنماط الأساسية */
         body {
-            font-family: 'Zain', 'Beiruti', 'Markazi Text', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
             margin: 0;
-            padding: 0;
-            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+            transition: padding-top 0.3s ease;
         }
-        
-        /* التوب بار المحسّن */
-        .topbar {
-            background: linear-gradient(to left, #1a2a6c, #3a7bd5);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            font-family: 'Zain', sans-serif;
-            font-weight: 700;
-        }
-        
-        .logo {
-            height: 40px;
-        }
-        
-        .topbar-icons {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .topbar-icon {
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        
-        /* محتوى الصفحة */
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        
-        /* بطاقة التنبيه */
-        .alert-card {
-            background: linear-gradient(to right, #ffeb3b, #ffc107);
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-family: 'Markazi Text', serif;
-            font-size: 18px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-        
-        .alert-icon {
-            background-color: #ff5722;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-        }
-        
-        /* شبكة الأيقونات */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-        
-        .service-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        .service-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            object-fit: contain;
-        }
-        
-        .service-title {
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #1a2a6c;
-            font-family: 'Beiruti', serif;
-            font-size: 22px;
-        }
-        
-        .service-desc {
-            color: #666;
-            font-size: 16px;
-            font-family: 'Readex Pro', sans-serif;
-        }
-        
-        /* روابط */
-        .disclaimer-link {
-            color: #e91e63;
-            text-decoration: none;
-            font-weight: bold;
-            font-family: 'Zain', sans-serif;
-        }
-        
-        .disclaimer-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* التكيف مع الشاشات الصغيرة */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 15px;
-            }
-            
-            .alert-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 15px;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
+        .content {
+            padding: 20px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <!-- التوب بار -->
-    <div class="topbar">
-        <div>
-            <img src="https://github.com/qmsweb/Tools/raw/main/images/rawafid/r-logo.png" 
-                 alt="شعار روافد" 
-                 class="logo">
-        </div>
-        <div class="topbar-icons">
-            <i class="fas fa-search topbar-icon"></i>
-            <i class="fas fa-bars topbar-icon"></i>
-        </div>
+    <div id="topbar-container"></div>
+    
+    <div class="content">
+        <h1>مرحباً بك في الصفحة الرئيسية</h1>
+        <p>هذا مثال على استخدام التوب بار الجديد المميز.</p>
     </div>
 
-    <!-- المحتوى الرئيسي -->
-    <div class="container">
-        <!-- بطاقة التنبيه -->
-        <div class="alert-card">
-            <div class="alert-icon">
-                <i class="fas fa-exclamation"></i>
-            </div>
-            <div>
-                إخلاء المسؤولية القانونية: بوابة الاختبارات تقدم موادًا للاستخدام التعليمي فقط. 
-                للمزيد من المعلومات <a href="https://exam.jassim.one/p/disclaimer.html" class="disclaimer-link" target="_blank">انقر هنا</a>.
-            </div>
-        </div>
-        
-        <!-- شبكة الخدمات -->
-        <div class="services-grid">
-            <!-- خدمة 1 -->
-            <div class="service-card" onclick="window.location.href='#'">
-                <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" 
-                     alt="اختبارات تفاعلية" 
-                     class="service-icon">
-                <div class="service-title">الاختبارات التفاعلية</div>
-                <div class="service-desc">قريبًا إن شاء الله</div>
-            </div>
-            
-            <!-- خدمة 2 -->
-            <div class="service-card" onclick="window.location.href='https://exam.jassim.one/p/printed.html'">
-                <img src="https://cdn-icons-png.flaticon.com/128/3767/3767094.png" 
-                     alt="اختبارات مطبوعة" 
-                     class="service-icon">
-                <div class="service-title">الاختبارات المطبوعة</div>
-                <div class="service-desc">والملخصات الدراسية</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- الصورة المخفية -->
-    <img id="hidden-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMSdaZrEJpx_tAg4pwuqdeX0X8f8BZLiw-1anwOPeYA5ySu6y3ugZFJdjBd5TJ4iEeBLmqEQc1bmse5hx6TemeFGEvAyjwdmLY1EEoX9W9XjGSLXT4OPcgyw7NiqiO4JXCIzN_I6Z3WwQo65K-doOpmT48jP1EGnlb77YFRrXC-XNXbgibxJc11LwjB_M/s1600/%D9%A0%D9%A7%E2%9D%A4%D9%A0%D9%A2%E2%9D%A4%D9%A2%D9%A5%E2%9D%A4%D9%A0%D9%A8%D9%A1%D9%A4%D9%A2%D9%A6%E2%9D%A4Ase.Mob%E2%9D%A4.jpg" 
-         alt="الشعار" 
-         style="width:0;height:0;overflow:hidden;">
+    <script src="loadTopbar.js"></script>
 </body>
 </html>
