@@ -1,30 +1,30 @@
 {
-  "name": "مقرر الرياضيات التطبيقية",
-  "description": "هذا المقرر يغطي المفاهيم الأساسية والتطبيقات العملية للرياضيات في المجالات الهندسية والعلمية...",
+  "name": "مقرر النحو 1",
+  "description": "",
   "items": [
     {
-      "title": "ملخص الوحدة الأولى",
-      "description": "ملخص شامل للوحدة الأولى يغطي جميع النقاط الأساسية.",
+      "title": "مقارنة بين المدرستين البصريّة والكوفيّة"
+      "description": "",
       "type": "documents",
-      "date": "2023-10-15",
+      "date": "2025-02-10",
       "size": "2.4 MB",
       "badge": "important",
       "badgeText": "مهم",
       "icon": "fas fa-file-pdf",
-      "download_url": "https://example.com/file1.pdf",
-      "preview_url": "https://example.com/view1"
+      "download_url": "https://github.com/qmsweb/exam-jassim/raw/main/ARAB112/%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A9%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D9%85%D8%AF%D8%B1%D8%B3%D8%AA%D9%8A%D9%86%20%D8%A7%D9%84%D8%A8%D8%B5%D8%B1%D9%8A%D9%91%D8%A9%20%D9%88%D8%A7%D9%84%D9%83%D9%88%D9%81%D9%8A%D9%91%D8%A9.pdf",
+      "preview_url": "https://drive.google.com/file/d/1H0i913VHo2JGmirN0YSMt9NsYTZSTBNK/view?usp=drive_link"
     },
     {
-      "title": "شرح الدوال المتقدمة",
-      "description": "فيديو يشرح الدوال المتقدمة.",
-      "type": "videos",
-      "date": "2023-09-20",
-      "size": "45 دقيقة",
+      "title": "الاختبار التعويضي الأول",
+      "description": "",
+      "type": "documents",
+      "date": "2025-02-10",
+      "size": "2.4 MB",
       "badge": "new",
       "badgeText": "جديد",
-      "icon": "fas fa-video",
-      "download_url": "#",
-      "preview_url": "https://youtube.com/example"
+      "icon": "fas fa-file-pdf",
+      "download_url": "https://github.com/qmsweb/exam-jassim/raw/main/ARAB112/%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%20%D8%A7%D9%84%D8%AA%D8%B9%D9%88%D9%8A%D8%B6%D9%8A%20%D8%A7%D9%84%D8%A3%D9%88%D9%84%20-%20%D9%85%D9%82%D8%B1%D8%B1%20%D8%A7%D9%84%D9%86%D8%AD%D9%88%201.pdf",
+      "preview_url": "https://drive.google.com/file/d/1luHKOYKuERNaZwfcxNbZBm9zVNAdGvrP/view?usp=drive_link"
     }
   ]
 }
