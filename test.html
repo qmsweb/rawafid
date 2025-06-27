@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <link rel="stylesheet" href="topbar.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محتوى المقرر الدراسي</title>
@@ -409,40 +410,7 @@
             display: none;
         }
         
-        /* تحسينات للشريط العلوي */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            margin: 0 15px 20px;
-            border-bottom: 1px solid #eee;
-        }
         
-        .user-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f5f7fa;
-            color: #4361ee;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .action-btn:hover {
-            background: #4361ee;
-            color: white;
-            transform: translateY(-3px);
-        }
         
         /* تأثيرات انتقالية للتصفية */
         .fade-out {
@@ -461,17 +429,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="top-bar">
-            <div class="logo">
-                <h2 style="color: #4361ee; font-weight: 700;"><i class="fas fa-book-open"></i>روافد</h2>
-            </div>
-            <div class="user-actions">
-                <div class="action-btn"><i class="fas fa-search"></i></div>
-                <div class="action-btn"><i class="fas fa-bell"></i></div>
-                <div class="action-btn"><i class="fas fa-user"></i></div>
-            </div>
-        </div>
-        
+       
         <div class="header">
             <h1>مقرر الرياضيات التطبيقية</h1>
             <p>هذا المقرر يغطي المفاهيم الأساسية والتطبيقات العملية للرياضيات في المجالات الهندسية والعلمية. يشمل الموضوعات الرئيسية مثل المعادلات التفاضلية، الجبر الخطي، والتحليل العددي.</p>
