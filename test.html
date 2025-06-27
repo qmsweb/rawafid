@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محتوى المقرر الدراسي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   <style>
+  <style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
     }
 
     body {
-        background-color: #ffffff;
+        background-color: #f4f6fb;
+        color: #2d2d2d;
         min-height: 100vh;
         padding: 20px;
-        color: #333;
     }
 
     .container {
@@ -27,78 +27,72 @@
     }
 
     .header {
+        margin: 20px 0 30px;
         text-align: right;
-        margin: 30px 0 25px;
-        padding: 0 15px;
     }
 
     .header h1 {
-        color: #2c3e50;
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        color: #1e1e2f;
         margin-bottom: 10px;
-        font-weight: 700;
     }
 
     .header p {
-        color: #7f8c8d;
-        font-size: 1.1rem;
+        color: #555;
+        font-size: 1rem;
         max-width: 700px;
-        line-height: 1.7;
+        line-height: 1.6;
     }
 
     .course-info {
         display: flex;
         justify-content: flex-end;
-        gap: 20px;
         flex-wrap: wrap;
-        margin-bottom: 30px;
-        padding: 0 15px;
+        gap: 16px;
+        margin-bottom: 25px;
     }
 
     .info-card {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 15px 20px;
-        min-width: 180px;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 15px;
         text-align: center;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-        border: 1px solid #e9ecef;
-        transition: all 0.3s ease;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        min-width: 160px;
+        transition: all 0.3s;
+        border: 1px solid #ececec;
     }
 
     .info-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        border-color: #4361ee;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        border-color: #3f51b5;
     }
 
     .info-card i {
-        font-size: 2rem;
-        color: #4361ee;
-        margin-bottom: 10px;
+        font-size: 1.8rem;
+        color: #3f51b5;
+        margin-bottom: 8px;
     }
 
     .info-card h3 {
-        color: #2c3e50;
-        margin-bottom: 8px;
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 5px;
     }
 
     .info-card p {
-        color: #555;
-        font-weight: 500;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        color: #666;
     }
 
     .filter-bar {
         display: flex;
-        justify-content: flex-start;
         overflow-x: auto;
-        padding: 12px 15px;
-        gap: 14px;
-        background: #f9fbff;
-        border: 1px solid #e0e6f0;
+        padding: 10px;
+        gap: 10px;
+        background: #ffffff;
         border-radius: 12px;
+        border: 1px solid #e0e0e0;
         margin-bottom: 30px;
         scrollbar-width: thin;
         scrollbar-color: #ccc transparent;
@@ -108,80 +102,68 @@
         height: 6px;
     }
 
-    .filter-bar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
     .filter-bar::-webkit-scrollbar-thumb {
-        background-color: #ccc;
+        background: #ccc;
         border-radius: 10px;
     }
 
     .filter-item {
         flex: 0 0 auto;
-        padding: 10px 24px;
+        padding: 10px 18px;
         border-radius: 30px;
-        background: linear-gradient(145deg, #eef2ff, #ffffff);
-        border: 2px solid transparent;
-        color: #3b5bfd;
+        background: #f0f2f7;
+        color: #3f51b5;
         font-weight: 600;
-        font-size: 0.95rem;
-        white-space: nowrap;
+        font-size: 0.9rem;
+        border: 1px solid transparent;
         cursor: pointer;
-        transition: 0.3s;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        transition: 0.3s ease;
     }
 
     .filter-item:hover {
-        background: linear-gradient(145deg, #dbe4ff, #f1f5ff);
-        border-color: #3b5bfd;
+        background: #e0e7ff;
+        border-color: #3f51b5;
     }
 
     .filter-item.active {
-        background: #3b5bfd;
+        background: #3f51b5;
         color: white;
-        border-color: #3b5bfd;
-        box-shadow: 0 4px 10px rgba(59, 91, 253, 0.2);
-    }
-
-    .filter-item.active::after {
-        display: none;
+        border-color: #3f51b5;
     }
 
     .content-section {
-        background: white;
+        background: #fff;
         border-radius: 15px;
-        padding: 25px 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-        margin-bottom: 30px;
-        border: 1px solid #f1f1f1;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     }
 
     .section-title {
         display: flex;
         align-items: center;
-        margin-bottom: 25px;
+        gap: 10px;
+        border-bottom: 1px solid #eee;
         padding-bottom: 15px;
-        border-bottom: 2px solid #f5f7fa;
+        margin-bottom: 20px;
     }
 
     .section-title i {
-        background: #f0f4ff;
-        color: #4361ee;
-        width: 45px;
-        height: 45px;
+        background: #eef0ff;
+        color: #3f51b5;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 1.3rem;
-        margin-left: 15px;
+        align-items: center;
+        font-size: 1.2rem;
     }
 
     .section-title h2 {
-        color: #2c3e50;
-        font-size: 1.6rem;
-        font-weight: 700;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #222;
     }
 
     .materials-list {
@@ -191,159 +173,98 @@
     }
 
     .material-item {
-        background: white;
+        border: 1px solid #e7e7e7;
         border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+        background: white;
+        padding: 20px;
         transition: all 0.3s ease;
-        border: 1px solid #f1f1f1;
-        display: flex;
-        flex-direction: column;
-        animation: fadeIn 0.4s ease forwards;
-        opacity: 0;
     }
 
     .material-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        border-color: #e0e7ff;
-    }
-
-    .item-header {
-        background: #f8f9ff;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        transform: translateY(-2px);
     }
 
     .item-title {
         display: flex;
         align-items: center;
         gap: 15px;
+        margin-bottom: 10px;
     }
 
     .item-title i {
-        font-size: 1.5rem;
-        color: #4361ee;
-        background: #eef2ff;
-        width: 45px;
-        height: 45px;
+        font-size: 1.4rem;
+        background: #e9ecff;
+        color: #3f51b5;
+        padding: 10px;
         border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .item-title h3 {
-        font-size: 1.25rem;
-        color: #2c3e50;
-        font-weight: 600;
+        font-size: 1.1rem;
+        color: #1d1d1d;
     }
 
     .item-meta {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .item-date {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .item-size {
-        background: #eef7ff;
-        color: #3498db;
-        padding: 5px 10px;
-        border-radius: 8px;
         font-size: 0.85rem;
-        font-weight: 600;
-    }
-
-    .item-body {
-        padding: 0 20px 20px 80px;
+        color: #777;
+        margin-bottom: 12px;
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .item-description {
-        color: #555;
-        line-height: 1.7;
-        font-size: 1rem;
+        font-size: 0.95rem;
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 15px;
     }
 
     .item-footer {
         display: flex;
-        gap: 15px;
-        padding: 0 20px 20px 80px;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     .btn {
-        padding: 10px 20px;
-        border-radius: 8px;
-        text-decoration: none;
+        padding: 8px 18px;
+        font-size: 0.9rem;
         font-weight: 600;
+        text-decoration: none;
+        border-radius: 8px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        font-size: 0.95rem;
-    }
-
-    .btn i {
-        font-size: 0.9rem;
+        gap: 6px;
+        transition: 0.3s;
     }
 
     .btn-download {
-        background: #4361ee;
+        background: #3f51b5;
         color: white;
     }
 
     .btn-download:hover {
-        background: #3a56d4;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        background: #3243a8;
     }
 
     .btn-preview {
-        background: #f8f9fa;
-        color: #4361ee;
-        border: 1px solid #dee2e6;
+        background: #f4f5fa;
+        color: #3f51b5;
+        border: 1px solid #ccd1e0;
     }
 
     .btn-preview:hover {
-        background: #f1f4f9;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        background: #e9ecf5;
     }
 
     .badge {
         display: inline-block;
-        padding: 4px 10px;
-        border-radius: 20px;
         font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 12px;
         font-weight: 600;
         margin-top: 5px;
-        width: fit-content;
-        max-width: 100%;
-        text-align: center;
-    }
-
-    .badge-new {
-        background: #ffefd5;
-        color: #e67e22;
-        border: 1px solid #ffe4c4;
-    }
-
-    .badge-popular {
-        background: #fce4ec;
-        color: #e91e63;
-        border: 1px solid #f8bbd0;
     }
 
     .badge-important {
@@ -353,83 +274,17 @@
     }
 
     @media (max-width: 768px) {
-        .header h1 {
-            font-size: 2rem;
-        }
-
-        .course-info {
-            justify-content: center;
-        }
-
-        .item-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
         .item-meta {
-            width: 100%;
-            justify-content: space-between;
-            padding-left: 60px;
-        }
-
-        .item-body, .item-footer {
-            padding-left: 20px;
-        }
-
-        .filter-item {
-            font-size: 0.95rem;
-            padding: 12px 5px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .course-info {
             flex-direction: column;
-        }
-
-        .filter-bar {
-            flex-wrap: wrap;
-        }
-
-        .filter-item {
-            flex: 1 0 45%;
-            padding: 12px 5px;
-            font-size: 0.9rem;
+            gap: 8px;
         }
 
         .item-footer {
             flex-direction: column;
-            gap: 10px;
         }
-
-        .btn {
-            justify-content: center;
-        }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .fade-out {
-        animation: fadeOut 0.3s ease forwards;
-    }
-
-    @keyframes fadeOut {
-        from { opacity: 1; transform: translateY(0); }
-        to { opacity: 0; transform: translateY(20px); }
-    }
-
-    .fade-in {
-        animation: fadeIn 0.4s ease forwards;
     }
 </style>
+
 
 </head>
 <body>
