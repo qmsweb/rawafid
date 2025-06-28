@@ -317,8 +317,9 @@
     const filterItems = document.querySelectorAll('.filter-item');
 
     // استخراج رمز المقرر من الرابط
-   const pathSegments = window.location.pathname.split('/');
-const courseCode = pathSegments.length > 2 ? pathSegments[2] : null;
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseCode = urlParams.get('i');
+
 
     let materialsData = [];
 
