@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="topbar.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محتوى المقرر الدراسي</title>
+    <title>روافد</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
@@ -205,14 +205,6 @@
         color: #1d1d1d;
     }
 
-    .item-meta {
-        font-size: 0.85rem;
-        color: #777;
-        margin-bottom: 12px;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
 
     .item-description {
         font-size: 0.95rem;
@@ -308,7 +300,7 @@
         <div class="content-section">
             <div class="section-title">
                 <i class="fas fa-file-alt"></i>
-                <h2>المواد الدراسية</h2>
+                <h2>المحتويات</h2>
             </div>
             
             <div class="materials-list" id="materials-list">
@@ -353,9 +345,6 @@
                         <div class="item-meta">
                             <div class="item-date">
                                 <i class="fas fa-calendar-alt"></i> ${item.date}
-                            </div>
-                            <div class="item-size">${item.size}</div>
-                        </div>
                     </div>
                     <div class="item-body">
                         <p class="item-description">${item.description}</p>
