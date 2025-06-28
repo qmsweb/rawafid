@@ -26,6 +26,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    margin-bottom: 50px;
     height: var(--topbar-height);
 }
 
