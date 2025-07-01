@@ -286,6 +286,33 @@
     body {
         padding: 10px;
     }
+    .view-toggle i {
+    font-size: 1.2rem;
+    color: #3f51b5;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.view-toggle i:hover {
+    background-color: #e0e7ff;
+}
+
+.view-toggle i.active {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.materials-list.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.materials-list.grid-view .material-item {
+    height: 100%;
+}
+
 }
 
     }
@@ -312,6 +339,12 @@
             <div class="filter-item" data-filter="documents">المستندات</div>
             <div class="filter-item" data-filter="videos">الفيديوهات</div>
             <div class="filter-item" data-filter="resources">الملاحظات</div>
+            <div class="view-toggle" style="margin-right: auto; display: flex; align-items: center; gap: 10px;">
+    <i class="fas fa-list active" id="list-view" style="cursor: pointer;"></i>
+    <i class="fas fa-th-large" id="grid-view" style="cursor: pointer;"></i>
+</div>
+
+
         </div>
         
        
@@ -405,6 +438,24 @@
                 materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
             });
     });
+    
+    // التبديل بين العرض الشبكي والليستي
+const gridBtn = document.getElementById('grid-view');
+const listBtn = document.getElementById('list-view');
+
+gridBtn.addEventListener('click', () => {
+    materialsList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+});
+
+listBtn.addEventListener('click', () => {
+    materialsList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+});
+
+
 </script>
 <script src="loadTopbar.js"></script>
 
