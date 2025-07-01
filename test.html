@@ -1,463 +1,352 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روافد</title>
-    
-<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Arabic:wght@300;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>روافد</title>
 
+  <!-- خطوط -->
+  <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Arabic:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
 
-     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="topbar.css">
+  <!-- أيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Playpen Sans Arabic', cursive;
-
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Playpen Sans Arabic', cursive;
     }
 
     body {
-        background-color: #f4f6fb;
-        color: #2d2d2d;
-        min-height: 100vh;
-        padding: 20px;
+      background-color: #f4f6fb;
+      color: #2d2d2d;
+      min-height: 100vh;
+      padding: 20px;
     }
 
     .container {
-        max-width: 1200px;
-        margin: 0 auto;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .header {
-        margin: 20px 0 30px;
-        text-align: right;
-        font-family: 'Playpen Sans Arabic', cursive;
-
+      margin: 20px 0 30px;
+      text-align: right;
     }
 
     .header h1 {
-        font-size: 2.2rem;
-        color: #1e1e2f;
-        margin-bottom: 10px;
-        margin-top: 50px;
-        font-family: 'Playpen Sans Arabic', cursive;
-
-
-
+      font-size: 2.2rem;
+      color: #1e1e2f;
+      margin-bottom: 10px;
+      margin-top: 50px;
     }
 
     .header p {
-        color: #555;
-        font-size: 1rem;
-        max-width: 700px;
-        line-height: 1.6;
-        font-family: 'Playpen Sans Arabic', cursive;
-    }
-
-    .course-info {
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-bottom: 25px;
-    }
-
-    .info-card {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        min-width: 160px;
-        transition: all 0.3s;
-        border: 1px solid #ececec;
-    }
-
-    .info-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        border-color: #3f51b5;
-    }
-
-    .info-card i {
-        font-size: 1.8rem;
-        color: #3f51b5;
-        margin-bottom: 8px;
-    }
-
-    .info-card h3 {
-        font-size: 1rem;
-        margin-bottom: 5px;
-    }
-
-    .info-card p {
-        font-size: 0.9rem;
-        color: #666;
+      color: #555;
+      font-size: 1rem;
+      max-width: 700px;
+      line-height: 1.6;
     }
 
     .filter-bar {
-        display: flex;
-        overflow-x: auto;
-        padding: 10px;
-        scrollbar-width: thin;
-        scrollbar-color: #ccc transparent;
-    }
-
-    .filter-bar::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    .filter-bar::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 10px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      align-items: center;
+      padding: 10px 0;
+      margin-bottom: 25px;
     }
 
     .filter-item {
-        flex: 0 0 auto;
-        padding: 10px 18px;
-        border-radius: 30px;
-        background: #f0f2f7;
-        color: #3f51b5;
-        font-weight: 600;
-        font-size: 0.9rem;
-        border: 1px solid transparent;
-        cursor: pointer;
-        transition: 0.3s ease;
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: #f0f2f7;
+      color: #3f51b5;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.3s ease;
+      white-space: nowrap;
     }
 
     .filter-item:hover {
-        background: #e0e7ff;
-        border-color: #3f51b5;
+      background: #e0e7ff;
+      border-color: #3f51b5;
     }
 
     .filter-item.active {
-        background: #3f51b5;
-        color: white;
-        border-color: #3f51b5;
+      background: #3f51b5;
+      color: white;
+      border-color: #3f51b5;
     }
 
-    .content-section {
-        margin-bottom: 25px;
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      margin-right: auto;
     }
 
-  
-    .section-title i {
-        background: #eef0ff;
-        color: #3f51b5;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.2rem;
+    .view-toggle i {
+      font-size: 1.1rem;
+      color: #3f51b5;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccd1e0;
+      background-color: #f0f2f7;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .section-title h2 {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #222;
+    .view-toggle i:hover {
+      background-color: #e0e7ff;
+    }
+
+    .view-toggle i.active {
+      background-color: #3f51b5;
+      color: white;
     }
 
     .materials-list {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .materials-list.grid-view {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .material-item {
-        border: 1px solid #e7e7e7;
-        border-radius: 12px;
-        background: white;
-        padding: 20px;
-        transition: all 0.3s ease;
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
+      background: white;
+      padding: 20px;
+      transition: all 0.3s ease;
     }
 
     .material-item:hover {
-        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
-        transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
     }
 
     .item-title {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
     }
 
     .item-title i {
-        font-size: 1.4rem;
-        background: #e9ecff;
-        color: #3f51b5;
-        padding: 10px;
-        border-radius: 10px;
+      font-size: 1.4rem;
+      background: #e9ecff;
+      color: #3f51b5;
+      padding: 10px;
+      border-radius: 10px;
     }
 
     .item-title h3 {
-        font-size: 1.1rem;
-        color: #1d1d1d;
+      font-size: 1.1rem;
+      color: #1d1d1d;
     }
 
-
     .item-description {
-        font-size: 0.95rem;
-        color: #444;
-        line-height: 1.6;
-        margin-bottom: 15px;
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 15px;
     }
 
     .item-footer {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn {
-        padding: 8px 18px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-decoration: none;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: 0.3s;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.3s;
     }
 
     .btn-download {
-        background: #3f51b5;
-        color: white;
+      background: #3f51b5;
+      color: white;
     }
 
     .btn-download:hover {
-        background: #3243a8;
+      background: #3243a8;
     }
 
     .btn-preview {
-        background: #f4f5fa;
-        color: #3f51b5;
-        border: 1px solid #ccd1e0;
+      background: #f4f5fa;
+      color: #3f51b5;
+      border: 1px solid #ccd1e0;
     }
 
     .btn-preview:hover {
-        background: #e9ecf5;
+      background: #e9ecf5;
     }
 
     .badge {
-        display: inline-block;
-        font-size: 0.75rem;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-weight: 600;
-        margin-top: 5px;
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-top: 5px;
     }
 
     .badge-important {
-        background: #e3f2fd;
-        color: #1976d2;
-        border: 1px solid #bbdefb;
-        margin-bottom: 10px;
+      background: #e3f2fd;
+      color: #1976d2;
+      border: 1px solid #bbdefb;
+      margin-bottom: 10px;
     }
-       .badge-new {
-        background: #fff9e6;
-        color: #a79835;
-        border: 1px solid #ffecb3;
-        margin-bottom: 10px;
+
+    .badge-new {
+      background: #fff9e6;
+      color: #a79835;
+      border: 1px solid #ffecb3;
+      margin-bottom: 10px;
     }
 
     @media (max-width: 768px) {
-        .item-meta {
-            flex-direction: column;
-            gap: 8px;
-        }
+      .materials-list.grid-view {
+        grid-template-columns: 1fr;
+      }
 
-       
-        @media (max-width: 768px) {
-    .container {
-        padding: 0;
-        width: 100%;
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .filter-item,
+      .view-toggle i {
+        flex-shrink: 0;
+      }
     }
-
-    body {
-        padding: 10px;
-    }
-    .view-toggle i {
-    font-size: 1.2rem;
-    color: #3f51b5;
-    padding: 6px 10px;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.view-toggle i:hover {
-    background-color: #e0e7ff;
-}
-
-.view-toggle i.active {
-    background-color: #3f51b5;
-    color: white;
-}
-
-.materials-list.grid-view {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.materials-list.grid-view .material-item {
-    height: 100%;
-}
-
-}
-
-    }
-</style>
-
-
+  </style>
 </head>
 <body>
-        <div id="topbar-container"></div>
+  <div id="topbar-container"></div>
 
-
-    <div class="container">
-       
-        <div class="header">
-            <h1></h1>
-            <p></p>
-        </div>
-        
-        
-        </div>
-        
-        <div class="filter-bar">
-            <div class="filter-item active" data-filter="all">الكل</div>
-            <div class="filter-item" data-filter="documents">المستندات</div>
-            <div class="filter-item" data-filter="videos">الفيديوهات</div>
-            <div class="filter-item" data-filter="resources">الملاحظات</div>
-            <div class="view-toggle" style="margin-right: auto; display: flex; align-items: center; gap: 10px;">
-    <i class="fas fa-list active" id="list-view" style="cursor: pointer;"></i>
-    <i class="fas fa-th-large" id="grid-view" style="cursor: pointer;"></i>
-</div>
-
-
-        </div>
-        
-       
-            
-            <div class="materials-list" id="materials-list">
-                <!-- العناصر سيتم إضافتها عبر الجافاسكريبت -->
-            </div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <h1></h1>
+      <p></p>
     </div>
 
-    <script>
+    <div class="filter-bar">
+      <div class="filter-item active" data-filter="all">الكل</div>
+      <div class="filter-item" data-filter="documents">المستندات</div>
+      <div class="filter-item" data-filter="videos">الفيديوهات</div>
+      <div class="filter-item" data-filter="resources">الملاحظات</div>
+
+      <div class="view-toggle">
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+      </div>
+    </div>
+
+    <div class="materials-list" id="materials-list">
+      <!-- يتم ملؤها تلقائيًا -->
+    </div>
+  </div>
+
+  <script>
     const materialsList = document.getElementById('materials-list');
     const filterItems = document.querySelectorAll('.filter-item');
+    const gridBtn = document.getElementById('grid-view');
+    const listBtn = document.getElementById('list-view');
 
     // استخراج رمز المقرر من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const courseCode = urlParams.get('i');
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseCode = urlParams.get('i');
 
     let materialsData = [];
 
     function renderMaterials(filter = 'all') {
-        const allItems = materialsList.querySelectorAll('.material-item');
-        allItems.forEach(item => item.classList.add('fade-out'));
+      materialsList.innerHTML = '';
+      const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-        setTimeout(() => {
-            materialsList.innerHTML = '';
-
-            const filtered = filter === 'all'
-                ? materialsData
-                : materialsData.filter(item => item.type === filter);
-
-            filtered.forEach((item, index) => {
-                const el = document.createElement('div');
-                el.className = 'material-item fade-in';
-                el.style.animationDelay = `${index * 0.1}s`;
-                el.dataset.type = item.type;
-
-                el.innerHTML = `
-                    <div class="item-header">
-                        <div class="item-title">
-                            <i class="${item.icon}"></i>
-                            <h3>${item.title}</h3>
-                        </div>
-                        <div class="item-meta">
-                          
-                    </div>
-                    <div class="item-body">
-                        <p class="item-description">${item.description}</p>
-                        ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
-                    </div>
-                    <div class="item-footer">
-                        <a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>
-                        <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
-                            <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
-                            ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
-                        </a>
-                    </div>
-                `;
-
-                materialsList.appendChild(el);
-            });
-        }, 300);
+      filtered.forEach((item, index) => {
+        const el = document.createElement('div');
+        el.className = 'material-item';
+        el.innerHTML = `
+          <div class="item-title">
+            <i class="${item.icon}"></i>
+            <h3>${item.title}</h3>
+          </div>
+          <p class="item-description">${item.description}</p>
+          ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
+          <div class="item-footer">
+            <a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>
+            <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
+              <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
+              ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
+            </a>
+          </div>
+        `;
+        materialsList.appendChild(el);
+      });
     }
 
-    // ربط التصفية
+    // الفلاتر
     filterItems.forEach(item => {
-        item.addEventListener('click', function () {
-            filterItems.forEach(el => el.classList.remove('active'));
-            this.classList.add('active');
-            renderMaterials(this.dataset.filter);
-        });
+      item.addEventListener('click', function () {
+        filterItems.forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+        renderMaterials(this.dataset.filter);
+      });
+    });
+
+    // التبديل بين العرض الشبكي والقائمة
+    gridBtn.addEventListener('click', () => {
+      materialsList.classList.add('grid-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    });
+
+    listBtn.addEventListener('click', () => {
+      materialsList.classList.remove('grid-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
     });
 
     // عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => {
-        if (!courseCode) {
-            materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
-            return;
-        }
+      if (!courseCode) {
+        materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
+        return;
+      }
 
-        fetch(`assets/data/${courseCode}.json`)
-            .then(res => res.json())
-            .then(data => {
-                materialsData = data.items;
-                document.querySelector('.header h1').textContent = data.name || 'مقرر دراسي';
-                document.querySelector('.header p').textContent = data.description || '';
-                renderMaterials();
-            })
-            .catch(err => {
-                materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
-            });
+      fetch(`assets/data/${courseCode}.json`)
+        .then(res => res.json())
+        .then(data => {
+          materialsData = data.items;
+          document.querySelector('.header h1').textContent = data.name || 'مقرر دراسي';
+          document.querySelector('.header p').textContent = data.description || '';
+          renderMaterials();
+        })
+        .catch(err => {
+          materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
+        });
     });
-    
-    // التبديل بين العرض الشبكي والليستي
-const gridBtn = document.getElementById('grid-view');
-const listBtn = document.getElementById('list-view');
+  </script>
 
-gridBtn.addEventListener('click', () => {
-    materialsList.classList.add('grid-view');
-    gridBtn.classList.add('active');
-    listBtn.classList.remove('active');
-});
-
-listBtn.addEventListener('click', () => {
-    materialsList.classList.remove('grid-view');
-    listBtn.classList.add('active');
-    gridBtn.classList.remove('active');
-});
-
-
-</script>
-<script src="loadTopbar.js"></script>
-
+  <script src="loadTopbar.js"></script>
 </body>
 </html>
