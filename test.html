@@ -223,21 +223,22 @@
       margin-bottom: 10px;
     }
 
-    @media (max-width: 768px) {
-      .materials-list.grid-view {
-        grid-template-columns: 1fr;
-      }
+@media (max-width: 768px) {
+  .materials-list.grid-view {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
 
-      .filter-bar {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-      }
+  .filter-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
 
-      .filter-item,
-      .view-toggle i {
-        flex-shrink: 0;
-      }
-    }
+  .filter-item,
+  .view-toggle i {
+    flex-shrink: 0;
+  }
+}
+
   </style>
 </head>
 <body>
