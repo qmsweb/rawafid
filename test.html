@@ -6,21 +6,19 @@
   <title>روافد</title>
 
   <!-- خطوط -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
- 
- <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
- 
- 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  
   <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
+    /* كامل التنسيق كما هو بدون تغيير */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: "Noto Kufi Arabic", sans-serif;
-
     }
 
     body {
@@ -226,22 +224,21 @@
       margin-bottom: 10px;
     }
 
-@media (max-width: 768px) {
-  .materials-list.grid-view {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
+    @media (max-width: 768px) {
+      .materials-list.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
 
-  .filter-bar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-  }
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
 
-  .filter-item,
-  .view-toggle i {
-    flex-shrink: 0;
-  }
-}
-
+      .filter-item,
+      .view-toggle i {
+        flex-shrink: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -276,7 +273,6 @@
     const gridBtn = document.getElementById('grid-view');
     const listBtn = document.getElementById('list-view');
 
-    // استخراج رمز المقرر من الرابط
     const urlParams = new URLSearchParams(window.location.search);
     const courseCode = urlParams.get('i');
 
@@ -289,6 +285,12 @@
       filtered.forEach((item, index) => {
         const el = document.createElement('div');
         el.className = 'material-item';
+
+        const downloadButton = item.type !== 'videos' ? `
+          <a href="${item.download_url}" class="btn btn-download" download>
+            <i class="fas fa-download"></i> تحميل
+          </a>` : '';
+
         el.innerHTML = `
           <div class="item-title">
             <i class="${item.icon}"></i>
@@ -297,18 +299,18 @@
           <p class="item-description">${item.description}</p>
           ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
           <div class="item-footer">
-            <a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>
+            ${downloadButton}
             <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
               <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
               ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
             </a>
           </div>
         `;
+
         materialsList.appendChild(el);
       });
     }
 
-    // الفلاتر
     filterItems.forEach(item => {
       item.addEventListener('click', function () {
         filterItems.forEach(el => el.classList.remove('active'));
@@ -317,7 +319,6 @@
       });
     });
 
-    // التبديل بين العرض الشبكي والقائمة
     gridBtn.addEventListener('click', () => {
       materialsList.classList.add('grid-view');
       gridBtn.classList.add('active');
@@ -330,7 +331,6 @@
       gridBtn.classList.remove('active');
     });
 
-    // عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => {
       if (!courseCode) {
         materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
