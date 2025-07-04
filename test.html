@@ -299,10 +299,17 @@
       const el = document.createElement('div');
       el.className = 'material-item';
 
-      const downloadButton = item.type !== 'videos' ? `
-        <a href="${item.download_url}" class="btn btn-download" download>
-          <i class="fas fa-download"></i> تحميل
-        </a>` : '';
+      const downloadButton = item.download_url ? `
+  <a href="${item.download_url}" class="btn btn-download" download>
+    <i class="fas fa-download"></i> تحميل
+  </a>` : '';
+
+const previewButton = item.preview_url ? `
+  <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
+    <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
+    ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
+  </a>` : '';
+
 
       el.innerHTML = `
         <div class="item-title">
@@ -312,12 +319,10 @@
         <p class="item-description">${item.description}</p>
         ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
         <div class="item-footer">
-          ${downloadButton}
-          <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
-            <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
-            ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
-          </a>
-        </div>
+  ${downloadButton}
+  ${previewButton}
+</div>
+
       `;
 
       materialsList.appendChild(el);
