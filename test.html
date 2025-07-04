@@ -239,7 +239,35 @@
         flex-shrink: 0;
       }
     }
- <script>
+  </style>
+</head>
+<body>
+  <div id="topbar-container"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1></h1>
+      <p></p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-item active" data-filter="all">الكل</div>
+      <div class="filter-item" data-filter="documents">المستندات</div>
+      <div class="filter-item" data-filter="videos">الفيديوهات</div>
+      <div class="filter-item" data-filter="resources">الملاحظات</div>
+
+      <div class="view-toggle">
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+      </div>
+    </div>
+
+    <div class="materials-list" id="materials-list">
+      <!-- يتم ملؤها تلقائيًا -->
+    </div>
+  </div>
+
+  <script>
   const materialsList = document.getElementById('materials-list');
   const filterItems = document.querySelectorAll('.filter-item');
   const gridBtn = document.getElementById('grid-view');
