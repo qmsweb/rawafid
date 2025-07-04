@@ -33,7 +33,7 @@
       "description": "هذا مجرد مثال لاختبار نوع الملاحظة.",
       "type": "resources",
       "badge": "important",
-      "badgeText": "عاجل",
+      "badgeText": "عاجل"
     }
   ]
 }
