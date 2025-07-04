@@ -239,117 +239,103 @@
         flex-shrink: 0;
       }
     }
-  </style>
-</head>
-<body>
-  <div id="topbar-container"></div>
+ <script>
+  const materialsList = document.getElementById('materials-list');
+  const filterItems = document.querySelectorAll('.filter-item');
+  const gridBtn = document.getElementById('grid-view');
+  const listBtn = document.getElementById('list-view');
 
-  <div class="container">
-    <div class="header">
-      <h1></h1>
-      <p></p>
-    </div>
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseCode = urlParams.get('i');
 
-    <div class="filter-bar">
-      <div class="filter-item active" data-filter="all">الكل</div>
-      <div class="filter-item" data-filter="documents">المستندات</div>
-      <div class="filter-item" data-filter="videos">الفيديوهات</div>
-      <div class="filter-item" data-filter="resources">الملاحظات</div>
+  let materialsData = [];
 
-      <div class="view-toggle">
-        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
-        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
-      </div>
-    </div>
+  function getIconClass(type) {
+    switch (type) {
+      case 'documents':
+        return 'fas fa-file-alt'; // مستند
+      case 'videos':
+        return 'fab fa-youtube'; // فيديو
+      case 'resources':
+        return 'fas fa-bullhorn'; // ملاحظة
+      default:
+        return 'fas fa-file'; // افتراضي
+    }
+  }
 
-    <div class="materials-list" id="materials-list">
-      <!-- يتم ملؤها تلقائيًا -->
-    </div>
-  </div>
+  function renderMaterials(filter = 'all') {
+    materialsList.innerHTML = '';
+    const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-  <script>
-    const materialsList = document.getElementById('materials-list');
-    const filterItems = document.querySelectorAll('.filter-item');
-    const gridBtn = document.getElementById('grid-view');
-    const listBtn = document.getElementById('list-view');
+    filtered.forEach((item, index) => {
+      const el = document.createElement('div');
+      el.className = 'material-item';
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseCode = urlParams.get('i');
+      const downloadButton = item.type !== 'videos' ? `
+        <a href="${item.download_url}" class="btn btn-download" download>
+          <i class="fas fa-download"></i> تحميل
+        </a>` : '';
 
-    let materialsData = [];
+      el.innerHTML = `
+        <div class="item-title">
+          <i class="${getIconClass(item.type)}"></i>
+          <h3>${item.title}</h3>
+        </div>
+        <p class="item-description">${item.description}</p>
+        ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
+        <div class="item-footer">
+          ${downloadButton}
+          <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
+            <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
+            ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
+          </a>
+        </div>
+      `;
 
-    function renderMaterials(filter = 'all') {
-      materialsList.innerHTML = '';
-      const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
+      materialsList.appendChild(el);
+    });
+  }
 
-      filtered.forEach((item, index) => {
-        const el = document.createElement('div');
-        el.className = 'material-item';
+  filterItems.forEach(item => {
+    item.addEventListener('click', function () {
+      filterItems.forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
+      renderMaterials(this.dataset.filter);
+    });
+  });
 
-        const downloadButton = item.type !== 'videos' ? `
-          <a href="${item.download_url}" class="btn btn-download" download>
-            <i class="fas fa-download"></i> تحميل
-          </a>` : '';
+  gridBtn.addEventListener('click', () => {
+    materialsList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  });
 
-        el.innerHTML = `
-          <div class="item-title">
-            <i class="${item.icon}"></i>
-            <h3>${item.title}</h3>
-          </div>
-          <p class="item-description">${item.description}</p>
-          ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
-          <div class="item-footer">
-            ${downloadButton}
-            <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
-              <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
-              ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
-            </a>
-          </div>
-        `;
+  listBtn.addEventListener('click', () => {
+    materialsList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  });
 
-        materialsList.appendChild(el);
-      });
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!courseCode) {
+      materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
+      return;
     }
 
-    filterItems.forEach(item => {
-      item.addEventListener('click', function () {
-        filterItems.forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-        renderMaterials(this.dataset.filter);
+    fetch(`assets/data/${courseCode}.json`)
+      .then(res => res.json())
+      .then(data => {
+        materialsData = data.items;
+        document.querySelector('.header h1').textContent = data.name || 'مقرر دراسي';
+        document.querySelector('.header p').textContent = data.description || '';
+        renderMaterials();
+      })
+      .catch(err => {
+        materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
       });
-    });
+  });
+</script>
 
-    gridBtn.addEventListener('click', () => {
-      materialsList.classList.add('grid-view');
-      gridBtn.classList.add('active');
-      listBtn.classList.remove('active');
-    });
-
-    listBtn.addEventListener('click', () => {
-      materialsList.classList.remove('grid-view');
-      listBtn.classList.add('active');
-      gridBtn.classList.remove('active');
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!courseCode) {
-        materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
-        return;
-      }
-
-      fetch(`assets/data/${courseCode}.json`)
-        .then(res => res.json())
-        .then(data => {
-          materialsData = data.items;
-          document.querySelector('.header h1').textContent = data.name || 'مقرر دراسي';
-          document.querySelector('.header p').textContent = data.description || '';
-          renderMaterials();
-        })
-        .catch(err => {
-          materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
-        });
-    });
-  </script>
 
   <script src="loadTopbar.js"></script>
 </body>
