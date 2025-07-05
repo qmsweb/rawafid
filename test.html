@@ -13,7 +13,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* كامل التنسيق كما هو بدون تغيير */
+    :root {
+      --primary-color: #1a2a6c;
+      --hover-bg: #e0e7ff;
+      --light-bg: #f0f2f7;
+      --light-border: #ccd1e0;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -65,8 +71,8 @@
       flex: 0 0 auto;
       padding: 10px 18px;
       border-radius: 10px;
-      background: #f0f2f7;
-      color: #3f51b5;
+      background: var(--light-bg);
+      color: var(--primary-color);
       font-weight: 700;
       font-size: 0.75rem;
       border: 1px solid transparent;
@@ -76,14 +82,14 @@
     }
 
     .filter-item:hover {
-      background: #e0e7ff;
-      border-color: #3f51b5;
+      background: var(--hover-bg);
+      border-color: var(--primary-color);
     }
 
     .filter-item.active {
-      background: #3f51b5;
+      background: var(--primary-color);
       color: white;
-      border-color: #3f51b5;
+      border-color: var(--primary-color);
     }
 
     .view-toggle {
@@ -94,21 +100,21 @@
 
     .view-toggle i {
       font-size: 1.1rem;
-      color: #3f51b5;
+      color: var(--primary-color);
       padding: 6px 10px;
       border-radius: 6px;
-      border: 1px solid #ccd1e0;
-      background-color: #f0f2f7;
+      border: 1px solid var(--light-border);
+      background-color: var(--light-bg);
       cursor: pointer;
       transition: 0.3s;
     }
 
     .view-toggle i:hover {
-      background-color: #e0e7ff;
+      background-color: var(--hover-bg);
     }
 
     .view-toggle i.active {
-      background-color: #3f51b5;
+      background-color: var(--primary-color);
       color: white;
     }
 
@@ -146,8 +152,8 @@
 
     .item-title i {
       font-size: 1.4rem;
-      background: #e9ecff;
-      color: #3f51b5;
+      background: var(--hover-bg);
+      color: var(--primary-color);
       padding: 10px;
       border-radius: 10px;
     }
@@ -183,18 +189,18 @@
     }
 
     .btn-download {
-      background: #3f51b5;
+      background: var(--primary-color);
       color: white;
     }
 
     .btn-download:hover {
-      background: #3243a8;
+      background: #162254;
     }
 
     .btn-preview {
       background: #f4f5fa;
-      color: #3f51b5;
-      border: 1px solid #ccd1e0;
+      color: var(--primary-color);
+      border: 1px solid var(--light-border);
     }
 
     .btn-preview:hover {
@@ -212,7 +218,7 @@
 
     .badge-important {
       background: #e3f2fd;
-      color: #1976d2;
+      color: var(--primary-color);
       border: 1px solid #bbdefb;
       margin-bottom: 10px;
     }
@@ -281,13 +287,13 @@
   function getIconClass(type) {
     switch (type) {
       case 'documents':
-        return 'fas fa-file-alt'; // مستند
+        return 'fas fa-file-alt';
       case 'videos':
-        return 'fab fa-youtube'; // فيديو
+        return 'fab fa-youtube';
       case 'resources':
-        return 'fas fa-bullhorn'; // ملاحظة
+        return 'fas fa-bullhorn';
       default:
-        return 'fas fa-file'; // افتراضي
+        return 'fas fa-file';
     }
   }
 
@@ -295,7 +301,7 @@
     materialsList.innerHTML = '';
     const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-    filtered.forEach((item, index) => {
+    filtered.forEach((item) => {
       const el = document.createElement('div');
       el.className = 'material-item';
 
@@ -304,12 +310,11 @@
     <i class="fas fa-download"></i> تحميل
   </a>` : '';
 
-const previewButton = item.preview_url ? `
+      const previewButton = item.preview_url ? `
   <a href="${item.preview_url}" class="btn btn-preview" target="_blank">
     <i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> 
     ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}
   </a>` : '';
-
 
       el.innerHTML = `
         <div class="item-title">
@@ -319,12 +324,10 @@ const previewButton = item.preview_url ? `
         <p class="item-description">${item.description}</p>
         ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
         <div class="item-footer">
-  ${downloadButton}
-  ${previewButton}
-</div>
-
+          ${downloadButton}
+          ${previewButton}
+        </div>
       `;
-
       materialsList.appendChild(el);
     });
   }
@@ -367,8 +370,7 @@ const previewButton = item.preview_url ? `
         materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
       });
   });
-</script>
-
+  </script>
 
   <script src="loadTopbar.js"></script>
 </body>
