@@ -3,13 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>المناهج الدراسية | روافد</title>
-
-  <!-- خطوط -->
+  <title>روافد</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  
-  <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
@@ -42,13 +37,6 @@
       color: #1e1e2f;
       margin-bottom: 10px;
       margin-top: 50px;
-    }
-
-    .header p {
-      color: #555;
-      font-size: 1rem;
-      max-width: 700px;
-      line-height: 1.6;
     }
 
     .filter-bar {
@@ -111,9 +99,15 @@
       color: white;
     }
 
-    .courses-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .course-list.grid-view {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
 
@@ -123,9 +117,6 @@
       background: white;
       padding: 20px;
       transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      min-height: 200px;
     }
 
     .course-card:hover {
@@ -133,95 +124,50 @@
       transform: translateY(-2px);
     }
 
-    .course-icon {
-      font-size: 1.8rem;
-      background: #e9ecff;
-      color: #3f51b5;
-      padding: 15px;
-      border-radius: 12px;
-      width: fit-content;
-      margin-bottom: 15px;
-    }
-
-    .course-title {
-      font-size: 1.2rem;
-      color: #1d1d1d;
+    .item-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
       margin-bottom: 10px;
     }
 
-    .course-description {
-      font-size: 0.95rem;
-      color: #444;
-      line-height: 1.6;
-      margin-bottom: 15px;
-      flex-grow: 1;
+    .item-title i {
+      font-size: 1.4rem;
+      background: #e9ecff;
+      color: #3f51b5;
+      padding: 10px;
+      border-radius: 10px;
     }
 
-    .course-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
+    .item-title h3 {
+      font-size: 1.1rem;
+      color: #1d1d1d;
     }
 
-    .course-code {
-      font-size: 0.85rem;
-      color: #666;
-      background: #f5f5f5;
-      padding: 4px 10px;
-      border-radius: 4px;
-    }
-
-    .btn-view {
-      padding: 8px 18px;
+    .item-footer a {
+      display: inline-block;
       font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
+      padding: 8px 14px;
       border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      text-decoration: none;
+      font-weight: 600;
       transition: 0.3s;
+    }
+
+    .btn-enter {
       background: #3f51b5;
       color: white;
     }
 
-    .btn-view:hover {
+    .btn-enter:hover {
       background: #3243a8;
     }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .badge-grammar {
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
-    }
-
-    .badge-poetry {
-      background: #f3e5f5;
-      color: #7b1fa2;
-      border: 1px solid #e1bee7;
-    }
-
-    .badge-common {
-      background: #e3f2fd;
-      color: #1976d2;
-      border: 1px solid #bbdefb;
-    }
-
     @media (max-width: 768px) {
-      .courses-list {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      .course-list.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
-      
+
       .filter-bar {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -235,148 +181,87 @@
   </style>
 </head>
 <body>
-  <div id="topbar-container"></div>
-
   <div class="container">
     <div class="header">
-      <h1>المناهج الدراسية</h1>
-      <p>استكشف المقررات الدراسية المتاحة حسب التخصص والمرحلة التعليمية</p>
+      <h1>المقررات الدراسية</h1>
     </div>
 
     <div class="filter-bar">
       <div class="filter-item active" data-filter="all">الكل</div>
-      <div class="filter-item" data-filter="grammar">النحو</div>
+      <div class="filter-item" data-filter="nahw">النحو</div>
       <div class="filter-item" data-filter="poetry">الشعر</div>
-      <div class="filter-item" data-filter="common">المشتركة</div>
+      <div class="filter-item" data-filter="shared">الجامعية</div>
 
       <div class="view-toggle">
-        <i class="fas fa-th-large active" id="grid-view" title="عرض شبكي"></i>
-        <i class="fas fa-list" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
       </div>
     </div>
 
-    <div class="courses-list" id="courses-list">
-      <!-- سيتم ملؤها تلقائيًا -->
+    <div class="course-list" id="course-list">
+      <!-- يتم توليد المقررات هنا -->
     </div>
   </div>
 
   <script>
-  const coursesList = document.getElementById('courses-list');
-  const filterItems = document.querySelectorAll('.filter-item');
-  const gridBtn = document.getElementById('grid-view');
-  const listBtn = document.getElementById('list-view');
+    const courses = [
+      { name: "النحو 1", type: "nahw", code: "ARAB101" },
+      { name: "النحو 2", type: "nahw", code: "ARAB102" },
+      { name: "الشعر الجاهلي", type: "poetry", code: "ARAB201" },
+      { name: "الشعر الأموي", type: "poetry", code: "ARAB202" },
+      { name: "القراءة والتحليل", type: "shared", code: "ARAB301" },
+      { name: "مهارات لغوية", type: "shared", code: "ARAB302" }
+    ];
 
-  const coursesData = [
-    {
-      id: "ARB101",
-      title: "قواعد النحو الأساسية",
-      description: "مقدمة شاملة لقواعد النحو العربي مع تمارين تطبيقية",
-      category: "grammar",
-      icon: "fas fa-language",
-      badge: "grammar",
-      badgeText: "نحو"
-    },
-    {
-      id: "ARB102",
-      title: "علم العروض والقافية",
-      description: "دراسة الأوزان الشعرية والقوافي في الشعر العربي",
-      category: "poetry",
-      icon: "fas fa-pen-fancy",
-      badge: "poetry",
-      badgeText: "شعر"
-    },
-    {
-      id: "ARB103",
-      title: "النصوص الأدبية",
-      description: "قراءة وتحليل نصوص من الأدب العربي عبر العصور",
-      category: "common",
-      icon: "fas fa-book-open",
-      badge: "common",
-      badgeText: "مشتركة"
-    },
-    {
-      id: "ARB104",
-      title: "الصرف التطبيقي",
-      description: "دراسة تحويلات الكلمة في اللغة العربية",
-      category: "grammar",
-      icon: "fas fa-spell-check",
-      badge: "grammar",
-      badgeText: "نحو"
-    },
-    {
-      id: "ARB105",
-      title: "الشعر الجاهلي",
-      description: "دراسة وتحليل نماذج من الشعر الجاهلي",
-      category: "poetry",
-      icon: "fas fa-feather-alt",
-      badge: "poetry",
-      badgeText: "شعر"
-    },
-    {
-      id: "ARB106",
-      title: "البلاغة العربية",
-      description: "علم المعاني والبيان والبديع",
-      category: "common",
-      icon: "fas fa-comment-dots",
-      badge: "common",
-      badgeText: "مشتركة"
+    const listContainer = document.getElementById("course-list");
+    const filters = document.querySelectorAll(".filter-item");
+
+    function renderCourses(filter = "all") {
+      listContainer.innerHTML = "";
+      const filtered = filter === "all" ? courses : courses.filter(c => c.type === filter);
+
+      filtered.forEach(course => {
+        const div = document.createElement("div");
+        div.className = "course-card";
+        div.innerHTML = `
+          <div class="item-title">
+            <i class="fas fa-book"></i>
+            <h3>${course.name}</h3>
+          </div>
+          <div class="item-footer">
+            <a class="btn-enter" href="course.html?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
+          </div>
+        `;
+        listContainer.appendChild(div);
+      });
     }
-  ];
 
-  function renderCourses(filter = 'all') {
-    coursesList.innerHTML = '';
-    const filtered = filter === 'all' ? coursesData : coursesData.filter(item => item.category === filter);
-
-    filtered.forEach((course) => {
-      const el = document.createElement('div');
-      el.className = 'course-card';
-
-      el.innerHTML = `
-        <div class="course-icon">
-          <i class="${course.icon}"></i>
-        </div>
-        <h3 class="course-title">${course.title}</h3>
-        ${course.badge ? `<span class="badge badge-${course.badge}">${course.badgeText}</span>` : ''}
-        <p class="course-description">${course.description}</p>
-        <div class="course-meta">
-          <span class="course-code">${course.id}</span>
-          <a href="materials.html?i=${course.id}" class="btn-view">
-            <i class="fas fa-external-link-alt"></i> عرض المقرر
-          </a>
-        </div>
-      `;
-
-      coursesList.appendChild(el);
+    filters.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filters.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderCourses(btn.dataset.filter);
+      });
     });
-  }
 
-  filterItems.forEach(item => {
-    item.addEventListener('click', function () {
-      filterItems.forEach(el => el.classList.remove('active'));
-      this.classList.add('active');
-      renderCourses(this.dataset.filter);
+    // عرض الشبكي / القائمة
+    const gridBtn = document.getElementById('grid-view');
+    const listBtn = document.getElementById('list-view');
+    const courseList = document.getElementById('course-list');
+
+    gridBtn.addEventListener('click', () => {
+      courseList.classList.add('grid-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
     });
-  });
 
-  // عرض افتراضي شبكي
-  gridBtn.addEventListener('click', () => {
-    coursesList.classList.remove('list-view');
-    gridBtn.classList.add('active');
-    listBtn.classList.remove('active');
-  });
+    listBtn.addEventListener('click', () => {
+      courseList.classList.remove('grid-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    });
 
-  // عرض قائمة (إذا كان مطلوباً)
-  listBtn.addEventListener('click', () => {
-    coursesList.classList.add('list-view');
-    listBtn.classList.add('active');
-    gridBtn.classList.remove('active');
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    renderCourses();
-  });
-</script>
-
-  <script src="loadTopbar.js"></script>
+    renderCourses(); // أول تحميل
+  </script>
 </body>
 </html>
