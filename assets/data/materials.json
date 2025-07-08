@@ -1,0 +1,8 @@
+[
+  { "name": "النحو 1", "type": "nahw", "code": "ARAB101" },
+  { "name": "النحو 2", "type": "nahw", "code": "ARAB102" },
+  { "name": "الشعر الجاهلي", "type": "poetry", "code": "ARAB201" },
+  { "name": "الشعر الأموي", "type": "poetry", "code": "ARAB202" },
+  { "name": "القراءة والتحليل", "type": "shared", "code": "ARAB301" },
+  { "name": "مهارات لغوية", "type": "shared", "code": "ARAB302" }
+]
