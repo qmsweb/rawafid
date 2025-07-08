@@ -26,6 +26,7 @@
       "title": "الفرق بين البناء والإعراب",
       "description": "",
       "type": "videos",
+      "time-ms": "1720434194000",
       "badge": "new",
       "badgeText": "جديد",
       "preview_url": "https://www.youtube.com/watch?v=bu0_j3hsW2o"
@@ -34,6 +35,7 @@
       "title": "ملاحظة تجريبية",
       "description": "هذا مجرد مثال لاختبار نوع الملاحظة.",
       "type": "resources",
+      "time-ms": "1720434194000",
       "badge": "important",
       "badgeText": "عاجل"
     }
