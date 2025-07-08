@@ -210,64 +210,68 @@
   </div>
 
   <script>
-    const courses = [
-      { name: "النحو 1", type: "nahw", code: "ARAB101" },
-      { name: "النحو 2", type: "nahw", code: "ARAB102" },
-      { name: "الشعر الجاهلي", type: "poetry", code: "ARAB201" },
-      { name: "الشعر الأموي", type: "poetry", code: "ARAB202" },
-      { name: "القراءة والتحليل", type: "shared", code: "ARAB301" },
-      { name: "مهارات لغوية", type: "shared", code: "ARAB302" }
-    ];
+  const listContainer = document.getElementById("course-list");
+  const filters = document.querySelectorAll(".filter-item");
 
-    const listContainer = document.getElementById("course-list");
-    const filters = document.querySelectorAll(".filter-item");
+  let allCourses = [];
 
-    function renderCourses(filter = "all") {
-      listContainer.innerHTML = "";
-      const filtered = filter === "all" ? courses : courses.filter(c => c.type === filter);
+  function renderCourses(filter = "all") {
+    listContainer.innerHTML = "";
+    const filtered = filter === "all" ? allCourses : allCourses.filter(c => c.type === filter);
 
-      filtered.forEach(course => {
-        const div = document.createElement("div");
-        div.className = "course-card";
-        div.innerHTML = `
-          <div class="item-title">
-            <i class="fas fa-book"></i>
-            <h3>${course.name}</h3>
-          </div>
-          <div class="item-footer">
-            <a class="btn-enter" href="course.html?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
-          </div>
-        `;
-        listContainer.appendChild(div);
-      });
-    }
+    filtered.forEach(course => {
+      const div = document.createElement("div");
+      div.className = "course-card";
+      div.innerHTML = `
+        <div class="item-title">
+          <i class="fas fa-book"></i>
+          <h3>${course.name}</h3>
+        </div>
+        <div class="item-footer">
+          <a class="btn-enter" href="course.html?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
+        </div>
+      `;
+      listContainer.appendChild(div);
+    });
+  }
 
-    filters.forEach(btn => {
-      btn.addEventListener("click", () => {
-        filters.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        renderCourses(btn.dataset.filter);
-      });
+  // تحميل البيانات من ملف JSON
+  fetch("assets/data/materials.json")
+    .then(response => response.json())
+    .then(data => {
+      allCourses = data;
+      renderCourses();
+    })
+    .catch(error => {
+      listContainer.innerHTML = "<p>حدث خطأ أثناء تحميل المقررات.</p>";
+      console.error("فشل تحميل البيانات:", error);
     });
 
-    const gridBtn = document.getElementById('grid-view');
-    const listBtn = document.getElementById('list-view');
-    const courseList = document.getElementById('course-list');
-
-    gridBtn.addEventListener('click', () => {
-      courseList.classList.add('grid-view');
-      gridBtn.classList.add('active');
-      listBtn.classList.remove('active');
+  filters.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filters.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCourses(btn.dataset.filter);
     });
+  });
 
-    listBtn.addEventListener('click', () => {
-      courseList.classList.remove('grid-view');
-      listBtn.classList.add('active');
-      gridBtn.classList.remove('active');
-    });
+  const gridBtn = document.getElementById('grid-view');
+  const listBtn = document.getElementById('list-view');
+  const courseList = document.getElementById('course-list');
 
-    renderCourses();
-  </script>
+  gridBtn.addEventListener('click', () => {
+    courseList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  });
+
+  listBtn.addEventListener('click', () => {
+    courseList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  });
+</script>
+
 
   <script src="loadTopbar.js"></script>
 </body>
