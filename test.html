@@ -322,23 +322,7 @@
           <h3>${item.title}</h3>
         </div>
         <p class="item-description">${item.description}</p>
-        ${(() => {
-  const MS_IN_DAY = 24 * 60 * 60 * 1000;
-  const daysLeft = item['time-ms'] ? Math.floor(item['time-ms'] / MS_IN_DAY) : null;
-
-  // أولوية للبادج اليدوية
-  if (item.badge && item.badgeText) {
-    return `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
-  }
-
-  // إذا لم توجد بادج يدوية، نظهر "جديد" تلقائيًا إن كانت المدة ≤ 14 يوم
-  if (daysLeft !== null && daysLeft <= 14) {
-    return `<span class="badge badge-new">جديد 🔥</span>`;
-  }
-
-  return '';
-})()}
-
+        ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
         <div class="item-footer">
           ${downloadButton}
           ${previewButton}
