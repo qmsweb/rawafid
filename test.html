@@ -322,7 +322,23 @@
           <h3>${item.title}</h3>
         </div>
         <p class="item-description">${item.description}</p>
-        ${item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : ''}
+        ${(() => {
+  const MS_IN_DAY = 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const timeMs = item['time-ms'];
+  const daysLeft = timeMs ? Math.floor((timeMs - now) / MS_IN_DAY) : null;
+
+  if (item.badge === 'new') {
+    if (daysLeft !== null && daysLeft >= -14) {
+      return `<span class="badge badge-new">${item.badgeText}</span>`;
+    } else {
+      return ''; // لا تعرض "جديد" إذا مضى أكثر من 14 يوم
+    }
+  }
+
+  return item.badge ? `<span class="badge badge-${item.badge}">${item.badgeText}</span>` : '';
+})()}
+
         <div class="item-footer">
           ${downloadButton}
           ${previewButton}
