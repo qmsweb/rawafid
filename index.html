@@ -4,29 +4,311 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>روافد</title>
-
-  <!-- خطوط وأيقونات -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Kufi Arabic", sans-serif;
+    }
+
+    body {
+      background-color: #f4f6fb;
+      color: #2d2d2d;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #topbar-container {
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin: 20px 0 30px;
+      text-align: right;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      color: #1e1e2f;
+      margin-bottom: 10px;
+      margin-top: 50px;
+    }
+
+    /* شريط الأدوات */
+    .top-buttons {
+      display: flex;
+      gap: 10px;
+      padding-bottom: 20px;
+      justify-content: center;
+    }
+
+    .top-button {
+      flex: 1;
+      text-align: center;
+      color: white;
+      border-radius: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 20px;
+    }
+
+    .blue-gradient {
+      background: linear-gradient(135deg, #3481f8, #5ea2ff);
+    }
+
+    .gold-gradient {
+      background: linear-gradient(135deg, #d4af37, #f6d365);
+    }
+
+    .cyan-gradient {
+      background: linear-gradient(135deg, #20cfd3, #62e4f3);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      align-items: center;
+      padding: 10px 0;
+      margin-bottom: 25px;
+    }
+
+    .filter-item {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: #f0f2f7;
+      color: #3f51b5;
+      font-weight: 700;
+      font-size: 0.75rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .filter-item:hover {
+      background: #e0e7ff;
+      border-color: #3f51b5;
+    }
+
+    .filter-item.active {
+      background: #3f51b5;
+      color: white;
+      border-color: #3f51b5;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      margin-right: auto;
+    }
+
+    .view-toggle i {
+      font-size: 1.1rem;
+      color: #3f51b5;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccd1e0;
+      background-color: #f0f2f7;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .view-toggle i:hover {
+      background-color: #e0e7ff;
+    }
+
+    .view-toggle i.active {
+      background-color: #3f51b5;
+      color: white;
+    }
+
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .course-list.grid-view {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .course-card {
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
+      background: white;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .course-card:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .item-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .item-title i {
+      font-size: 1.4rem;
+      background: #e9ecff;
+      color: #3f51b5;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .item-title h3 {
+      font-size: 1.1rem;
+      color: #1d1d1d;
+    }
+
+    .item-footer a {
+      display: inline-block;
+      font-size: 0.8rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-enter {
+      background: #3f51b5;
+      color: white;
+    }
+
+    .btn-enter:hover {
+      background: #3243a8;
+    }
+
+    @media (max-width: 768px) {
+      .course-list.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .filter-item,
+      .view-toggle i {
+        flex-shrink: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- التوب بار -->
   <div id="topbar-container"></div>
 
-  <!-- المحتوى العام -->
   <div class="container">
     <div class="header">
-      <h1 id="page-title"></h1>
-      <p id="page-desc"></p>
+      <h1>المقررات الدراسية</h1>
     </div>
 
-    <!-- يتم تحميل الصفحات هنا -->
-    <div id="page-content"></div>
+    <!-- شريط الأدوات الجديد -->
+    <div class="top-buttons">
+      <div class="top-button blue-gradient">الأدوات</div>
+      <div class="top-button gold-gradient">المكتبات</div>
+      <div class="top-button cyan-gradient">المواقع التعليمية</div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-item active" data-filter="all">الكل</div>
+      <div class="filter-item" data-filter="nahw">النحو</div>
+      <div class="filter-item" data-filter="poetry">الشعر</div>
+      <div class="filter-item" data-filter="shared">الجامعية</div>
+
+      <div class="view-toggle">
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+      </div>
+    </div>
+
+    <div class="course-list" id="course-list">
+      <!-- يتم توليد المقررات هنا -->
+    </div>
   </div>
 
-  <!-- سكربتات -->
+  <script>
+  const listContainer = document.getElementById("course-list");
+  const filters = document.querySelectorAll(".filter-item");
+
+  let allCourses = [];
+
+  function renderCourses(filter = "all") {
+    listContainer.innerHTML = "";
+    const filtered = filter === "all" ? allCourses : allCourses.filter(c => c.type === filter);
+
+    filtered.forEach(course => {
+      const div = document.createElement("div");
+      div.className = "course-card";
+      div.innerHTML = `
+        <div class="item-title">
+          <i class="fas fa-book"></i>
+          <h3>${course.name}</h3>
+        </div>
+        <div class="item-footer">
+          <a class="btn-enter" href="course?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
+        </div>
+      `;
+      listContainer.appendChild(div);
+    });
+  }
+
+  // تحميل البيانات من ملف JSON
+  fetch("assets/data/materials.json")
+    .then(response => response.json())
+    .then(data => {
+      allCourses = data;
+      renderCourses();
+    })
+    .catch(error => {
+      listContainer.innerHTML = "<p>حدث خطأ أثناء تحميل المقررات.</p>";
+      console.error("فشل تحميل البيانات:", error);
+    });
+
+  filters.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filters.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCourses(btn.dataset.filter);
+    });
+  });
+
+  const gridBtn = document.getElementById('grid-view');
+  const listBtn = document.getElementById('list-view');
+  const courseList = document.getElementById('course-list');
+
+  gridBtn.addEventListener('click', () => {
+    courseList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  });
+
+  listBtn.addEventListener('click', () => {
+    courseList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  });
+  </script>
+
   <script src="loadTopbar.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>
