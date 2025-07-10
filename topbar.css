@@ -7,7 +7,6 @@
     font-family: 'Arial', sans-serif;
     direction: rtl;
     transition: all 0.3s ease-out;
-
 }
 
 .topbar {
@@ -67,6 +66,106 @@
     gap: 10px;
 }
 
+/* تصميم القائمة الكاملة المعدل */
+.full-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.full-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.full-menu .menu-wrapper {
+    width: 100%;
+    max-width: 800px;
+}
+
+.full-menu .menu-wrapper ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.full-menu .menu-wrapper li {
+    margin: 10px 0;
+    transition: transform 0.3s ease;
+}
+
+.full-menu .menu-wrapper li:hover {
+    transform: translateX(-10px);
+}
+
+.full-menu .menu-wrapper a {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 10px 20px;
+    position: relative;
+}
+
+.full-menu .menu-wrapper a:hover {
+    color: var(--accent-color);
+}
+
+.full-menu .menu-wrapper a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 5px;
+    right: 20px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.full-menu .menu-wrapper a:hover::after {
+    width: calc(100% - 40px);
+}
+
+.full-menu .close-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.full-menu .close-btn:hover {
+    color: var(--accent-color);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
 /* تعديلات للهواتف */
 @media (max-width: 768px) {
     .top-bar {
@@ -89,78 +188,18 @@
     .topbar .logo-section {
         gap: 10px;
     }
-.full-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100vh;
-  backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-.full-menu.hidden {
-  display: none;
-}
-
-.full-menu .menu-wrapper ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.full-menu .menu-wrapper li {
-  margin: 20px 0;
-}
-
-.full-menu .menu-wrapper a {
-  color: white;
-  font-size: 28px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.full-menu .menu-wrapper a:hover {
-  color: var(--accent-color);
-}
-
-.full-menu .close-btn {
-  position: absolute;
-  top: 25px;
-  left: 25px;
-  font-size: 32px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  z-index: 10000;
-}
-
-.full-menu .close-btn:hover {
-  color: var(--accent-color);
-}
-
-/* الهواتف */
-@media (max-width: 3800px) {
-  .full-menu .menu-wrapper a {
-    font-size: 22px;
-  }
-
-  .full-menu .close-btn {
-    font-size: 26px;
-    top: 20px;
-    left: 20px;
-  }
-}
-
+    
+    .full-menu .menu-wrapper a {
+        font-size: 1.8rem;
+    }
+    
+    .full-menu .close-btn {
+        font-size: 1.5rem;
+        top: 20px;
+        left: 20px;
+    }
+    
+    .full-menu .menu-wrapper ul {
+        gap: 10px;
+    }
 }
