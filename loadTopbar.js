@@ -58,21 +58,27 @@ function initializeTopbar() {
     });
 
     // تهيئة قائمة الشاشة الكاملة
-    const fullMenu = document.getElementById("fullMenu");
-    if (fullMenu) {
-        fullMenu.addEventListener("click", (e) => {
-            if (e.target === fullMenu) {
-                fullMenu.classList.add("hidden");
-            }
-        });
+const fullMenu = document.getElementById("fullMenu");
+if (fullMenu) {
+    fullMenu.addEventListener("click", (e) => {
+        if (e.target === fullMenu) {
+            fullMenu.classList.add("hidden");
+        }
+    });
 
-        // إغلاق القائمة عند النقر على أي رابط داخلها
-        fullMenu.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                fullMenu.classList.add("hidden");
-            });
+    // إغلاق عند الضغط على الروابط
+    fullMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            fullMenu.classList.add("hidden");
         });
-    }
+    });
+
+    // زر الإغلاق
+    document.getElementById("closeMenuBtn")?.addEventListener("click", () => {
+        fullMenu.classList.add("hidden");
+    });
+}
+
 
     // ضبط الهامش العلوي للمحتوى
     adjustBodyPadding();
