@@ -20,6 +20,22 @@
       color: #2d2d2d;
       min-height: 100vh;
       padding: 20px;
+      display: none; /* إخفاء حتى تحميل التوب بار */
+    }
+
+    #loading {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #3f51b5;
     }
 
     #topbar-container {
@@ -43,7 +59,6 @@
       margin-top: 50px;
     }
 
-    /* شريط الأدوات */
     .top-buttons {
       display: flex;
       gap: 10px;
@@ -215,6 +230,8 @@
   </style>
 </head>
 <body>
+  <div id="loading">جارٍ التحميل...</div>
+
   <div id="topbar-container"></div>
 
   <div class="container">
@@ -222,7 +239,6 @@
       <h1>المقررات الدراسية</h1>
     </div>
 
-    <!-- شريط الأدوات الجديد -->
     <div class="top-buttons">
       <div class="top-button blue-gradient">الأدوات</div>
       <div class="top-button gold-gradient">المكتبات</div>
@@ -247,68 +263,86 @@
   </div>
 
   <script>
-  const listContainer = document.getElementById("course-list");
-  const filters = document.querySelectorAll(".filter-item");
+    // منع التخزين التلقائي في حال وجود Service Worker سابقًا
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
 
-  let allCourses = [];
+    const listContainer = document.getElementById("course-list");
+    const filters = document.querySelectorAll(".filter-item");
 
-  function renderCourses(filter = "all") {
-    listContainer.innerHTML = "";
-    const filtered = filter === "all" ? allCourses : allCourses.filter(c => c.type === filter);
+    let allCourses = [];
 
-    filtered.forEach(course => {
-      const div = document.createElement("div");
-      div.className = "course-card";
-      div.innerHTML = `
-        <div class="item-title">
-          <i class="fas fa-book"></i>
-          <h3>${course.name}</h3>
-        </div>
-        <div class="item-footer">
-          <a class="btn-enter" href="course?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
-        </div>
-      `;
-      listContainer.appendChild(div);
+    function renderCourses(filter = "all") {
+      listContainer.innerHTML = "";
+      const filtered = filter === "all" ? allCourses : allCourses.filter(c => c.type === filter);
+
+      filtered.forEach(course => {
+        const div = document.createElement("div");
+        div.className = "course-card";
+        div.innerHTML = `
+          <div class="item-title">
+            <i class="fas fa-book"></i>
+            <h3>${course.name}</h3>
+          </div>
+          <div class="item-footer">
+            <a class="btn-enter" href="course?i=${course.code}"><i class="fas fa-arrow-right"></i> دخول</a>
+          </div>
+        `;
+        listContainer.appendChild(div);
+      });
+    }
+
+    fetch("assets/data/materials.json")
+      .then(response => response.json())
+      .then(data => {
+        allCourses = data;
+        renderCourses();
+      })
+      .catch(error => {
+        listContainer.innerHTML = "<p>حدث خطأ أثناء تحميل المقررات.</p>";
+        console.error("فشل تحميل البيانات:", error);
+      });
+
+    filters.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filters.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderCourses(btn.dataset.filter);
+      });
     });
-  }
 
-  // تحميل البيانات من ملف JSON
-  fetch("assets/data/materials.json")
-    .then(response => response.json())
-    .then(data => {
-      allCourses = data;
-      renderCourses();
-    })
-    .catch(error => {
-      listContainer.innerHTML = "<p>حدث خطأ أثناء تحميل المقررات.</p>";
-      console.error("فشل تحميل البيانات:", error);
+    const gridBtn = document.getElementById('grid-view');
+    const listBtn = document.getElementById('list-view');
+    const courseList = document.getElementById('course-list');
+
+    gridBtn.addEventListener('click', () => {
+      courseList.classList.add('grid-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
     });
 
-  filters.forEach(btn => {
-    btn.addEventListener("click", () => {
-      filters.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderCourses(btn.dataset.filter);
+    listBtn.addEventListener('click', () => {
+      courseList.classList.remove('grid-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
     });
-  });
 
-  const gridBtn = document.getElementById('grid-view');
-  const listBtn = document.getElementById('list-view');
-  const courseList = document.getElementById('course-list');
-
-  gridBtn.addEventListener('click', () => {
-    courseList.classList.add('grid-view');
-    gridBtn.classList.add('active');
-    listBtn.classList.remove('active');
-  });
-
-  listBtn.addEventListener('click', () => {
-    courseList.classList.remove('grid-view');
-    listBtn.classList.add('active');
-    gridBtn.classList.remove('active');
-  });
+    // تحميل التوب بار ثم إظهار الصفحة
+    fetch("loadTopbar.js")
+      .then(() => {
+        const script = document.createElement("script");
+        script.src = "loadTopbar.js";
+        script.onload = () => {
+          document.getElementById("loading").style.display = "none";
+          document.body.style.display = "block";
+        };
+        document.body.appendChild(script);
+      });
   </script>
-
-  <script src="loadTopbar.js"></script>
 </body>
 </html>
