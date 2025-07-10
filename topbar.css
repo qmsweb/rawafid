@@ -89,7 +89,6 @@
     .topbar .logo-section {
         gap: 10px;
     }
-/* قائمة الشاشة الكاملة عند الضغط على زر القائمة */
 .full-menu {
   position: fixed;
   top: 0;
@@ -97,53 +96,71 @@
   width: 100%;
   height: 100vh;
   backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.3s ease;
   flex-direction: column;
-}
-
-.full-menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
   text-align: center;
-}
-
-.full-menu li {
-  margin: 20px 0;
-}
-
-.full-menu a {
-  color: white;
-  font-size: 26px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.full-menu a:hover {
-  color: var(--accent-color);
 }
 
 .full-menu.hidden {
   display: none;
 }
+
+.full-menu .menu-wrapper ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.full-menu .menu-wrapper li {
+  margin: 20px 0;
+}
+
+.full-menu .menu-wrapper a {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.full-menu .menu-wrapper a:hover {
+  color: var(--accent-color);
+}
+
 .full-menu .close-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 30px;
-  color: white;
+  top: 25px;
+  left: 25px;
+  font-size: 32px;
   background: none;
   border: none;
+  color: white;
   cursor: pointer;
-  font-weight: bold;
+  transition: color 0.3s ease;
+  z-index: 10000;
 }
+
 .full-menu .close-btn:hover {
   color: var(--accent-color);
 }
+
+/* الهواتف */
+@media (max-width: 768px) {
+  .full-menu .menu-wrapper a {
+    font-size: 22px;
+  }
+
+  .full-menu .close-btn {
+    font-size: 26px;
+    top: 20px;
+    left: 20px;
+  }
+}
+
 }
