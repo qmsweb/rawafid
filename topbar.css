@@ -151,7 +151,7 @@
 }
 
 /* الهواتف */
-@media (max-width: 768px) {
+@media (max-width: 3800px) {
   .full-menu .menu-wrapper a {
     font-size: 22px;
   }
