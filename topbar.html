@@ -1,28 +1,41 @@
-<div class="top-bar">
-    <header class="topbar" id="topbar">
+<div class="top-bar" dir="rtl">
+    <!-- الشريط العلوي الرئيسي -->
+    <header class="topbar" id="topbar" role="banner">
+        <!-- قسم الشعار والزر القائمة -->
         <div class="logo-section">
-            <i class="fas fa-bars topbar-icon" id="menuBtn"></i>
-            <a href="/" id="logoBtn">
+            <button id="menuBtn" class="topbar-icon" aria-label="فتح القائمة الرئيسية" aria-expanded="false" aria-controls="fullMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="index.html" id="logoBtn" aria-label="الصفحة الرئيسية">
                 <img src="https://github.com/qmsweb/Tools/raw/main/images/rawafid/r-logo.png" 
                      alt="شعار روافد" 
-                     class="logo-img">
+                     class="logo-img"
+                     loading="lazy"
+                     width="120"
+                     height="35">
             </a>
         </div>
         
+        <!-- قسم الأزرار الإضافية -->
         <div class="actions-section">
-            <i class="fas fa-search topbar-icon" id="searchBtn"></i>
+            <button id="searchBtn" class="topbar-icon" aria-label="فتح البحث">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </header>
-<div id="fullMenu" class="full-menu hidden">
-  <button id="closeMenuBtn" class="close-btn">×</button>
-  <nav class="menu-wrapper">
-    <ul>
-      <li><a href="#">الرئيسية</a></li>
-      <li><a href="#">الدروس</a></li>
-      <li><a href="#">عن الموقع</a></li>
-      <li><a href="#">تواصل معنا</a></li>
-    </ul>
-  </nav>
-</div>
 
+    <!-- القائمة الكاملة (ستظهر كشاشة كاملة) -->
+    <div id="fullMenu" class="full-menu" aria-hidden="true">
+        <button id="closeMenuBtn" class="close-btn" aria-label="إغلاق القائمة">
+            <span aria-hidden="true">×</span>
+        </button>
+        <nav class="menu-wrapper" role="navigation" aria-label="القائمة الرئيسية">
+            <ul>
+                <li><a href="index.html" class="menu-link">الرئيسية</a></li>
+                <li><a href="lessons.html" class="menu-link">الدروس</a></li>
+                <li><a href="about.html" class="menu-link">عن الموقع</a></li>
+                <li><a href="contact.html" class="menu-link">تواصل معنا</a></li>
+            </ul>
+        </nav>
+    </div>
 </div>
