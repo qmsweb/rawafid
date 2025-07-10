@@ -50,15 +50,51 @@ async function loadCSS(url) {
 }
 
 function initializeTopbar() {
-    // ربط الأحداث
+    // ربط الأحداث للأزرار
     document.getElementById('menuBtn')?.addEventListener('click', handleMenuClick);
     document.getElementById('searchBtn')?.addEventListener('click', handleSearchClick);
     document.getElementById('logoBtn')?.addEventListener('click', () => {
         window.location.href = getWithTimestamp('index.html');
     });
-    
-    // ضبط الهوامش
+
+    // تهيئة قائمة الشاشة الكاملة
+    const fullMenu = document.getElementById("fullMenu");
+    if (fullMenu) {
+        fullMenu.addEventListener("click", (e) => {
+            if (e.target === fullMenu) {
+                fullMenu.classList.add("hidden");
+            }
+        });
+
+        // إغلاق القائمة عند النقر على أي رابط داخلها
+        fullMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                fullMenu.classList.add("hidden");
+            });
+        });
+    }
+
+    // ضبط الهامش العلوي للمحتوى
     adjustBodyPadding();
+}
+
+function handleMenuClick() {
+    const fullMenu = document.getElementById("fullMenu");
+    if (fullMenu) {
+        fullMenu.classList.toggle("hidden");
+    }
+}
+
+function handleSearchClick() {
+    alert("ميزة البحث قيد التطوير");
+}
+
+function adjustBodyPadding() {
+    const topbar = document.getElementById('topbar');
+    if (topbar) {
+        const height = topbar.offsetHeight;
+        document.body.style.paddingTop = `${height}px`;
+    }
 }
 
 function showLoadingIndicator() {
@@ -85,9 +121,12 @@ function hideLoadingIndicator() {
     if (loader) loader.remove();
 }
 
+function showErrorUI() {
+    alert("حدث خطأ أثناء تحميل التوب بار.");
+}
+
 // بدء التحميل عند اكتمال DOM
 document.addEventListener('DOMContentLoaded', () => {
-    // إخفاء المحتوى حتى اكتمال التحميل
     document.body.style.visibility = 'hidden';
     loadResources();
 });
