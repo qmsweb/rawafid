@@ -63,7 +63,7 @@
       display: flex;
       gap: 10px;
       padding-bottom: 20px;
-      justify-content: center;
+      justify-content: flex-start; /* إلى اليمين */
     }
 
     .top-button {
@@ -75,9 +75,9 @@
       text-align: center;
       color: white;
       border-radius: 20px;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: bold;
-      padding: 20px;
+      padding: 10px;
     }
 
     .blue-gradient {
@@ -216,7 +216,7 @@
       background: #3243a8;
     }
 
-    @media (max-width: 3800px) {
+    @media (max-width: 768px) {
       .course-list.grid-view {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
@@ -229,6 +229,11 @@
       .filter-item,
       .view-toggle i {
         flex-shrink: 0;
+      }
+
+      .top-buttons {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -337,16 +342,13 @@
     });
 
     // تحميل التوب بار ثم إظهار الصفحة
-    fetch("loadTopbar.js")
-      .then(() => {
-        const script = document.createElement("script");
-        script.src = "loadTopbar.js";
-        script.onload = () => {
-          document.getElementById("loading").style.display = "none";
-          document.body.style.display = "block";
-        };
-        document.body.appendChild(script);
-      });
+    const script = document.createElement("script");
+    script.src = "loadTopbar.js";
+    script.onload = () => {
+      document.getElementById("loading").style.display = "none";
+      document.body.style.display = "block";
+    };
+    document.body.appendChild(script);
   </script>
 </body>
 </html>
