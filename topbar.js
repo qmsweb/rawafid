@@ -1,26 +1,27 @@
-// topbar.js
-document.addEventListener('DOMContentLoaded', () => {
-  const menuToggle = document.querySelector('.menu-toggle');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const closeMenu = document.querySelector('.close-menu');
-
-  if (menuToggle && closeMenu && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.add('active');
-      document.body.style.overflow = 'hidden';
+document.addEventListener('DOMContentLoaded', function() {
+    // عناصر DOM
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const closeMenu = document.querySelector('.close-menu');
+    
+    // فتح القائمة
+    menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden'; // منع التمرير عند فتح القائمة
     });
-
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      document.body.style.overflow = '';
+    
+    // إغلاق القائمة
+    closeMenu.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = ''; // إعادة تمكين التمرير
     });
-
+    
+    // إغلاق القائمة عند النقر على رابط
     const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
     mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-      });
+        link.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
     });
-  }
 });
