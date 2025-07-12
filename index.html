@@ -4,8 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>روافد</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
+
+  <!-- خط الموقع -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+
+  <!-- أيقونات Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- ملف تصميم التوب بار -->
+  <link rel="stylesheet" href="topbar.css">
 
   <style>
     * {
@@ -63,7 +70,7 @@
       display: flex;
       gap: 10px;
       padding-bottom: 20px;
-      justify-content: flex-start; /* إلى اليمين */
+      justify-content: flex-start;
     }
 
     .top-button {
@@ -241,6 +248,7 @@
 <body>
   <div id="loading">جارٍ التحميل...</div>
 
+  <!-- ✅ التوب بار يظهر هنا -->
   <div id="topbar-container"></div>
 
   <div class="container">
@@ -272,9 +280,9 @@
   </div>
 
   <script>
-    // منع التخزين التلقائي في حال وجود Service Worker سابقًا
+    // إلغاء أي خدمة تخزين مؤقت
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
         for (let registration of registrations) {
           registration.unregister();
         }
@@ -283,7 +291,6 @@
 
     const listContainer = document.getElementById("course-list");
     const filters = document.querySelectorAll(".filter-item");
-
     let allCourses = [];
 
     function renderCourses(filter = "all") {
@@ -341,7 +348,7 @@
       gridBtn.classList.remove('active');
     });
 
-    // تحميل التوب بار ثم إظهار الصفحة
+    // ✅ تحميل التوب بار
     const script = document.createElement("script");
     script.src = "loadTopbar.js";
     script.onload = () => {
