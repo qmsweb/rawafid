@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif; /* إزالة الخط المخصص */
+    font-family: Arial, sans-serif;
     direction: rtl;
 }
 
@@ -31,7 +31,7 @@ body {
     height: 30px;
 }
 
-/* روابط التنقل للشاشات الكبيرة */
+/* روابط التنقل */
 .nav-links {
     display: flex;
     list-style: none;
@@ -52,7 +52,7 @@ body {
     color: #ccc;
 }
 
-/* أيقونات القائمة والبحث */
+/* الأزرار */
 .menu-toggle,
 .search-toggle {
     background: none;
@@ -147,10 +147,6 @@ body {
 
     .navbar-container {
         justify-content: space-between;
-    }
-
-    .navbar-container {
-        display: flex;
         align-items: center;
     }
 
