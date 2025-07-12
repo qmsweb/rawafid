@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <!-- ملف تصميم التوب بار -->
-  <link rel="stylesheet" href="topbar.css">
+<link rel="stylesheet" href="topbar.css" />
 
   <style>
     * {
@@ -349,13 +349,16 @@
     });
 
     // ✅ تحميل التوب بار
-    const script = document.createElement("script");
-    script.src = "loadTopbar.js";
-    script.onload = () => {
-      document.getElementById("loading").style.display = "none";
-      document.body.style.display = "block";
-    };
-    document.body.appendChild(script);
-  </script>
+
+  fetch("topbar.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("topbar-container").innerHTML = html;
+      const script = document.createElement("script");
+      script.src = "topbar.js";
+      document.body.appendChild(script);
+    });
+</script>
 </body>
+<div id="topbar-container"></div>
 </html>
