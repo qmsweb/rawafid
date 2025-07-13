@@ -26,6 +26,10 @@ body {
 }
 
 
+body {
+    padding-top: 80px;
+}
+
 
 .navbar-container {
     display: flex;
