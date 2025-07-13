@@ -12,6 +12,8 @@
   <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+    <link rel="stylesheet" href="topbar.css" />
+
   <style>
     :root {
       --primary-color: #1a2a6c;
@@ -387,8 +389,26 @@
         materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
       });
   });
-  </script>
 
-  <script src="loadTopbar.js"></script>
-</body>
+    // ✅ تحميل التوب بار وإظهار الصفحة
+    fetch("topbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("topbar-container").innerHTML = html;
+
+        // تحميل ملف جافاسكربت التوب بار
+        const script = document.createElement("script");
+        script.src = "topbar.js";
+        script.onload = () => {
+          document.getElementById("loading").style.display = "none";
+          document.body.style.display = "block";
+        };
+        document.body.appendChild(script);
+      })
+      .catch(err => {
+        console.error("فشل تحميل التوب بار:", err);
+        document.getElementById("loading").style.display = "none";
+        document.body.style.display = "block";
+      });
+  </script></body>
 </html>
