@@ -101,6 +101,7 @@
       padding: 15px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
     }
 
     .top-button:hover {
@@ -125,20 +126,13 @@
       background: linear-gradient(135deg, #06b6d4, #0e7490);
     }
 
-    .filter-section {
-      background: white;
-      padding: 15px 20px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      margin-bottom: 30px;
-    }
-
     .filter-bar {
       display: flex;
       gap: 12px;
       overflow-x: auto;
       align-items: center;
-      padding: 10px 0;
+      padding: 15px 0;
+      margin-bottom: 20px;
     }
 
     .filter-item {
@@ -170,7 +164,6 @@
       display: flex;
       gap: 10px;
       margin-right: auto;
-      background: #f0f2f7;
       padding: 8px;
       border-radius: 12px;
     }
@@ -181,7 +174,7 @@
       padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #ccd1e0;
-      background-color: white;
+      background-color: #f0f2f7;
       cursor: pointer;
       transition: all 0.3s;
     }
@@ -198,22 +191,35 @@
     .course-list {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
     }
 
     .course-list.grid-view {
       display: grid !important;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
+      gap: 20px;
     }
 
     .course-card {
-      border: 1px solid #e7e7e7;
       border-radius: 16px;
       background: white;
       padding: 25px;
       transition: all 0.3s ease;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .course-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: #20a297;
+      transition: width 0.3s;
     }
 
     .course-card:hover {
@@ -221,20 +227,20 @@
       transform: translateY(-5px);
     }
 
+    .course-card:hover::after {
+      width: 8px;
+    }
+
     .item-title {
       display: flex;
       align-items: center;
       gap: 15px;
-      margin-bottom: 15px;
     }
 
     .item-title i {
       font-size: 1.6rem;
-      background: #f0fdfa;
       color: #20a297;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #ccfbf1;
+      transition: transform 0.3s;
     }
 
     .item-title h3 {
@@ -244,40 +250,8 @@
       flex: 1;
     }
 
-    .item-footer {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .item-footer a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      padding: 10px 18px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .btn-enter {
-      background: #20a297;
-      color: white;
-      box-shadow: 0 2px 5px rgba(32, 162, 151, 0.2);
-    }
-
-    .btn-enter:hover {
-      background: #1d948a;
-      transform: translateX(-3px);
-    }
-
-    .btn-enter i {
-      transition: transform 0.3s;
-    }
-
-    .btn-enter:hover i {
-      transform: translateX(3px);
+    .course-card:hover .item-title i {
+      transform: scale(1.1);
     }
 
     /* شريط التمرير */
@@ -317,10 +291,6 @@
 
       .course-list.grid-view {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      }
-
-      .filter-section {
-        padding: 12px 15px;
       }
     }
 
@@ -371,17 +341,15 @@
       </div>
     </div>
 
-    <div class="filter-section">
-      <div class="filter-bar">
-        <div class="filter-item active" data-filter="all">الكل</div>
-        <div class="filter-item" data-filter="nahw">النحو</div>
-        <div class="filter-item" data-filter="poetry">الشعر</div>
-        <div class="filter-item" data-filter="shared">الجامعية</div>
+    <div class="filter-bar">
+      <div class="filter-item active" data-filter="all">الكل</div>
+      <div class="filter-item" data-filter="nahw">النحو</div>
+      <div class="filter-item" data-filter="poetry">الشعر</div>
+      <div class="filter-item" data-filter="shared">الجامعية</div>
 
-        <div class="view-toggle">
-          <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
-          <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
-        </div>
+      <div class="view-toggle">
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
       </div>
     </div>
 
@@ -415,10 +383,10 @@
             <i class="fas fa-book"></i>
             <h3>${course.name}</h3>
           </div>
-          <div class="item-footer">
-            <a class="btn-enter" href="course?i=${course.code}"><i class="fas fa-arrow-left"></i> دخول</a>
-          </div>
         `;
+        div.addEventListener("click", () => {
+          window.location.href = `course?i=${course.code}`;
+        });
         listContainer.appendChild(div);
       });
     }
