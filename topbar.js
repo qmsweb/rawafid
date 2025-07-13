@@ -1,27 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // عناصر DOM
+document.addEventListener('DOMContentLoaded', function () {
+    // تأكد من وجود العناصر قبل ربط الأحداث
     const menuToggle = document.querySelector('.menu-toggle');
     const mobileMenu = document.querySelector('.mobile-menu');
     const closeMenu = document.querySelector('.close-menu');
-    
-    // فتح القائمة
-    menuToggle.addEventListener('click', function() {
-        mobileMenu.classList.add('active');
-        document.body.style.overflow = 'hidden'; // منع التمرير عند فتح القائمة
-    });
-    
-    // إغلاق القائمة
-    closeMenu.addEventListener('click', function() {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = ''; // إعادة تمكين التمرير
-    });
-    
-    // إغلاق القائمة عند النقر على رابط
     const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', function() {
+
+    if (menuToggle && mobileMenu) {
+        // فتح القائمة
+        menuToggle.addEventListener('click', function () {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (closeMenu && mobileMenu) {
+        // إغلاق القائمة
+        closeMenu.addEventListener('click', function () {
             mobileMenu.classList.remove('active');
             document.body.style.overflow = '';
         });
-    });
+    }
+
+    // إغلاق عند الضغط على روابط القائمة
+    if (mobileLinks.length > 0 && mobileMenu) {
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    }
 });
