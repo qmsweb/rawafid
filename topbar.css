@@ -42,6 +42,8 @@ body {
 /* الشعار */
 .logo img {
     height: 30px;
+    filter: brightness(0);
+
 }
 
 /* روابط التنقل للشاشات الكبيرة */
