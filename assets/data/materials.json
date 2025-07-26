@@ -1,5 +1,5 @@
 [
-  { "name": "النحو 1", "type": "nahw", "code": "ARAB112" },
-  { "name": "النحو 2", "type": "nahw", "code": "ARAB102" },
-  { "name": "مهارات لغوية", "type": "shared", "code": "ARAB302" }
+  { "name": "النحو 1", "type": "النحو", "code": "ARAB112", "color": "#D24545" },
+  { "name": "النحو 2", "type": "النحو", "code": "ARAB102", "color": "#0077B6" },
+  { "name": "مهارات لغوية", "type": "المواد المشتركة", "code": "ARAB302" }
 ]
