@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>روافد</title>
 
-  <!-- خط الموقع -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
-
-  <!-- أيقونات Font Awesome -->
+  <!-- خطوط -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  
+  <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- ملف تصميم التوب بار -->
   <link rel="stylesheet" href="topbar.css" />
 
   <style>
+    :root {
+      --primary-color: #1a2a6c;
+      --hover-bg: #e0e7ff;
+      --light-bg: #f0f2f7;
+      --light-border: #ccd1e0;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -23,426 +29,330 @@
     }
 
     body {
-      background-color: #f8fafc;
+      background-color: #f4f6fb;
       color: #2d2d2d;
       min-height: 100vh;
-      display: none; /* إخفاء حتى تحميل التوب بار */
-    }
-
-    #loading {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: white;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: #20a297;
-    }
-
-    #topbar-container {
-      margin-bottom: 20px;
+      padding: 20px;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
     }
 
     .header {
-      margin: 30px 0;
+      margin: 20px 0 30px;
       text-align: right;
     }
 
     .header h1 {
-      font-size: 2.5rem;
-      color: #1a365d;
-      margin-bottom: 15px;
-      font-weight: 700;
-      position: relative;
-      display: inline-block;
-    }
-
-    .header h1::after {
-      content: "";
-      position: absolute;
-      bottom: -8px;
-      right: 0;
-      width: 70px;
-      height: 4px;
-      background: #20a297;
-      border-radius: 2px;
-    }
-
-    .top-buttons {
-      display: flex;
-      gap: 15px;
-      padding-bottom: 30px;
-      justify-content: flex-start;
-    }
-
-    .top-button {
-      width: 120px;
-      height: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      border-radius: 20px;
-      font-size: 16px;
-      font-weight: bold;
-      padding: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-    }
-
-    .top-button:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    }
-
-    .top-button i {
-      font-size: 28px;
+      font-size: 2.2rem;
+      color: #1e1e2f;
       margin-bottom: 10px;
+      margin-top: 50px;
     }
 
-    .blue-gradient {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    }
-
-    .gold-gradient {
-      background: linear-gradient(135deg, #f59e0b, #b45309);
-    }
-
-    .cyan-gradient {
-      background: linear-gradient(135deg, #06b6d4, #0e7490);
+    .header p {
+      color: #555;
+      font-size: 1rem;
+      max-width: 700px;
+      line-height: 1.6;
     }
 
     .filter-bar {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       overflow-x: auto;
       align-items: center;
-      padding: 15px 0;
-      margin-bottom: 20px;
+      padding: 10px 0;
+      margin-bottom: 25px;
     }
 
     .filter-item {
       flex: 0 0 auto;
-      padding: 12px 22px;
-      border-radius: 12px;
-      background: #f0f2f7;
-      color: #20a297;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: var(--light-bg);
+      color: var(--primary-color);
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: 0.3s ease;
       white-space: nowrap;
     }
 
     .filter-item:hover {
-      background: #e0e7ff;
-      border-color: #20a297;
+      background: var(--hover-bg);
+      border-color: var(--primary-color);
     }
 
     .filter-item.active {
-      background: #20a297;
+      background: var(--primary-color);
       color: white;
-      border-color: #20a297;
+      border-color: var(--primary-color);
     }
 
     .view-toggle {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-right: auto;
-      padding: 8px;
-      border-radius: 12px;
     }
 
     .view-toggle i {
-      font-size: 1.2rem;
-      color: #20a297;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccd1e0;
-      background-color: #f0f2f7;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--light-border);
+      background-color: var(--light-bg);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: 0.3s;
     }
 
     .view-toggle i:hover {
-      background-color: #e0e7ff;
+      background-color: var(--hover-bg);
     }
 
     .view-toggle i.active {
-      background-color: #20a297;
+      background-color: var(--primary-color);
       color: white;
     }
 
-    .course-list {
+    .materials-list {
       display: flex;
       flex-direction: column;
       gap: 15px;
     }
 
-    .course-list.grid-view {
+    .materials-list.grid-view {
       display: grid !important;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
 
-    .course-card {
-      border-radius: 16px;
+    .material-item {
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
       background: white;
-      padding: 25px;
+      padding: 20px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
     }
 
-    .course-card::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 4px;
-      height: 100%;
-      background: #20a297;
-      transition: width 0.3s;
-    }
-
-    .course-card:hover {
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-      transform: translateY(-5px);
-    }
-
-    .course-card:hover::after {
-      width: 8px;
+    .material-item:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
     }
 
     .item-title {
       display: flex;
-      align-items: center;
+      align-items: self-start;
       gap: 15px;
+      margin-bottom: 10px;
     }
 
     .item-title i {
-      font-size: 1.6rem;
-      color: #20a297;
-      transition: transform 0.3s;
+      font-size: 1.4rem;
+      background: var(--hover-bg);
+      color: var(--primary-color);
+      padding: 10px;
+      border-radius: 10px;
     }
 
     .item-title h3 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #1d1d1d;
+    }
+
+    .item-description {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .item-footer {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 18px;
+      font-size: 0.8rem;
       font-weight: 600;
-      flex: 1;
+      text-decoration: none;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.3s;
     }
 
-    .course-card:hover .item-title i {
-      transform: scale(1.1);
+    .btn-download {
+      background: var(--primary-color);
+      color: white;
     }
 
-    /* شريط التمرير */
-    ::-webkit-scrollbar {
-      height: 6px;
+    .btn-download:hover {
+      background: #162254;
     }
 
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
+    .btn-preview {
+      background: #f4f5fa;
+      color: var(--primary-color);
+      border: 1px solid var(--light-border);
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 10px;
+    .btn-preview:hover {
+      background: #e9ecf5;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #a1a1a1;
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .badge-important {
+      background: #e3f2fd;
+      color: var(--primary-color);
+      border: 1px solid #bbdefb;
+      margin-bottom: 10px;
+    }
+
+    .badge-new {
+      background: #fff9e6;
+      color: #a79835;
+      border: 1px solid #ffecb3;
+      margin-bottom: 10px;
     }
 
     @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
+      .materials-list.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
 
-      .top-buttons {
-        justify-content: center;
-        flex-wrap: wrap;
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
       }
 
-      .top-button {
-        width: 100px;
-        height: 100px;
-        font-size: 14px;
-      }
-
-      .course-list.grid-view {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header h1 {
-        font-size: 1.8rem;
-      }
-
-      .top-button {
-        width: 85px;
-        height: 85px;
-        font-size: 13px;
-      }
-
-      .top-button i {
-        font-size: 22px;
-      }
-
-      .course-list.grid-view {
-        grid-template-columns: 1fr;
+      .filter-item,
+      .view-toggle i {
+        flex-shrink: 0;
       }
     }
   </style>
 </head>
 <body>
-  <div id="loading">جارٍ التحميل...</div>
-
-  <!-- ✅ التوب بار سيظهر هنا -->
   <div id="topbar-container"></div>
 
   <div class="container">
     <div class="header">
-      <h1>المقررات الدراسية</h1>
+      <h1>جميع المواد</h1>
+      <p>اختر أحد المقررات للاطلاع على محتوياته.</p>
     </div>
 
-    <div class="top-buttons">
-      <div class="top-button blue-gradient">
-        <i class="fas fa-tools"></i>
-        الأدوات
-      </div>
-      <div class="top-button gold-gradient">
-        <i class="fas fa-book-open"></i>
-        المكتبات
-      </div>
-      <div class="top-button cyan-gradient">
-        <i class="fas fa-globe"></i>
-        المواقع التعليمية
-      </div>
-    </div>
-
-    <div class="filter-bar">
-      <div class="filter-item active" data-filter="all">الكل</div>
-      <div class="filter-item" data-filter="nahw">النحو</div>
-      <div class="filter-item" data-filter="poetry">الشعر</div>
-      <div class="filter-item" data-filter="shared">الجامعية</div>
-
+    <div class="filter-bar" id="filter-bar">
+      <!-- تُملأ ديناميكيًا -->
       <div class="view-toggle">
         <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
         <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
       </div>
     </div>
 
-    <div class="course-list" id="course-list">
-      <!-- يتم توليد المقررات هنا -->
+    <div class="materials-list" id="materials-list">
+      <!-- تُعرض المواد -->
     </div>
   </div>
 
   <script>
-    // إلغاء تسجيل أي خدمة عمل قديمة
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
+    const materialsList = document.getElementById('materials-list');
+    const filterBar = document.getElementById('filter-bar');
+    const gridBtn = document.getElementById('grid-view');
+    const listBtn = document.getElementById('list-view');
 
-    const listContainer = document.getElementById("course-list");
-    const filters = document.querySelectorAll(".filter-item");
     let allCourses = [];
 
-    function renderCourses(filter = "all") {
-      listContainer.innerHTML = "";
-      const filtered = filter === "all" ? allCourses : allCourses.filter(c => c.type === filter);
-      filtered.forEach(course => {
-        const div = document.createElement("div");
-        div.className = "course-card";
-        div.innerHTML = `
+    function renderMaterialItems(items) {
+      materialsList.innerHTML = '';
+      items.forEach((item) => {
+        const el = document.createElement('div');
+        el.className = 'material-item';
+
+        el.innerHTML = `
           <div class="item-title">
             <i class="fas fa-book"></i>
-            <h3>${course.name}</h3>
+            <h3>${item.name}</h3>
           </div>
+          <p class="item-description">رمز المقرر: ${item.code}</p>
         `;
-        div.addEventListener("click", () => {
-          window.location.href = `course?i=${course.code}`;
-        });
-        listContainer.appendChild(div);
+        materialsList.appendChild(el);
       });
     }
 
-    // تحميل بيانات المقررات
-    fetch("assets/data/materials.json")
-      .then(res => res.json())
-      .then(data => {
-        allCourses = data;
-        renderCourses();
-      })
-      .catch(err => {
-        listContainer.innerHTML = "<p>حدث خطأ أثناء تحميل المقررات.</p>";
-        console.error("فشل التحميل:", err);
+    function createFilters(courses) {
+      const types = [...new Set(courses.map(c => c.type))];
+      types.unshift('all');
+
+      types.forEach(type => {
+        const filterBtn = document.createElement('div');
+        filterBtn.className = 'filter-item';
+        filterBtn.dataset.filter = type;
+        filterBtn.textContent = type === 'all' ? 'الكل' : type;
+        if (type === 'all') filterBtn.classList.add('active');
+
+        filterBtn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+          filterBtn.classList.add('active');
+
+          const filtered = type === 'all' ? allCourses : allCourses.filter(c => c.type === type);
+          renderMaterialItems(filtered);
+        });
+
+        filterBar.insertBefore(filterBtn, filterBar.querySelector('.view-toggle'));
       });
+    }
 
-    filters.forEach(btn => {
-      btn.addEventListener("click", () => {
-        filters.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        renderCourses(btn.dataset.filter);
-      });
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch("assets/data/materials.json")
+        .then(res => res.json())
+        .then(data => {
+          allCourses = data;
+          createFilters(data);
+          renderMaterialItems(data);
+        })
+        .catch(err => {
+          materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
+        });
     });
 
-    document.getElementById("grid-view").addEventListener("click", () => {
-      document.getElementById("course-list").classList.add("grid-view");
-      document.getElementById("grid-view").classList.add("active");
-      document.getElementById("list-view").classList.remove("active");
+    gridBtn.addEventListener('click', () => {
+      materialsList.classList.add('grid-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
     });
 
-    document.getElementById("list-view").addEventListener("click", () => {
-      document.getElementById("course-list").classList.remove("grid-view");
-      document.getElementById("list-view").classList.add("active");
-      document.getElementById("grid-view").classList.remove("active");
+    listBtn.addEventListener('click', () => {
+      materialsList.classList.remove('grid-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
     });
 
-    // ✅ تحميل التوب بار وإظهار الصفحة
+    // تحميل التوب بار
     fetch("topbar.html")
       .then(res => res.text())
       .then(html => {
         document.getElementById("topbar-container").innerHTML = html;
-
-        // تحميل ملف جافاسكربت التوب بار
         const script = document.createElement("script");
         script.src = "topbar.js";
-        script.onload = () => {
-          document.getElementById("loading").style.display = "none";
-          document.body.style.display = "block";
-        };
         document.body.appendChild(script);
       })
-      .catch(err => {
-        console.error("فشل تحميل التوب بار:", err);
-        document.getElementById("loading").style.display = "none";
-        document.body.style.display = "block";
-      });
+      .catch(err => console.error("فشل تحميل التوب بار:", err));
   </script>
 </body>
 </html>
