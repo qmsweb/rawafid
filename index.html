@@ -220,25 +220,30 @@
     let allCourses = [];
 
     function renderMaterialItems(items) {
-      materialsList.innerHTML = '';
-      items.forEach((item) => {
-        const el = document.createElement('div');
-        el.className = 'material-item';
+  materialsList.innerHTML = '';
+  items.forEach((item) => {
+    const el = document.createElement('div');
+    el.className = 'material-item';
+    el.style.cursor = 'pointer';
 
-        el.addEventListener('click', () => {
-          window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
-        });
+    // إعداد اللون
+    const iconColor = item.color || '#333'; // اللون الافتراضي
 
-        el.innerHTML = `
-          <div class="item-title">
-            <i class="fas fa-book"></i>
-            <h3>${item.name}</h3>
-          </div>
-          <p class="item-description">رمز المقرر: ${item.code}</p>
-        `;
-        materialsList.appendChild(el);
-      });
-    }
+    el.addEventListener('click', () => {
+      window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
+    });
+
+    el.innerHTML = `
+      <div class="item-title">
+        <i class="fas fa-book" style="color: ${iconColor};"></i>
+        <h3>${item.name}</h3>
+      </div>
+      <p class="item-description">رمز المقرر: ${item.code}</p>
+    `;
+    materialsList.appendChild(el);
+  });
+}
+
 
     function createFilters(courses) {
       const types = [...new Set(courses.map(c => c.type))];
