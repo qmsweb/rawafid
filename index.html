@@ -137,6 +137,7 @@
       background: white;
       padding: 20px;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .material-item:hover {
@@ -169,66 +170,6 @@
       color: #444;
       line-height: 1.6;
       margin-bottom: 15px;
-    }
-
-    .item-footer {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 8px 18px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.3s;
-    }
-
-    .btn-download {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .btn-download:hover {
-      background: #162254;
-    }
-
-    .btn-preview {
-      background: #f4f5fa;
-      color: var(--primary-color);
-      border: 1px solid var(--light-border);
-    }
-
-    .btn-preview:hover {
-      background: #e9ecf5;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .badge-important {
-      background: #e3f2fd;
-      color: var(--primary-color);
-      border: 1px solid #bbdefb;
-      margin-bottom: 10px;
-    }
-
-    .badge-new {
-      background: #fff9e6;
-      color: #a79835;
-      border: 1px solid #ffecb3;
-      margin-bottom: 10px;
     }
 
     @media (max-width: 768px) {
@@ -283,6 +224,10 @@
       items.forEach((item) => {
         const el = document.createElement('div');
         el.className = 'material-item';
+
+        el.addEventListener('click', () => {
+          window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
+        });
 
         el.innerHTML = `
           <div class="item-title">
