@@ -263,6 +263,7 @@
   <div class="container">
     <div class="header">
       <h1></h1>
+      <h2></h2>
       <div id="share-button" class="share-button">
         <i class="fas fa-share-alt"></i> مشاركة الرابط
       </div>
@@ -378,7 +379,7 @@
         .then(data => {
           materialsData = data.items;
           document.querySelector('.header h1').textContent = data.name || '';
-          document.querySelector('.header p').textContent = data.code || '';
+          document.querySelector('.header h2').textContent = data.code || '';
           renderMaterials();
         })
         .catch(err => {
