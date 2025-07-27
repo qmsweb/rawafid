@@ -377,8 +377,8 @@
         .then(res => res.json())
         .then(data => {
           materialsData = data.items;
-          document.querySelector('.header h1').textContent = data.name || 'مقرر دراسي';
-          document.querySelector('.header p').textContent = data.description || '';
+          document.querySelector('.header h1').textContent = data.name || '';
+          document.querySelector('.header p').textContent = data.code || '';
           renderMaterials();
         })
         .catch(err => {
