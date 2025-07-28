@@ -1,5 +1,6 @@
 [
   { "name": "النحو 1", "type": "النحو", "code": "ARAB112", "color": "#D24545" },
-  { "name": "النحو 2", "type": "النحو", "code": "ARAB124", "color": "#0077B6" },
+  { "name": "النحو 2", "type": "النحو", "code": "ARAB124", "color": "#D24545" },
+  { "name": "النحو 3", "type": "النحو", "code": "ARAB213", "color": "#D24545" },
   { "name": "الشعر العباسي", "type": "الشعر", "code": "ARAB212" }
 ]
