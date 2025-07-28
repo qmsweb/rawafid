@@ -4,5 +4,6 @@
   { "name": "النحو 3", "type": "النحو", "code": "ARAB213", "color": "#D24545" },
   { "name": "الشعر الجاهلي", "type": "الشعر", "code": "ARAB111", "color": "#bdba12" },
   { "name": "الشعر الإسلامي والأموي", "type": "الشعر", "code": "ARAB122", "color": "#bdba12" },
-  { "name": "الشعر العباسي", "type": "الشعر", "code": "ARAB212", "color": "#bdba12" }
+  { "name": "الشعر العباسي", "type": "الشعر", "code": "ARAB212", "color": "#bdba12" },
+  { "name": "النثر القديم", "type": "النثر", "code": "ARAB125", "color": "#09c983" }
 ]
