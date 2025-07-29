@@ -388,14 +388,26 @@
         });
     });
 
-    document.getElementById('share-button').addEventListener('click', () => {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => {
-        alert("✅ تم نسخ رابط الصفحة بنجاح");
-      }).catch(() => {
-        alert("❌ حدث خطأ أثناء النسخ");
-      });
+ document.getElementById('share-button').addEventListener('click', () => {
+  const url = window.location.href;
+  const title = document.title;
+
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      url: url
+    }).catch(() => {
+      alert("❌ لم يتم تنفيذ المشاركة.");
     });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("✅ تم نسخ رابط الصفحة بنجاح");
+    }).catch(() => {
+      alert("❌ حدث خطأ أثناء النسخ");
+    });
+  }
+});
+
 
     // تحميل التوب بار
     fetch("topbar.html")
