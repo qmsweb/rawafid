@@ -168,6 +168,17 @@
       .view-toggle i {
         flex-shrink: 0;
       }
+
+.item-title i.item-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: var(--hover-bg);
+  border-radius: 10px;
+}
     }
   </style>
 </head>
@@ -205,7 +216,7 @@
     el.style.cursor = 'pointer';
 
     const iconColor = item.color || '#333';
-    const iconClass = item.icon || 'fa-book'; // ← دعم مفتاح icon
+    const iconClass = item.icon || 'fa-book';
 
     el.addEventListener('click', () => {
       window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
@@ -213,14 +224,15 @@
 
     el.innerHTML = `
       <div class="item-title">
-        <i class="fas ${iconClass}" style="color: ${iconColor};"></i>
+        <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
         <h3>${item.name}</h3>
       </div>
-      <p class="item-code">رمز المقرر: ${item.code}</p>
+      ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
     `;
     materialsList.appendChild(el);
   });
 }
+
 
 
 
