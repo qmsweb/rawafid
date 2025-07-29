@@ -379,7 +379,8 @@
         .then(res => res.json())
         .then(data => {
           materialsData = data.items;
-          document.querySelector('.header h1').textContent = data.name || '';
+document.querySelector('.header h1').textContent = data.name || '';
+document.title = data.name || 'روافد';
           document.querySelector('.header h2').textContent = data.code || '';
           renderMaterials();
         })
