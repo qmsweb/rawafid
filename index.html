@@ -197,15 +197,15 @@
 
     let allCourses = [];
 
-    function renderMaterialItems(items) {
+   function renderMaterialItems(items) {
   materialsList.innerHTML = '';
   items.forEach((item) => {
     const el = document.createElement('div');
     el.className = 'material-item';
     el.style.cursor = 'pointer';
 
-    // إعداد اللون
-    const iconColor = item.color || '#333'; // اللون الافتراضي
+    const iconColor = item.color || '#333';
+    const iconClass = item.icon || 'fa-book'; // ← دعم مفتاح icon
 
     el.addEventListener('click', () => {
       window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
@@ -213,7 +213,7 @@
 
     el.innerHTML = `
       <div class="item-title">
-        <i class="fas fa-book" style="color: ${iconColor};"></i>
+        <i class="fas ${iconClass}" style="color: ${iconColor};"></i>
         <h3>${item.name}</h3>
       </div>
       <p class="item-code">رمز المقرر: ${item.code}</p>
@@ -221,6 +221,7 @@
     materialsList.appendChild(el);
   });
 }
+
 
 
     function createFilters(courses) {
