@@ -1,35 +1,27 @@
-/* تهيئة عامة */
+/* General Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif; /* إزالة الخط المخصص */
     direction: rtl;
+    background-color: #f5f5f5;
 }
 
-/* شريط التنقل */
+/* Navbar Styles */
 .navbar {
-    background-color: rgba(176, 176, 176, 0.55); 
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    padding: 1rem;
-    position: fixed; /* يجعل التوب بار ثابتًا */
-    top: 0;
-    left: 0;
+    background-color: #1a2a6c;
+    color: white;
+    padding: 10px 0;
+    position: fixed;
     width: 100%;
+    top: 0;
     z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
-
-body {
-    padding-top: 80px;
-}
-
 
 .navbar-container {
     display: flex;
@@ -37,152 +29,218 @@ body {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* الشعار */
+.nav-left, .nav-center, .nav-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    justify-content: flex-start;
+}
+
+.nav-center {
+    justify-content: center;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
 .logo img {
-    height: 30px;
-    filter: brightness(0);
-
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s;
 }
 
-/* روابط التنقل للشاشات الكبيرة */
-.nav-links {
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.email-icon, .social-icons a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.email-icon:hover, .social-icons a:hover {
+    color: #ddd;
+    transform: translateY(-2px);
+}
+
+.social-icons {
+    display: flex;
+    margin-right: 20px;
+}
+
+/* قائمة سطح المكتب */
+.desktop-menu {
     display: flex;
     list-style: none;
 }
 
-.nav-links li {
-    margin-left: 2rem;
+.desktop-menu li {
+    margin-left: 25px;
 }
 
-.nav-links a {
-    color: #fff;
+.desktop-menu a {
+    color: white;
     text-decoration: none;
+    font-size: 16px;
     font-weight: 500;
-    transition: color 0.3s;
+    transition: all 0.3s;
+    padding: 5px 0;
+    position: relative;
 }
 
-.nav-links a:hover {
-    color: #ccc;
+.desktop-menu a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: white;
+    bottom: 0;
+    right: 0;
+    transition: width 0.3s;
 }
 
-/* أيقونات القائمة والبحث */
-.menu-toggle,
-.search-toggle {
+.desktop-menu a:hover:after {
+    width: 100%;
+    right: auto;
+    left: 0;
+}
+
+/* زر القائمة للهاتف */
+.menu-toggle {
     background: none;
     border: none;
-    color: #000;
-    font-size: 1.5rem;
+    color: white;
+    font-size: 24px;
     cursor: pointer;
+    padding: 5px 10px;
     display: none;
+    transition: transform 0.3s;
 }
 
-/* قائمة الجوال */
-.mobile-menu {
+.menu-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* تأثير Blur للخلفية */
+.blur-overlay {
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(176, 176, 176, 0.56);
+    background: rgba(26, 42, 108, 0.7);
     backdrop-filter: blur(5px);
-    display: flex;
+    z-index: 9998;
+    display: none;
+}
+
+.blur-overlay.active {
+    display: block;
+}
+
+/* قائمة الهاتف المنبثقة */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: none;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    transform: translateY(-100%);
-    opacity: 0;
-    transition: all 0.3s ease;
+    justify-content: flex-start;
+    padding-top: 80px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-menu.active {
-    transform: translateY(0);
-    opacity: 1;
+    display: flex;
+    transform: translateX(0);
 }
 
 .close-menu {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+    top: 20px;
+    left: 20px;
     background: none;
     border: none;
-    color: #fff;
-    font-size: 1.5rem;
+    color: #1a2a6c;
+    font-size: 30px;
     cursor: pointer;
+    padding: 5px 10px;
+    transition: transform 0.3s;
 }
 
-.mobile-nav-links {
+.close-menu:hover {
+    transform: rotate(90deg);
+}
+
+.menu-items {
     list-style: none;
-    text-align: center;
+    width: 100%;
+    padding: 0 20px;
 }
 
-.mobile-nav-links li {
-    margin: 1.5rem 0;
+.menu-items li {
+    margin: 15px 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
 }
 
-.mobile-nav-links a {
-    color: #fff;
+.menu-items a {
+    color: #1a2a6c;
     text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: 500;
-    transition: color 0.3s;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: block;
+    padding: 10px 0;
 }
 
-.mobile-nav-links a:hover {
-    color: #ccc;
+.menu-items a:hover {
+    color: #0d1a4a;
+    padding-right: 10px;
 }
 
-.social-icons {
-    margin-top: 2rem;
-}
-
-.social-icons a {
-    color: #fff;
-    font-size: 1.5rem;
-    margin: 0 0.5rem;
-    transition: color 0.3s;
-}
-
-.social-icons a:hover {
-    color: #ccc;
-}
-
-/* تصميم متجاوب */
-@media (max-width: 768px) {
-    .nav-links {
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .desktop-menu {
         display: none;
     }
-
-    .menu-toggle,
-    .search-toggle {
+    
+    .menu-toggle {
         display: block;
     }
-
-    .navbar-container {
-        justify-content: space-between;
+    
+    .social-icons {
+        display: none;
     }
-
-    .navbar-container {
-        display: flex;
-        align-items: center;
+    
+    .email-icon {
+        margin-left: 0;
     }
-
-    .menu-toggle {
-        order: 1;
+    
+    .logo img {
+        height: 35px;
     }
+}
 
-    .logo {
-        order: 2;
-        margin: 0 1rem;
-    }
-
-    .search-toggle {
-        order: 3;
-    }
-
-    .navbar-container > * {
-        margin: 0 0.25rem;
+@media (min-width: 993px) {
+    .mobile-menu, .blur-overlay {
+        display: none !important;
     }
 }
