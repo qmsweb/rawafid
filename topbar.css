@@ -245,4 +245,8 @@ body {
     .blur-overlay {
         display: none !important;
     }
+
+.spacer {
+    height: 80px;
+}
 }
