@@ -1,33 +1,37 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // تأكد من وجود العناصر قبل ربط الأحداث
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const closeMenu = document.querySelector('.close-menu');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
-
-    if (menuToggle && mobileMenu) {
-        // فتح القائمة
-        menuToggle.addEventListener('click', function () {
-            mobileMenu.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    }
-
-    if (closeMenu && mobileMenu) {
-        // إغلاق القائمة
-        closeMenu.addEventListener('click', function () {
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menuToggle');
+    const closeMenu = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const blurOverlay = document.getElementById('blurOverlay');
+    
+    // Toggle menu when menu button is clicked
+    menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.add('active');
+        blurOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    // Close menu when close button is clicked
+    closeMenu.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        blurOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    
+    // Close menu when clicking on overlay
+    blurOverlay.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        blurOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    
+    // Close menu when clicking on a menu item
+    const menuItems = document.querySelectorAll('.menu-items a');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
             mobileMenu.classList.remove('active');
+            blurOverlay.classList.remove('active');
             document.body.style.overflow = '';
         });
-    }
-
-    // إغلاق عند الضغط على روابط القائمة
-    if (mobileLinks.length > 0 && mobileMenu) {
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                mobileMenu.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        });
-    }
+    });
 });
