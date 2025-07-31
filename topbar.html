@@ -1,72 +1,71 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar تصميم</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navbar تصميم</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="nav-left">
-                <a href="mailto:example@example.com" class="email-icon">
-                    <i class="fas fa-envelope"></i>
-                </a>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            
-            <div class="nav-center">
-                <a href="#" class="logo">
-<img src="https://github.com/qmsweb/rawafid/raw/main/images/Rawafid-white.png" alt="شعار الموقع">                </a>
-            </div>
-            
-            <div class="nav-right">
-                <!-- قائمة سطح المكتب -->
-                <ul class="desktop-menu">
-                    <li><a href="#">الرئيسية</a></li>
-                    <li><a href="#">من نحن</a></li>
-                    <li><a href="#">خدماتنا</a></li>
-                    <li><a href="#">أعمالنا</a></li>
-                    <li><a href="#">اتصل بنا</a></li>
-                </ul>
-                
-                <!-- زر القائمة للهاتف -->
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="nav-left">
+        <a href="mailto:example@example.com" class="email-icon">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
         </div>
-    </nav>
+      </div>
 
-<nav class="navbar">
-  <!-- محتوى الـ Navbar -->
-</nav>
+      <div class="nav-center">
+        <a href="#" class="logo">
+          <img src="https://github.com/qmsweb/rawafid/raw/main/images/Rawafid-white.png" alt="شعار الموقع" />
+        </a>
+      </div>
 
-<!-- العنصر الفاصل الذي يحجز ارتفاع الـ Navbar -->
-<div class="spacer"></div>
-
-    <!-- قائمة الهاتف المنبثقة -->
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-menu" id="closeMenu">
-            <i class="fas fa-times"></i>
-        </button>
-        <ul class="menu-items">
-            <li><a href="#">الرئيسية</a></li>
-            <li><a href="#">من نحن</a></li>
-            <li><a href="#">خدماتنا</a></li>
-            <li><a href="#">أعمالنا</a></li>
-            <li><a href="#">اتصل بنا</a></li>
+      <div class="nav-right">
+        <ul class="desktop-menu">
+          <li><a href="#">الرئيسية</a></li>
+          <li><a href="#">من نحن</a></li>
+          <li><a href="#">خدماتنا</a></li>
+          <li><a href="#">أعمالنا</a></li>
+          <li><a href="#">اتصل بنا</a></li>
         </ul>
+        <button class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
     </div>
+  </nav>
 
-    <div class="blur-overlay" id="blurOverlay"></div>
+  <!-- محتوى الصفحة -->
+  <main class="page-content">
+    <section>
+      <h1>مرحبًا بك في موقعنا</h1>
+      <p>هذا نص تجريبي يظهر بعد الـ Navbar ولا يجب أن يُغطى أو يتداخل معه.</p>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
+  <!-- قائمة الهاتف -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">
+      <i class="fas fa-times"></i>
+    </button>
+    <ul class="menu-items">
+      <li><a href="#">الرئيسية</a></li>
+      <li><a href="#">من نحن</a></li>
+      <li><a href="#">خدماتنا</a></li>
+      <li><a href="#">أعمالنا</a></li>
+      <li><a href="#">اتصل بنا</a></li>
+    </ul>
+  </div>
+
+  <div class="blur-overlay" id="blurOverlay"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
