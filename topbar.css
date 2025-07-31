@@ -8,7 +8,7 @@
 body {
     direction: rtl;
     background-color: #f5f5f5;
-  padding-top: 80px;
+    padding-top: 80px; /* مساحة للـ Navbar الثابت */
 }
 
 /* Navbar Styles */
@@ -222,26 +222,27 @@ body {
     .desktop-menu {
         display: none;
     }
-    
+
     .menu-toggle {
         display: block;
     }
-    
+
     .social-icons {
         display: none;
     }
-    
+
     .email-icon {
         margin-left: 0;
     }
-    
+
     .logo img {
         height: 35px;
     }
 }
 
 @media (min-width: 993px) {
-    .mobile-menu, .blur-overlay {
+    .mobile-menu,
+    .blur-overlay {
         display: none !important;
     }
 }
