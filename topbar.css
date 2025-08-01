@@ -8,6 +8,7 @@ body {
   font-family: 'Poppins', sans-serif;
   direction: rtl;
   padding-bottom: 80px;
+  padding-top: 70px; /* إضافة padding-top لتعويض النافبار الثابت */
 }
 
 .navbar {
@@ -18,7 +19,7 @@ body {
   align-items: center;
   justify-content: space-between;
   position: fixed;
- top: 0;
+  top: 0;
   right: 0;
   left: 0;
   z-index: 1000;
@@ -40,44 +41,58 @@ body {
   color: white;
   font-size: 1rem;
   transition: color 0.3s;
+  padding: 0.5rem 0;
 }
 
 .nav-links a:hover {
   color: #ffcc00;
 }
 
+/* زر القائمة - مخفي افتراضيًا */
 .menu-toggle {
+  display: none;
   font-size: 1.5rem;
   color: white;
   cursor: pointer;
-  display: none; /* تخفيها دائمًا */
+  background: none;
+  border: none;
+  padding: 0.5rem;
 }
 
-/* الشاشات الصغيرة فقط */
+/* تصميم الجوال */
 @media (max-width: 768px) {
   .menu-toggle {
-    display: block; /* تظهر فقط على الجوال */
+    display: block; /* يظهر فقط على الجوال */
   }
 
   .nav-links {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 100%;
+    position: fixed;
+    top: 70px; /* ارتفاع النافبار */
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
     background-color: #1a2a6c;
     flex-direction: column;
-    align-items: center;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-in-out;
+    align-items: flex-start;
+    padding: 1rem;
+    height: calc(100vh - 70px);
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .nav-links.active {
-    max-height: 400px;
-    padding: 1rem 0;
+    right: 0;
   }
 
   .nav-links li {
-    margin: 1rem 0;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
