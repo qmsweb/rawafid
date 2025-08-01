@@ -1,14 +1,6 @@
-let hamMenuIcon = document.getElementById("ham-menu");
-let navBar = document.getElementById("nav-bar");
-let navLinks = navBar.querySelectorAll("li");
+const toggleBtn = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
 
-hamMenuIcon.addEventListener("click", () => {
-  navBar.classList.toggle("active");
-  hamMenuIcon.classList.toggle("fa-times");
-});
-navLinks.forEach((navLinks) => {
-  navLinks.addEventListener("click", () => {
-    navBar.classList.remove("active");
-    hamMenuIcon.classList.toggle("fa-times");
-  });
+toggleBtn.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
 });
