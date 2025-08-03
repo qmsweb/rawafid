@@ -12,7 +12,7 @@ body {
 }
 
 .navbar {
-  background-color: #1a2a6c;
+  background-color: #1a2ac6;
   color: #fff;
   padding: 1rem 2rem;
   display: flex;
@@ -71,7 +71,7 @@ body {
     right: -100%;
     width: 80%;
     max-width: 300px;
-    background-color: #1a2a6c;
+    background-color: #1a2ac6;
     flex-direction: column;
     align-items: flex-start;
     padding: 1rem;
