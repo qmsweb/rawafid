@@ -62,8 +62,8 @@ body {
 /* تصميم الجوال */
 @media (max-width: 768px) {
   .menu-toggle {
-    display: block; /* يظهر فقط على الجوال */
-  }
+    display: none !important;
+}
 
   .nav-links {
     position: fixed;
