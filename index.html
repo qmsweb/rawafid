@@ -41,7 +41,6 @@
       margin: 0 auto;
     }
 
-    
     .filter-bar {
       display: flex;
       gap: 10px;
@@ -77,11 +76,10 @@
     }
 
     .view-toggle {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
 
     .view-toggle i {
       font-size: 1.1rem;
@@ -171,16 +169,16 @@
         flex-shrink: 0;
       }
 
-.item-title i.item-icon {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  background: var(--hover-bg);
-  border-radius: 10px;
-}
+      .item-title i.item-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        background: var(--hover-bg);
+        border-radius: 10px;
+      }
     }
   </style>
 </head>
@@ -188,62 +186,52 @@
   <div id="topbar-container"></div>
 
   <div class="container">
- 
     <div class="filter-bar" id="filter-bar">
       <!-- تُملأ ديناميكيًا -->
-      <div class="view-toggle">
-        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
-        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
-      </div>
     </div>
 
     <div class="materials-list" id="materials-list">
       <!-- تُعرض المواد -->
     </div>
-        <div id="footer-placeholder"></div> 
+
+    <div id="footer-placeholder"></div> 
   </div>
 
   <script>
- fetch("/footer.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("footer-placeholder").innerHTML = data;
-    });
-    
+    fetch("/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer-placeholder").innerHTML = data;
+      });
+
     const materialsList = document.getElementById('materials-list');
     const filterBar = document.getElementById('filter-bar');
-    const gridBtn = document.getElementById('grid-view');
-    const listBtn = document.getElementById('list-view');
-
     let allCourses = [];
 
-   function renderMaterialItems(items) {
-  materialsList.innerHTML = '';
-  items.forEach((item) => {
-    const el = document.createElement('div');
-    el.className = 'material-item';
-    el.style.cursor = 'pointer';
+    function renderMaterialItems(items) {
+      materialsList.innerHTML = '';
+      items.forEach((item) => {
+        const el = document.createElement('div');
+        el.className = 'material-item';
+        el.style.cursor = 'pointer';
 
-    const iconColor = item.color || '#333';
-    const iconClass = item.icon || 'fa-book';
+        const iconColor = item.color || '#333';
+        const iconClass = item.icon || 'fa-book';
 
-    el.addEventListener('click', () => {
-      window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
-    });
+        el.addEventListener('click', () => {
+          window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
+        });
 
-    el.innerHTML = `
-      <div class="item-title">
-        <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
-        <h3>${item.name}</h3>
-      </div>
-      ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
-    `;
-    materialsList.appendChild(el);
-  });
-}
-
-
-
+        el.innerHTML = `
+          <div class="item-title">
+            <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
+            <h3>${item.name}</h3>
+          </div>
+          ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
+        `;
+        materialsList.appendChild(el);
+      });
+    }
 
     function createFilters(courses) {
       const types = [...new Set(courses.map(c => c.type))];
@@ -264,7 +252,34 @@
           renderMaterialItems(filtered);
         });
 
-        filterBar.insertBefore(filterBtn, filterBar.querySelector('.view-toggle'));
+        filterBar.appendChild(filterBtn);
+      });
+
+      // ← نضيف أزرار العرض بعد الفلاتر
+      const viewToggle = document.createElement('div');
+      viewToggle.className = 'view-toggle';
+
+      viewToggle.innerHTML = `
+        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
+        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+      `;
+
+      filterBar.appendChild(viewToggle);
+
+      // ربط الأحداث بعد إنشائهم
+      const gridBtn = viewToggle.querySelector('#grid-view');
+      const listBtn = viewToggle.querySelector('#list-view');
+
+      gridBtn.addEventListener('click', () => {
+        materialsList.classList.add('grid-view');
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+      });
+
+      listBtn.addEventListener('click', () => {
+        materialsList.classList.remove('grid-view');
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
       });
     }
 
@@ -279,18 +294,6 @@
         .catch(err => {
           materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
         });
-    });
-
-    gridBtn.addEventListener('click', () => {
-      materialsList.classList.add('grid-view');
-      gridBtn.classList.add('active');
-      listBtn.classList.remove('active');
-    });
-
-    listBtn.addEventListener('click', () => {
-      materialsList.classList.remove('grid-view');
-      listBtn.classList.add('active');
-      gridBtn.classList.remove('active');
     });
 
     // تحميل التوب بار
