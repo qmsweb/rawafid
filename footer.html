@@ -1,17 +1,101 @@
-<footer style="background-color: #000; padding: 20px 0 0 0; font-family: 'Arial', sans-serif; border-top: 1px solid #ddd; margin: 0; width: 100%;">
-  <div style="padding: 20px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
-    <div style="text-align: right; width: 100%;">
-      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
-        <img src="/images/favicon.png" alt="شعار" style="width: 30px; height: 30px;">
-        <h2 style="margin: 0; font-size: 18px; color: #1a2bc6;">روافد التعليمية</h2>
-      </div>
-      <p style="margin: 8px 0 0; font-size: 14px; color: #fff;">
-        منصة إلكترونية لتسهيل الوصول إلى المقررات والمصادر التعليمية
-      </p>
-    </div>
-  </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صفحة مع فوتر ثابت</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <div style="text-align: center; margin-top: 20px; padding-bottom: 20px;">
-    <small style="font-size: 13px; color: #fff;">© حقوق البرمجة والتصميم محفوظة 2025</small>
-  </div>
-</footer>
+    html, body {
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      background-color: #000;
+      border-top: 1px solid #ddd;
+      width: 100%;
+    }
+
+    .footer-content {
+      padding: 20px;
+      padding-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .footer-right {
+      text-align: right;
+      width: 100%;
+    }
+
+    .footer-right div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .footer-right h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #1a2bc6;
+    }
+
+    .footer-right p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .footer-bottom small {
+      font-size: 13px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- محتوى الصفحة -->
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-right">
+        <div>
+          <img src="/images/favicon.png" alt="شعار" style="width: 30px; height: 30px;">
+          <h2>روافد التعليمية</h2>
+        </div>
+        <p>منصة إلكترونية لتسهيل الوصول إلى المقررات والمصادر التعليمية</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small>© حقوق البرمجة والتصميم محفوظة 2025</small>
+    </div>
+  </footer>
+
+</body>
+</html>
