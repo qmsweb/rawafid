@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="topbar.css" />
 
+  <!-- مكتبة js-yaml لتحليل ملفات YAML -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+
   <style>
     :root {
       --primary-color: #1a2ac6;
@@ -141,7 +144,7 @@
   <div id="topbar-container"></div>
 
   <div class="container">
-    <h1>الاختبار</h1>
+    <h1 id="quiz-title">الاختبار</h1>
     <div id="question-container">
       <p id="question">جارٍ تحميل السؤال...</p>
       <div id="choices"></div>
@@ -156,8 +159,10 @@
     const choicesElement = document.getElementById('choices');
     const submitButton = document.getElementById('submit-btn');
     const resultElement = document.getElementById('result');
+    const quizTitleElement = document.getElementById('quiz-title');
 
     let quizData = [];
+    let currentQuiz = 0;
     let currentQuestion = 0;
     let score = 0;
     const wrongAnswers = [];
@@ -176,9 +181,16 @@
       }
 
       try {
-        const res = await fetch(`assets/online/${examCode}.json`);
+        const res = await fetch(`assets/online/${examCode}.yaml`);
         if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
-        quizData = await res.json();
+        const yamlText = await res.text();
+        quizData = jsyaml.load(yamlText);
+        
+        // عرض عنوان الاختبار
+        if (quizData[currentQuiz] && quizData[currentQuiz].title) {
+          quizTitleElement.textContent = quizData[currentQuiz].title;
+        }
+        
         loadQuestion();
       } catch (err) {
         questionElement.textContent = `❌ ${err.message}`;
@@ -187,7 +199,14 @@
     }
 
     function loadQuestion() {
-      const { question, choices } = quizData[currentQuestion];
+      const quiz = quizData[currentQuiz];
+      if (!quiz || !quiz.questions || !quiz.questions[currentQuestion]) {
+        questionElement.textContent = 'لا توجد أسئلة متاحة';
+        submitButton.style.display = 'none';
+        return;
+      }
+
+      const { question, choices } = quiz.questions[currentQuestion];
       questionElement.textContent = question;
       choicesElement.innerHTML = '';
 
@@ -208,19 +227,22 @@
       const selectedBtn = choicesElement.querySelector('.selected');
       if (!selectedBtn) return;
 
-      const selectedIndex = [...choicesElement.children].indexOf(selectedBtn);
-      if (selectedIndex === quizData[currentQuestion].correctAnswer) {
+      const selectedAnswer = selectedBtn.textContent;
+      const currentQuizData = quizData[currentQuiz];
+      const correctAnswer = currentQuizData.questions[currentQuestion].answer;
+
+      if (selectedAnswer === correctAnswer) {
         score++;
       } else {
         wrongAnswers.push({
-          question: quizData[currentQuestion].question,
-          userAnswer: quizData[currentQuestion].choices[selectedIndex],
-          correctAnswer: quizData[currentQuestion].choices[quizData[currentQuestion].correctAnswer]
+          question: currentQuizData.questions[currentQuestion].question,
+          userAnswer: selectedAnswer,
+          correctAnswer: correctAnswer
         });
       }
 
       currentQuestion++;
-      if (currentQuestion < quizData.length) {
+      if (currentQuestion < currentQuizData.questions.length) {
         loadQuestion();
       } else {
         showResult();
@@ -231,10 +253,11 @@
       questionContainer.style.display = 'none';
       submitButton.style.display = 'none';
 
+      const totalQuestions = quizData[currentQuiz].questions.length;
       let resultHTML = `
         <p class='score'>درجتك: 
-          ${Math.round((score * 100) / quizData.length)}%
-          (${score} من ${quizData.length})
+          ${Math.round((score * 100) / totalQuestions)}%
+          (${score} من ${totalQuestions})
         </p>
       `;
 
