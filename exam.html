@@ -176,7 +176,7 @@
       }
 
       try {
-        const res = await fetch(`data/${examCode}.json`);
+        const res = await fetch(`assets/data/${examCode}.json`);
         if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
         quizData = await res.json();
         loadQuestion();
