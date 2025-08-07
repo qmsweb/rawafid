@@ -55,19 +55,27 @@
       font-weight: 800;
     }
 
-    #question {
+    .question-item {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    .question-text {
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 15px;
     }
 
-    #choices {
+    .choices-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    #choices button {
+    .choice-btn {
       padding: 10px 15px;
       border: 1px solid var(--light-border);
       border-radius: 10px;
@@ -77,12 +85,22 @@
       transition: 0.3s;
     }
 
-    #choices button:hover {
+    .choice-btn:hover {
       background-color: var(--hover-bg);
     }
 
-    #choices button.selected {
+    .choice-btn.selected {
       background-color: var(--primary-color);
+      color: white;
+    }
+
+    .choice-btn.correct {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .choice-btn.wrong {
+      background-color: #F44336;
       color: white;
     }
 
@@ -98,11 +116,24 @@
       cursor: pointer;
     }
 
+    #review-btn {
+      display: none;
+      margin: 15px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     #result {
       margin-top: 30px;
       background-color: #f8f9fa;
       padding: 20px;
       border-radius: 10px;
+      display: none;
     }
 
     #result .score {
@@ -145,26 +176,23 @@
 
   <div class="container">
     <h1 id="quiz-title">الاختبار</h1>
-    <div id="question-container">
-      <p id="question">جارٍ تحميل السؤال...</p>
-      <div id="choices"></div>
-    </div>
-    <button id="submit-btn">تأكيد الإجابة</button>
+    <div id="questions-container"></div>
+    <button id="submit-btn">تأكيد الإجابات</button>
+    <button id="review-btn">مراجعة الإجابات</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const questionContainer = document.getElementById('question-container');
-    const questionElement = document.getElementById('question');
-    const choicesElement = document.getElementById('choices');
+    const questionsContainer = document.getElementById('questions-container');
     const submitButton = document.getElementById('submit-btn');
+    const reviewButton = document.getElementById('review-btn');
     const resultElement = document.getElementById('result');
     const quizTitleElement = document.getElementById('quiz-title');
 
     let quizData = [];
     let currentQuiz = 0;
-    let currentQuestion = 0;
     let score = 0;
+    const userAnswers = [];
     const wrongAnswers = [];
 
     function getExamCode() {
@@ -175,7 +203,7 @@
     async function loadQuizData() {
       const examCode = getExamCode();
       if (!examCode) {
-        questionElement.textContent = '⚠️ لم يتم تحديد رمز الاختبار.';
+        questionsContainer.innerHTML = '<p>⚠️ لم يتم تحديد رمز الاختبار.</p>';
         submitButton.style.display = 'none';
         return;
       }
@@ -191,69 +219,119 @@
           quizTitleElement.textContent = quizData[currentQuiz].title;
         }
         
-        loadQuestion();
+        renderAllQuestions();
       } catch (err) {
-        questionElement.textContent = `❌ ${err.message}`;
+        questionsContainer.innerHTML = `<p>❌ ${err.message}</p>`;
         submitButton.style.display = 'none';
       }
     }
 
-    function loadQuestion() {
+    function renderAllQuestions() {
       const quiz = quizData[currentQuiz];
-      if (!quiz || !quiz.questions || !quiz.questions[currentQuestion]) {
-        questionElement.textContent = 'لا توجد أسئلة متاحة';
+      if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+        questionsContainer.innerHTML = '<p>لا توجد أسئلة متاحة</p>';
         submitButton.style.display = 'none';
         return;
       }
 
-      const { question, choices } = quiz.questions[currentQuestion];
-      questionElement.textContent = question;
-      choicesElement.innerHTML = '';
-
-      choices.forEach((choice, index) => {
-        const btn = document.createElement('button');
-        btn.textContent = choice;
-        btn.addEventListener('click', () => selectChoice(index));
-        choicesElement.appendChild(btn);
+      questionsContainer.innerHTML = '';
+      
+      quiz.questions.forEach((q, qIndex) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-item';
+        questionDiv.dataset.questionIndex = qIndex;
+        
+        const questionText = document.createElement('p');
+        questionText.className = 'question-text';
+        questionText.textContent = `${qIndex + 1}. ${q.question}`;
+        questionDiv.appendChild(questionText);
+        
+        const choicesDiv = document.createElement('div');
+        choicesDiv.className = 'choices-container';
+        
+        q.choices.forEach((choice, cIndex) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.textContent = choice;
+          btn.dataset.choiceIndex = cIndex;
+          btn.addEventListener('click', () => selectChoice(qIndex, cIndex));
+          choicesDiv.appendChild(btn);
+        });
+        
+        questionDiv.appendChild(choicesDiv);
+        questionsContainer.appendChild(questionDiv);
       });
     }
 
-    function selectChoice(index) {
-      [...choicesElement.children].forEach(btn => btn.classList.remove('selected'));
-      choicesElement.children[index].classList.add('selected');
+    function selectChoice(qIndex, cIndex) {
+      const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+      const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
+      
+      choiceBtns.forEach(btn => btn.classList.remove('selected'));
+      choiceBtns[cIndex].classList.add('selected');
+      
+      // حفظ إجابة المستخدم
+      userAnswers[qIndex] = cIndex;
     }
 
-    function submitAnswer() {
-      const selectedBtn = choicesElement.querySelector('.selected');
-      if (!selectedBtn) return;
-
-      const selectedAnswer = selectedBtn.textContent;
-      const currentQuizData = quizData[currentQuiz];
-      const correctAnswer = currentQuizData.questions[currentQuestion].answer;
-
-      if (selectedAnswer === correctAnswer) {
-        score++;
-      } else {
-        wrongAnswers.push({
-          question: currentQuizData.questions[currentQuestion].question,
-          userAnswer: selectedAnswer,
-          correctAnswer: correctAnswer
+    function submitAllAnswers() {
+      const quiz = quizData[currentQuiz];
+      let allAnswered = true;
+      
+      quiz.questions.forEach((q, qIndex) => {
+        if (userAnswers[qIndex] === undefined) {
+          allAnswered = false;
+        }
+      });
+      
+      if (!allAnswered) {
+        alert('الرجاء الإجابة على جميع الأسئلة قبل التقديم');
+        return;
+      }
+      
+      // تصحيح الإجابات
+      score = 0;
+      wrongAnswers.length = 0;
+      
+      quiz.questions.forEach((q, qIndex) => {
+        const userAnswerIndex = userAnswers[qIndex];
+        const correctAnswerIndex = q.choices.indexOf(q.answer);
+        
+        const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+        const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
+        
+        // تمييز الإجابات الصحيحة والخاطئة
+        choiceBtns.forEach((btn, btnIndex) => {
+          if (btnIndex === correctAnswerIndex) {
+            btn.classList.add('correct');
+          } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
+            btn.classList.add('wrong');
+          }
+          
+          btn.style.pointerEvents = 'none'; // تعطيل النقر بعد التصحيح
         });
-      }
-
-      currentQuestion++;
-      if (currentQuestion < currentQuizData.questions.length) {
-        loadQuestion();
-      } else {
-        showResult();
-      }
+        
+        // حساب النتيجة
+        if (userAnswerIndex === correctAnswerIndex) {
+          score++;
+        } else {
+          wrongAnswers.push({
+            question: q.question,
+            userAnswer: q.choices[userAnswerIndex],
+            correctAnswer: q.answer
+          });
+        }
+      });
+      
+      submitButton.style.display = 'none';
+      reviewButton.style.display = 'block';
+      showResult();
     }
 
     function showResult() {
-      questionContainer.style.display = 'none';
-      submitButton.style.display = 'none';
-
       const totalQuestions = quizData[currentQuiz].questions.length;
+      resultElement.style.display = 'block';
+      
       let resultHTML = `
         <p class='score'>درجتك: 
           ${Math.round((score * 100) / totalQuestions)}%
@@ -273,12 +351,20 @@
           `;
         });
         resultHTML += '</ul>';
+      } else {
+        resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
       }
 
       resultElement.innerHTML = resultHTML;
     }
 
-    submitButton.addEventListener('click', submitAnswer);
+    function reviewAnswers() {
+      // يمكن إضافة وظائف إضافية للمراجعة هنا
+      alert('يمكنك الآن مراجعة إجاباتك. الإجابات الصحيحة باللون الأخضر والخاطئة باللون الأحمر.');
+    }
+
+    submitButton.addEventListener('click', submitAllAnswers);
+    reviewButton.addEventListener('click', reviewAnswers);
     loadQuizData();
 
     // تحميل التوب بار
