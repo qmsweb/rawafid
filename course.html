@@ -289,6 +289,7 @@
       <div class="filter-item" data-filter="documents">المستندات</div>
       <div class="filter-item" data-filter="videos">الفيديوهات</div>
       <div class="filter-item" data-filter="resources">الملاحظات</div>
+      <div class="filter-item" data-filter="quizzes">الاختبارات</div>
 
       <div class="view-toggle">
         <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
@@ -319,6 +320,7 @@
         case 'documents': return 'fas fa-file-alt';
         case 'videos': return 'fab fa-youtube';
         case 'resources': return 'fas fa-bullhorn';
+        case 'quizzes': return 'fas fa-question-circle';
         default: return 'fas fa-file';
       }
     }
@@ -328,6 +330,7 @@
         case 'documents': return '#4A90E2';
         case 'videos': return '#E63946';
         case 'resources': return '#F4C430';
+        case 'quizzes': return '#6A4C93';
         default: return '#666';
       }
     }
@@ -341,7 +344,7 @@
         el.className = 'material-item';
 
         const downloadBtn = item.download_url ? `<a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>` : '';
-        const previewBtn = item.preview_url ? `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${item.type === 'videos' ? 'fas fa-play-circle' : 'fab fa-google-drive'}"></i> ${item.type === 'videos' ? 'مشاهدة' : 'قراءة'}</a>` : '';
+        const previewBtn = item.preview_url ? `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${item.type === 'videos' ? 'fas fa-play-circle' : item.type === 'quizzes' ? 'fas fa-question-circle' : 'fab fa-google-drive'}"></i> ${item.type === 'videos' ? 'مشاهدة' : item.type === 'quizzes' ? 'بدء الاختبار' : 'قراءة'}</a>` : '';
 
         let badgeHTML = '';
         const now = Date.now();
