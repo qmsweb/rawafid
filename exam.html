@@ -486,29 +486,28 @@
 
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
-                // تجاهل الأسئلة المقالية في المراجعة
+                const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                
+                // للأسئلة المقالية
                 if (q.type === 'essay') {
-                    // عرض الإجابة المقالية في وضع المراجعة
-                    const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
                     const answerDiv = questionDiv.querySelector('.essay-answer');
                     answerDiv.style.display = 'block';
-                    return;
+                    const essayButtons = questionDiv.querySelector('.essay-buttons');
+                    essayButtons.style.display = 'none'; // إخفاء الأزرار
+                } else { // لأسئلة الاختيار من متعدد
+                    const userAnswerIndex = userAnswers[qIndex];
+                    const correctAnswerIndex = q.choices.indexOf(q.answer);
+                    const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
+
+                    choiceBtns.forEach((btn, btnIndex) => {
+                        if (btnIndex === correctAnswerIndex) {
+                            btn.classList.add('correct');
+                        } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
+                            btn.classList.add('wrong');
+                        }
+                        btn.disabled = true; // تعطيل الأزرار في وضع المراجعة
+                    });
                 }
-
-                const userAnswerIndex = userAnswers[qIndex];
-                const correctAnswerIndex = q.choices.indexOf(q.answer);
-
-                const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-                const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
-
-                choiceBtns.forEach((btn, btnIndex) => {
-                    if (btnIndex === correctAnswerIndex) {
-                        btn.classList.add('correct');
-                    } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
-                        btn.classList.add('wrong');
-                    }
-                    btn.disabled = true;
-                });
             });
         }
 
