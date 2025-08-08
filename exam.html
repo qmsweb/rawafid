@@ -56,8 +56,11 @@
     .question-item {
       margin-bottom: 30px;
       padding: 20px;
-      border: 1px solid var(--light-border);
-      background-color: white;
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .question-text {
@@ -75,6 +78,7 @@
     .choice-btn {
       padding: 10px 15px;
       border: 1px solid var(--light-border);
+      border-radius: 8px;
       background-color: var(--light-bg);
       text-align: right;
       cursor: pointer;
@@ -100,6 +104,39 @@
       color: white;
     }
 
+    .essay-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .essay-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .show-answer-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .dont-know-btn {
+      background-color: #F44336;
+      color: white;
+    }
+
+    .essay-answer {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border-right: 4px solid var(--primary-color);
+      display: none;
+    }
+
     #submit-btn {
       display: block;
       margin: 25px auto 10px;
@@ -108,7 +145,13 @@
       background-color: var(--primary-color);
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #submit-btn:hover {
+      opacity: 0.9;
     }
 
     #review-btn {
@@ -119,13 +162,21 @@
       background-color: #FF9800;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #review-btn:hover {
+      opacity: 0.9;
     }
 
     #result {
       margin-top: 30px;
       padding: 20px;
       display: none;
+      border-radius: 12px;
+      background-color: #f8f9fa;
     }
 
     #result .score {
@@ -148,8 +199,9 @@
 
     #result li {
       margin-bottom: 15px;
-      padding: 10px;
-      border: 1px solid #ddd;
+      padding: 15px;
+      border: 1px solid #e7e7e7;
+      border-radius: 8px;
       background: white;
     }
 
@@ -237,19 +289,54 @@
         questionText.textContent = `${qIndex + 1}. ${q.question}`;
         questionDiv.appendChild(questionText);
         
-        const choicesDiv = document.createElement('div');
-        choicesDiv.className = 'choices-container';
+        // إذا كان السؤال مقاليًا
+        if (q.type === 'essay') {
+          const buttonsDiv = document.createElement('div');
+          buttonsDiv.className = 'essay-buttons';
+          
+          const showAnswerBtn = document.createElement('button');
+          showAnswerBtn.className = 'essay-btn show-answer-btn';
+          showAnswerBtn.textContent = 'عرض الإجابة';
+          showAnswerBtn.addEventListener('click', () => {
+            const answerDiv = questionDiv.querySelector('.essay-answer');
+            answerDiv.style.display = answerDiv.style.display === 'block' ? 'none' : 'block';
+          });
+          
+          const dontKnowBtn = document.createElement('button');
+          dontKnowBtn.className = 'essay-btn dont-know-btn';
+          dontKnowBtn.textContent = 'لا أعرف';
+          dontKnowBtn.addEventListener('click', () => {
+            userAnswers[qIndex] = -1; // -1 يعني لا أعرف
+            dontKnowBtn.disabled = true;
+            showAnswerBtn.disabled = true;
+          });
+          
+          buttonsDiv.appendChild(showAnswerBtn);
+          buttonsDiv.appendChild(dontKnowBtn);
+          questionDiv.appendChild(buttonsDiv);
+          
+          const answerDiv = document.createElement('div');
+          answerDiv.className = 'essay-answer';
+          answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
+          questionDiv.appendChild(answerDiv);
+        } 
+        // إذا كان السؤال اختيار من متعدد
+        else {
+          const choicesDiv = document.createElement('div');
+          choicesDiv.className = 'choices-container';
+          
+          q.choices.forEach((choice, cIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = choice;
+            btn.dataset.choiceIndex = cIndex;
+            btn.addEventListener('click', () => selectChoice(qIndex, cIndex));
+            choicesDiv.appendChild(btn);
+          });
+          
+          questionDiv.appendChild(choicesDiv);
+        }
         
-        q.choices.forEach((choice, cIndex) => {
-          const btn = document.createElement('button');
-          btn.className = 'choice-btn';
-          btn.textContent = choice;
-          btn.dataset.choiceIndex = cIndex;
-          btn.addEventListener('click', () => selectChoice(qIndex, cIndex));
-          choicesDiv.appendChild(btn);
-        });
-        
-        questionDiv.appendChild(choicesDiv);
         questionsContainer.appendChild(questionDiv);
       });
     }
@@ -271,7 +358,7 @@
       let allAnswered = true;
       
       quiz.questions.forEach((q, qIndex) => {
-        if (userAnswers[qIndex] === undefined) {
+        if (userAnswers[qIndex] === undefined && q.type !== 'essay') {
           allAnswered = false;
         }
       });
@@ -285,6 +372,9 @@
       wrongAnswers.length = 0;
       
       quiz.questions.forEach((q, qIndex) => {
+        // تجاهل الأسئلة المقالية في التصحيح
+        if (q.type === 'essay') return;
+        
         const userAnswerIndex = userAnswers[qIndex];
         const correctAnswerIndex = q.choices.indexOf(q.answer);
         
@@ -306,7 +396,7 @@
     }
 
     function showResult() {
-      const totalQuestions = quizData[currentQuiz].questions.length;
+      const totalQuestions = quizData[currentQuiz].questions.filter(q => q.type !== 'essay').length;
       resultElement.style.display = 'block';
       
       let resultHTML = `
@@ -328,7 +418,7 @@
           `;
         });
         resultHTML += '</ul>';
-      } else {
+      } else if (totalQuestions > 0) {
         resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
       }
 
@@ -344,6 +434,9 @@
       
       const quiz = quizData[currentQuiz];
       quiz.questions.forEach((q, qIndex) => {
+        // تجاهل الأسئلة المقالية في المراجعة
+        if (q.type === 'essay') return;
+        
         const userAnswerIndex = userAnswers[qIndex];
         const correctAnswerIndex = q.choices.indexOf(q.answer);
         
