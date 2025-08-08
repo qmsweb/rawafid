@@ -75,16 +75,20 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* لمحاذاة النص والأيقونة لليمين */
         }
 
         .points-badge {
+            order: -1; /* لجعلها أول عنصر في Flexbox */
             display: inline-block;
             background-color: var(--primary-color);
             color: white;
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 14px;
-            margin-right: 5px;
+            margin-left: 10px; /* لإنشاء مسافة بين الأيقونة والنص */
         }
 
         .choices-container {
@@ -171,7 +175,17 @@
             border-right: 4px solid var(--primary-color);
             display: none;
         }
-
+        
+        .essay-answer strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .essay-answer p {
+            margin: 0;
+            text-align: right; /* لمحاذاة النص من اليمين لليسار */
+        }
+        
         #submit-btn {
             display: block;
             margin: 25px auto 10px;
@@ -392,12 +406,12 @@
                     buttonsDiv.className = 'essay-buttons';
 
                     const showAnswerBtn = document.createElement('button');
-                    showAnswerBtn.className = 'essay-btn';
+                    showAnswerBtn.className = 'essay-btn show-answer-btn';
                     showAnswerBtn.textContent = 'أعرف الإجابة';
                     showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
 
                     const dontKnowBtn = document.createElement('button');
-                    dontKnowBtn.className = 'essay-btn';
+                    dontKnowBtn.className = 'essay-btn dont-know-btn';
                     dontKnowBtn.textContent = 'لا أعرف';
                     dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
 
@@ -407,7 +421,7 @@
 
                     const answerDiv = document.createElement('div');
                     answerDiv.className = 'essay-answer';
-                    answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
+                    answerDiv.innerHTML = `<strong>الإجابة:</strong> <p>${q.answer}</p>`;
                     questionDiv.appendChild(answerDiv);
                 } else {
                     const choicesDiv = document.createElement('div');
