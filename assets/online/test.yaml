@@ -4,8 +4,12 @@
       type: "mcq"
       choices: ["3", "4", "5"]
       answer: "4"
-      points: 2
+      points: 1
     - question: "اكتب تعريف المشتق في الرياضيات"
       type: "essay"
       answer: "المشتق هو معدل تغير الدالة بالنسبة لمتغيرها"
-      points: 5
+      points: 3
+- question: "اكتب تعريف الطاقة في الفيزياء"
+      type: "essay"
+      answer: "الطاقة هي معدل تغير الدالة بالنسبة يمكن كذا"
+      points: 2
