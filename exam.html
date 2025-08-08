@@ -69,6 +69,16 @@
       margin-bottom: 15px;
     }
 
+    .points-badge {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-right: 5px;
+    }
+
     .choices-container {
       display: flex;
       flex-direction: column;
@@ -286,7 +296,14 @@
         
         const questionText = document.createElement('p');
         questionText.className = 'question-text';
-        questionText.textContent = `${qIndex + 1}. ${q.question}`;
+        
+        // إضافة شارة النقاط
+        const pointsBadge = document.createElement('span');
+        pointsBadge.className = 'points-badge';
+        pointsBadge.textContent = q.points || 1;
+        questionText.appendChild(pointsBadge);
+        
+        questionText.appendChild(document.createTextNode(`${qIndex + 1}. ${q.question}`));
         questionDiv.appendChild(questionText);
         
         // إذا كان السؤال مقاليًا
@@ -296,10 +313,11 @@
           
           const showAnswerBtn = document.createElement('button');
           showAnswerBtn.className = 'essay-btn show-answer-btn';
-          showAnswerBtn.textContent = 'عرض الإجابة';
+          showAnswerBtn.textContent = 'أعرف الإجابة';
           showAnswerBtn.addEventListener('click', () => {
-            const answerDiv = questionDiv.querySelector('.essay-answer');
-            answerDiv.style.display = answerDiv.style.display === 'block' ? 'none' : 'block';
+            userAnswers[qIndex] = 1; // 1 يعني أعرف الإجابة
+            showAnswerBtn.disabled = true;
+            dontKnowBtn.disabled = true;
           });
           
           const dontKnowBtn = document.createElement('button');
@@ -309,6 +327,9 @@
             userAnswers[qIndex] = -1; // -1 يعني لا أعرف
             dontKnowBtn.disabled = true;
             showAnswerBtn.disabled = true;
+            // عرض الإجابة مباشرة عند النقر على لا أعرف
+            const answerDiv = questionDiv.querySelector('.essay-answer');
+            answerDiv.style.display = 'block';
           });
           
           buttonsDiv.appendChild(showAnswerBtn);
@@ -368,41 +389,56 @@
         return;
       }
       
-      score = 0;
+      let totalPoints = 0;
+      let earnedPoints = 0;
       wrongAnswers.length = 0;
       
       quiz.questions.forEach((q, qIndex) => {
-        // تجاهل الأسئلة المقالية في التصحيح
-        if (q.type === 'essay') return;
+        // تجاهل الأسئلة المقالية التي تم الضغط على "لا أعرف"
+        if (q.type === 'essay' && userAnswers[qIndex] === -1) {
+          return;
+        }
         
-        const userAnswerIndex = userAnswers[qIndex];
-        const correctAnswerIndex = q.choices.indexOf(q.answer);
+        const questionPoints = q.points || 1;
+        totalPoints += questionPoints;
         
-        if (userAnswerIndex === correctAnswerIndex) {
-          score++;
-        } else {
-          wrongAnswers.push({
-            question: q.question,
-            userAnswer: q.choices[userAnswerIndex],
-            correctAnswer: q.answer
-          });
+        // الأسئلة المقالية التي تم الضغط على "أعرف الإجابة" تحصل على النقاط كاملة
+        if (q.type === 'essay' && userAnswers[qIndex] === 1) {
+          earnedPoints += questionPoints;
+          return;
+        }
+        
+        // أسئلة الاختيار من متعدد
+        if (q.type !== 'essay') {
+          const userAnswerIndex = userAnswers[qIndex];
+          const correctAnswerIndex = q.choices.indexOf(q.answer);
+          
+          if (userAnswerIndex === correctAnswerIndex) {
+            earnedPoints += questionPoints;
+          } else {
+            wrongAnswers.push({
+              question: q.question,
+              userAnswer: q.choices[userAnswerIndex],
+              correctAnswer: q.answer,
+              points: questionPoints
+            });
+          }
         }
       });
       
       questionsContainer.style.display = 'none';
       submitButton.style.display = 'none';
       reviewButton.style.display = 'block';
-      showResult();
+      showResult(earnedPoints, totalPoints);
     }
 
-    function showResult() {
-      const totalQuestions = quizData[currentQuiz].questions.filter(q => q.type !== 'essay').length;
+    function showResult(earnedPoints, totalPoints) {
       resultElement.style.display = 'block';
       
       let resultHTML = `
         <p class='score'>درجتك: 
-          ${Math.round((score * 100) / totalQuestions)}%
-          (${score} من ${totalQuestions})
+          ${Math.round((earnedPoints * 100) / totalPoints)}%
+          (${earnedPoints} من ${totalPoints} نقطة)
         </p>
       `;
 
@@ -412,13 +448,14 @@
           resultHTML += `
             <li>
               <p>السؤال: ${ans.question}</p>
-              <p>إجابتك: <span class='wrong'>${ans.userAnswer}</span></p>
+              <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
               <p>الصحيح: <span class='correct'>${ans.correctAnswer}</span></p>
+              <p>النقاط المفقودة: ${ans.points}</p>
             </li>
           `;
         });
         resultHTML += '</ul>';
-      } else if (totalQuestions > 0) {
+      } else if (totalPoints > 0) {
         resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
       }
 
