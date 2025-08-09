@@ -5,25 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>روافد</title>
 
-  <!-- خطوط -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
   <link rel="icon" href="images/favicon.png" type="image/jpg">
-  <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="topbar.css" />
 
-  <meta property="og:title" content="منصة روافد التعليمية">
-<meta property="og:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.">
-<meta property="og:image" content="/images/cover.png">
-<meta property="og:url" content="https://rawafid.jassim.one/index.html">
-<meta property="og:type" content="website">
+  <meta property="og:title" content="منصة روافد التعليمية" id="og-title">
+  <meta property="og:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة." id="og-description">
+  <meta property="og:image" content="/images/cover.png" id="og-image">
+  <meta property="og:url" content="https://rawafid.jassim.one/index.html">
+  <meta property="og:type" content="website">
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="منصة روافد التعليمية">
-<meta name="twitter:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.">
-<meta name="twitter:image" content="/images/cover.png">
-
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="منصة روافد التعليمية" id="twitter-title">
+  <meta name="twitter:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة." id="twitter-description">
+  <meta name="twitter:image" content="/images/cover.png" id="twitter-image">
   
   <style>
     :root {
@@ -45,7 +42,7 @@
       color: #2d2d2d;
       min-height: 100vh;
       padding: 20px;
-      padding-top: 80px;   
+      padding-top: 80px;  
     }
 
     .container {
@@ -298,15 +295,15 @@
     </div>
 
     <div class="materials-list" id="materials-list"></div>
-        <div id="footer-placeholder"></div> 
+      <div id="footer-placeholder"></div> 
   </div>
 
   <script>
-  fetch("/footer.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("footer-placeholder").innerHTML = data;
-    });
+    fetch("/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer-placeholder").innerHTML = data;
+      });
     
     const materialsList = document.getElementById('materials-list');
     const filterItems = document.querySelectorAll('.filter-item');
@@ -402,9 +399,22 @@
         .then(res => res.json())
         .then(data => {
           materialsData = data.items;
-document.querySelector('.header h1').textContent = data.name || '';
-document.title = data.name || 'روافد';
+          // تحديث عنوان الصفحة وجميع العناوين
+          document.querySelector('.header h1').textContent = data.name || '';
+          document.title = data.name || 'روافد';
           document.querySelector('.header h2').textContent = data.code || '';
+          document.querySelector('.header p').textContent = data.description || '';
+
+          // تحديث الـ meta tags
+          if (data.name) {
+              document.getElementById('og-title').setAttribute('content', data.name);
+              document.getElementById('twitter-title').setAttribute('content', data.name);
+          }
+          if (data.description) {
+              document.getElementById('og-description').setAttribute('content', data.description);
+              document.getElementById('twitter-description').setAttribute('content', data.description);
+          }
+
           renderMaterials();
         })
         .catch(err => {
@@ -412,26 +422,25 @@ document.title = data.name || 'روافد';
         });
     });
 
- document.getElementById('share-button').addEventListener('click', () => {
-  const url = window.location.href;
-  const title = document.title;
+    document.getElementById('share-button').addEventListener('click', () => {
+      const url = window.location.href;
+      const title = document.title;
 
-  if (navigator.share) {
-    navigator.share({
-      title: title,
-      url: url
-    }).catch(() => {
-      alert("❌ لم يتم تنفيذ المشاركة.");
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          url: url
+        }).catch(() => {
+          alert("❌ لم يتم تنفيذ المشاركة.");
+        });
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          alert("✅ تم نسخ رابط الصفحة بنجاح");
+        }).catch(() => {
+          alert("❌ حدث خطأ أثناء النسخ");
+        });
+      }
     });
-  } else {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("✅ تم نسخ رابط الصفحة بنجاح");
-    }).catch(() => {
-      alert("❌ حدث خطأ أثناء النسخ");
-    });
-  }
-});
-
 
     // تحميل التوب بار
     fetch("topbar.html")
