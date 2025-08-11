@@ -42,7 +42,7 @@
             padding: 30px 20px;
             background: white;
         }
-        
+    
         .quiz-header {
             display: flex;
             align-items: center;
@@ -266,7 +266,7 @@
             background-color: var(--primary-color);
             color: white;
         }
-        
+    
         .quiz-info-table tbody td {
             background-color: #f8f9fa;
         }
@@ -375,29 +375,44 @@
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 questionDiv.dataset.questionIndex = qIndex;
-
-                const questionText = document.createElement('p');
-                questionText.className = 'question-text';
+                
+                const questionContent = document.createElement('div');
+                questionContent.className = 'question-content';
 
                 const pointsBadge = document.createElement('span');
                 pointsBadge.className = 'points-badge';
                 pointsBadge.textContent = q.points || 1;
-                questionText.appendChild(pointsBadge);
-
-                questionText.appendChild(document.createTextNode(`${qIndex + 1}. ${q.question}`));
-                questionDiv.appendChild(questionText);
+                questionContent.appendChild(pointsBadge);
+                
+                if (q.image) {
+                    const imageElement = document.createElement('img');
+                    imageElement.src = q.image;
+                    imageElement.alt = `السؤال رقم ${qIndex + 1}`;
+                    imageElement.style.maxWidth = '100%';
+                    imageElement.style.height = 'auto';
+                    imageElement.style.display = 'block';
+                    imageElement.style.marginTop = '10px';
+                    questionContent.appendChild(imageElement);
+                } else {
+                    const questionText = document.createElement('p');
+                    questionText.className = 'question-text';
+                    questionText.appendChild(document.createTextNode(`${qIndex + 1}. ${q.question}`));
+                    questionContent.appendChild(questionText);
+                }
+                
+                questionDiv.appendChild(questionContent);
 
                 if (q.type === 'essay') {
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
 
                     const showAnswerBtn = document.createElement('button');
-                    showAnswerBtn.className = 'essay-btn';
+                    showAnswerBtn.className = 'essay-btn show-answer-btn';
                     showAnswerBtn.textContent = 'أعرف الإجابة';
                     showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
 
                     const dontKnowBtn = document.createElement('button');
-                    dontKnowBtn.className = 'essay-btn';
+                    dontKnowBtn.className = 'essay-btn dont-know-btn';
                     dontKnowBtn.textContent = 'لا أعرف';
                     dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
 
@@ -472,7 +487,7 @@
                         earnedPoints += questionPoints;
                     } else if (userAnswers[qIndex] === -1) {
                         wrongAnswers.push({
-                            question: q.question,
+                            question: q.question || 'سؤال صورة',
                             userAnswer: "لا أعرف",
                             correctAnswer: q.answer,
                             points: questionPoints
@@ -485,7 +500,7 @@
                         earnedPoints += questionPoints;
                     } else {
                         wrongAnswers.push({
-                            question: q.question,
+                            question: q.question || 'سؤال صورة',
                             userAnswer: q.choices[userAnswerIndex] || "لم تجب",
                             correctAnswer: q.answer,
                             points: questionPoints
