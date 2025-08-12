@@ -346,7 +346,7 @@
                     }
                     // تحديث بيانات الجدول
                     subjectNameElement.textContent = quizData[currentQuiz].subject || 'غير محدد';
-                    subjectCodeElement.textContent = examCode;
+                    subjectCodeElement.textContent = quizData[currentQuiz].subjectCode || examCode; // هذا هو التغيير
                     
                     let totalPoints = 0;
                     quizData[currentQuiz].questions.forEach(q => {
