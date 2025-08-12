@@ -1,11 +1,12 @@
-- title: اختبار صرف
+- title: اختبار في الوحدة الأولى
+  subject-name: الصرف
+  subject-code: ARAB112
   questions:
-    - question: ما هو اليوم؟
+    - question: ما الوزن الصرفي لكلمة "مقدام"؟
       type: mcq
-      points: 25
+      points: 0
       choices:
-        - الأحد
-        - الجمعة
-        - الثلاثاء
-        - الخميس
-      answer: الثلاثاء
+        - فِعْلٌ
+        - مِفْعَالٌ
+        - فَعِيلٌ
+      answer: فِعْلٌ
