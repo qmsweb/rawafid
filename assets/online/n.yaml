@@ -1,35 +1,11 @@
-- title: "اختبار تجريبي"
-  subject: "برمجة الويب"
+- title: اختبار صرف
   questions:
-    - type: "mcq"
-      question: "ما هو العنصر المستخدم لتعريف فقرة نصية في HTML؟"
-      points: 1
+    - question: ما هو اليوم؟
+      type: mcq
+      points: 25
       choices:
-        - "div"
-        - "p"
-        - "span"
-        - "h1"
-      answer: "p"
-    - type: "mcq"
-      image: "https://via.placeholder.com/600x400.png?text=Image+Question"
-      question: "ما هي قيمة $x$ في المعادلة التي تظهر في الصورة؟"
-      points: 2
-      choices:
-        - "5"
-        - "10"
-        - "15"
-        - "20"
-      answer: "10"
-    - type: "essay"
-      question: "اشرح باختصار الفرق بين CSS و JavaScript."
-      points: 3
-      answer: "تُستخدم CSS لتنسيق وتصميم عناصر صفحة الويب (مثل الألوان والخطوط)، بينما تُستخدم JavaScript لإضافة التفاعل والسلوك الديناميكي إلى الصفحة."
-    - type: "mcq"
-      question: "أي من الخصائص التالية تُستخدم لتغيير لون الخلفية في CSS؟"
-      points: 1
-      choices:
-        - "font-color"
-        - "background-color"
-        - "color"
-        - "background-image"
-      answer: "background-color"
+        - الأحد
+        - الجمعة
+        - الثلاثاء
+        - الخميس
+      answer: الثلاثاء
