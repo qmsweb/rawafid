@@ -4,7 +4,7 @@
   questions:
     - question: ما معنى كلمة "التصريف" في اللغة العربية؟
       type: mcq
-      points: 0
+      points: 0.5
       choices:
         - التمثيل
         - التغيير
@@ -12,7 +12,7 @@
       answer: التغيير
     - question: عدد حروف الزيادة في اللغة العربية
       type: mcq
-      points: 0
+      points: 0.5
       choices:
         - سبعة
         - تسعة
@@ -20,14 +20,14 @@
       answer: عشرة
     - question: الكلمة المجردة من الأسماء والأفعال هي التي تكون جميع حروفها أصلية ولا يوجد فيها حرف زائد.
       type: mcq
-      points: 0
+      points: 0.5
       choices:
         - صح
         - خطأ
       answer: صح
     - question: الكلمة المزيدة من الأسماء والأفعال هي التي زيدَ فيها حرف أو أكثر عن حروفها الأصلية
       type: mcq
-      points: 0
+      points: 0.5
       choices:
         - صح
         - خطأ
