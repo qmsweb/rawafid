@@ -1,0 +1,13 @@
+{
+  "name": "مقرر الصرف",
+  "description": "",
+  "items": [
+    {
+      "title": "اختبار في الميزان الصرفي",
+      "description": "اختبار تفاعلي",
+      "type": "quizzes",
+      "preview_url": "exam?i=n",
+      "time-ms": "1755191418825"
+    }
+  ]
+}
