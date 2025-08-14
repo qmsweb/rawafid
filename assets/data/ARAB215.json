@@ -4,9 +4,9 @@
   "items": [
     {
       "title": "اختبار في الميزان الصرفي",
-      "description": "اختبار تفاعلي",
+      "description": "اختبار تفاعلي في الدرس الأول",
       "type": "quizzes",
-      "preview_url": "exam?i=n",
+      "preview_url": "exam?i=215-1",
       "time-ms": "1755191418825"
     }
   ]
