@@ -57,10 +57,20 @@
 
         h1 {
             text-align: center;
-            text-size: 25px
+            font-size: 25px;
             color: var(--primary-color);
             font-weight: 600;
             margin: 0;
+        }
+
+        .divider-text {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 40px 0 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light-border);
         }
 
         .question-item {
@@ -76,6 +86,14 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
+        }
+
+        .question-subtext {
+            font-size: 14px;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-weight: normal;
         }
 
         .points-badge {
@@ -350,7 +368,9 @@
                     
                     let totalPoints = 0;
                     quizData[currentQuiz].questions.forEach(q => {
-                        totalPoints += q.points || 1;
+                        if (q.type !== 'divider') {
+                            totalPoints += q.points || 1;
+                        }
                     });
                     subjectTotalScoreElement.textContent = totalPoints;
                 }
@@ -373,6 +393,14 @@
             questionsContainer.innerHTML = '';
 
             quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) {
+                    const dividerDiv = document.createElement('div');
+                    dividerDiv.className = 'divider-text';
+                    dividerDiv.textContent = q.divider;
+                    questionsContainer.appendChild(dividerDiv);
+                    return; // Continue to the next item
+                }
+
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 questionDiv.dataset.questionIndex = qIndex;
@@ -385,20 +413,28 @@
                 pointsBadge.textContent = q.points || 1;
                 questionText.appendChild(pointsBadge);
 
-                questionText.appendChild(document.createTextNode(`${qIndex + 1}. ${q.question}`));
+                const formattedQuestion = q.question.replace(/\n/g, '<br>');
+                questionText.innerHTML += `${qIndex + 1}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
+
+                if (q.subtext) {
+                    const subtextParagraph = document.createElement('p');
+                    subtextParagraph.className = 'question-subtext';
+                    subtextParagraph.textContent = q.subtext;
+                    questionDiv.appendChild(subtextParagraph);
+                }
 
                 if (q.type === 'essay') {
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
 
                     const showAnswerBtn = document.createElement('button');
-                    showAnswerBtn.className = 'essay-btn';
+                    showAnswerBtn.className = 'essay-btn show-answer-btn';
                     showAnswerBtn.textContent = 'أعرف الإجابة';
                     showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
 
                     const dontKnowBtn = document.createElement('button');
-                    dontKnowBtn.className = 'essay-btn';
+                    dontKnowBtn.className = 'essay-btn dont-know-btn';
                     dontKnowBtn.textContent = 'لا أعرف';
                     dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
 
@@ -450,7 +486,7 @@
             const quiz = quizData[currentQuiz];
             let allAnswered = true;
             quiz.questions.forEach((q, qIndex) => {
-                if (userAnswers[qIndex] === undefined) {
+                if (q.type !== 'divider' && userAnswers[qIndex] === undefined) {
                     allAnswered = false;
                 }
             });
@@ -465,6 +501,8 @@
             wrongAnswers.length = 0;
 
             quiz.questions.forEach((q, qIndex) => {
+                if (q.type === 'divider') return;
+
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
 
@@ -519,9 +557,10 @@
             if (wrongAnswers.length > 0) {
                 resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
                 wrongAnswers.forEach(ans => {
+                    const formattedQuestion = ans.question.replace(/\n/g, '<br>');
                     resultHTML += `
                         <li>
-                            <p>السؤال: ${ans.question}</p>
+                            <p>السؤال: ${formattedQuestion}</p>
                             <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
                             <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
                             <p>الدرجات المفقودة: ${ans.points}</p>
@@ -545,6 +584,8 @@
 
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
+                if (q.type === 'divider') return;
+
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
                 
                 if (q.type === 'essay') {
