@@ -42,7 +42,7 @@
             padding: 30px 20px;
             background: white;
         }
-        
+
         .quiz-header {
             display: flex;
             align-items: center;
@@ -95,7 +95,7 @@
             margin-bottom: 15px;
             font-weight: normal;
         }
-
+        
         .points-badge {
             display: inline-block;
             background-color: var(--primary-color);
@@ -112,33 +112,32 @@
             gap: 10px;
         }
 
-        .choice-btn {
+        .choice-label {
+            display: block;
             padding: 10px 15px;
             border: 1px solid var(--light-border);
             border-radius: 8px;
             background-color: var(--light-bg);
-            text-align: right;
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .choice-btn:hover {
+        
+        .choice-label:hover {
             background-color: var(--hover-bg);
         }
 
-        .choice-btn.selected {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .choice-btn.correct {
+        .choice-label.correct {
             background-color: #4CAF50;
             color: white;
         }
 
-        .choice-btn.wrong {
+        .choice-label.wrong {
             background-color: #F44336;
             color: white;
+        }
+
+        .choice-radio {
+            margin-left: 10px;
         }
 
         .essay-buttons {
@@ -285,7 +284,7 @@
             background-color: var(--primary-color);
             color: white;
         }
-        
+
         .quiz-info-table tbody td {
             background-color: #f8f9fa;
         }
@@ -365,12 +364,11 @@
                     // تحديث بيانات الجدول
                     subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
                     subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
-                    
+
                     let totalPoints = 0;
                     quizData[currentQuiz].questions.forEach(q => {
-                        if (q.type !== 'divider') {
-                            totalPoints += q.points || 1;
-                        }
+                        if (q.divider) return;
+                        totalPoints += q.points || 1;
                     });
                     subjectTotalScoreElement.textContent = totalPoints;
                 }
@@ -391,6 +389,7 @@
             }
 
             questionsContainer.innerHTML = '';
+            let questionNumber = 1;
 
             quiz.questions.forEach((q, qIndex) => {
                 if (q.divider) {
@@ -412,9 +411,9 @@
                 pointsBadge.className = 'points-badge';
                 pointsBadge.textContent = q.points || 1;
                 questionText.appendChild(pointsBadge);
-
+                
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
-                questionText.innerHTML += `${qIndex + 1}. ${formattedQuestion}`;
+                questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
 
                 if (q.subtext) {
@@ -451,18 +450,27 @@
                     choicesDiv.className = 'choices-container';
 
                     q.choices.forEach((choice, cIndex) => {
-                        const btn = document.createElement('button');
-                        btn.className = 'choice-btn';
-                        btn.textContent = choice;
-                        btn.dataset.choiceIndex = cIndex;
-                        btn.addEventListener('click', () => selectChoice(qIndex, cIndex));
-                        choicesDiv.appendChild(btn);
+                        const label = document.createElement('label');
+                        label.className = 'choice-label';
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = `question-${qIndex}`;
+                        radio.value = cIndex;
+                        radio.className = 'choice-radio';
+                        
+                        radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
+                        
+                        label.appendChild(radio);
+                        label.appendChild(document.createTextNode(choice));
+                        choicesDiv.appendChild(label);
                     });
 
                     questionDiv.appendChild(choicesDiv);
                 }
 
                 questionsContainer.appendChild(questionDiv);
+                questionNumber++;
             });
         }
 
@@ -473,20 +481,21 @@
             otherBtn.classList.remove('selected-essay');
         }
 
-        function selectChoice(qIndex, cIndex) {
+        function selectChoice(qIndex, cIndex, selectedLabel) {
             if (reviewMode) return;
-            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-            const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
-            choiceBtns.forEach(btn => btn.classList.remove('selected'));
-            choiceBtns[cIndex].classList.add('selected');
             userAnswers[qIndex] = cIndex;
+            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+            const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+            choiceLabels.forEach(label => label.classList.remove('selected'));
+            selectedLabel.classList.add('selected');
         }
 
         function submitAllAnswers() {
             const quiz = quizData[currentQuiz];
             let allAnswered = true;
             quiz.questions.forEach((q, qIndex) => {
-                if (q.type !== 'divider' && userAnswers[qIndex] === undefined) {
+                if (q.divider) return;
+                if (userAnswers[qIndex] === undefined) {
                     allAnswered = false;
                 }
             });
@@ -501,7 +510,7 @@
             wrongAnswers.length = 0;
 
             quiz.questions.forEach((q, qIndex) => {
-                if (q.type === 'divider') return;
+                if (q.divider) return;
 
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
@@ -537,7 +546,7 @@
             submitButton.style.display = 'none';
             reviewButton.style.display = 'block';
             showResult(earnedPoints, totalPoints);
-            
+
             window.scrollTo(0, 0);
         }
 
@@ -546,9 +555,9 @@
 
             let resultHTML = '';
             const percentage = Math.round((earnedPoints * 100) / totalPoints);
-            
+
             resultHTML = `
-                <p class='score'>درجتك: 
+                <p class='score'>درجتك:
                     ${percentage}%
                     (${earnedPoints} من ${totalPoints} درجة)
                 </p>
@@ -584,10 +593,10 @@
 
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
-                if (q.type === 'divider') return;
+                if (q.divider) return;
 
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-                
+
                 if (q.type === 'essay') {
                     const answerDiv = questionDiv.querySelector('.essay-answer');
                     answerDiv.style.display = 'block';
@@ -596,15 +605,16 @@
                 } else {
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
-                    const choiceBtns = questionDiv.querySelectorAll('.choice-btn');
+                    const choiceLabels = questionDiv.querySelectorAll('.choice-label');
 
-                    choiceBtns.forEach((btn, btnIndex) => {
+                    choiceLabels.forEach((label, btnIndex) => {
+                        const radio = label.querySelector('input[type="radio"]');
                         if (btnIndex === correctAnswerIndex) {
-                            btn.classList.add('correct');
+                            label.classList.add('correct');
                         } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
-                            btn.classList.add('wrong');
+                            label.classList.add('wrong');
                         }
-                        btn.disabled = true;
+                        radio.disabled = true;
                     });
                 }
             });
