@@ -6,16 +6,16 @@
     - question: |
         ما هي لغة البرمجة التي تُستخدم لتطوير تطبيقات الويب من جانب العميل؟
     - subtext: (اختر إجابة واحدة)
-    - choices: 
+    - choices:
         - Java
         - Python
         - JavaScript
         - C++
     - answer: "JavaScript"
     - points: 2
-    
+
     - divider: أسئلة عن هياكل البيانات
-    
+
     - question: |
         ما هو هيكل البيانات الذي يعمل بنظام "الداخل أولًا، الخارج أولًا" (FIFO)؟
     - subtext: (إجابة قصيرة)
@@ -25,13 +25,13 @@
 
     - question: |
         ما هي القيمة النهائية للمتغير `x` بعد تنفيذ الكود التالي؟
-        
+
         ```
         let x = 10;
         x += 5;
         x *= 2;
         ```
-    - choices: 
+    - choices:
         - "20"
         - "25"
         - "30"
@@ -44,12 +44,12 @@
     - type: essay
     - answer: "لشرح وظيفة الكود وتسهيل قراءته وفهمه من قبل المبرمجين الآخرين أو المبرمج نفسه في المستقبل."
     - points: 5
-    
+
     - divider: أسئلة اختيار متعدد
-    
+
     - question: |
         ما هو الأمر الصحيح لعرض رسالة في صندوق تنبيه (alert box) باستخدام JavaScript؟
-    - choices: 
+    - choices:
         - `console.log("Hello");`
         - `alertBox("Hello");`
         - `window.alert("Hello");`
