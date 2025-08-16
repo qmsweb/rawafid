@@ -1,15 +1,48 @@
 ---
-- title: اختبار أساسيات البرمجة
-  subject-name: أساسيات البرمجة
-  subject-code: PROG101
+- title: اختبار لغات الويب
+  subject-name: لغات البرمجة
+  subject-code: WEB-DEV
   questions:
     - question: |
-        ما هي لغة البرمجة التي تُستخدم لتطوير تطبيقات الويب من جانب العميل؟
+        ما هي اللغة المسؤولة عن هيكل صفحة الويب؟
     - subtext: (اختر إجابة واحدة)
     - choices:
-        - Java
+        - CSS
         - Python
+        - HTML
         - JavaScript
-        - C++
-    - answer: "JavaScript"
+    - answer: "HTML"
+    - points: 3
+
+    - divider: أسئلة عن التنسيق
+
+    - question: |
+        ما هي الخاصية المستخدمة في CSS لتغيير لون النص؟
+    - subtext: (أجب بكلمة واحدة)
+    - type: essay
+    - answer: "color"
     - points: 2
+
+    - question: |
+        ما هو الناتج من تنفيذ الكود التالي؟
+
+        ```
+        let num1 = 5;
+        let num2 = "10";
+        let result = num1 + num2;
+        ```
+    - choices:
+        - "15"
+        - "510"
+        - "Error"
+        - "10"
+    - answer: "510"
+    - points: 5
+
+    - divider: أسئلة عن JavaScript
+
+    - question: |
+        لماذا يُعتبر DOM (Document Object Model) مهمًا في JavaScript؟
+    - type: essay
+    - answer: "لأنه يُمثل هيكل الصفحة على شكل شجرة، مما يسمح للغة JavaScript بالوصول إلى عناصر HTML وتعديلها ديناميكيًا."
+    - points: 4
