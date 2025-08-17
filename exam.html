@@ -1,649 +1,647 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>اختبار</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اختبار</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/favicon.png" type="image/jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.png" type="image/jpg">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="topbar.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="topbar.css" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 
-    <style>
-        :root {
-            --primary-color: #1a2ac6;
-            --hover-bg: #e0e7ff;
-            --light-bg: #f0f2f7;
-            --light-border: #ccd1e0;
-        }
+    <style>
+        :root {
+            --primary-color: #1a2ac6;
+            --hover-bg: #e0e7ff;
+            --light-bg: #f0f2f7;
+            --light-border: #ccd1e0;
+        }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Noto Kufi Arabic", sans-serif;
-        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Kufi Arabic", sans-serif;
+        }
 
-        body {
-            background-color: white;
-            color: #2d2d2d;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
+        body {
+            background-color: white;
+            color: #2d2d2d;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: white;
-        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            background: white;
+        }
 
-        .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .quiz-header img {
-            width: 35px;
-            height: 35px;
-            margin-left: 10px;
-        }
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .quiz-header img {
+            width: 35px;
+            height: 35px;
+            margin-left: 10px;
+        }
 
-        h1 {
-            text-align: center;
-            font-size: 25px;
-            color: var(--primary-color);
-            font-weight: 600;
-            margin: 0;
-        }
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
 
-        .divider-text {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 40px 0 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--light-border);
-        }
+        .divider-text {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 40px 0 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light-border);
+        }
 
-        .question-item {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #e7e7e7;
-            border-radius: 12px;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
+        .question-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e7e7e7;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
 
-        .question-text {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-        .question-subtext {
-            font-size: 14px;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 15px;
-            font-weight: normal;
-        }
-        
-        .points-badge {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 14px;
-            margin-right: 5px;
-        }
+        .question-subtext {
+            font-size: 14px;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+         
+        .points-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
 
-        .choices-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-        .choice-label {
-            display: block;
-            padding: 10px 15px;
-            border: 1px solid var(--light-border);
-            border-radius: 8px;
-            background-color: var(--light-bg);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        
-        .choice-label:hover {
-            background-color: var(--hover-bg);
-        }
+        .choice-label {
+            display: block;
+            padding: 10px 15px;
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+            background-color: var(--light-bg);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+         
+        .choice-label:hover {
+            background-color: var(--hover-bg);
+        }
 
-        .choice-label.correct {
-            background-color: #4CAF50;
-            color: white;
-        }
+        .choice-label.correct {
+            background-color: #4CAF50;
+            color: white;
+        }
 
-        .choice-label.wrong {
-            background-color: #F44336;
-            color: white;
-        }
+        .choice-label.wrong {
+            background-color: #F44336;
+            color: white;
+        }
 
-        .choice-radio {
-            margin-left: 10px;
-        }
+        .choice-radio {
+            margin-left: 10px;
+        }
 
-        .essay-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+        .essay-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-        .essay-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            background-color: var(--light-bg);
-            color: var(--primary-color);
-        }
+        .essay-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-        .essay-btn.selected-essay {
-            border: 2px solid var(--primary-color);
-            background-color: var(--hover-bg);
-            color: var(--primary-color);
-        }
+        .essay-btn.selected-essay {
+            border: 2px solid var(--primary-color);
+            background-color: var(--hover-bg);
+            color: var(--primary-color);
+        }
 
-        .essay-btn.show-answer-btn {
-            /* No change to color here */
-        }
+        .essay-btn.show-answer-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
 
-        .essay-btn.dont-know-btn {
-            /* No change to color here */
-        }
+        .essay-btn.dont-know-btn {
+            background-color: #F44336;
+            color: white;
+        }
+        .essay-btn.selected-essay.show-answer-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
 
-        .essay-btn.selected-essay.show-answer-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
+        .essay-btn.selected-essay.dont-know-btn {
+            background-color: #F44336;
+            color: white;
+            border: none;
+        }
 
-        .essay-btn.selected-essay.dont-know-btn {
-            background-color: #F44336;
-            color: white;
-            border: none;
-        }
+        .essay-answer {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-right: 4px solid var(--primary-color);
+            display: none;
+            white-space: pre-wrap; /* **تمت إضافة هذا السطر** */
+        }
 
-        .essay-answer {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-right: 4px solid var(--primary-color);
-            display: none;
-        }
+        #submit-btn {
+            display: block;
+            margin: 25px auto 10px;
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-        .essay-answer p {
-            white-space: pre-wrap;
-        }
+        #submit-btn:hover {
+            opacity: 0.9;
+        }
 
-        #submit-btn {
-            display: block;
-            margin: 25px auto 10px;
-            padding: 12px 30px;
-            font-size: 16px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        #review-btn {
+            display: none;
+            margin: 15px auto;
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-        #submit-btn:hover {
-            opacity: 0.9;
-        }
+        #review-btn:hover {
+            opacity: 0.9;
+        }
 
-        #review-btn {
-            display: none;
-            margin: 15px auto;
-            padding: 12px 30px;
-            font-size: 16px;
-            background-color: #FF9800;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            display: none;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+        }
 
-        #review-btn:hover {
-            opacity: 0.9;
-        }
+        #result .score {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary-color);
+        }
 
-        #result {
-            margin-top: 30px;
-            padding: 20px;
-            display: none;
-            border-radius: 12px;
-            background-color: #f8f9fa;
-        }
+        #result h3 {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #444;
+        }
 
-        #result .score {
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            color: var(--primary-color);
-        }
+        #result ul {
+            list-style: none;
+            padding: 0;
+        }
 
-        #result h3 {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #444;
-        }
+        #result li {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #e7e7e7;
+            border-radius: 8px;
+            background: white;
+        }
 
-        #result ul {
-            list-style: none;
-            padding: 0;
-        }
+        .wrong {
+            color: red;
+        }
 
-        #result li {
-            margin-bottom: 15px;
-            padding: 15px;
-            border: 1px solid #e7e7e7;
-            border-radius: 8px;
-            background: white;
-        }
+        .correct {
+            color: green;
+        }
 
-        .wrong {
-            color: red;
-        }
+        .quiz-info-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .quiz-info-table th, .quiz-info-table td {
+            border: 1px solid var(--light-border);
+            padding: 12px;
+        }
+        .quiz-info-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
-        .correct {
-            color: green;
-        }
-
-        .quiz-info-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-bottom: 25px;
-            text-align: center;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .quiz-info-table th, .quiz-info-table td {
-            border: 1px solid var(--light-border);
-            padding: 12px;
-        }
-        .quiz-info-table th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .quiz-info-table tbody td {
-            background-color: #f8f9fa;
-        }
-    </style>
+        .quiz-info-table tbody td {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-    <div id="topbar-container"></div>
+    <div id="topbar-container"></div>
 
-    <div class="container">
-        <div class="quiz-header">
-            <img src="/images/favicon.png" alt="Quiz Icon">
-            <h1 id="quiz-title">الاختبار</h1>
-        </div>
+    <div class="container">
+        <div class="quiz-header">
+            <img src="/images/favicon.png" alt="Quiz Icon">
+            <h1 id="quiz-title">الاختبار</h1>
+        </div>
 
-        <table class="quiz-info-table" id="quiz-info-table">
-            <thead>
-                <tr>
-                    <th>اسم المقرر</th>
-                    <th>رمز المقرر</th>
-                    <th>الدرجة الكلية</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="subject-name"></td>
-                    <td id="subject-code"></td>
-                    <td id="subject-total-score"></td>
-                </tr>
-            </tbody>
-        </table>
+        <table class="quiz-info-table" id="quiz-info-table">
+            <thead>
+                <tr>
+                    <th>اسم المقرر</th>
+                    <th>رمز المقرر</th>
+                    <th>الدرجة الكلية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="subject-name"></td>
+                    <td id="subject-code"></td>
+                    <td id="subject-total-score"></td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div id="questions-container"></div>
-        <button id="submit-btn">تأكيد الإجابات</button>
-        <button id="review-btn">مراجعة الإجابات</button>
-        <div id="result"></div>
-    </div>
+        <div id="questions-container"></div>
+        <button id="submit-btn">تأكيد الإجابات</button>
+        <button id="review-btn">مراجعة الإجابات</button>
+        <div id="result"></div>
+    </div>
 
-    <script>
-        const questionsContainer = document.getElementById('questions-container');
-        const submitButton = document.getElementById('submit-btn');
-        const reviewButton = document.getElementById('review-btn');
-        const resultElement = document.getElementById('result');
-        const quizTitleElement = document.getElementById('quiz-title');
-        const subjectNameElement = document.getElementById('subject-name');
-        const subjectCodeElement = document.getElementById('subject-code');
-        const subjectTotalScoreElement = document.getElementById('subject-total-score');
+    <script>
+        const questionsContainer = document.getElementById('questions-container');
+        const submitButton = document.getElementById('submit-btn');
+        const reviewButton = document.getElementById('review-btn');
+        const resultElement = document.getElementById('result');
+        const quizTitleElement = document.getElementById('quiz-title');
+        const subjectNameElement = document.getElementById('subject-name');
+        const subjectCodeElement = document.getElementById('subject-code');
+        const subjectTotalScoreElement = document.getElementById('subject-total-score');
 
-        let quizData = [];
-        let currentQuiz = 0;
-        const userAnswers = [];
-        const wrongAnswers = [];
-        let reviewMode = false;
+        let quizData = [];
+        let currentQuiz = 0;
+        const userAnswers = [];
+        const wrongAnswers = [];
+        let reviewMode = false;
 
-        function getExamCode() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('i');
-        }
+        function getExamCode() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('i');
+        }
 
-        async function loadQuizData() {
-            const examCode = getExamCode();
-            if (!examCode) {
-                questionsContainer.innerHTML = '<p>⚠️ لم يتم تحديد رمز الاختبار.</p>';
-                submitButton.style.display = 'none';
-                return;
-            }
+        async function loadQuizData() {
+            const examCode = getExamCode();
+            if (!examCode) {
+                questionsContainer.innerHTML = '<p>⚠️ لم يتم تحديد رمز الاختبار.</p>';
+                submitButton.style.display = 'none';
+                return;
+            }
 
-            try {
-                const res = await fetch(`assets/online/${examCode}.yaml`);
-                if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
-                const yamlText = await res.text();
-                quizData = jsyaml.load(yamlText);
+            try {
+                const res = await fetch(`assets/online/${examCode}.yaml`);
+                if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
+                const yamlText = await res.text();
+                quizData = jsyaml.load(yamlText);
 
-                if (quizData[currentQuiz]) {
-                    if (quizData[currentQuiz].title) {
-                        quizTitleElement.textContent = quizData[currentQuiz].title;
-                    }
-                    // تحديث بيانات الجدول
-                    subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
-                    subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
+                if (quizData[currentQuiz]) {
+                    if (quizData[currentQuiz].title) {
+                        quizTitleElement.textContent = quizData[currentQuiz].title;
+                    }
+                    // تحديث بيانات الجدول
+                    subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
+                    subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
 
-                    let totalPoints = 0;
-                    quizData[currentQuiz].questions.forEach(q => {
-                        if (q.divider) return;
-                        totalPoints += q.points || 1;
-                    });
-                    subjectTotalScoreElement.textContent = totalPoints;
-                }
+                    let totalPoints = 0;
+                    quizData[currentQuiz].questions.forEach(q => {
+                        if (q.divider) return;
+                        totalPoints += q.points || 1;
+                    });
+                    subjectTotalScoreElement.textContent = totalPoints;
+                }
 
-                renderAllQuestions();
-            } catch (err) {
-                questionsContainer.innerHTML = `<p>❌ ${err.message}</p>`;
-                submitButton.style.display = 'none';
-            }
-        }
+                renderAllQuestions();
+            } catch (err) {
+                questionsContainer.innerHTML = `<p>❌ ${err.message}</p>`;
+                submitButton.style.display = 'none';
+            }
+        }
 
-        function renderAllQuestions() {
-            const quiz = quizData[currentQuiz];
-            if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-                questionsContainer.innerHTML = '<p>لا توجد أسئلة متاحة</p>';
-                submitButton.style.display = 'none';
-                return;
-            }
+        function renderAllQuestions() {
+            const quiz = quizData[currentQuiz];
+            if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+                questionsContainer.innerHTML = '<p>لا توجد أسئلة متاحة</p>';
+                submitButton.style.display = 'none';
+                return;
+            }
 
-            questionsContainer.innerHTML = '';
-            let questionNumber = 1;
+            questionsContainer.innerHTML = '';
+            let questionNumber = 1;
 
-            quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) {
-                    const dividerDiv = document.createElement('div');
-                    dividerDiv.className = 'divider-text';
-                    dividerDiv.textContent = q.divider;
-                    questionsContainer.appendChild(dividerDiv);
-                    return; // Continue to the next item
-                }
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) {
+                    const dividerDiv = document.createElement('div');
+                    dividerDiv.className = 'divider-text';
+                    dividerDiv.textContent = q.divider;
+                    questionsContainer.appendChild(dividerDiv);
+                    return; // Continue to the next item
+                }
 
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question-item';
-                questionDiv.dataset.questionIndex = qIndex;
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                questionDiv.dataset.questionIndex = qIndex;
 
-                const questionText = document.createElement('p');
-                questionText.className = 'question-text';
+                const questionText = document.createElement('p');
+                questionText.className = 'question-text';
 
-                const pointsBadge = document.createElement('span');
-                pointsBadge.className = 'points-badge';
-                pointsBadge.textContent = q.points || 1;
-                questionText.appendChild(pointsBadge);
-                
-                const formattedQuestion = q.question.replace(/\n/g, '<br>');
-                questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
-                questionDiv.appendChild(questionText);
+                const pointsBadge = document.createElement('span');
+                pointsBadge.className = 'points-badge';
+                pointsBadge.textContent = q.points || 1;
+                questionText.appendChild(pointsBadge);
+                 
+                const formattedQuestion = q.question.replace(/\n/g, '<br>');
+                questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
+                questionDiv.appendChild(questionText);
 
-                if (q.subtext) {
-                    const subtextParagraph = document.createElement('p');
-                    subtextParagraph.className = 'question-subtext';
-                    subtextParagraph.textContent = q.subtext;
-                    questionDiv.appendChild(subtextParagraph);
-                }
+                if (q.subtext) {
+                    const subtextParagraph = document.createElement('p');
+                    subtextParagraph.className = 'question-subtext';
+                    subtextParagraph.textContent = q.subtext;
+                    questionDiv.appendChild(subtextParagraph);
+                }
 
-                if (q.type === 'essay') {
-                    const buttonsDiv = document.createElement('div');
-                    buttonsDiv.className = 'essay-buttons';
+                if (q.type === 'essay') {
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = 'essay-buttons';
 
-                    const showAnswerBtn = document.createElement('button');
-                    showAnswerBtn.className = 'essay-btn show-answer-btn';
-                    showAnswerBtn.textContent = 'أعرف الإجابة';
-                    showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
+                    const showAnswerBtn = document.createElement('button');
+                    showAnswerBtn.className = 'essay-btn show-answer-btn';
+                    showAnswerBtn.textContent = 'أعرف الإجابة';
+                    showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
 
-                    const dontKnowBtn = document.createElement('button');
-                    dontKnowBtn.className = 'essay-btn dont-know-btn';
-                    dontKnowBtn.textContent = 'لا أعرف';
-                    dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
+                    const dontKnowBtn = document.createElement('button');
+                    dontKnowBtn.className = 'essay-btn dont-know-btn';
+                    dontKnowBtn.textContent = 'لا أعرف';
+                    dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
 
-                    buttonsDiv.appendChild(showAnswerBtn);
-                    buttonsDiv.appendChild(dontKnowBtn);
-                    questionDiv.appendChild(buttonsDiv);
+                    buttonsDiv.appendChild(showAnswerBtn);
+                    buttonsDiv.appendChild(dontKnowBtn);
+                    questionDiv.appendChild(buttonsDiv);
 
-                    const answerDiv = document.createElement('div');
-                    answerDiv.className = 'essay-answer';
-                    answerDiv.innerHTML = `<strong>الإجابة:</strong> <p>${q.answer}</p>`;
-                    questionDiv.appendChild(answerDiv);
-                } else {
-                    const choicesDiv = document.createElement('div');
-                    choicesDiv.className = 'choices-container';
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'essay-answer';
+                    // تم تعديل هذا السطر لاستخدام innerHTML لكي يتم عرض تنسيقات HTML إن وجدت
+                    answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
+                    questionDiv.appendChild(answerDiv);
+                } else {
+                    const choicesDiv = document.createElement('div');
+                    choicesDiv.className = 'choices-container';
 
-                    q.choices.forEach((choice, cIndex) => {
-                        const label = document.createElement('label');
-                        label.className = 'choice-label';
+                    q.choices.forEach((choice, cIndex) => {
+                        const label = document.createElement('label');
+                        label.className = 'choice-label';
 
-                        const radio = document.createElement('input');
-                        radio.type = 'radio';
-                        radio.name = `question-${qIndex}`;
-                        radio.value = cIndex;
-                        radio.className = 'choice-radio';
-                        
-                        radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
-                        
-                        label.appendChild(radio);
-                        label.appendChild(document.createTextNode(choice));
-                        choicesDiv.appendChild(label);
-                    });
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = `question-${qIndex}`;
+                        radio.value = cIndex;
+                        radio.className = 'choice-radio';
+                         
+                        radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
+                       
+                        label.appendChild(radio);
+                        label.appendChild(document.createTextNode(choice));
+                        choicesDiv.appendChild(label);
+                    });
 
-                    questionDiv.appendChild(choicesDiv);
-                }
+                    questionDiv.appendChild(choicesDiv);
+                }
 
-                questionsContainer.appendChild(questionDiv);
-                questionNumber++;
-            });
-        }
+                questionsContainer.appendChild(questionDiv);
+                questionNumber++;
+            });
+        }
 
-        function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
-            if (reviewMode) return;
-            userAnswers[qIndex] = choice;
-            
-            // Remove selected class from all buttons in this question
-            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-            const buttons = questionDiv.querySelectorAll('.essay-btn');
-            buttons.forEach(btn => btn.classList.remove('selected-essay'));
+        // **دالة تم تعديلها لإصلاح مشكلة الأزرار**
+        function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
+            if (reviewMode) return;
+            userAnswers[qIndex] = choice;
+            
+            // إزالة فئة التحديد من جميع الأزرار لنفس السؤال
+            const questionDiv = selectedBtn.closest('.question-item');
+            const allBtns = questionDiv.querySelectorAll('.essay-btn');
+            allBtns.forEach(btn => btn.classList.remove('selected-essay'));
 
-            // Add selected class to the clicked button
-            selectedBtn.classList.add('selected-essay');
-        }
+            // إضافة فئة التحديد إلى الزر الذي تم النقر عليه فقط
+            selectedBtn.classList.add('selected-essay');
+        }
 
-        function selectChoice(qIndex, cIndex, selectedLabel) {
-            if (reviewMode) return;
-            userAnswers[qIndex] = cIndex;
-            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-            const choiceLabels = questionDiv.querySelectorAll('.choice-label');
-            choiceLabels.forEach(label => label.classList.remove('selected'));
-            selectedLabel.classList.add('selected');
-        }
+        function selectChoice(qIndex, cIndex, selectedLabel) {
+            if (reviewMode) return;
+            userAnswers[qIndex] = cIndex;
+            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+            const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+            choiceLabels.forEach(label => label.classList.remove('selected'));
+            selectedLabel.classList.add('selected');
+        }
 
-        function submitAllAnswers() {
-            const quiz = quizData[currentQuiz];
-            let allAnswered = true;
-            quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
-                if (userAnswers[qIndex] === undefined) {
-                    allAnswered = false;
-                }
-            });
+        function submitAllAnswers() {
+            const quiz = quizData[currentQuiz];
+            let allAnswered = true;
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) return;
+                if (userAnswers[qIndex] === undefined) {
+                    allAnswered = false;
+                }
+            });
 
-            if (!allAnswered) {
-                alert('الرجاء الإجابة على جميع الأسئلة قبل الإرسال');
-                return;
-            }
+            if (!allAnswered) {
+                alert('الرجاء الإجابة على جميع الأسئلة قبل الإرسال');
+                return;
+            }
 
-            let earnedPoints = 0;
-            let totalPoints = 0;
-            wrongAnswers.length = 0;
+            let earnedPoints = 0;
+            let totalPoints = 0;
+            wrongAnswers.length = 0;
 
-            quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) return;
 
-                const questionPoints = q.points || 1;
-                totalPoints += questionPoints;
+                const questionPoints = q.points || 1;
+                totalPoints += questionPoints;
 
-                if (q.type === 'essay') {
-                    if (userAnswers[qIndex] === 1) {
-                        earnedPoints += questionPoints;
-                    } else if (userAnswers[qIndex] === -1) {
-                        wrongAnswers.push({
-                            question: q.question,
-                            userAnswer: "لا أعرف",
-                            correctAnswer: q.answer,
-                            points: questionPoints
-                        });
-                    }
-                } else {
-                    const userAnswerIndex = userAnswers[qIndex];
-                    const correctAnswerIndex = q.choices.indexOf(q.answer);
-                    if (userAnswerIndex === correctAnswerIndex) {
-                        earnedPoints += questionPoints;
-                    } else {
-                        wrongAnswers.push({
-                            question: q.question,
-                            userAnswer: q.choices[userAnswerIndex] || "لم تجب",
-                            correctAnswer: q.answer,
-                            points: questionPoints
-                        });
-                    }
-                }
-            });
+                if (q.type === 'essay') {
+                    if (userAnswers[qIndex] === 1) {
+                        earnedPoints += questionPoints;
+                    } else if (userAnswers[qIndex] === -1) {
+                        wrongAnswers.push({
+                            question: q.question,
+                            userAnswer: "لا أعرف",
+                            correctAnswer: q.answer,
+                            points: questionPoints
+                        });
+                    }
+                } else {
+                    const userAnswerIndex = userAnswers[qIndex];
+                    const correctAnswerIndex = q.choices.indexOf(q.answer);
+                    if (userAnswerIndex === correctAnswerIndex) {
+                        earnedPoints += questionPoints;
+                    } else {
+                        wrongAnswers.push({
+                            question: q.question,
+                            userAnswer: q.choices[userAnswerIndex] || "لم تجب",
+                            correctAnswer: q.answer,
+                            points: questionPoints
+                        });
+                    }
+                }
+            });
 
-            questionsContainer.style.display = 'none';
-            submitButton.style.display = 'none';
-            reviewButton.style.display = 'block';
-            showResult(earnedPoints, totalPoints);
+            questionsContainer.style.display = 'none';
+            submitButton.style.display = 'none';
+            reviewButton.style.display = 'block';
+            showResult(earnedPoints, totalPoints);
 
-            window.scrollTo(0, 0);
-        }
+            window.scrollTo(0, 0);
+        }
 
-        function showResult(earnedPoints, totalPoints) {
-            resultElement.style.display = 'block';
+        function showResult(earnedPoints, totalPoints) {
+            resultElement.style.display = 'block';
 
-            let resultHTML = '';
-            const percentage = Math.round((earnedPoints * 100) / totalPoints);
+            let resultHTML = '';
+            const percentage = Math.round((earnedPoints * 100) / totalPoints);
 
-            resultHTML = `
-                <p class='score'>درجتك:
-                    ${percentage}%
-                    (${earnedPoints} من ${totalPoints} درجة)
-                </p>
-            `;
+            resultHTML = `
+                <p class='score'>درجتك:
+                    ${percentage}%
+                    (${earnedPoints} من ${totalPoints} درجة)
+                </p>
+            `;
 
-            if (wrongAnswers.length > 0) {
-                resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
-                wrongAnswers.forEach(ans => {
-                    const formattedQuestion = ans.question.replace(/\n/g, '<br>');
-                    resultHTML += `
-                        <li>
-                            <p>السؤال: ${formattedQuestion}</p>
-                            <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
-                            <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
-                            <p>الدرجات المفقودة: ${ans.points}</p>
-                        </li>
-                    `;
-                });
-                resultHTML += '</ul>';
-            } else if (totalPoints > 0) {
-                resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
-            }
+            if (wrongAnswers.length > 0) {
+                resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
+                wrongAnswers.forEach(ans => {
+                    const formattedQuestion = ans.question.replace(/\n/g, '<br>');
+                    resultHTML += `
+                        <li>
+                            <p>السؤال: ${formattedQuestion}</p>
+                            <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
+                            <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
+                            <p>الدرجات المفقودة: ${ans.points}</p>
+                        </li>
+                    `;
+                });
+                resultHTML += '</ul>';
+            } else if (totalPoints > 0) {
+                resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
+            }
 
-            resultElement.innerHTML = resultHTML;
-        }
+            resultElement.innerHTML = resultHTML;
+        }
 
-        function reviewAnswers() {
-            reviewMode = true;
-            questionsContainer.style.display = 'block';
-            resultElement.style.display = 'none';
-            reviewButton.style.display = 'none';
-            submitButton.style.display = 'none';
+        function reviewAnswers() {
+            reviewMode = true;
+            questionsContainer.style.display = 'block';
+            resultElement.style.display = 'none';
+            reviewButton.style.display = 'none';
+            submitButton.style.display = 'none';
 
-            const quiz = quizData[currentQuiz];
-            quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
+            const quiz = quizData[currentQuiz];
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) return;
 
-                const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
 
-                if (q.type === 'essay') {
-                    const answerDiv = questionDiv.querySelector('.essay-answer');
-                    answerDiv.style.display = 'block';
-                    const essayButtons = questionDiv.querySelector('.essay-buttons');
-                    essayButtons.style.display = 'none';
-                } else {
-                    const userAnswerIndex = userAnswers[qIndex];
-                    const correctAnswerIndex = q.choices.indexOf(q.answer);
-                    const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+                if (q.type === 'essay') {
+                    const answerDiv = questionDiv.querySelector('.essay-answer');
+                    answerDiv.style.display = 'block';
+                    const essayButtons = questionDiv.querySelector('.essay-buttons');
+                    essayButtons.style.display = 'none';
+                } else {
+                    const userAnswerIndex = userAnswers[qIndex];
+                    const correctAnswerIndex = q.choices.indexOf(q.answer);
+                    const choiceLabels = questionDiv.querySelectorAll('.choice-label');
 
-                    choiceLabels.forEach((label, btnIndex) => {
-                        const radio = label.querySelector('input[type="radio"]');
-                        if (btnIndex === correctAnswerIndex) {
-                            label.classList.add('correct');
-                        } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
-                            label.classList.add('wrong');
-                        }
-                        radio.disabled = true;
-                    });
-                }
-            });
-        }
+                    choiceLabels.forEach((label, btnIndex) => {
+                        const radio = label.querySelector('input[type="radio"]');
+                        if (btnIndex === correctAnswerIndex) {
+                            label.classList.add('correct');
+                        } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
+                            label.classList.add('wrong');
+                        }
+                        radio.disabled = true;
+                    });
+                }
+            });
+        }
 
-        submitButton.addEventListener('click', submitAllAnswers);
-        reviewButton.addEventListener('click', reviewAnswers);
-        loadQuizData();
+        submitButton.addEventListener('click', submitAllAnswers);
+        reviewButton.addEventListener('click', reviewAnswers);
+        loadQuizData();
 
-        fetch("topbar.html")
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById("topbar-container").innerHTML = html;
-                const script = document.createElement("script");
-                script.src = "topbar.js";
-                document.body.appendChild(script);
-            })
-            .catch(err => console.error("فشل تحميل التوب بار:", err));
-    </script>
+        fetch("topbar.html")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("topbar-container").innerHTML = html;
+                const script = document.createElement("script");
+                script.src = "topbar.js";
+                document.body.appendChild(script);
+            })
+            .catch(err => console.error("فشل تحميل التوب بار:", err));
+    </script>
 </body>
 </html>
