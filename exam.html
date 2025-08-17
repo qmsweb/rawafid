@@ -72,6 +72,26 @@
             padding-top: 20px;
             border-top: 2px solid var(--light-border);
         }
+        
+        /* إضافة نمط العنوان والوصف للسؤال الإرشادي */
+        .info-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .info-description {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* إخفاء نقاط السؤال من النوع الإرشادي */
+        .info-question .points-badge {
+            display: none;
+        }
 
         .question-item {
             margin-bottom: 30px;
@@ -188,7 +208,7 @@
             border-radius: 8px;
             border-right: 4px solid var(--primary-color);
             display: none;
-            white-space: pre-wrap; /* **تمت إضافة هذا السطر** */
+            white-space: pre-wrap;
         }
 
         #submit-btn {
@@ -369,6 +389,7 @@
                     let totalPoints = 0;
                     quizData[currentQuiz].questions.forEach(q => {
                         if (q.divider) return;
+                        if (q.type === 'info') return; // تجاهل الأسئلة الإرشادية
                         totalPoints += q.points || 1;
                     });
                     subjectTotalScoreElement.textContent = totalPoints;
@@ -400,18 +421,40 @@
                     questionsContainer.appendChild(dividerDiv);
                     return; // Continue to the next item
                 }
-
+                
+                // إضافة فئة خاصة للأسئلة الإرشادية
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
+                if (q.type === 'info') {
+                    questionDiv.classList.add('info-question');
+                }
                 questionDiv.dataset.questionIndex = qIndex;
+
+                if (q.type === 'info') {
+                    // إنشاء وعرض العنوان والوصف
+                    if (q.mainTitle) {
+                        const mainTitle = document.createElement('div');
+                        mainTitle.className = 'info-header';
+                        mainTitle.textContent = q.mainTitle;
+                        questionDiv.appendChild(mainTitle);
+                    }
+                    if (q.description) {
+                        const description = document.createElement('p');
+                        description.className = 'info-description';
+                        description.textContent = q.description;
+                        questionDiv.appendChild(description);
+                    }
+                }
 
                 const questionText = document.createElement('p');
                 questionText.className = 'question-text';
 
-                const pointsBadge = document.createElement('span');
-                pointsBadge.className = 'points-badge';
-                pointsBadge.textContent = q.points || 1;
-                questionText.appendChild(pointsBadge);
+                if (q.type !== 'info') { // إخفاء نقاط السؤال من النوع الإرشادي
+                    const pointsBadge = document.createElement('span');
+                    pointsBadge.className = 'points-badge';
+                    pointsBadge.textContent = q.points || 1;
+                    questionText.appendChild(pointsBadge);
+                }
                  
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
                 questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
@@ -447,7 +490,7 @@
                     // تم تعديل هذا السطر لاستخدام innerHTML لكي يتم عرض تنسيقات HTML إن وجدت
                     answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
                     questionDiv.appendChild(answerDiv);
-                } else {
+                } else if (q.type !== 'info') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
 
@@ -476,7 +519,6 @@
             });
         }
 
-        // **دالة تم تعديلها لإصلاح مشكلة الأزرار**
         function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
             if (reviewMode) return;
             userAnswers[qIndex] = choice;
@@ -503,7 +545,7 @@
             const quiz = quizData[currentQuiz];
             let allAnswered = true;
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
+                if (q.divider || q.type === 'info') return; // تجاهل الأسئلة الإرشادية
                 if (userAnswers[qIndex] === undefined) {
                     allAnswered = false;
                 }
@@ -519,7 +561,7 @@
             wrongAnswers.length = 0;
 
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
+                if (q.divider || q.type === 'info') return; // تجاهل الأسئلة الإرشادية
 
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
@@ -602,7 +644,7 @@
 
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider) return;
+                if (q.divider || q.type === 'info') return; // تجاهل الأسئلة الإرشادية
 
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
 
