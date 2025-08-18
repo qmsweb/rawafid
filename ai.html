@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>كليم</title>
+  <title>كليم • شاتبوت</title>
   <!-- خطوط عربية من Google -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- أيقونات (Font Awesome) -->
@@ -19,6 +19,8 @@
         --text: #0f172a;
         --border: rgba(15, 23, 42, 0.04);
         --shadow: rgba(15, 23, 42, 0.06);
+        --user-bubble: #0ea5a4; /* تمييز فقاعة المستخدم باللون الأزرق */
+        --user-text: #ffffff;  /* نص فقاعة المستخدم باللون الأبيض */
         
         /* أحجام الخطوط النسبية */
         --font-sm: 0.875rem;
@@ -135,9 +137,10 @@
     
     .user {
         align-self: flex-start;
-        background: #f1f5f9;
-        color: var(--text);
-        border: 1px solid var(--border);
+        background: var(--user-bubble); /* تمييز فقاعة المستخدم باللون الأزرق */
+        color: var(--user-text);       /* نص فقاعة المستخدم باللون الأبيض */
+        border: 1px solid rgba(14, 165, 164, 0.2);
+        box-shadow: 0 4px 12px rgba(14, 165, 164, 0.1);
     }
     
     .bot {
@@ -168,6 +171,13 @@
         font-size: var(--font-md);
         font-family: 'Cairo', sans-serif;
         max-height: 200px;
+        transition: all 0.3s ease;
+    }
+    
+    textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.2);
+        outline: none;
     }
     
     /* زر الإرسال أيقونة */
@@ -344,7 +354,7 @@
 <body>
   <div class="container">
     <div class="logo-wrap">
-      <img src="/images/favicon.png"  class="logo" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="شعار كليم" class="logo" />
     </div>
 
     <div class="card" role="application">
@@ -353,7 +363,8 @@
           <div class="title">كليم</div>
           <div class="subtitle">مساعد في التربية واللغة العربية</div>
         </div>
-        <div style="margin-inline-start:auto; text-align:left">
+        <!-- تم إخفاء رابط النموذج حسب الطلب -->
+        <div style="display: none;">
           <small class="meta">المسار: <code>https://api.groq.com/openai/v1/chat/completions</code></small>
         </div>
       </header>
@@ -367,13 +378,13 @@
         <button type="submit" class="send-btn" id="sendBtn" title="إرسال"><i class="fa-solid fa-paper-plane" style="font-size:18px"></i></button>
       </form>
 
-      <div class="system-note">قد تصدر عن كليم بعض الأخطاء، يرجى التأكد من إجاباته</div>
+      <div class="system-note">ملاحظة: هذا الملف يحتوي على مفتاح API داخل الكود — استبدله قبل الاستخدام ويفضل وضعه في خادم وسيط لإخفائه.</div>
     </div>
   </div>
 
   <script>
     /***** اضف مفتاحك هنا (استبدله بقيمة حقيقية) *****/
-    const GROQ_API_KEY = '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'; // <-- ضع مفتاحك هنا
+    const GROQ_API_KEY = 'REPLACE_WITH_YOUR_API_KEY'; // <-- ضع مفتاحك هنا
 
     /* شخصية كليم (رسالة النظام) */
     const systemMessage = {
@@ -461,6 +472,8 @@
     // ترحيب افتراضي يظهر عند فتح الصفحة
     window.addEventListener('load', ()=>{
       addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+      // تحديد حقل النص تلقائيًا عند تحميل الصفحة
+      promptEl.focus();
     });
   </script>
 </body>
