@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>كليم • شاتبوت</title>
+  <!-- خطوط عربية من Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- أيقونات (Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papV7mXK0w6YJt3qQzYwJ8wq3ZLZ0nq6VnG6w3Y9VjK1hKk2/0gkYQ3QGJp2b1y0R6yQzF8Xwz1Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+  <style>
+    :root{
+      --bg:#f3f6f9; --card:#ffffff; --muted:#64748b; --accent:#0ea5a4; --text:#0f172a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:'Cairo',system-ui,Arial; background:var(--bg); color:var(--text);}
+
+    /* حاوية رئيسية */
+    .container{max-width:920px; margin:28px auto; padding:18px; position:relative}
+
+    /* شعار البوت في أعلى يمين الشاشة */
+    .logo-wrap{position:absolute; top:8px; right:8px;}
+    .logo{width:68px; height:68px; object-fit:cover; border-radius:12px; box-shadow:0 6px 18px rgba(15,23,42,0.12); border:1px solid rgba(15,23,42,0.06)}
+
+    .card{background:var(--card); border-radius:14px; box-shadow:0 8px 30px rgba(15,23,42,0.06); overflow:hidden; border:1px solid rgba(15,23,42,0.04)}
+    header{display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid rgba(15,23,42,0.04)}
+    header .title{font-weight:700; font-size:18px}
+    header .subtitle{color:var(--muted); font-size:13px}
+
+    /* مساحة المحادثة - بخلفية بيضاء */
+    #chat{height:62vh; padding:18px; overflow:auto; background:linear-gradient(180deg,#ffffff,#fbfdff);}
+    .messages{display:flex; flex-direction:column; gap:12px}
+
+    .bubble{max-width:76%; padding:12px 14px; border-radius:12px; line-height:1.6; white-space:pre-wrap;}
+    .user{align-self:flex-start; background:#f1f5f9; color:var(--text); border:1px solid rgba(15,23,42,0.04)}
+    .bot{align-self:flex-end; background:#ffffff; color:var(--text); border:1px solid rgba(14,165,132,0.08); box-shadow:0 4px 12px rgba(14,165,132,0.03)}
+
+    /* نموذج الإرسال */
+    form{display:flex; gap:8px; padding:14px; border-top:1px solid rgba(15,23,42,0.04); align-items:center}
+    textarea{flex:1; min-height:56px; resize:vertical; padding:10px 12px; border-radius:10px; border:1px solid rgba(15,23,42,0.06); font-size:15px; font-family:'Cairo',sans-serif}
+
+    /* زر الإرسال أيقونة */
+    .send-btn{width:56px; height:56px; border-radius:10px; display:inline-grid; place-items:center; background:var(--accent); color:#fff; border:none; cursor:pointer}
+    .send-btn:disabled{opacity:.6; cursor:not-allowed}
+
+    .meta{padding:12px 18px; font-size:13px; color:var(--muted)}
+
+    /* استجابة صغيرة عند كتابة النظام */
+    .system-note{padding:10px 16px; font-size:13px; color:var(--muted); background:linear-gradient(90deg,#f8fafc,#ffffff); border-top:1px solid rgba(15,23,42,0.02)}
+
+    @media (max-width:640px){.container{padding:12px}.logo{width:54px;height:54px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrap">
+      <img src="/images/favicon.png"  class="logo" />
+    </div>
+
+    <div class="card" role="application">
+      <header>
+        <div>
+          <div class="title">كليم</div>
+          <div class="subtitle">مساعد في التربية واللغة العربية</div>
+        </div>
+        <div style="margin-inline-start:auto; text-align:left">
+          <small class="meta">المسار: <code>https://api.groq.com/openai/v1/chat/completions</code></small>
+        </div>
+      </header>
+
+      <div id="chat" aria-live="polite">
+        <div class="messages" id="messages"></div>
+      </div>
+
+      <form id="sendForm" autocomplete="off">
+        <textarea id="prompt" placeholder="اكتب رسالتك هنا..." required></textarea>
+        <button type="submit" class="send-btn" id="sendBtn" title="إرسال"><i class="fa-solid fa-paper-plane" style="font-size:18px"></i></button>
+      </form>
+
+      <div class="system-note">ملاحظة: هذا الملف يحتوي على مفتاح API داخل الكود — استبدله قبل الاستخدام ويفضل وضعه في خادم وسيط لإخفائه.</div>
+    </div>
+  </div>
+
+  <script>
+    /***** اضف مفتاحك هنا (استبدله بقيمة حقيقية) *****/
+    const GROQ_API_KEY = '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'; // <-- ضع مفتاحك هنا
+
+    /* شخصية كليم (رسالة النظام) */
+    const systemMessage = {
+      role: 'system',
+      content: `اسمك هو "كليم".\nأنت مساعد أكاديمي متخصص فقط في مجال التربية واللغة العربية.\nأجب دائمًا بالعربية الفصحى وبشكل واضح ومختصر.\nإذا طرح المستخدم سؤالًا خارج هذين المجالين، اجب بلباقة: "أنا مختص بالتربية واللغة العربية فقط".`
+    };
+
+    // مصفوفة المحادثة تحفظ الرسائل التي سترسل إلى الـ API
+    const conversation = [ systemMessage ];
+
+    const messagesEl = document.getElementById('messages');
+    const form = document.getElementById('sendForm');
+    const promptEl = document.getElementById('prompt');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addBubble(text, who='user'){
+      const div = document.createElement('div');
+      div.className = 'bubble ' + (who === 'user' ? 'user' : 'bot');
+      div.textContent = text;
+      messagesEl.appendChild(div);
+      // تمرير للعرض
+      const chat = document.getElementById('chat');
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function callGroqAPI(messages){
+      if (!GROQ_API_KEY || GROQ_API_KEY === 'REPLACE_WITH_YOUR_API_KEY'){
+        throw new Error('ضع مفتاح Groq API في المتغير GROQ_API_KEY داخل الكود.');
+      }
+
+      const body = {
+        model: 'llama-3.3-70b-versatile',
+        messages: messages,
+        temperature: 0.25,
+        stream: false
+      };
+
+      const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + GROQ_API_KEY
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!resp.ok){
+        const txt = await resp.text().catch(()=>resp.statusText);
+        throw new Error('خطأ من الخادم: ' + resp.status + ' — ' + txt);
+      }
+
+      const data = await resp.json();
+      const reply = data?.choices?.[0]?.message?.content || '';
+      return reply.trim();
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const text = promptEl.value.trim();
+      if (!text) return;
+
+      // إضافة فقاعة المستخدم
+      addBubble(text, 'user');
+      conversation.push({ role: 'user', content: text });
+
+      // تعطيل الإدخال أثناء الطلب
+      promptEl.value = '';
+      promptEl.disabled = true;
+      sendBtn.disabled = true;
+
+      try{
+        const reply = await callGroqAPI(conversation);
+        // إضافة فقاعة البوت
+        addBubble(reply || '—', 'bot');
+        conversation.push({ role: 'assistant', content: reply });
+      }catch(err){
+        addBubble('خطأ: ' + err.message, 'bot');
+      }finally{
+        promptEl.disabled = false;
+        sendBtn.disabled = false;
+        promptEl.focus();
+      }
+    });
+
+    // ترحيب افتراضي يظهر عند فتح الصفحة
+    window.addEventListener('load', ()=>{
+      addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+    });
+  </script>
+</body>
+</html>
