@@ -2,14 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>كليم • شاتبوت</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>كليم</title>
   <!-- خطوط عربية من Google -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- أيقونات (Font Awesome) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papV7mXK0w6YJt3qQzYwJ8wq3ZLZ0nq6VnG6w3Y9VjK1hKk2/0gkYQ3QGJp2b1y0R6yQzF8Xwz1Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <!-- أيقونات (Font Awesome) - تم تصحيح الرابط -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-        <style>
+  <style>
     /* المتغيرات */
     :root {
         --bg: #f3f6f9;
@@ -172,6 +172,8 @@
         font-family: 'Cairo', sans-serif;
         max-height: 200px;
         transition: all 0.3s ease;
+        /* حل مشكلة التكبير في الهواتف */
+        font-size: 16px;
     }
     
     textarea:focus {
@@ -269,7 +271,8 @@
         
         textarea {
             min-height: 3rem;
-            font-size: var(--font-sm);
+            /* التأكد من عدم التكبير في الهواتف */
+            font-size: 16px;
         }
         
         .send-btn {
@@ -310,6 +313,8 @@
         
         textarea {
             width: 100%;
+            /* التأكد من عدم التكبير في الهواتف */
+            font-size: 16px;
         }
         
         .send-btn {
@@ -348,8 +353,7 @@
             transform: translateX(0);
         }
     }
-    </style>
-
+  </style>
 </head>
 <body>
   <div class="container">
