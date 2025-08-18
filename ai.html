@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>كليم</title>
+  <title>كليم • شاتبوت</title>
   <!-- خطوط عربية من Google -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- أيقونات (Font Awesome) - تم تصحيح الرابط -->
@@ -98,6 +98,7 @@
         padding: 1.125rem 1.25rem;
         border-bottom: 1px solid var(--border);
         background: var(--card);
+        position: relative;
     }
     
     header .title {
@@ -105,7 +106,10 @@
         font-size: var(--font-xl);
     }
     
-   
+    header .subtitle {
+        color: var(--muted);
+        font-size: var(--font-sm);
+    }
     
     /* مساحة المحادثة - بخلفية بيضاء */
     #chat {
@@ -222,6 +226,9 @@
         color: var(--muted);
         background: linear-gradient(90deg, #f8fafc, #ffffff);
         border-top: 1px solid rgba(15, 23, 42, 0.02);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
     /* استجابات للشاشات المختلفة */
@@ -350,6 +357,38 @@
             transform: translateX(0);
         }
     }
+    
+    /* زر مسح المحادثة */
+    .clear-btn {
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .clear-btn:hover {
+        color: #ef4444;
+    }
+    
+    .save-notice {
+        color: #0ea5a4;
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background: rgba(14, 165, 164, 0.1);
+        animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -360,8 +399,13 @@
 
     <div class="card" role="application">
       <header>
+        <button class="clear-btn" id="clearChat" title="مسح المحادثة">
+          <i class="fas fa-trash-alt"></i>
+        </button>
         <div>
           <div class="title">كليم</div>
+          <div class="subtitle">مساعد في التربية واللغة العربية</div>
+        </div>
         <!-- تم إخفاء رابط النموذج حسب الطلب -->
         <div style="display: none;">
           <small class="meta">المسار: <code>https://api.groq.com/openai/v1/chat/completions</code></small>
@@ -377,7 +421,10 @@
         <button type="submit" class="send-btn" id="sendBtn" title="إرسال"><i class="fa-solid fa-paper-plane" style="font-size:18px"></i></button>
       </form>
 
-      <div class="system-note">قد تصدر عن كليم بعض الإجابات الخاطئة</div>
+      <div class="system-note">
+        <span>قد تصدر عن كليم بعض الإجابات الخاطئة</span>
+        <span id="saveNotice" class="save-notice" style="display:none;">تم حفظ المحادثة!</span>
+      </div>
     </div>
   </div>
 
@@ -392,12 +439,53 @@
     };
 
     // مصفوفة المحادثة تحفظ الرسائل التي سترسل إلى الـ API
-    const conversation = [ systemMessage ];
+    let conversation = [ systemMessage ];
 
     const messagesEl = document.getElementById('messages');
     const form = document.getElementById('sendForm');
     const promptEl = document.getElementById('prompt');
     const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearChat');
+    const saveNotice = document.getElementById('saveNotice');
+
+    // دالة لحفظ المحادثة في localStorage
+    function saveConversation() {
+      localStorage.setItem('kaleem_conversation', JSON.stringify(conversation));
+      
+      // إظهار إشعار الحفظ
+      saveNotice.style.display = 'inline';
+      setTimeout(() => {
+        saveNotice.style.display = 'none';
+      }, 2000);
+    }
+
+    // دالة لتحميل المحادثة من localStorage
+    function loadConversation() {
+      const saved = localStorage.getItem('kaleem_conversation');
+      if (saved) {
+        try {
+          conversation = JSON.parse(saved);
+          return true;
+        } catch (e) {
+          console.error('خطأ في تحميل المحادثة:', e);
+          conversation = [systemMessage];
+          return false;
+        }
+      }
+      return false;
+    }
+
+    // دالة لعرض المحادثة المحفوظة
+    function displaySavedMessages() {
+      messagesEl.innerHTML = '';
+      conversation.forEach(msg => {
+        if (msg.role === 'user') {
+          addBubble(msg.content, 'user');
+        } else if (msg.role === 'assistant') {
+          addBubble(msg.content, 'bot');
+        }
+      });
+    }
 
     function addBubble(text, who='user'){
       const div = document.createElement('div');
@@ -448,6 +536,9 @@
       // إضافة فقاعة المستخدم
       addBubble(text, 'user');
       conversation.push({ role: 'user', content: text });
+      
+      // حفظ المحادثة
+      saveConversation();
 
       // تعطيل الإدخال أثناء الطلب
       promptEl.value = '';
@@ -459,6 +550,9 @@
         // إضافة فقاعة البوت
         addBubble(reply || '—', 'bot');
         conversation.push({ role: 'assistant', content: reply });
+        
+        // حفظ المحادثة مرة أخرى بعد إضافة الرد
+        saveConversation();
       }catch(err){
         addBubble('خطأ: ' + err.message, 'bot');
       }finally{
@@ -468,9 +562,36 @@
       }
     });
 
+    // زر مسح المحادثة
+    clearBtn.addEventListener('click', () => {
+      if (confirm('هل أنت متأكد من رغبتك في مسح محادثة كليم؟')) {
+        localStorage.removeItem('kaleem_conversation');
+        conversation = [systemMessage];
+        messagesEl.innerHTML = '';
+        addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+        saveNotice.textContent = 'تم مسح المحادثة!';
+        saveNotice.style.display = 'inline';
+        setTimeout(() => {
+          saveNotice.style.display = 'none';
+        }, 2000);
+      }
+    });
+
     // ترحيب افتراضي يظهر عند فتح الصفحة
     window.addEventListener('load', ()=>{
-      addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+      // تحميل المحادثة المحفوظة
+      const hasSaved = loadConversation();
+      
+      if (hasSaved) {
+        displaySavedMessages();
+        // إذا كان هناك محادثة محفوظة، لا نعرض رسالة الترحيب
+        if (conversation.length === 1) {
+          addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+        }
+      } else {
+        addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
+      }
+      
       // تحديد حقل النص تلقائيًا عند تحميل الصفحة
       promptEl.focus();
     });
