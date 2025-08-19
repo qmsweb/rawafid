@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>كليم</title>
+  <title>كليم - مع أوامر خارجية</title>
   <!-- خطوط عربية من Google -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- أيقونات (Font Awesome) - تم تصحيح الرابط -->
+  <!-- أيقونات (Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
   <style>
@@ -19,8 +19,10 @@
         --text: #0f172a;
         --border: rgba(15, 23, 42, 0.04);
         --shadow: rgba(15, 23, 42, 0.06);
-        --user-bubble: #0ea5a4; /* تمييز فقاعة المستخدم باللون الأزرق */
-        --user-text: #ffffff;  /* نص فقاعة المستخدم باللون الأبيض */
+        --user-bubble: #0ea5a4;
+        --user-text: #ffffff;
+        --success: #10b981;
+        --warning: #f59e0b;
         
         /* أحجام الخطوط النسبية */
         --font-sm: 0.875rem;
@@ -106,8 +108,6 @@
         font-size: var(--font-xl);
     }
     
-   
-    
     /* مساحة المحادثة - بخلفية بيضاء */
     #chat {
         flex: 1;
@@ -135,8 +135,8 @@
     
     .user {
         align-self: flex-start;
-        background: var(--user-bubble); /* تمييز فقاعة المستخدم باللون الأزرق */
-        color: var(--user-text);       /* نص فقاعة المستخدم باللون الأبيض */
+        background: var(--user-bubble);
+        color: var(--user-text);
         border: 1px solid rgba(14, 165, 164, 0.2);
         box-shadow: 0 4px 12px rgba(14, 165, 164, 0.1);
     }
@@ -170,7 +170,6 @@
         font-family: 'Cairo', sans-serif;
         max-height: 200px;
         transition: all 0.3s ease;
-        /* حل مشكلة التكبير في الهواتف */
         font-size: 16px;
     }
     
@@ -228,6 +227,99 @@
         align-items: center;
     }
     
+    /* زر تحميل ملف الأوامر */
+    .commands-btn {
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        position: absolute;
+        left: 3.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .commands-btn:hover {
+        color: var(--accent);
+    }
+    
+    /* نافذة تحميل الأوامر */
+    .commands-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .commands-content {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .commands-content h3 {
+        margin-bottom: 1rem;
+        color: var(--accent);
+    }
+    
+    .commands-content textarea {
+        width: 100%;
+        min-height: 150px;
+        margin-bottom: 1rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+    
+    .commands-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+    
+    .commands-actions button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+    
+    .btn-primary {
+        background: var(--accent);
+        color: white;
+    }
+    
+    .btn-secondary {
+        background: #e5e7eb;
+        color: var(--text);
+    }
+    
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-left: 0.5rem;
+    }
+    
+    .status-active {
+        background-color: var(--success);
+    }
+    
+    .status-inactive {
+        background-color: #9ca3af;
+    }
+    
     /* استجابات للشاشات المختلفة */
     @media (max-width: 768px) {
         :root {
@@ -244,6 +336,10 @@
         
         .bubble {
             max-width: 90%;
+        }
+        
+        .commands-btn {
+            left: 3rem;
         }
     }
     
@@ -272,13 +368,16 @@
         
         textarea {
             min-height: 3rem;
-            /* التأكد من عدم التكبير في الهواتف */
             font-size: 16px;
         }
         
         .send-btn {
             width: 3rem;
             height: 3rem;
+        }
+        
+        .commands-btn {
+            left: 2.5rem;
         }
     }
     
@@ -297,30 +396,10 @@
             gap: 0.25rem;
             text-align: center;
         }
-    }
-    
-    /* تحسينات للأجهزة الصغيرة جداً */
-    @media (max-width: 360px) {
-        :root {
-            --font-sm: 0.75rem;
-            --font-md: 0.875rem;
-            --font-lg: 0.9375rem;
-            --font-xl: 1rem;
-        }
         
-        form {
-            flex-direction: column;
-        }
-        
-        textarea {
-            width: 100%;
-            /* التأكد من عدم التكبير في الهواتف */
-            font-size: 16px;
-        }
-        
-        .send-btn {
-            width: 100%;
-            height: 2.75rem;
+        .commands-content {
+            width: 95%;
+            padding: 1rem;
         }
     }
     
@@ -374,11 +453,20 @@
     }
     
     .save-notice {
-        color: #0ea5a4;
+        color: var(--success);
         font-size: 0.85rem;
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
-        background: rgba(14, 165, 164, 0.1);
+        background: rgba(16, 185, 129, 0.1);
+        animation: fadeIn 0.5s;
+    }
+    
+    .command-notice {
+        color: var(--warning);
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background: rgba(245, 158, 11, 0.1);
         animation: fadeIn 0.5s;
     }
     
@@ -399,10 +487,12 @@
         <button class="clear-btn" id="clearChat" title="مسح المحادثة">
           <i class="fas fa-trash-alt"></i>
         </button>
+        <button class="commands-btn" id="commandsBtn" title="تحميل أوامر إضافية">
+          <i class="fas fa-file-code"></i>
+        </button>
         <div>
-          <div class="title">كليم</div>
+          <div class="title">كليم <span id="commandsStatus" class="status-indicator status-inactive"></span></div>
         </div>
-        <!-- تم إخفاء رابط النموذج حسب الطلب -->
         <div style="display: none;">
           <small class="meta">المسار: <code>https://api.groq.com/openai/v1/chat/completions</code></small>
         </div>
@@ -419,34 +509,83 @@
 
       <div class="system-note">
         <span>قد تصدر عن كليم بعض الإجابات الخاطئة</span>
-        <span id="saveNotice" class="save-notice" style="display:none;">تم حفظ المحادثة!</span>
+        <div>
+          <span id="saveNotice" class="save-notice" style="display:none;">تم حفظ المحادثة!</span>
+          <span id="commandNotice" class="command-notice" style="display:none;">تم تحميل الأوامر بنجاح!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تحميل الأوامر -->
+  <div class="commands-modal" id="commandsModal">
+    <div class="commands-content">
+      <h3>تحميل أوامر إضافية</h3>
+      <p>يمكنك إضافة أوامر وتعليمات إضافية للنموذج هنا. سيتم دمج هذه الأوامر مع الأوامر الأساسية.</p>
+      <textarea id="externalCommands" placeholder="أضف أوامرك الإضافية هنا..."></textarea>
+      <div class="commands-actions">
+        <button class="btn-secondary" id="cancelCommands">إلغاء</button>
+        <button class="btn-primary" id="loadCommands">تحميل الأوامر</button>
       </div>
     </div>
   </div>
 
   <script>
     /***** اضف مفتاحك هنا (استبدله بقيمة حقيقية) *****/
-    const GROQ_API_KEY = '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'; // <-- ضع مفتاحك هنا
+    const GROQ_API_KEY = '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';
 
-    /* شخصية كليم (رسالة النظام) */
-    const systemMessage = {
-  role: 'system',
-  content: `اسمك هو "كليم".\nأنت مساعد أكاديمي متخصص فقط في مجال التربية واللغة العربية.\nأجب دائمًا بالعربية الفصحى وبشكل واضح ومختصر.\n\nالتعليمات الخاصة:\n1. إذا سألك أحد: "هل أنت GPT؟" أو أي سؤال مشابه، فاجب: "لا، أنا كليم مساعدك المتخصص في التربية واللغة العربية".\n2. إذا سألك أحد عن "روافد"، فاجب: "روافد منصة تعليمية موجهة لطلبة جامعة الشرقية، من تطوير جاسم الفارسي".\n3. إذا طرح المستخدم سؤالًا خارج مجال التربية واللغة العربية، اجب بلباقة: "أنا مختص بالتربية واللغة العربية فقط".`
-};
+    /* شخصية كليم الأساسية (رسالة النظام) */
+    const baseSystemMessage = {
+      role: 'system',
+      content: `اسمك هو "كليم".\nأنت مساعد أكاديمي متخصص فقط في مجال التربية واللغة العربية.\nأجب دائمًا بالعربية الفصحى وبشكل واضح ومختصر.\n\nالتعليمات الخاصة:\n1. إذا سألك أحد: "هل أنت GPT؟" أو أي سؤال مشابه، فاجب: "لا، أنا كليم مساعدك المتخصص في التربية واللغة العربية".\n2. إذا سألك أحد عن "روافد"، فاجب: "روافد منصة تعليمية موجهة لطلبة جامعة الشرقية، من تطوير جاسم الفارسي".\n3. إذا طرح المستخدم سؤالًا خارج مجال التربية واللغة العربية، اجب بلباقة: "أنا مختص بالتربية واللغة العربية فقط".`
+    };
+
+    // متغير للأوامر الإضافية
+    let additionalCommands = '';
 
     // مصفوفة المحادثة تحفظ الرسائل التي سترسل إلى الـ API
-    let conversation = [ systemMessage ];
+    let conversation = [];
 
     const messagesEl = document.getElementById('messages');
     const form = document.getElementById('sendForm');
     const promptEl = document.getElementById('prompt');
     const sendBtn = document.getElementById('sendBtn');
     const clearBtn = document.getElementById('clearChat');
+    const commandsBtn = document.getElementById('commandsBtn');
+    const commandsModal = document.getElementById('commandsModal');
+    const externalCommandsEl = document.getElementById('externalCommands');
+    const cancelCommandsBtn = document.getElementById('cancelCommands');
+    const loadCommandsBtn = document.getElementById('loadCommands');
     const saveNotice = document.getElementById('saveNotice');
+    const commandNotice = document.getElementById('commandNotice');
+    const commandsStatus = document.getElementById('commandsStatus');
+
+    // دالة لإنشاء رسالة النظام مع دمج الأوامر الإضافية
+    function createSystemMessage() {
+      let content = baseSystemMessage.content;
+      
+      if (additionalCommands && additionalCommands.trim() !== '') {
+        content += '\n\n<!-- أوامر إضافية -->\n' + additionalCommands;
+      }
+      
+      return {
+        role: 'system',
+        content: content
+      };
+    }
+
+    // دالة لتحديث المحادثة مع رسالة النظام المحدثة
+    function updateSystemMessage() {
+      // إذا كانت المحادثة تحتوي على رسالة نظام، قم بتحديثها
+      if (conversation.length > 0 && conversation[0].role === 'system') {
+        conversation[0] = createSystemMessage();
+      }
+    }
 
     // دالة لحفظ المحادثة في localStorage
     function saveConversation() {
       localStorage.setItem('kaleem_conversation', JSON.stringify(conversation));
+      localStorage.setItem('kaleem_additional_commands', additionalCommands);
       
       // إظهار إشعار الحفظ
       saveNotice.style.display = 'inline';
@@ -458,13 +597,22 @@
     // دالة لتحميل المحادثة من localStorage
     function loadConversation() {
       const saved = localStorage.getItem('kaleem_conversation');
+      const savedCommands = localStorage.getItem('kaleem_additional_commands');
+      
+      if (savedCommands) {
+        additionalCommands = savedCommands;
+        updateCommandsStatus();
+      }
+      
       if (saved) {
         try {
           conversation = JSON.parse(saved);
+          // تحديث رسالة النظام بالأوامر الإضافية
+          updateSystemMessage();
           return true;
         } catch (e) {
           console.error('خطأ في تحميل المحادثة:', e);
-          conversation = [systemMessage];
+          conversation = [createSystemMessage()];
           return false;
         }
       }
@@ -474,13 +622,23 @@
     // دالة لعرض المحادثة المحفوظة
     function displaySavedMessages() {
       messagesEl.innerHTML = '';
-      conversation.forEach(msg => {
+      // تخطي رسالة النظام في العرض
+      conversation.slice(1).forEach(msg => {
         if (msg.role === 'user') {
           addBubble(msg.content, 'user');
         } else if (msg.role === 'assistant') {
           addBubble(msg.content, 'bot');
         }
       });
+    }
+
+    // دالة لتحديث حالة الأوامر
+    function updateCommandsStatus() {
+      if (additionalCommands && additionalCommands.trim() !== '') {
+        commandsStatus.className = 'status-indicator status-active';
+      } else {
+        commandsStatus.className = 'status-indicator status-inactive';
+      }
     }
 
     function addBubble(text, who='user'){
@@ -562,7 +720,7 @@
     clearBtn.addEventListener('click', () => {
       if (confirm('هل أنت متأكد من رغبتك في مسح محادثة كليم؟')) {
         localStorage.removeItem('kaleem_conversation');
-        conversation = [systemMessage];
+        conversation = [createSystemMessage()];
         messagesEl.innerHTML = '';
         addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
         saveNotice.textContent = 'تم مسح المحادثة!';
@@ -573,20 +731,45 @@
       }
     });
 
+    // زر فتح نافذة الأوامر
+    commandsBtn.addEventListener('click', () => {
+      externalCommandsEl.value = additionalCommands;
+      commandsModal.style.display = 'flex';
+    });
+
+    // زر إلغاء تحميل الأوامر
+    cancelCommandsBtn.addEventListener('click', () => {
+      commandsModal.style.display = 'none';
+    });
+
+    // زر تحميل الأوامر
+    loadCommandsBtn.addEventListener('click', () => {
+      additionalCommands = externalCommandsEl.value.trim();
+      updateSystemMessage();
+      updateCommandsStatus();
+      saveConversation();
+      
+      commandsModal.style.display = 'none';
+      commandNotice.style.display = 'inline';
+      setTimeout(() => {
+        commandNotice.style.display = 'none';
+      }, 2000);
+    });
+
     // ترحيب افتراضي يظهر عند فتح الصفحة
     window.addEventListener('load', ()=>{
       // تحميل المحادثة المحفوظة
       const hasSaved = loadConversation();
       
-      if (hasSaved) {
+      if (hasSaved && conversation.length > 1) {
         displaySavedMessages();
-        // إذا كان هناك محادثة محفوظة، لا نعرض رسالة الترحيب
-        if (conversation.length === 1) {
-          addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
-        }
       } else {
+        conversation = [createSystemMessage()];
         addBubble('مرحبًا — أنا كليم، مساعدك المتخصص في التربية واللغة العربية. كيف أساعدك اليوم؟', 'bot');
       }
+      
+      // تحديث حالة الأوامر
+      updateCommandsStatus();
       
       // تحديد حقل النص تلقائيًا عند تحميل الصفحة
       promptEl.focus();
