@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>كليم - مع أوامر خارجية</title>
+  <title>كليم</title>
   <!-- خطوط عربية من Google -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- أيقونات (Font Awesome) -->
@@ -446,7 +446,7 @@
     async function loadExternalCommands() {
       try {
         commandsStatus.style.display = 'inline-block';
-        commandNotice.textContent = 'جاري تحميل الأوامر...';
+        commandNotice.textContent = 'جاري تحميل البيانات...';
         commandNotice.style.display = 'inline';
         
         const response = await fetch(EXTERNAL_COMMANDS_URL);
@@ -460,19 +460,19 @@
         if (commandsText.trim()) {
           additionalCommands = commandsText;
           updateSystemMessage();
-          commandNotice.textContent = 'تم تحميل الأوامر الخارجية بنجاح';
+          commandNotice.textContent = 'مرحبا';
           setTimeout(() => {
             commandNotice.style.display = 'none';
           }, 3000);
         } else {
-          commandNotice.textContent = 'ملف الأوامر فارغ';
+          commandNotice.textContent = 'قاعدة البيانات فارغة';
           setTimeout(() => {
             commandNotice.style.display = 'none';
           }, 3000);
         }
       } catch (error) {
-        console.error('خطأ في تحميل الأوامر الخارجية:', error);
-        commandNotice.textContent = 'فشل في تحميل الأوامر الخارجية';
+        console.error('خطأ في تحميل البيانات:', error);
+        commandNotice.textContent = 'فشل في تحميل البيانات';
         setTimeout(() => {
           commandNotice.style.display = 'none';
         }, 3000);
