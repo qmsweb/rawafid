@@ -284,6 +284,40 @@
         to { transform: rotate(360deg); }
     }
     
+    /* أزرار الروابط */
+    .link-buttons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+    
+    .link-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: #475569;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+    
+    .link-button:hover {
+        background-color: #f1f5f9;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+    }
+    
+    .link-button img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+    }
+    
     /* استجابات للشاشات المختلفة */
     @media (max-width: 768px) {
         :root {
@@ -421,6 +455,45 @@
     const commandNotice = document.getElementById('commandNotice');
     const commandsStatus = document.getElementById('commandsStatus');
 
+    // دالة لاستخراج الروابط من النص
+    function extractLinks(text) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.match(urlRegex) || [];
+    }
+
+    // دالة لاستخراج اسم النطاق من الرابط
+    function getDomainName(url) {
+      try {
+        const domain = new URL(url).hostname;
+        return domain.replace('www.', '');
+      } catch (e) {
+        return url;
+      }
+    }
+
+    // دالة لإنشاء زر رابط
+    function createLinkButton(url) {
+      const domain = getDomainName(url);
+      const button = document.createElement('a');
+      button.href = url;
+      button.target = '_blank';
+      button.rel = 'noopener noreferrer';
+      button.className = 'link-button';
+      
+      // إضافة أيقونة الموقع
+      const favicon = document.createElement('img');
+      favicon.src = `https://www.google.com/s2/favicons?domain=${getDomainName(url)}&sz=32`;
+      favicon.alt = `${domain} favicon`;
+      button.appendChild(favicon);
+      
+      // إضافة اسم الموقع
+      const span = document.createElement('span');
+      span.textContent = domain;
+      button.appendChild(span);
+      
+      return button;
+    }
+
     // دالة لإنشاء رسالة النظام مع دمج الأوامر الإضافية
     function createSystemMessage() {
       let content = baseSystemMessage.content;
@@ -525,7 +598,39 @@
     function addBubble(text, who='user'){
       const div = document.createElement('div');
       div.className = 'bubble ' + (who === 'user' ? 'user' : 'bot');
-      div.textContent = text;
+      
+      // إذا كان الرد من البوت ويحتوي على روابط
+      if (who === 'bot') {
+        const links = extractLinks(text);
+        let processedText = text;
+        
+        // إخفاء الروابط من النص
+        links.forEach(link => {
+          processedText = processedText.replace(link, '');
+        });
+        
+        // إضافة النص المعالج
+        const textNode = document.createElement('div');
+        textNode.textContent = processedText;
+        div.appendChild(textNode);
+        
+        // إذا كان هناك روابط، إضافة أزرار لها
+        if (links.length > 0) {
+          const linkButtonsContainer = document.createElement('div');
+          linkButtonsContainer.className = 'link-buttons-container';
+          
+          links.forEach(link => {
+            const button = createLinkButton(link);
+            linkButtonsContainer.appendChild(button);
+          });
+          
+          div.appendChild(linkButtonsContainer);
+        }
+      } else {
+        // للمستخدمين، عرض النص كما هو
+        div.textContent = text;
+      }
+      
       messagesEl.appendChild(div);
       // تمرير للعرض
       const chat = document.getElementById('chat');
