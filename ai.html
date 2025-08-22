@@ -429,7 +429,7 @@
 
   <script>
     /***** اضف مفتاحك هنا (استبدله بقيمة حقيقية) *****/
-    const GROQ_API_KEY = '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';
+    const GROQ_API_KEY = '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';
 
     // رابط ملف الأوامر الخارجي - يمكنك تغييره إلى رابط ملفك
     const EXTERNAL_COMMANDS_URL = 'https://raw.githubusercontent.com/qmsweb/rawafid/main/Kaleem/commands.txt';
@@ -638,12 +638,12 @@
     }
 
     async function callGroqAPI(messages){
-      if (!GROQ_API_KEY || GROQ_API_KEY === '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'){
+      if (!GROQ_API_KEY || GROQ_API_KEY === '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'){
         throw new Error('ضع مفتاح Groq API في المتغير GROQ_API_KEY داخل الكود.');
       }
 
       const body = {
-        model: 'llama-3.3-70b-versatile',
+        model: 'deepseek-r1-distill-llama-70b',
         messages: messages,
         temperature: 0.25,
         stream: false
