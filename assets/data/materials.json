@@ -1,6 +1,8 @@
 [
   { "name": "ملفات لطلبة اللغة العربية", "type": "المثبتة", "code": "R1", "color": "#09c983", "icon": "fa-thumbtack", "hideCode": true
  },
+ { "name": "اختبارات تحديد المستوى", "type": "المثبتة", "code": "F1", "color": "#09c983", "icon": "fa-thumbtack", "hideCode": true
+ },
   { "name": "النحو 1", "type": "التخصصية", "code": "ARAB112", "color": "#D24545" },
   { "name": "النحو 2", "type": "التخصصية", "code": "ARAB124", "color": "#D24545" },
   { "name": "النحو 3", "type": "التخصصية", "code": "ARAB213", "color": "#D24545" },
