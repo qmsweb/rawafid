@@ -174,7 +174,7 @@
   <!-- الفوتر -->
   <div id="footer-placeholder"></div>
 
-  <script>
+   <script>
     // تحميل الفوتر
     fetch("/footer.html")
       .then(response => response.text())
@@ -184,15 +184,24 @@
       .catch(err => console.error("فشل تحميل الفوتر:", err));
 
     // تحميل التوب بار
-    fetch("topbar.html")
+    fetch("/topbar.html")   // هنا أضفت / ليكون نفس الفوتر
       .then(res => res.text())
       .then(html => {
         document.getElementById("topbar-container").innerHTML = html;
+        
+        // إذا عندك CSS مخصص للتوب بار
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "/topbar.css"; 
+        document.head.appendChild(link);
+
+        // تحميل سكربت التوب بار (إذا كان فيه وظائف)
         const script = document.createElement("script");
-        script.src = "topbar.js";
+        script.src = "/topbar.js";
         document.body.appendChild(script);
       })
       .catch(err => console.error("فشل تحميل التوب بار:", err));
   </script>
+
 </body>
 </html>
