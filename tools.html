@@ -309,41 +309,24 @@
       .catch(err => console.error("فشل تحميل الفوتر:", err));
 
     // تحميل التوب بار
-    fetch("topbar.html")
+    fetch("/topbar.html")   // هنا أضفت / ليكون نفس الفوتر
       .then(res => res.text())
       .then(html => {
         document.getElementById("topbar-container").innerHTML = html;
+        
+        // إذا عندك CSS مخصص للتوب بار
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "/topbar.css"; 
+        document.head.appendChild(link);
+
+        // تحميل سكربت التوب بار (إذا كان فيه وظائف)
         const script = document.createElement("script");
-        script.src = "topbar.js";
+        script.src = "/topbar.js";
         document.body.appendChild(script);
       })
       .catch(err => console.error("فشل تحميل التوب بار:", err));
-      
-    // وظيفة البحث (تبسيطية)
-    document.querySelector('.search-button').addEventListener('click', function() {
-      const searchTerm = document.querySelector('.search-input').value;
-      if (searchTerm) {
-        alert(`سيتم البحث عن: ${searchTerm}`);
-        // في التطبيق الحقيقي، سيتم هنا تصفية القائمة أو إرسال طلب بحث
-      }
-    });
-    
-    // إضافة إدخال البحث عند الضغط على Enter
-    document.querySelector('.search-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        document.querySelector('.search-button').click();
-      }
-    });
-    
-    // تبديل الفئات النشطة
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        categoryButtons.forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        // في التطبيق الحقيقي، سيتم هنا تصفية العناصر حسب الفئة
-      });
-    });
   </script>
+
 </body>
 </html>
