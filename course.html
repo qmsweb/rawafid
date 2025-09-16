@@ -299,16 +299,19 @@
   </div>
 
 <script>
-/* ======= متغيرات أساسية ======= */
+/* ======= عناصر DOM ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
 const gridBtn = document.getElementById('grid-view');
 const listBtn = document.getElementById('list-view');
+const shareButton = document.getElementById('share-button');
 const courseCode = new URLSearchParams(window.location.search).get('i');
-let materialsData = [];
-let userToggledView = false; // اذا ضغط المستخدم على زر لا نغيّر وجهة العرض تلقائياً عند الريسايز
 
-/* ======= وظائف مساعدة ======= */
+let materialsData = [];
+let userToggledView = false; // عند ضغط المستخدم لا نغيّر العرض تلقائياً
+let courseShareURL = null; // سيتم ضبطه من JSON أو fallback إلى window.location.href
+
+/* ======= دوال مساعدة ======= */
 function getIconClass(type) {
   switch (type) {
     case 'documents': return 'fas fa-file-alt';
@@ -328,7 +331,7 @@ function getIconColor(type) {
   }
 }
 
-/* عرض المواد وفق النمط (list أو grid) */
+/* ضبط نوع العرض (grid أو list) وتحديث حالة الأزرار */
 function setView(view) {
   if (view === 'grid') {
     materialsList.classList.add('grid-view');
@@ -341,7 +344,7 @@ function setView(view) {
   }
 }
 
-/* عرض المواد بناءً على الفلتر */
+/* عرض المواد وفق الفلتر */
 function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
@@ -379,7 +382,7 @@ function renderMaterials(filter = 'all') {
   });
 }
 
-/* ======= تهيئة التفاعل مع الفلتر والأزرار ======= */
+/* ======= تهيئة الفلاتر والأزرار ======= */
 filterItems.forEach(item => {
   item.addEventListener('click', function () {
     filterItems.forEach(el => el.classList.remove('active'));
@@ -397,33 +400,44 @@ listBtn.addEventListener('click', () => {
   setView('list');
 });
 
-/* ======= media query: تفعيل افتراضي للقائمة الشبكية على الشاشات الكبيرة ======= */
+/* ======= media query للتفعيل الافتراضي على الشاشات الكبيرة ======= */
 const mq = window.matchMedia('(min-width: 992px)');
 function applyDefaultViewBasedOnMQ() {
-  if (!userToggledView) { // لا نعيد الكتابة فوق اختيار المستخدم
+  if (!userToggledView) {
     if (mq.matches) setView('grid');
     else setView('list');
   }
 }
-mq.addEventListener('change', applyDefaultViewBasedOnMQ);
+if (mq.addEventListener) mq.addEventListener('change', applyDefaultViewBasedOnMQ);
+else if (mq.addListener) mq.addListener(applyDefaultViewBasedOnMQ); // دعم قديم
 
-/* ======= تحميل بيانات المقرر وتهيئة العنوان ======= */
+/* ======= تحميل بيانات المقرر ======= */
 document.addEventListener('DOMContentLoaded', () => {
   if (!courseCode) {
     materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
+    // نحدد رابط المشاركة كالرابط الحالي حتى لو لم يوجد مقرر
+    courseShareURL = window.location.href;
     return;
   }
 
   fetch(`assets/data/${courseCode}.json`)
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+      return res.json();
+    })
     .then(data => {
       materialsData = data.items || [];
 
-      document.querySelector('.header h1').textContent = data.name || '';
+      // تحديث العناوين والنصوص
+      const h1 = document.querySelector('.header h1');
+      const h2 = document.querySelector('.header h2');
+      const p = document.querySelector('.header p');
+      if (h1) h1.textContent = data.name || '';
+      if (h2) h2.textContent = data.code || '';
+      if (p) p.textContent = data.description || '';
       document.title = data.name || 'روافد';
-      document.querySelector('.header h2').textContent = data.code || '';
-      document.querySelector('.header p').textContent = data.description || '';
 
+      // تحديث الميتا إن وُجدت
       if (data.name) {
         const og = document.getElementById('og-title');
         const tw = document.getElementById('twitter-title');
@@ -437,37 +451,53 @@ document.addEventListener('DOMContentLoaded', () => {
         if (twd) twd.setAttribute('content', data.description);
       }
 
-      // العرض الافتراضي حسب حجم الشاشة الآن (ما لم يضغط المستخدم)
+      // ضبط رابط المشاركة: نأخذ المفتاح url من JSON إن وجد، وإلا نستخدم رابط الصفحة
+      courseShareURL = (data && data.url) ? data.url : window.location.href;
+
+      // تطبيق العرض الافتراضي (ما لم يضغط المستخدم)
       applyDefaultViewBasedOnMQ();
 
       renderMaterials();
     })
     .catch(err => {
-      materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err}</p>`;
+      materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err.message || err}</p>`;
+      courseShareURL = window.location.href; // fallback
     });
 });
 
-/* ======= مشاركة زر النسخ/المشاركة (يبقى كما هو) ======= */
-document.getElementById('share-button').addEventListener('click', () => {
-  const url = window.location.href;
-  const title = document.title;
-  if (navigator.share) {
-    navigator.share({ title, url }).catch(() => alert("❌ لم يتم تنفيذ المشاركة."));
-  } else {
-    navigator.clipboard.writeText(url).then(() => alert("✅ تم نسخ رابط الصفحة بنجاح")).catch(() => alert("❌ حدث خطأ أثناء النسخ"));
-  }
-});
+/* ======= زر المشاركة: يستخدم courseShareURL أو fallback. لا يوجد توست، يستخدم navigator.share أو يفتح الرابط في نافذة جديدة ======= */
+if (shareButton) {
+  shareButton.addEventListener('click', () => {
+    const shareUrl = courseShareURL || window.location.href;
+    const title = document.title || '';
+
+    if (navigator.share) {
+      try {
+        navigator.share({ title, url: shareUrl });
+      } catch (e) {
+        // لا نعرض رسائل للمستخدم — في حالة خطأ بسيط نفتح الرابط كفيلباك
+        window.open(shareUrl, '_blank');
+      }
+    } else {
+      // متصفحات بدون Web Share API
+      window.open(shareUrl, '_blank');
+    }
+  });
+}
 
 /* ======= تحميل التوب بار (كما في الكود الأصلي) ======= */
 fetch("topbar.html")
   .then(res => res.text())
   .then(html => {
-    document.getElementById("topbar-container").innerHTML = html;
+    const container = document.getElementById("topbar-container");
+    if (container) container.innerHTML = html;
     const script = document.createElement("script");
     script.src = "topbar.js";
     document.body.appendChild(script);
-  });
+  })
+  .catch(() => {}); // لا نعرض أخطاء هنا
 </script>
+
 
 </body>
 </html>
