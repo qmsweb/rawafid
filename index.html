@@ -117,9 +117,8 @@
       border: 1px solid #e7e7e7;
       border-radius: 12px;
       background: white;
-      padding: 10px;
+      padding: 15px;
       transition: all 0.3s ease;
-      cursor: pointer;
     }
 
     .material-item:hover {
@@ -129,7 +128,7 @@
 
     .item-title {
       display: flex;
-      align-items: self-start;
+      align-items: center;
       gap: 15px;
       margin-bottom: 10px;
     }
@@ -143,41 +142,55 @@
     }
 
     .item-title h3 {
-      font-size: 1.0rem;
+      font-size: 1rem;
       color: #1d1d1d;
     }
 
     .item-description {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #444;
-      line-height: 1.6;
-      margin-bottom: 15px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .item-footer {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: 0.3s;
+    }
+
+    .btn-download {
+      background: #1a2ac6;
+      color: #fff;
+    }
+
+    .btn-download:hover {
+      background: #0d1b8c;
+    }
+
+    .btn-preview {
+      background: #f0f2f7;
+      color: #333;
+    }
+
+    .btn-preview:hover {
+      background: #e0e7ff;
     }
 
     @media (max-width: 768px) {
       .materials-list.grid-view {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      }
-
-      .filter-bar {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-      }
-
-      .filter-item,
-      .view-toggle i {
-        flex-shrink: 0;
-      }
-
-      .item-title i.item-icon {
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4rem;
-        background: var(--hover-bg);
-        border-radius: 10px;
       }
     }
   </style>
@@ -186,13 +199,9 @@
   <div id="topbar-container"></div>
 
   <div class="container">
-    <div class="filter-bar" id="filter-bar">
-      <!-- تُملأ ديناميكيًا -->
-    </div>
+    <div class="filter-bar" id="filter-bar"></div>
 
-    <div class="materials-list" id="materials-list">
-      <!-- تُعرض المواد -->
-    </div>
+    <div class="materials-list" id="materials-list"></div>
 
     <div id="footer-placeholder"></div> 
   </div>
@@ -213,21 +222,21 @@
       items.forEach((item) => {
         const el = document.createElement('div');
         el.className = 'material-item';
-        el.style.cursor = 'pointer';
 
         const iconColor = item.color || '#333';
         const iconClass = item.icon || 'fa-book';
 
-        el.addEventListener('click', () => {
-          window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
-        });
-
         el.innerHTML = `
           <div class="item-title">
-            <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
+            <i class="fas ${iconClass}" style="color:${iconColor};"></i>
             <h3>${item.name}</h3>
           </div>
-          ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
+          ${item.description ? `<p class="item-description">${item.description}</p>` : ""}
+          ${item.hideCode ? "" : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
+          <div class="item-footer">
+            <a href="https://rawafid.jassim.one/course?i=${item.code}" class="btn btn-preview"><i class="fas fa-eye"></i> معاينة</a>
+            <a href="assets/data/${item.code}.json" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>
+          </div>
         `;
         materialsList.appendChild(el);
       });
@@ -255,18 +264,14 @@
         filterBar.appendChild(filterBtn);
       });
 
-      // ← نضيف أزرار العرض بعد الفلاتر
       const viewToggle = document.createElement('div');
       viewToggle.className = 'view-toggle';
-
       viewToggle.innerHTML = `
         <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
         <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
       `;
-
       filterBar.appendChild(viewToggle);
 
-      // ربط الأحداث بعد إنشائهم
       const gridBtn = viewToggle.querySelector('#grid-view');
       const listBtn = viewToggle.querySelector('#list-view');
 
@@ -296,7 +301,6 @@
         });
     });
 
-    // تحميل التوب بار
     fetch("topbar.html")
       .then(res => res.text())
       .then(html => {
@@ -304,8 +308,7 @@
         const script = document.createElement("script");
         script.src = "topbar.js";
         document.body.appendChild(script);
-      })
-      .catch(err => console.error("فشل تحميل التوب بار:", err));
+      });
   </script>
 </body>
 </html>
