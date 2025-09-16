@@ -233,6 +233,18 @@
       });
     }
 
+function setView(view) {
+  if (view === 'grid') {
+    materialsList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  } else {
+    materialsList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  }
+}
+
     function createFilters(courses) {
       const types = [...new Set(courses.map(c => c.type))];
       types.unshift('all');
