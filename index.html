@@ -197,127 +197,153 @@
     <div id="footer-placeholder"></div> 
   </div>
 
-  <script>
-    fetch("/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
+ <script>
+  // تحميل الفوتر (كما في الكود الأصلي)
+  fetch("/footer.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("footer-placeholder").innerHTML = data;
+    })
+    .catch(err => {
+      console.error("فشل تحميل الفوتر:", err);
+    });
+
+  const materialsList = document.getElementById('materials-list');
+  const filterBar = document.getElementById('filter-bar');
+  let allCourses = [];
+
+  function renderMaterialItems(items) {
+    materialsList.innerHTML = '';
+    items.forEach((item) => {
+      const el = document.createElement('div');
+      el.className = 'material-item';
+      el.style.cursor = 'pointer';
+
+      const iconColor = item.color || '#333';
+      const iconClass = item.icon || 'fa-book';
+
+      el.addEventListener('click', () => {
+        window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
       });
 
-    const materialsList = document.getElementById('materials-list');
-    const filterBar = document.getElementById('filter-bar');
-    let allCourses = [];
-
-    function renderMaterialItems(items) {
-      materialsList.innerHTML = '';
-      items.forEach((item) => {
-        const el = document.createElement('div');
-        el.className = 'material-item';
-        el.style.cursor = 'pointer';
-
-        const iconColor = item.color || '#333';
-        const iconClass = item.icon || 'fa-book';
-
-        el.addEventListener('click', () => {
-          window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
-        });
-
-        el.innerHTML = `
-          <div class="item-title">
-            <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
-            <h3>${item.name}</h3>
-          </div>
-          ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
-        `;
-        materialsList.appendChild(el);
-      });
-    }
-
-function setView(view) {
-  if (view === 'grid') {
-    materialsList.classList.add('grid-view');
-    gridBtn.classList.add('active');
-    listBtn.classList.remove('active');
-  } else {
-    materialsList.classList.remove('grid-view');
-    listBtn.classList.add('active');
-    gridBtn.classList.remove('active');
-  }
-}
-
-    function createFilters(courses) {
-      const types = [...new Set(courses.map(c => c.type))];
-      types.unshift('all');
-
-      types.forEach(type => {
-        const filterBtn = document.createElement('div');
-        filterBtn.className = 'filter-item';
-        filterBtn.dataset.filter = type;
-        filterBtn.textContent = type === 'all' ? 'الكل' : type;
-        if (type === 'all') filterBtn.classList.add('active');
-
-        filterBtn.addEventListener('click', () => {
-          document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
-          filterBtn.classList.add('active');
-
-          const filtered = type === 'all' ? allCourses : allCourses.filter(c => c.type === type);
-          renderMaterialItems(filtered);
-        });
-
-        filterBar.appendChild(filterBtn);
-      });
-
-      // ← نضيف أزرار العرض بعد الفلاتر
-      const viewToggle = document.createElement('div');
-      viewToggle.className = 'view-toggle';
-
-      viewToggle.innerHTML = `
-        <i class="fas fa-list active" id="list-view" title="عرض قائمة"></i>
-        <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+      el.innerHTML = `
+        <div class="item-title">
+          <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
+          <h3>${item.name}</h3>
+        </div>
+        ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
       `;
+      materialsList.appendChild(el);
+    });
+  }
 
-      filterBar.appendChild(viewToggle);
+  function createFilters(courses) {
+    // جمع الأنواع (types) ووضع 'all' أولاً
+    const types = [...new Set(courses.map(c => c.type))];
+    types.unshift('all');
 
-      // ربط الأحداث بعد إنشائهم
-      const gridBtn = viewToggle.querySelector('#grid-view');
-      const listBtn = viewToggle.querySelector('#list-view');
+    types.forEach(type => {
+      const filterBtn = document.createElement('div');
+      filterBtn.className = 'filter-item';
+      filterBtn.dataset.filter = type;
+      filterBtn.textContent = type === 'all' ? 'الكل' : type;
+      if (type === 'all') filterBtn.classList.add('active');
 
-      gridBtn.addEventListener('click', () => {
+      filterBtn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+        filterBtn.classList.add('active');
+
+        const filtered = type === 'all' ? allCourses : allCourses.filter(c => c.type === type);
+        renderMaterialItems(filtered);
+      });
+
+      filterBar.appendChild(filterBtn);
+    });
+
+    // ← نضيف أزرار العرض بعد الفلاتر
+    const viewToggle = document.createElement('div');
+    viewToggle.className = 'view-toggle';
+
+    viewToggle.innerHTML = `
+      <i class="fas fa-list" id="list-view" title="عرض قائمة"></i>
+      <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+    `;
+
+    filterBar.appendChild(viewToggle);
+
+    // ربط الأحداث بعد إنشائهم
+    const gridBtn = viewToggle.querySelector('#grid-view');
+    const listBtn = viewToggle.querySelector('#list-view');
+
+    function applyVisualState(mode) {
+      if (mode === 'grid') {
         materialsList.classList.add('grid-view');
         gridBtn.classList.add('active');
         listBtn.classList.remove('active');
-      });
-
-      listBtn.addEventListener('click', () => {
+      } else {
         materialsList.classList.remove('grid-view');
         listBtn.classList.add('active');
         gridBtn.classList.remove('active');
-      });
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch("assets/data/materials.json")
-        .then(res => res.json())
-        .then(data => {
-          allCourses = data;
-          createFilters(data);
-          renderMaterialItems(data);
-        })
-        .catch(err => {
-          materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
-        });
-    });
+    function setView(mode, save = true) {
+      applyVisualState(mode);
+      if (save) localStorage.setItem('viewMode', mode);
+    }
 
-    // تحميل التوب بار
-    fetch("topbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("topbar-container").innerHTML = html;
-        const script = document.createElement("script");
-        script.src = "topbar.js";
-        document.body.appendChild(script);
+    gridBtn.addEventListener('click', () => setView('grid'));
+    listBtn.addEventListener('click', () => setView('list'));
+
+    // التعيين التلقائي عند أول مرة: نحترم savedMode إذا وُجد
+    const savedMode = localStorage.getItem('viewMode');
+    if (savedMode) {
+      applyVisualState(savedMode);
+    } else {
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      applyVisualState(isMobile ? 'list' : 'grid');
+    }
+
+    // إذا لم يكن هناك وضع محفوظ، نُحدِّث الوضع تلقائيًا عند تغيير حجم النافذة
+    // (لا نغيّر إذا المستخدم حَفِظ تفضيله)
+    if (!savedMode) {
+      const mq = window.matchMedia("(max-width: 768px)");
+      const onChange = (e) => {
+        applyVisualState(e.matches ? 'list' : 'grid');
+      };
+      // دعم الإضافة للكائن media query
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', onChange);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(onChange);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch("assets/data/materials.json")
+      .then(res => res.json())
+      .then(data => {
+        allCourses = data;
+        createFilters(data);
+        renderMaterialItems(data);
       })
-      .catch(err => console.error("فشل تحميل التوب بار:", err));
-  </script>
+      .catch(err => {
+        materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
+      });
+  });
+
+  // تحميل التوب بار (كما في الكود الأصلي)
+  fetch("topbar.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("topbar-container").innerHTML = html;
+      const script = document.createElement("script");
+      script.src = "topbar.js";
+      document.body.appendChild(script);
+    })
+    .catch(err => console.error("فشل تحميل التوب بار:", err));
+</script>
+
 </body>
 </html>
