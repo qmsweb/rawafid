@@ -354,6 +354,21 @@
         .quiz-info-table tbody td {
             background-color: #f8f9fa;
         }
+
+        /* أنماط جديدة للأسئلة مع الصور */
+        .question-image {
+            width: 100%;
+            max-width: 500px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        .image-question-container {
+            text-align: center;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
@@ -511,6 +526,20 @@
                 questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
 
+                // إضافة صورة السؤال إذا كانت موجودة
+                if (q.image) {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-question-container';
+                    
+                    const questionImage = document.createElement('img');
+                    questionImage.src = q.image;
+                    questionImage.alt = 'صورة السؤال';
+                    questionImage.className = 'question-image';
+                    
+                    imageContainer.appendChild(questionImage);
+                    questionDiv.appendChild(imageContainer);
+                }
+
                 if (q.subtext) {
                     const subtextParagraph = document.createElement('p');
                     subtextParagraph.className = 'question-subtext';
@@ -518,7 +547,7 @@
                     questionDiv.appendChild(subtextParagraph);
                 }
 
-                if (q.type === 'essay') {
+                if (q.type === 'essay' || q.type === 'essay-image') {
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
 
@@ -540,7 +569,7 @@
                     answerDiv.className = 'essay-answer';
                     answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
                     questionDiv.appendChild(answerDiv);
-                } else if (q.type !== 'info') {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
 
@@ -622,7 +651,7 @@
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
 
-                if (q.type === 'essay') {
+                if (q.type === 'essay' || q.type === 'essay-image') {
                     if (userAnswers[qIndex] === 1) {
                         earnedPoints += questionPoints;
                     } else if (userAnswers[qIndex] === -1) {
@@ -633,7 +662,7 @@
                             points: questionPoints
                         });
                     }
-                } else {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
                     if (userAnswerIndex === correctAnswerIndex) {
@@ -704,12 +733,12 @@
 
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
 
-                if (q.type === 'essay') {
+                if (q.type === 'essay' || q.type === 'essay-image') {
                     const answerDiv = questionDiv.querySelector('.essay-answer');
                     answerDiv.style.display = 'block';
                     const essayButtons = questionDiv.querySelector('.essay-buttons');
                     essayButtons.style.display = 'none';
-                } else {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
                     const choiceLabels = questionDiv.querySelectorAll('.choice-label');
