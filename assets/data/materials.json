@@ -8,6 +8,7 @@
   { "name": "النحو 3", "type": "التخصصية", "code": "ARAB213", "color": "#D24545" },
   { "name": "النحو 4", "type": "التخصصية", "code": "ARAB224", "color": "#D24545" },
   { "name": "الصرف", "type": "التخصصية", "code": "ARAB215", "color": "#D24545" },
+  { "name": "علم الصوتيات", "type": "التخصصية", "code": "ARAB229", "color": "#4b31de" },
   { "name": "الشعر الجاهلي", "type": "التخصصية", "code": "ARAB111", "color": "#bdba12" },
   { "name": "الشعر الإسلامي والأموي", "type": "التخصصية", "code": "ARAB122", "color": "#bdba12" },
   { "name": "الشعر العباسي", "type": "التخصصية", "code": "ARAB212", "color": "#bdba12" },
