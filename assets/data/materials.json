@@ -6,6 +6,7 @@
   { "name": "النحو 1", "type": "التخصصية", "code": "ARAB112", "color": "#D24545" },
   { "name": "النحو 2", "type": "التخصصية", "code": "ARAB124", "color": "#D24545" },
   { "name": "النحو 3", "type": "التخصصية", "code": "ARAB213", "color": "#D24545" },
+  { "name": "النحو 4", "type": "التخصصية", "code": "ARAB224", "color": "#D24545" },
   { "name": "الصرف", "type": "التخصصية", "code": "ARAB215", "color": "#D24545" },
   { "name": "الشعر الجاهلي", "type": "التخصصية", "code": "ARAB111", "color": "#bdba12" },
   { "name": "الشعر الإسلامي والأموي", "type": "التخصصية", "code": "ARAB122", "color": "#bdba12" },
