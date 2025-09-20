@@ -308,8 +308,8 @@ const shareButton = document.getElementById('share-button');
 const courseCode = new URLSearchParams(window.location.search).get('i');
 
 let materialsData = [];
-let userToggledView = false; // عند ضغط المستخدم لا نغيّر العرض تلقائياً
-let courseShareURL = null; // سيتم ضبطه من JSON أو fallback إلى window.location.href
+let userToggledView = false; 
+let courseShareURL = null; 
 
 /* ======= دوال مساعدة ======= */
 function getIconClass(type) {
@@ -331,8 +331,8 @@ function getIconColor(type) {
   }
 }
 
-/* ضبط نوع العرض (grid أو list) وتحديث حالة الأزرار */
-function setView(view) {
+/* ضبط نوع العرض وتخزينه */
+function setView(view, save = true) {
   if (view === 'grid') {
     materialsList.classList.add('grid-view');
     gridBtn.classList.add('active');
@@ -342,9 +342,10 @@ function setView(view) {
     listBtn.classList.add('active');
     gridBtn.classList.remove('active');
   }
+  if (save) localStorage.setItem('viewMode', view);
 }
 
-/* عرض المواد وفق الفلتر */
+/* عرض المواد */
 function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
@@ -382,7 +383,7 @@ function renderMaterials(filter = 'all') {
   });
 }
 
-/* ======= تهيئة الفلاتر والأزرار ======= */
+/* ======= الفلاتر ======= */
 filterItems.forEach(item => {
   item.addEventListener('click', function () {
     filterItems.forEach(el => el.classList.remove('active'));
@@ -391,6 +392,7 @@ filterItems.forEach(item => {
   });
 });
 
+/* ======= أزرار العرض ======= */
 gridBtn.addEventListener('click', () => {
   userToggledView = true;
   setView('grid');
@@ -400,22 +402,21 @@ listBtn.addEventListener('click', () => {
   setView('list');
 });
 
-/* ======= media query للتفعيل الافتراضي على الشاشات الكبيرة ======= */
+/* ======= media query ======= */
 const mq = window.matchMedia('(min-width: 992px)');
 function applyDefaultViewBasedOnMQ() {
-  if (!userToggledView) {
-    if (mq.matches) setView('grid');
-    else setView('list');
+  if (!userToggledView && !localStorage.getItem('viewMode')) {
+    if (mq.matches) setView('grid', false);
+    else setView('list', false);
   }
 }
 if (mq.addEventListener) mq.addEventListener('change', applyDefaultViewBasedOnMQ);
-else if (mq.addListener) mq.addListener(applyDefaultViewBasedOnMQ); // دعم قديم
+else if (mq.addListener) mq.addListener(applyDefaultViewBasedOnMQ);
 
-/* ======= تحميل بيانات المقرر ======= */
+/* ======= تحميل البيانات ======= */
 document.addEventListener('DOMContentLoaded', () => {
   if (!courseCode) {
     materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
-    // نحدد رابط المشاركة كالرابط الحالي حتى لو لم يوجد مقرر
     courseShareURL = window.location.href;
     return;
   }
@@ -428,7 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       materialsData = data.items || [];
 
-      // تحديث العناوين والنصوص
       const h1 = document.querySelector('.header h1');
       const h2 = document.querySelector('.header h2');
       const p = document.querySelector('.header p');
@@ -437,7 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p) p.textContent = data.description || '';
       document.title = data.name || 'روافد';
 
-      // تحديث الميتا إن وُجدت
       if (data.name) {
         const og = document.getElementById('og-title');
         const tw = document.getElementById('twitter-title');
@@ -451,21 +450,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (twd) twd.setAttribute('content', data.description);
       }
 
-      // ضبط رابط المشاركة: نأخذ المفتاح url من JSON إن وجد، وإلا نستخدم رابط الصفحة
       courseShareURL = (data && data.url) ? data.url : window.location.href;
 
-      // تطبيق العرض الافتراضي (ما لم يضغط المستخدم)
-      applyDefaultViewBasedOnMQ();
+      // استرجاع تفضيل المستخدم إن وجد
+      const savedMode = localStorage.getItem('viewMode');
+      if (savedMode) {
+        setView(savedMode, false);
+      } else {
+        applyDefaultViewBasedOnMQ();
+      }
 
       renderMaterials();
     })
     .catch(err => {
       materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err.message || err}</p>`;
-      courseShareURL = window.location.href; // fallback
+      courseShareURL = window.location.href; 
     });
 });
 
-/* ======= زر المشاركة: يستخدم courseShareURL أو fallback. لا يوجد توست، يستخدم navigator.share أو يفتح الرابط في نافذة جديدة ======= */
+/* ======= زر المشاركة ======= */
 if (shareButton) {
   shareButton.addEventListener('click', () => {
     const shareUrl = courseShareURL || window.location.href;
@@ -475,17 +478,15 @@ if (shareButton) {
       try {
         navigator.share({ title, url: shareUrl });
       } catch (e) {
-        // لا نعرض رسائل للمستخدم — في حالة خطأ بسيط نفتح الرابط كفيلباك
         window.open(shareUrl, '_blank');
       }
     } else {
-      // متصفحات بدون Web Share API
       window.open(shareUrl, '_blank');
     }
   });
 }
 
-/* ======= تحميل التوب بار (كما في الكود الأصلي) ======= */
+/* ======= تحميل التوب بار ======= */
 fetch("topbar.html")
   .then(res => res.text())
   .then(html => {
@@ -495,7 +496,7 @@ fetch("topbar.html")
     script.src = "topbar.js";
     document.body.appendChild(script);
   })
-  .catch(() => {}); // لا نعرض أخطاء هنا
+  .catch(() => {});
 </script>
 
 
