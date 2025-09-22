@@ -1,5 +1,5 @@
 [
-  { "name": "ملفات لطلبة اللغة العربية", "type": "المثبتة", "code": "R1", "color": "#09c983", "icon": "fa-thumbtack", "hideCode": true
+  { "name": "خطط تخصصات اللغة العربية", "type": "المثبتة", "code": "R1", "color": "#09c983", "icon": "fa-thumbtack", "hideCode": true
  },
  { "name": "اختبارات تحديد المستوى", "type": "المثبتة", "code": "F1", "color": "#09c983", "icon": "fa-thumbtack", "hideCode": true
  },
