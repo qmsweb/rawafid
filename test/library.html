@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>المكتبة الرقمية</title>
+  <style>
+    body {
+      font-family: "Tahoma", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f8f8;
+      color: #333;
+    }
+    header {
+      background: #4a148c;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+    }
+    .section {
+      padding: 30px;
+      margin: 20px auto;
+      max-width: 1100px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #4a148c;
+    }
+    .more-btn {
+      background: #4a148c;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .more-btn:hover {
+      background: #6a1b9a;
+    }
+    .books {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+    .book {
+      background: #eee;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .book:hover {
+      transform: translateY(-5px);
+    }
+    .book img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .book-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📚 المكتبة الرقمية</header>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>كتب الأدب</h2>
+      <button class="more-btn" onclick="openMore('adab.html')">عرض المزيد</button>
+    </div>
+    <div class="books">
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+1"><div class="book-title">كتاب 1</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+2"><div class="book-title">كتاب 2</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+3"><div class="book-title">كتاب 3</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+4"><div class="book-title">كتاب 4</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+5"><div class="book-title">كتاب 5</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+6"><div class="book-title">كتاب 6</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+7"><div class="book-title">كتاب 7</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>كتب التاريخ</h2>
+      <button class="more-btn" onclick="openMore('tarikh.html')">عرض المزيد</button>
+    </div>
+    <div class="books">
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+1"><div class="book-title">كتاب 1</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+2"><div class="book-title">كتاب 2</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+3"><div class="book-title">كتاب 3</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+4"><div class="book-title">كتاب 4</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+5"><div class="book-title">كتاب 5</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+6"><div class="book-title">كتاب 6</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+7"><div class="book-title">كتاب 7</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>كتب العلوم</h2>
+      <button class="more-btn" onclick="openMore('oloom.html')">عرض المزيد</button>
+    </div>
+    <div class="books">
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+1"><div class="book-title">كتاب 1</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+2"><div class="book-title">كتاب 2</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+3"><div class="book-title">كتاب 3</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+4"><div class="book-title">كتاب 4</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+5"><div class="book-title">كتاب 5</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+6"><div class="book-title">كتاب 6</div></div>
+      <div class="book"><img src="https://via.placeholder.com/150x200?text=كتاب+7"><div class="book-title">كتاب 7</div></div>
+    </div>
+  </div>
+
+  <script>
+    function openMore(url) {
+      window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>
