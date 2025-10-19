@@ -9,57 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
   <link rel="icon" href="images/favicon.png" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    /* أنماط الشريط العلوي */
-  
-    
-    .nav-links {
-      display: flex;
-      gap: 20px;
-    }
-    
-    .nav-links a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    
-    .nav-links a:hover {
-      color: #1a2ac6;
-    }
-    
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #333;
-    }
-    
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        flex-direction: column;
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-      }
-      
-      .nav-links.active {
-        display: flex;
-      }
-      
-      .mobile-menu-btn {
-        display: block;
-      }
-    }
-  </style>
   <link rel="stylesheet" href="topbar.css" />
 
   <meta property="og:title" content="المقررات - روافد" id="og-title">
@@ -103,19 +52,11 @@
 
     .header {
       text-align: right;
-      margin-bottom: 30px;
     }
 
     .header h1 {
       font-size: 2.0rem;
       color: #1e1e2f;
-      margin-bottom: 10px;
-    }
-
-    .header h2 {
-      font-size: 1.3rem;
-      color: #555;
-      margin-bottom: 15px;
     }
 
     .share-button {
@@ -129,7 +70,7 @@
       border-radius: 8px;
       cursor: pointer;
       border: 1px solid #cdd4ec;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       transition: 0.3s;
     }
 
@@ -149,9 +90,8 @@
       gap: 10px;
       overflow-x: auto;
       align-items: center;
-      padding: 15px 0;
+      padding: 10px 0;
       margin-bottom: 25px;
-      border-bottom: 1px solid #e7e7e7;
     }
 
     .filter-item {
@@ -221,11 +161,8 @@
       border: 1px solid #e7e7e7;
       border-radius: 12px;
       background: white;
-      padding: 15px;
+      padding: 10px;
       transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
     }
 
     .material-item:hover {
@@ -252,33 +189,12 @@
       color: #444;
       line-height: 1.6;
       margin-bottom: 15px;
-      flex-grow: 1;
-    }
-
-    .item-image {
-      width: 100%;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      overflow: hidden;
-      max-height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .item-image img {
-      width: 100%;
-      height: auto;
-      max-height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
     }
 
     .item-footer {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: auto;
     }
 
     .btn {
@@ -335,21 +251,7 @@
       margin-bottom: 10px;
     }
 
-    .footer {
-      text-align: center;
-      padding: 30px 0;
-      margin-top: 50px;
-      border-top: 1px solid #e7e7e7;
-      color: #666;
-      font-size: 0.9rem;
-    }
-
     @media (max-width: 768px) {
-      body {
-        padding: 15px;
-        padding-top: 70px;
-      }
-      
       .materials-list.grid-view {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       }
@@ -357,7 +259,6 @@
       .filter-bar {
         flex-wrap: nowrap;
         overflow-x: auto;
-        padding: 10px 0;
       }
 
       .filter-item,
@@ -365,72 +266,23 @@
         flex-shrink: 0;
       }
       
-      .materials-list.grid-view .material-item {
-        display: flex;
-        flex-direction: column;
-      }
+.materials-list.grid-view .material-item {
+  display: flex;
+  flex-direction: column;
+}
 
-      .materials-list.grid-view .item-footer {
-        margin-top: auto;
-        justify-content: flex-end; 
-      }
+.materials-list.grid-view .item-footer {
+  margin-top: auto;
+  justify-content: flex-end; 
+}
 
-      .item-image {
-        max-height: 150px;
-      }
-      
-      .item-image img {
-        max-height: 150px;
-      }
-      
-      .header h1 {
-        font-size: 1.6rem;
-      }
-      
-      .header h2 {
-        font-size: 1.1rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-        padding-top: 70px;
-      }
-      
-      .materials-list.grid-view {
-        grid-template-columns: 1fr;
-      }
-      
-      .header h1 {
-        font-size: 1.4rem;
-      }
+
     }
   </style>
 </head>
 <body>
-  <!-- الشريط العلوي -->
-  <div id="topbar-container">
-    <div class="topbar">
-      <a href="/" class="logo">
-        <i class="fas fa-graduation-cap"></i>
-        <span>روافد</span>
-      </a>
-      
-      <button class="mobile-menu-btn" id="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <div class="nav-links" id="nav-links">
-        <a href="/">الرئيسية</a>
-        <a href="/courses.html">المقررات</a>
-        <a href="/about.html">عن الموقع</a>
-        <a href="/contact.html">اتصل بنا</a>
-      </div>
-    </div>
-  </div>
+  <div id="topbar-container"></div>
 
-  <!-- المحتوى الرئيسي -->
   <div class="container">
     <div class="header">
       <h1></h1>
@@ -456,15 +308,15 @@
     </div>
 
     <div class="materials-list" id="materials-list"></div>
+      <div id="footer-placeholder"></div> 
   </div>
   
-  <!-- الفوتر -->
-  <div class="footer" id="footer-placeholder">
-    <p>جميع الحقوق محفوظة &copy; روافد 2023</p>
+    <div id="footer-placeholder"></div> 
   </div>
 
+
 <script>
-  // تحميل الفوتر
+  // تحميل الفوتر (كما في الكود الأصلي)
   fetch("/footer.html")
     .then(response => response.text())
     .then(data => {
@@ -472,17 +324,13 @@
     })
     .catch(err => {
       console.error("فشل تحميل الفوتر:", err);
-      document.getElementById("footer-placeholder").innerHTML = '<p>جميع الحقوق محفوظة &copy; روافد 2023</p>';
     });
-
 /* ======= عناصر DOM ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
 const gridBtn = document.getElementById('grid-view');
 const listBtn = document.getElementById('list-view');
 const shareButton = document.getElementById('share-button');
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const navLinks = document.getElementById('nav-links');
 const courseCode = new URLSearchParams(window.location.search).get('i');
 
 let materialsData = [];
@@ -530,11 +378,6 @@ function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-  if (filtered.length === 0) {
-    materialsList.innerHTML = '<p style="text-align: center; padding: 30px; color: #666;">لا توجد مواد لعرضها</p>';
-    return;
-  }
-
   filtered.forEach(item => {
     const el = document.createElement('div');
     el.className = 'material-item';
@@ -578,16 +421,6 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
-    // إضافة صورة العنصر إذا كانت موجودة
-    let imageHTML = '';
-    if (item.image) {
-      imageHTML = `
-        <div class="item-image">
-          <img src="${item.image}" alt="${item.title}" loading="lazy" />
-        </div>
-      `;
-    }
-
     el.innerHTML = `
       <div class="item-title">
         <i class="${getIconClass(item.type)}" style="background:#f3f3f3; color:${getIconColor(item.type)};"></i>
@@ -595,7 +428,6 @@ function renderMaterials(filter = 'all') {
       </div>
       <p class="item-description">${item.description}</p>
       ${badgeHTML}
-      ${imageHTML}
       <div class="item-footer">
         ${downloadBtn}
         ${previewBtn}
@@ -624,20 +456,6 @@ listBtn.addEventListener('click', () => {
   setView('list');
 });
 
-/* ======= القائمة المتنقلة ======= */
-if (mobileMenuBtn && navLinks) {
-  mobileMenuBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-  
-  // إغلاق القائمة عند النقر خارجها
-  document.addEventListener('click', (e) => {
-    if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-      navLinks.classList.remove('active');
-    }
-  });
-}
-
 /* ======= media query ======= */
 const mq = window.matchMedia('(min-width: 992px)');
 function applyDefaultViewBasedOnMQ() {
@@ -652,7 +470,7 @@ else if (mq.addListener) mq.addListener(applyDefaultViewBasedOnMQ);
 /* ======= تحميل البيانات ======= */
 document.addEventListener('DOMContentLoaded', () => {
   if (!courseCode) {
-    materialsList.innerHTML = '<p style="text-align: center; padding: 30px; color: #666;">⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
+    materialsList.innerHTML = '<p>⚠️ لم يتم تحديد رمز المقرر في الرابط.</p>';
     courseShareURL = window.location.href;
     return;
   }
@@ -699,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderMaterials();
     })
     .catch(err => {
-      materialsList.innerHTML = `<p style="text-align: center; padding: 30px; color: #666;">❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err.message || err}</p>`;
+      materialsList.innerHTML = `<p>❌ حدث خطأ أثناء تحميل بيانات المقرر: ${err.message || err}</p>`;
       courseShareURL = window.location.href; 
     });
 });
@@ -721,7 +539,20 @@ if (shareButton) {
     }
   });
 }
+
+/* ======= تحميل التوب بار ======= */
+fetch("topbar.html")
+  .then(res => res.text())
+  .then(html => {
+    const container = document.getElementById("topbar-container");
+    if (container) container.innerHTML = html;
+    const script = document.createElement("script");
+    script.src = "topbar.js";
+    document.body.appendChild(script);
+  })
+  .catch(() => {});
 </script>
+
 
 </body>
 </html>
