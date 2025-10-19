@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -299,6 +299,7 @@
       <div class="filter-item" data-filter="videos">الفيديوهات</div>
       <div class="filter-item" data-filter="resources">الملاحظات</div>
       <div class="filter-item" data-filter="quizzes">الاختبارات</div>
+      <div class="filter-item" data-filter="links">الروابط</div>
 
       <div class="view-toggle">
         <i class="fas fa-list active" id="list-view" title="عرض كقائمة"></i>
@@ -343,6 +344,7 @@ function getIconClass(type) {
     case 'videos': return 'fab fa-youtube';
     case 'resources': return 'fas fa-bullhorn';
     case 'quizzes': return 'fas fa-question-circle';
+    case 'links': return 'fas fa-globe';
     default: return 'fas fa-file';
   }
 }
@@ -352,6 +354,7 @@ function getIconColor(type) {
     case 'videos': return '#E63946';
     case 'resources': return '#F4C430';
     case 'quizzes': return '#6A4C93';
+    case 'links': return '#2E8B57';
     default: return '#666';
   }
 }
@@ -380,7 +383,33 @@ function renderMaterials(filter = 'all') {
     el.className = 'material-item';
 
     const downloadBtn = item.download_url ? `<a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل</a>` : '';
-    const previewBtn = item.preview_url ? `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${item.type === 'videos' ? 'fas fa-play-circle' : item.type === 'quizzes' ? 'fas fa-question-circle' : 'fab fa-google-drive'}"></i> ${item.type === 'videos' ? 'مشاهدة' : item.type === 'quizzes' ? 'فتح الرابط' : 'قراءة'}</a>` : '';
+    
+    // تحديد الزر المناسب بناءً على نوع المادة
+    let previewBtn = '';
+    if (item.preview_url) {
+      let iconClass = '';
+      let buttonText = '';
+      
+      switch (item.type) {
+        case 'videos':
+          iconClass = 'fas fa-play-circle';
+          buttonText = 'مشاهدة';
+          break;
+        case 'quizzes':
+          iconClass = 'fas fa-question-circle';
+          buttonText = 'اختبر الآن';
+          break;
+        case 'links':
+          iconClass = 'fas fa-external-link-alt';
+          buttonText = 'فتح الرابط';
+          break;
+        default:
+          iconClass = 'fab fa-google-drive';
+          buttonText = 'قراءة';
+      }
+      
+      previewBtn = `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${iconClass}"></i> ${buttonText}</a>`;
+    }
 
     let badgeHTML = '';
     const now = Date.now();
