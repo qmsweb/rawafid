@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الأفلام - روافد</title>
+
+  <!-- خطوط -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/favicon.png" type="image/jpg">
+
+  <!-- أيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="topbar.css" />
+
+  <style>
+    :root {
+      --primary-color: #1a2ac6;
+      --hover-bg: #e0e7ff;
+      --light-bg: #f0f2f7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Kufi Arabic", sans-serif;
+    }
+
+    body {
+      background-color: #f4f6fb;
+      color: #2d2d2d;
+      min-height: 100vh;
+      padding-top: 80px;
+      overflow-x: hidden;
+    }
+
+    /* ======= السلايدر الرئيسي ======= */
+    .hero-slider {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: background-image 0.8s ease-in-out;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .hero-content img {
+      width: 180px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+
+    .hero-description {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #f1f1f1;
+    }
+
+    /* ======= قائمة الأفلام ======= */
+    .movies-section {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .movies-list {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .movie-item {
+      flex: 0 0 auto;
+      width: 300px;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      background-color: #000;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .movie-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.75);
+    }
+
+    .movie-logo {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-slider {
+        height: 55vh;
+      }
+      .hero-content img {
+        width: 130px;
+      }
+      .movies-list {
+        gap: 12px;
+      }
+      .movie-item {
+        width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="topbar-container"></div>
+
+  <!-- السلايدر الرئيسي -->
+  <div class="hero-slider" id="hero-slider">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <img src="images/movie-logo.png" alt="شعار الفيلم" id="hero-logo">
+      <p class="hero-description" id="hero-description">قصة شيقة تدور حول صراعٍ بين الخير والشر في عالمٍ مليءٍ بالمفاجآت.</p>
+    </div>
+  </div>
+
+  <!-- قسم الأفلام -->
+  <section class="movies-section">
+    <div class="movies-list" id="movies-list">
+      <!-- تُملأ ديناميكيًا -->
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    // بيانات تجريبية للأفلام
+    const movies = [
+      {
+        title: "الفيلم الأول",
+        logo: "images/movie1-logo.png",
+        bg: "images/movie1-bg.jpg",
+        desc: "قصة ملحمية عن البطولة والشجاعة.",
+      },
+      {
+        title: "الفيلم الثاني",
+        logo: "images/movie2-logo.png",
+        bg: "images/movie2-bg.jpg",
+        desc: "رحلة غامضة في عالمٍ غير متوقع.",
+      },
+      {
+        title: "الفيلم الثالث",
+        logo: "images/movie3-logo.png",
+        bg: "images/movie3-bg.jpg",
+        desc: "مغامرة مفعمة بالإثارة والتشويق.",
+      },
+    ];
+
+    const heroSlider = document.getElementById("hero-slider");
+    const heroLogo = document.getElementById("hero-logo");
+    const heroDesc = document.getElementById("hero-description");
+    const moviesList = document.getElementById("movies-list");
+
+    // عرض الأفلام في القائمة
+    movies.forEach((movie, index) => {
+      const item = document.createElement("div");
+      item.className = "movie-item";
+      item.innerHTML = `
+        <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
+        <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
+      `;
+      item.addEventListener("click", () => setHero(movie));
+      moviesList.appendChild(item);
+      if (index === 0) setHero(movie); // أول فيلم افتراضي
+    });
+
+    function setHero(movie) {
+      heroSlider.style.backgroundImage = `url('${movie.bg}')`;
+      heroLogo.src = movie.logo;
+      heroDesc.textContent = movie.desc;
+    }
+
+    // تحميل التوب بار والفوتر
+    fetch("topbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("topbar-container").innerHTML = html;
+        const script = document.createElement("script");
+        script.src = "topbar.js";
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("فشل تحميل التوب بار:", err));
+
+    fetch("/footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer-placeholder").innerHTML = data;
+      })
+      .catch(err => console.error("فشل تحميل الفوتر:", err));
+  </script>
+</body>
+</html>
