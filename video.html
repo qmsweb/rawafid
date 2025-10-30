@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مشغل الفيديو - روافد</title>
+
+  <!-- خطوط -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/favicon.png" type="image/jpg">
+  <!-- أيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="topbar.css" />
+
+  <style>
+    :root {
+      --primary-color: #1a2ac6;
+      --hover-bg: #e0e7ff;
+      --light-bg: #f0f2f7;
+      --light-border: #ccd1e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Kufi Arabic", sans-serif;
+    }
+
+    body {
+      background-color: #f4f6fb;
+      color: #2d2d2d;
+      min-height: 100vh;
+      padding: 20px;
+      padding-top: 80px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+    }
+
+    .video-player {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 20px;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    .video-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1d1d1d;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 0 auto;
+    }
+
+    .share-btn:hover {
+      background: #1422a5;
+    }
+
+    #share-status {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: green;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      .video-title {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="topbar-container"></div>
+
+  <div class="container">
+    <div class="video-player">
+      <video controls poster="images/cover.png" id="video">
+        <source src="videos/sample.mp4" type="video/mp4">
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
+    </div>
+
+    <h2 class="video-title" id="video-title">عنوان الفيديو التجريبي 🎬</h2>
+
+    <button class="share-btn" id="share-btn">
+      <i class="fas fa-share"></i> مشاركة الرابط
+    </button>
+    <p id="share-status">تم نسخ الرابط ✅</p>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    // تحميل التوب بار
+    fetch("topbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("topbar-container").innerHTML = html;
+        const script = document.createElement("script");
+        script.src = "topbar.js";
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("فشل تحميل التوب بار:", err));
+
+    // تحميل الفوتر
+    fetch("/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer-placeholder").innerHTML = data;
+      })
+      .catch(err => console.error("فشل تحميل الفوتر:", err));
+
+    // زر المشاركة
+    const shareBtn = document.getElementById('share-btn');
+    const shareStatus = document.getElementById('share-status');
+
+    shareBtn.addEventListener('click', async () => {
+      const url = window.location.href;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: document.title, url });
+        } catch (err) {
+          console.error('فشل المشاركة:', err);
+        }
+      } else {
+        await navigator.clipboard.writeText(url);
+        shareStatus.style.display = 'block';
+        shareStatus.textContent = "تم نسخ الرابط ✅";
+        setTimeout(() => shareStatus.style.display = 'none', 2000);
+      }
+    });
+  </script>
+</body>
+</html>
