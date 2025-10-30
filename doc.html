@@ -17,8 +17,6 @@
   <style>
     :root {
       --primary-color: #1a2ac6;
-      --hover-bg: #e0e7ff;
-      --light-bg: #f0f2f7;
     }
 
     * {
@@ -36,7 +34,7 @@
       overflow-x: hidden;
     }
 
-    /* ======= السلايدر الرئيسي ======= */
+    /* ======= السلايدر ======= */
     .hero-slider {
       position: relative;
       width: 100%;
@@ -146,18 +144,10 @@
     }
 
     @media (max-width: 768px) {
-      .hero-slider {
-        height: 55vh;
-      }
-      .hero-content img {
-        width: 130px;
-      }
-      .movies-list {
-        gap: 12px;
-      }
-      .movie-item {
-        width: 220px;
-      }
+      .hero-slider { height: 55vh; }
+      .hero-content img { width: 130px; }
+      .movies-list { gap: 12px; }
+      .movie-item { width: 220px; }
     }
   </style>
 </head>
@@ -165,12 +155,12 @@
 
   <div id="topbar-container"></div>
 
-  <!-- السلايدر الرئيسي -->
+  <!-- السلايدر -->
   <div class="hero-slider" id="hero-slider">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <img src="images/movie-logo.png" alt="شعار الفيلم" id="hero-logo">
-      <p class="hero-description" id="hero-description">قصة شيقة تدور حول صراعٍ بين الخير والشر في عالمٍ مليءٍ بالمفاجآت.</p>
+      <img id="hero-logo" alt="شعار الفيلم">
+      <p class="hero-description" id="hero-description"></p>
       <button class="watch-btn" id="watch-btn">
         <i class="fas fa-play"></i> عرض الفيلم
       </button>
@@ -179,39 +169,12 @@
 
   <!-- قسم الأفلام -->
   <section class="movies-section">
-    <div class="movies-list" id="movies-list">
-      <!-- تُملأ ديناميكيًا -->
-    </div>
+    <div class="movies-list" id="movies-list"></div>
   </section>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // بيانات الأفلام (تجريبية)
-    const movies = [
-      {
-        title: "الفيلم الأول",
-        logo: "images/movie1-logo.png",
-        bg: "images/movie1-bg.jpg",
-        desc: "قصة ملحمية عن البطولة والشجاعة.",
-        link: "video.html?src=movie1.mp4"
-      },
-      {
-        title: "الفيلم الثاني",
-        logo: "images/movie2-logo.png",
-        bg: "images/movie2-bg.jpg",
-        desc: "رحلة غامضة في عالمٍ غير متوقع.",
-        link: "video.html?src=movie2.mp4"
-      },
-      {
-        title: "الفيلم الثالث",
-        logo: "images/movie3-logo.png",
-        bg: "images/movie3-bg.jpg",
-        desc: "مغامرة مفعمة بالإثارة والتشويق.",
-        link: "video.html?src=movie3.mp4"
-      },
-    ];
-
     const heroSlider = document.getElementById("hero-slider");
     const heroLogo = document.getElementById("hero-logo");
     const heroDesc = document.getElementById("hero-description");
@@ -219,31 +182,47 @@
     const moviesList = document.getElementById("movies-list");
     let currentMovie = null;
 
-    // عرض الأفلام
-    movies.forEach((movie, index) => {
-      const item = document.createElement("div");
-      item.className = "movie-item";
-      item.innerHTML = `
-        <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
-        <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
-      `;
-      item.addEventListener("click", () => setHero(movie));
-      moviesList.appendChild(item);
-      if (index === 0) setHero(movie); // أول فيلم افتراضي
-    });
+    // تحميل بيانات السلايدر
+    fetch("/assets/doc/slider.json")
+      .then(res => res.json())
+      .then(slides => {
+        if (slides.length > 0) {
+          setHero(slides[0]);
+          // يمكن جعل السلايدر يدور تلقائيًا لاحقًا
+        }
+        // عند النقر على زر عرض الفيلم
+        watchBtn.addEventListener("click", () => {
+          if (currentMovie && currentMovie.link) {
+            window.location.href = currentMovie.link;
+          }
+        });
+      })
+      .catch(err => console.error("فشل تحميل slider.json:", err));
 
     function setHero(movie) {
       currentMovie = movie;
       heroSlider.style.backgroundImage = `url('${movie.bg}')`;
       heroLogo.src = movie.logo;
       heroDesc.textContent = movie.desc;
+      watchBtn.onclick = () => window.location.href = movie.link;
     }
 
-    watchBtn.addEventListener("click", () => {
-      if (currentMovie && currentMovie.link) {
-        window.location.href = currentMovie.link;
-      }
-    });
+    // تحميل قائمة الأفلام
+    fetch("/assets/doc/movies.json")
+      .then(res => res.json())
+      .then(movies => {
+        movies.forEach(movie => {
+          const item = document.createElement("div");
+          item.className = "movie-item";
+          item.innerHTML = `
+            <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
+            <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
+          `;
+          item.addEventListener("click", () => setHero(movie));
+          moviesList.appendChild(item);
+        });
+      })
+      .catch(err => console.error("فشل تحميل movies.json:", err));
 
     // تحميل التوب بار والفوتر
     fetch("topbar.html")
@@ -253,15 +232,13 @@
         const script = document.createElement("script");
         script.src = "topbar.js";
         document.body.appendChild(script);
-      })
-      .catch(err => console.error("فشل تحميل التوب بار:", err));
+      });
 
     fetch("/footer.html")
       .then(res => res.text())
       .then(data => {
         document.getElementById("footer-placeholder").innerHTML = data;
-      })
-      .catch(err => console.error("فشل تحميل الفوتر:", err));
+      });
   </script>
 </body>
 </html>
