@@ -74,6 +74,26 @@
       font-size: 1rem;
       line-height: 1.7;
       color: #f1f1f1;
+      margin-bottom: 20px;
+    }
+
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .watch-btn:hover {
+      background: #1422a5;
     }
 
     /* ======= قائمة الأفلام ======= */
@@ -81,11 +101,12 @@
       max-width: 1200px;
       margin: 50px auto;
       padding: 0 20px;
+      direction: rtl;
     }
 
     .movies-list {
       display: flex;
-      flex-direction: row-reverse;
+      flex-direction: row;
       gap: 18px;
       overflow-x: auto;
       scroll-behavior: smooth;
@@ -118,8 +139,8 @@
     .movie-logo {
       position: absolute;
       bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
+      right: 50%;
+      transform: translateX(50%);
       width: 40%;
       border-radius: 6px;
     }
@@ -150,6 +171,9 @@
     <div class="hero-content">
       <img src="images/movie-logo.png" alt="شعار الفيلم" id="hero-logo">
       <p class="hero-description" id="hero-description">قصة شيقة تدور حول صراعٍ بين الخير والشر في عالمٍ مليءٍ بالمفاجآت.</p>
+      <button class="watch-btn" id="watch-btn">
+        <i class="fas fa-play"></i> عرض الفيلم
+      </button>
     </div>
   </div>
 
@@ -163,34 +187,39 @@
   <div id="footer-placeholder"></div>
 
   <script>
-    // بيانات تجريبية للأفلام
+    // بيانات الأفلام (تجريبية)
     const movies = [
       {
         title: "الفيلم الأول",
         logo: "images/movie1-logo.png",
         bg: "images/movie1-bg.jpg",
         desc: "قصة ملحمية عن البطولة والشجاعة.",
+        link: "video.html?src=movie1.mp4"
       },
       {
         title: "الفيلم الثاني",
         logo: "images/movie2-logo.png",
         bg: "images/movie2-bg.jpg",
         desc: "رحلة غامضة في عالمٍ غير متوقع.",
+        link: "video.html?src=movie2.mp4"
       },
       {
         title: "الفيلم الثالث",
         logo: "images/movie3-logo.png",
         bg: "images/movie3-bg.jpg",
         desc: "مغامرة مفعمة بالإثارة والتشويق.",
+        link: "video.html?src=movie3.mp4"
       },
     ];
 
     const heroSlider = document.getElementById("hero-slider");
     const heroLogo = document.getElementById("hero-logo");
     const heroDesc = document.getElementById("hero-description");
+    const watchBtn = document.getElementById("watch-btn");
     const moviesList = document.getElementById("movies-list");
+    let currentMovie = null;
 
-    // عرض الأفلام في القائمة
+    // عرض الأفلام
     movies.forEach((movie, index) => {
       const item = document.createElement("div");
       item.className = "movie-item";
@@ -204,10 +233,17 @@
     });
 
     function setHero(movie) {
+      currentMovie = movie;
       heroSlider.style.backgroundImage = `url('${movie.bg}')`;
       heroLogo.src = movie.logo;
       heroDesc.textContent = movie.desc;
     }
+
+    watchBtn.addEventListener("click", () => {
+      if (currentMovie && currentMovie.link) {
+        window.location.href = currentMovie.link;
+      }
+    });
 
     // تحميل التوب بار والفوتر
     fetch("topbar.html")
