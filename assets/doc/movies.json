@@ -1,0 +1,16 @@
+[
+  {
+    "title": "الفيلم الثالث",
+    "logo": "/images/movie3-logo.png",
+    "bg": "/images/movie3-bg.jpg",
+    "desc": "مغامرة شيقة مليئة بالإثارة.",
+    "link": "video.html?src=movie3.mp4"
+  },
+  {
+    "title": "الفيلم الرابع",
+    "logo": "/images/movie4-logo.png",
+    "bg": "/images/movie4-bg.jpg",
+    "desc": "قصة درامية مؤثرة.",
+    "link": "video.html?src=movie4.mp4"
+  }
+]
