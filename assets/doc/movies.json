@@ -1,9 +1,9 @@
 [
   {
-    "title": "الفيلم الثالث",
-    "logo": "/images/movie3-logo.png",
-    "bg": "/images/movie3-bg.jpg",
-    "desc": "مغامرة شيقة مليئة بالإثارة.",
+    "title": "الأمين على الكلمك",
+    "logo": "/images/movies/ameen-logo.PNG",
+    "bg": "/images/movies/ameen-back.PNG",
+    "desc": "سيرة أحمد أمين.",
     "link": "video.html?src=movie3.mp4"
   },
   {
