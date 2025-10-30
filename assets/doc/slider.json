@@ -1,9 +1,9 @@
 [
   {
-    "title": "الفيلم الأول",
-    "logo": "/images/movie1-logo.png",
-    "bg": "/images/movie1-bg.jpg",
-    "desc": "قصة شيقة عن الصراع بين الخير والشر.",
+    "title": "الأمين على الكلمة",
+    "logo": "/images/movies/ameen-logo.PNG",
+    "bg": "images/movies/ameen-back.PNG",
+    "desc": "سيرة أحمد أمين إبراهيم.",
     "link": "video.html?src=movie1.mp4"
   },
   {
