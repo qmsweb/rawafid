@@ -1,0 +1,16 @@
+[
+  {
+    "title": "الفيلم الأول",
+    "logo": "/images/movie1-logo.png",
+    "bg": "/images/movie1-bg.jpg",
+    "desc": "قصة شيقة عن الصراع بين الخير والشر.",
+    "link": "video.html?src=movie1.mp4"
+  },
+  {
+    "title": "الفيلم الثاني",
+    "logo": "/images/movie2-logo.png",
+    "bg": "/images/movie2-bg.jpg",
+    "desc": "رحلة في عالم غامض مليء بالمفاجآت.",
+    "link": "video.html?src=movie2.mp4"
+  }
+]
