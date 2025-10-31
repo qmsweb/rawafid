@@ -208,21 +208,24 @@
     }
 
     // تحميل قائمة الأفلام
-    fetch("/assets/doc/movies.json")
-      .then(res => res.json())
-      .then(movies => {
-        movies.forEach(movie => {
-          const item = document.createElement("div");
-          item.className = "movie-item";
-          item.innerHTML = `
-            <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
-            <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
-          `;
-          item.addEventListener("click", () => setHero(movie));
-          moviesList.appendChild(item);
-        });
-      })
-      .catch(err => console.error("فشل تحميل movies.json:", err));
+fetch("/assets/doc/movies.json")
+  .then(res => res.json())
+  .then(movies => {
+    movies.forEach(movie => {
+      const item = document.createElement("div");
+      item.className = "movie-item";
+      item.innerHTML = `
+        <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
+        <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
+      `;
+      // عند النقر على الفيلم يفتح صفحة المشغل
+      item.addEventListener("click", () => {
+        window.location.href = `player.html?movie=${encodeURIComponent(movie.id || movie.title)}`;
+      });
+      moviesList.appendChild(item);
+    });
+  })
+  .catch(err => console.error("فشل تحميل movies.json:", err));
 
     // تحميل التوب بار والفوتر
     fetch("topbar.html")
