@@ -4,6 +4,8 @@
     "logo": "/images/movies/ameen-logo.PNG",
     "bg": "/images/movies/ameen-back.PNG",
     "desc": "سيرة أحمد أمين.",
-    "link": "video.html?src=movie3.mp4"
+    "id": "movie3"
+    "url": "https://www.example.com/one/this.mp4"
+    "share-url": "https://rawafid.jassim.one/video/movie1" 
   }
 ]
