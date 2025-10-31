@@ -220,7 +220,7 @@ fetch("/assets/doc/movies.json")
       `;
       // عند النقر على الفيلم يفتح صفحة المشغل
       item.addEventListener("click", () => {
-        window.location.href = `player.html?movie=${encodeURIComponent(movie.id || movie.title)}`;
+        window.location.href = `video.html?id=${encodeURIComponent(movie.id || movie.title)}`;
       });
       moviesList.appendChild(item);
     });
