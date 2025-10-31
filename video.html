@@ -11,7 +11,6 @@
   <link rel="icon" href="images/favicon.png" type="image/jpg">
   <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" />
 
   <style>
     :root {
@@ -59,6 +58,7 @@
       height: 60px;
       object-fit: contain;
       border-radius: 8px;
+      background-color: #f0f0f0;
     }
 
     .movie-title {
@@ -157,6 +157,9 @@
       color: red;
       font-size: 1.2rem;
       margin: 20px 0;
+      padding: 15px;
+      background-color: #ffeaea;
+      border-radius: 8px;
     }
 
     .loading {
@@ -181,8 +184,6 @@
   </style>
 </head>
 <body>
-
-  <div id="topbar-container"></div>
 
   <div class="container">
     <div class="video-header">
@@ -210,30 +211,19 @@
     <div id="error-message" class="error-message"></div>
   </div>
 
-  <div id="footer-placeholder"></div>
-
   <script>
-    // بيانات الفيديوهات (سيتم استبدالها بجلب البيانات من ملف JSON)
-    let moviesData = [];
-
-    // تحميل التوب بار
-    fetch("topbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("topbar-container").innerHTML = html;
-        const script = document.createElement("script");
-        script.src = "topbar.js";
-        document.body.appendChild(script);
-      })
-      .catch(err => console.error("فشل تحميل التوب بار:", err));
-
-    // تحميل الفوتر
-    fetch("/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
-      })
-      .catch(err => console.error("فشل تحميل الفوتر:", err));
+    // بيانات الفيديوهات - JSON مصحح
+    const moviesData = [
+      {
+        "title": "الأمين على الكلمة",
+        "logo": "/images/movies/ameen-logo.PNG",
+        "bg": "/images/movies/ameen-back.PNG",
+        "desc": "سيرة أحمد أمين.",
+        "id": "ameen",
+        "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "share-url": "https://rawafid.jassim.one/video/ameen" 
+      }
+    ];
 
     // الحصول على معرف الفيديو من الرابط
     function getVideoIdFromURL() {
@@ -241,68 +231,23 @@
       return urlParams.get('id');
     }
 
-    // جلب بيانات الفيديو من ملف JSON
-    async function fetchMovieData() {
-      try {
-        // في التطبيق الحقيقي، سيتم جلب البيانات من ملف JSON
-        // هنا سنستخدم بيانات تجريبية لمحاكاة ملف JSON مع عدة عناصر
-        const response = await fetch('assets/doc/movies.json');
-        if (!response.ok) {
-          throw new Error('لم يتم العثور على ملف البيانات');
-        }
-        moviesData = await response.json();
-        return moviesData;
-      } catch (error) {
-        console.error('خطأ في جلب بيانات الفيديو:', error);
-        // استخدام بيانات تجريبية في حالة فشل الجلب
-        return [
-          {
-            "title": "الأمين على الكلمة",
-            "logo": "/images/movies/ameen-logo.PNG",
-            "bg": "/images/movies/ameen-back.PNG",
-            "desc": "سيرة أحمد أمين.",
-            "id": "movie3",
-            "url": "https://www.example.com/one/this.mp4",
-            "share-url": "https://rawafid.jassim.one/video/movie3" 
-          },
-          {
-            "title": "فيلم تجريبي 2",
-            "logo": "/images/movies/sample-logo.png",
-            "bg": "/images/movies/sample-back.png",
-            "desc": "هذا فيلم تجريبي ثان.",
-            "id": "movie2",
-            "url": "https://www.example.com/two/that.mp4",
-            "share-url": "https://rawafid.jassim.one/video/movie2" 
-          },
-          {
-            "title": "فيلم تجريبي 3",
-            "logo": "/images/movies/another-logo.png",
-            "bg": "/images/movies/another-back.png",
-            "desc": "هذا فيلم تجريبي ثالث.",
-            "id": "movie1",
-            "url": "https://www.example.com/three/another.mp4",
-            "share-url": "https://rawafid.jassim.one/video/movie1" 
-          }
-        ];
-      }
-    }
-
-    // تحميل بيانات الفيديو المحدد
-    async function loadVideoData() {
+    // تحميل بيانات الفيديو
+    function loadVideoData() {
       const videoId = getVideoIdFromURL();
       
+      // إذا لم يتم تحديد معرف، نستخدم أول فيديو كافتراضي
       if (!videoId) {
-        showError('لم يتم تحديد معرف الفيديو في الرابط.');
-        return null;
+        console.warn('لم يتم تحديد معرف الفيديو، استخدام الفيديو الافتراضي');
+        return moviesData[0];
       }
-
-      const movies = await fetchMovieData();
-      const movie = movies.find(m => m.id === videoId);
+      
+      const movie = moviesData.find(m => m.id === videoId);
       
       if (movie) {
         document.title = `${movie.title} - روافد`;
         document.getElementById('movie-title').textContent = movie.title;
         document.getElementById('movie-logo').src = movie.logo;
+        document.getElementById('movie-logo').alt = movie.title;
         document.getElementById('video-poster').style.backgroundImage = `url('${movie.bg}')`;
         document.getElementById('video-desc').textContent = movie.desc;
         
@@ -338,8 +283,8 @@
     }
 
     // تهيئة الفيديو
-    async function initVideo() {
-      const movie = await loadVideoData();
+    function initVideo() {
+      const movie = loadVideoData();
       if (!movie) {
         return;
       }
@@ -353,7 +298,9 @@
       playButton.addEventListener('click', function() {
         videoPoster.style.display = 'none';
         videoElement.style.display = 'block';
-        videoElement.play();
+        videoElement.play().catch(e => {
+          console.error('خطأ في تشغيل الفيديو:', e);
+        });
       });
       
       // زر المشاركة
@@ -369,11 +316,28 @@
             console.error('فشل المشاركة:', err);
           }
         } else {
-          await navigator.clipboard.writeText(url);
-          shareStatus.style.display = 'block';
-          shareStatus.textContent = "تم نسخ الرابط ✅";
-          setTimeout(() => shareStatus.style.display = 'none', 2000);
+          try {
+            await navigator.clipboard.writeText(url);
+            shareStatus.style.display = 'block';
+            shareStatus.textContent = "تم نسخ الرابط ✅";
+            setTimeout(() => shareStatus.style.display = 'none', 2000);
+          } catch (err) {
+            console.error('فشل نسخ الرابط:', err);
+            shareStatus.style.display = 'block';
+            shareStatus.textContent = "فشل نسخ الرابط ❌";
+            shareStatus.style.color = "red";
+            setTimeout(() => shareStatus.style.display = 'none', 2000);
+          }
         }
+      });
+
+      // معالجة أخطاء تحميل الصور
+      document.getElementById('movie-logo').addEventListener('error', function() {
+        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgZmlsbD0iI0YwRjBGMCIvPgo8cGF0aCBkPSJNMzAgMTZDMjYuOCAxNiAyNCAxOC44IDI0IDIyQzI0IDI1LjIgMjYuOCAyOCAzMCAyOEMzMy4yIDI4IDM2IDI1LjIgMzYgMjJDMzYgMTguOCAzMy4yIDE2IDMwIDE2Wk0zMCA0MEMyMy42IDQwIDE4IDM2LjY0IDE4IDMyLjI4QzE4IDI3LjkyIDIzLjYgMjAgMzAgMjBDMzYuNCAyMCA0MiAyNy45MiA0MiAzMi4yOEM0MiAzNi42NCAzNi40IDQwIDMwIDQwWiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K';
+      });
+
+      document.getElementById('video-poster').addEventListener('error', function() {
+        this.style.backgroundImage = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
       });
     }
 
