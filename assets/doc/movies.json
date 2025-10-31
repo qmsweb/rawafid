@@ -5,12 +5,5 @@
     "bg": "/images/movies/ameen-back.PNG",
     "desc": "سيرة أحمد أمين.",
     "link": "video.html?src=movie3.mp4"
-  },
-  {
-    "title": "الفيلم الرابع",
-    "logo": "/images/movie4-logo.png",
-    "bg": "/images/movie4-bg.jpg",
-    "desc": "قصة درامية مؤثرة.",
-    "link": "video.html?src=movie4.mp4"
   }
 ]
