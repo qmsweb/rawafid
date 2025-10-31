@@ -4,8 +4,8 @@
     "logo": "/images/movies/ameen-logo.PNG",
     "bg": "/images/movies/ameen-back.PNG",
     "desc": "سيرة أحمد أمين.",
-    "id": "movie3"
-    "url": "https://www.example.com/one/this.mp4"
-    "share-url": "https://rawafid.jassim.one/video/movie1" 
+    "id": "ameen"
+    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    "share-url": "https://rawafid.jassim.one/video/ameen" 
   }
 ]
