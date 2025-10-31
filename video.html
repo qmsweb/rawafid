@@ -152,6 +152,20 @@
       display: none;
     }
 
+    .error-message {
+      text-align: center;
+      color: red;
+      font-size: 1.2rem;
+      margin: 20px 0;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #666;
+      margin: 20px 0;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 15px;
@@ -193,24 +207,14 @@
       <i class="fas fa-share"></i> مشاركة الرابط
     </button>
     <p id="share-status">تم نسخ الرابط ✅</p>
+    <div id="error-message" class="error-message"></div>
   </div>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // بيانات الفيديوهات (بدلاً من جلبها من ملف JSON)
-    const moviesData = [
-      {
-        "title": "الأمين على الكلمة",
-        "logo": "/images/movies/ameen-logo.PNG",
-        "bg": "/images/movies/ameen-back.PNG",
-        "desc": "سيرة أحمد أمين.",
-        "id": "movie3",
-        "url": "https://www.example.com/one/this.mp4",
-        "share-url": "https://rawafid.jassim.one/video/movie1" 
-      },
-      // يمكن إضافة المزيد من الفيديوهات هنا
-    ];
+    // بيانات الفيديوهات (سيتم استبدالها بجلب البيانات من ملف JSON)
+    let moviesData = [];
 
     // تحميل التوب بار
     fetch("topbar.html")
@@ -234,13 +238,66 @@
     // الحصول على معرف الفيديو من الرابط
     function getVideoIdFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('id') || 'movie3'; // القيمة الافتراضية
+      return urlParams.get('id');
     }
 
-    // تحميل بيانات الفيديو
-    function loadVideoData() {
+    // جلب بيانات الفيديو من ملف JSON
+    async function fetchMovieData() {
+      try {
+        // في التطبيق الحقيقي، سيتم جلب البيانات من ملف JSON
+        // هنا سنستخدم بيانات تجريبية لمحاكاة ملف JSON مع عدة عناصر
+        const response = await fetch('assets/doc/movies.json');
+        if (!response.ok) {
+          throw new Error('لم يتم العثور على ملف البيانات');
+        }
+        moviesData = await response.json();
+        return moviesData;
+      } catch (error) {
+        console.error('خطأ في جلب بيانات الفيديو:', error);
+        // استخدام بيانات تجريبية في حالة فشل الجلب
+        return [
+          {
+            "title": "الأمين على الكلمة",
+            "logo": "/images/movies/ameen-logo.PNG",
+            "bg": "/images/movies/ameen-back.PNG",
+            "desc": "سيرة أحمد أمين.",
+            "id": "movie3",
+            "url": "https://www.example.com/one/this.mp4",
+            "share-url": "https://rawafid.jassim.one/video/movie3" 
+          },
+          {
+            "title": "فيلم تجريبي 2",
+            "logo": "/images/movies/sample-logo.png",
+            "bg": "/images/movies/sample-back.png",
+            "desc": "هذا فيلم تجريبي ثان.",
+            "id": "movie2",
+            "url": "https://www.example.com/two/that.mp4",
+            "share-url": "https://rawafid.jassim.one/video/movie2" 
+          },
+          {
+            "title": "فيلم تجريبي 3",
+            "logo": "/images/movies/another-logo.png",
+            "bg": "/images/movies/another-back.png",
+            "desc": "هذا فيلم تجريبي ثالث.",
+            "id": "movie1",
+            "url": "https://www.example.com/three/another.mp4",
+            "share-url": "https://rawafid.jassim.one/video/movie1" 
+          }
+        ];
+      }
+    }
+
+    // تحميل بيانات الفيديو المحدد
+    async function loadVideoData() {
       const videoId = getVideoIdFromURL();
-      const movie = moviesData.find(m => m.id === videoId);
+      
+      if (!videoId) {
+        showError('لم يتم تحديد معرف الفيديو في الرابط.');
+        return null;
+      }
+
+      const movies = await fetchMovieData();
+      const movie = movies.find(m => m.id === videoId);
       
       if (movie) {
         document.title = `${movie.title} - روافد`;
@@ -255,14 +312,40 @@
         
         return movie;
       } else {
-        document.getElementById('movie-title').textContent = 'الفيديو غير موجود';
+        showError('الفيديو المطلوب غير موجود.');
         return null;
       }
     }
 
+    // عرض رسالة خطأ
+    function showError(message) {
+      document.getElementById('error-message').textContent = message;
+      // إخفاء العناصر الأخرى
+      document.querySelector('.video-header').style.display = 'none';
+      document.querySelector('.video-player').style.display = 'none';
+      document.querySelector('.video-desc').style.display = 'none';
+      document.getElementById('share-btn').style.display = 'none';
+    }
+
+    // إخفاء رسالة الخطأ
+    function hideError() {
+      document.getElementById('error-message').textContent = '';
+      // إظهار العناصر مرة أخرى
+      document.querySelector('.video-header').style.display = 'flex';
+      document.querySelector('.video-player').style.display = 'block';
+      document.querySelector('.video-desc').style.display = 'block';
+      document.getElementById('share-btn').style.display = 'flex';
+    }
+
     // تهيئة الفيديو
-    function initVideo() {
-      const movie = loadVideoData();
+    async function initVideo() {
+      const movie = await loadVideoData();
+      if (!movie) {
+        return;
+      }
+
+      hideError();
+      
       const videoPoster = document.getElementById('video-poster');
       const videoElement = document.getElementById('video-element');
       const playButton = document.querySelector('.play-button');
@@ -278,20 +361,18 @@
       const shareStatus = document.getElementById('share-status');
       
       shareBtn.addEventListener('click', async () => {
-        if (movie) {
-          const url = movie['share-url'];
-          if (navigator.share) {
-            try {
-              await navigator.share({ title: movie.title, url });
-            } catch (err) {
-              console.error('فشل المشاركة:', err);
-            }
-          } else {
-            await navigator.clipboard.writeText(url);
-            shareStatus.style.display = 'block';
-            shareStatus.textContent = "تم نسخ الرابط ✅";
-            setTimeout(() => shareStatus.style.display = 'none', 2000);
+        const url = movie['share-url'];
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: movie.title, url });
+          } catch (err) {
+            console.error('فشل المشاركة:', err);
           }
+        } else {
+          await navigator.clipboard.writeText(url);
+          shareStatus.style.display = 'block';
+          shareStatus.textContent = "تم نسخ الرابط ✅";
+          setTimeout(() => shareStatus.style.display = 'none', 2000);
         }
       });
     }
