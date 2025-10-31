@@ -1,109 +1,137 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>مشغل الفيديو - روافد</title>
 
-  <!-- خطوط -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  <link rel="icon" href="images/favicon.png" type="image/jpg">
-  <!-- أيقونات -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    :root {
-      --primary-color: #1a2ac6;
-      --hover-bg: #e0e7ff;
-      --light-bg: #f0f2f7;
-      --light-border: #ccd1e0;
+    :root{
+      --primary:#1a2ac6;
+      --card-bg:#fff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Noto Kufi Arabic",sans-serif;
+      background:#f4f6fb;
+      padding:20px;
+      padding-top:80px;
+      color:#222;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Noto Kufi Arabic", sans-serif;
+    /* حاوية رئيسية */
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      background:var(--card-bg);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 6px 20px rgba(0,0,0,.06);
     }
 
-    body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
-      min-height: 100vh;
-      padding: 20px;
-      padding-top: 80px;
+    /* قسم مشغل الفيديو مع الخلفية */
+    .video-hero{
+      position:relative;
+      min-height:320px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background-size:cover;
+      background-position:center;
+    }
+    .video-hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+      pointer-events:none;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 20px;
+    /* شعار الفيلم واسم الفيلم فوق الخلفية */
+    .movie-logo{
+      position:absolute;
+      top:18px;
+      right:18px;
+      z-index:12;
+      max-height:72px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.85);
+      padding:6px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .movie-logo img{max-height:60px; display:block}
+
+    .movie-meta{
+      position:absolute;
+      bottom:18px;
+      right:18px;
+      z-index:12;
+      text-align:right;
+      color:#fff;
+      max-width:65%;
+    }
+    .movie-title{font-size:1.3rem;font-weight:700;margin-bottom:6px}
+    .movie-desc{font-size:0.95rem;opacity:0.95}
+
+    /* مشغل الفيديو نفسه (مستجيب) */
+    .video-frame{
+      width:100%;
+      max-width:980px;
+      aspect-ratio:16/9;
+      position:relative;
+      z-index:10;
+      padding:12px;
+    }
+    video{
+      width:100%;
+      height:100%;
+      border-radius:10px;
+      display:block;
+      background:#000;
     }
 
-    .video-player {
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #000;
-      aspect-ratio: 16 / 9;
-      margin-bottom: 20px;
+    /* أسفل المشغل: عنوان، زر المشاركة، رسالة الحالة */
+    .controls{
+      padding:16px 20px 26px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .title-left{font-weight:700;font-size:1.05rem}
+    .share-btn{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .share-status{
+      width:100%;
+      text-align:center;
+      color:green;
+      font-weight:700;
+      margin-top:8px;
+      display:none;
     }
 
-    video {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-    }
-
-    .video-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1d1d1d;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .share-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      margin: 0 auto;
-    }
-
-    .share-btn:hover {
-      background: #1422a5;
-    }
-
-    #share-status {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 0.9rem;
-      color: green;
-      display: none;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
-      .video-title {
-        font-size: 1.05rem;
-      }
+    @media(max-width:720px){
+      .movie-meta{max-width:80%;}
+      .movie-logo{top:12px; right:12px}
+      .controls{padding:12px}
+      .movie-title{font-size:1rem}
     }
   </style>
 </head>
@@ -111,63 +139,167 @@
 
   <div id="topbar-container"></div>
 
-  <div class="container">
-    <div class="video-player">
-      <video controls poster="images/cover.png" id="video">
-        <source src="videos/sample.mp4" type="video/mp4">
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
+  <div class="container" id="app">
+    <div class="video-hero" id="video-hero">
+      <!-- شعار الفيلم -->
+      <div class="movie-logo" id="movie-logo" style="display:none">
+        <img id="logo-img" src="" alt="شعار الفيلم">
+      </div>
+
+      <!-- فيديو داخل إطار -->
+      <div class="video-frame">
+        <video id="player" controls playsinline preload="metadata" poster="">
+          <source id="video-source" src="" type="video/mp4">
+          متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+      </div>
+
+      <!-- اسم ووصف الفيلم -->
+      <div class="movie-meta" id="movie-meta" style="display:none">
+        <div class="movie-title" id="movie-title">عنوان الفيلم</div>
+        <div class="movie-desc" id="movie-desc">وصف الفيلم</div>
+      </div>
     </div>
 
-    <h2 class="video-title" id="video-title">عنوان الفيديو التجريبي 🎬</h2>
+    <div class="controls">
+      <div class="title-left" id="title-left">عنوان الفيديو التجريبي 🎬</div>
 
-    <button class="share-btn" id="share-btn">
-      <i class="fas fa-share"></i> مشاركة الرابط
-    </button>
-    <p id="share-status">تم نسخ الرابط ✅</p>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="share-btn" id="share-btn"><i class="fas fa-share"></i> مشاركة الرابط</button>
+      </div>
+
+      <div style="flex-basis:100%"></div>
+      <div class="share-status" id="share-status">تم نسخ رابط المشاركة ✅</div>
+    </div>
   </div>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // تحميل التوب بار
-    fetch("topbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("topbar-container").innerHTML = html;
-        const script = document.createElement("script");
-        script.src = "topbar.js";
-        document.body.appendChild(script);
-      })
-      .catch(err => console.error("فشل تحميل التوب بار:", err));
+    // تحميل topbar و footer (احتياطي)
+    fetch("topbar.html").then(r => r.text()).then(t => {
+      document.getElementById("topbar-container").innerHTML = t;
+      const s = document.createElement("script"); s.src = "topbar.js"; document.body.appendChild(s);
+    }).catch(()=>{ /* silent */ });
 
-    // تحميل الفوتر
-    fetch("/footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
-      })
-      .catch(err => console.error("فشل تحميل الفوتر:", err));
+    fetch("footer.html").then(r=>r.text()).then(t=>{ document.getElementById("footer-placeholder").innerHTML = t }).catch(()=>{});
 
-    // زر المشاركة
-    const shareBtn = document.getElementById('share-btn');
-    const shareStatus = document.getElementById('share-status');
+    // مسار ملف JSON
+    const JSON_PATH = "assets/doc/movies.json";
 
-    shareBtn.addEventListener('click', async () => {
-      const url = window.location.href;
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: document.title, url });
-        } catch (err) {
-          console.error('فشل المشاركة:', err);
-        }
-      } else {
-        await navigator.clipboard.writeText(url);
-        shareStatus.style.display = 'block';
-        shareStatus.textContent = "تم نسخ الرابط ✅";
-        setTimeout(() => shareStatus.style.display = 'none', 2000);
+    // قراءة باراميتر id من رابط الصفحة ?id=movie3
+    function getIdFromQuery(){
+      try {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('id') || null;
+      } catch(e) { return null; }
+    }
+
+    // تحميل بيانات الأفلام
+    async function loadMovies(){
+      try {
+        const res = await fetch(JSON_PATH, {cache: "no-store"});
+        if(!res.ok) throw new Error('لم أتمكن من تحميل movies.json');
+        const arr = await res.json();
+        return Array.isArray(arr) ? arr : [];
+      } catch(err){
+        console.error(err);
+        return [];
       }
-    });
+    }
+
+    // تحديث الواجهة بقيم الفيلم
+    function renderMovie(movie){
+      if(!movie) return;
+
+      // عناصر
+      const hero = document.getElementById('video-hero');
+      const logoWrap = document.getElementById('movie-logo');
+      const logoImg = document.getElementById('logo-img');
+      const meta = document.getElementById('movie-meta');
+      const title = document.getElementById('movie-title');
+      const desc = document.getElementById('movie-desc');
+      const titleLeft = document.getElementById('title-left');
+      const player = document.getElementById('player');
+      const source = document.getElementById('video-source');
+
+      // خلفية البطل
+      if(movie.bg) {
+        hero.style.backgroundImage = `url('${movie.bg}')`;
+      } else {
+        hero.style.backgroundImage = '';
+      }
+
+      // شعار
+      if(movie.logo){
+        logoImg.src = movie.logo;
+        logoWrap.style.display = 'flex';
+      } else logoWrap.style.display = 'none';
+
+      // نصوص
+      title.textContent = movie.title || '';
+      desc.textContent = movie.desc || '';
+      titleLeft.textContent = movie.title || 'مشاهدة';
+
+      meta.style.display = movie.title || movie.desc ? 'block' : 'none';
+
+      // فيديو
+      if(movie.url){
+        source.src = movie.url;
+        player.poster = movie.poster || movie.bg || "";
+        player.load();
+      }
+
+      // حفظ share-url بالزر
+      const shareBtn = document.getElementById('share-btn');
+      shareBtn.dataset.shareUrl = movie["share-url"] || movie["share_url"] || window.location.href;
+    }
+
+    // تفعيل زر المشاركة/نسخ باستخدام share-url
+    function setupShareButton(){
+      const btn = document.getElementById('share-btn');
+      const status = document.getElementById('share-status');
+
+      btn.addEventListener('click', async () => {
+        const shareUrl = btn.dataset.shareUrl || window.location.href;
+        // استخدام Web Share API أولاً إن توفر
+        if(navigator.share){
+          try{
+            await navigator.share({ title: document.title, url: shareUrl });
+            return;
+          }catch(e){ /* user cancelled أو خطأ */ }
+        }
+        // غير ذلك انسخ إلى الحافظة
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          status.style.display = 'block';
+          status.textContent = "تم نسخ رابط المشاركة ✅";
+          setTimeout(()=> status.style.display = 'none', 2200);
+        } catch(e){
+          // عرض بديل لو فشل النسخ
+          alert("انسخ هذا الرابط يدوياً:\n" + shareUrl);
+        }
+      });
+    }
+
+    // تنفيذ التحميل
+    (async function init(){
+      const movies = await loadMovies();
+      if(!movies.length){
+        console.error("لا توجد بيانات في movies.json أو فشل التحميل.");
+        return;
+      }
+
+      const id = getIdFromQuery();
+      let selected = null;
+      if(id){
+        selected = movies.find(m => m.id === id) || null;
+      }
+      if(!selected) selected = movies[0]; // افتراضي أول عنصر
+
+      renderMovie(selected);
+      setupShareButton();
+    })();
   </script>
 </body>
 </html>
