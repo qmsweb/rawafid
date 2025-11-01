@@ -4,8 +4,17 @@
     "logo": "/images/movies/ameen-logo.PNG",
     "bg": "/images/movies/ameen-back.PNG",
     "desc": "سيرة أحمد أمين.",
-    "id": "ameen"
-    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    "share-url": "https://rawafid.jassim.one/video/ameen" 
+    "id": "ameen",
+    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    "share-url": "https://rawafid.jassim.one/video/ameen"
+  },
+  {
+    "title": "ظلال الفجر",
+    "logo": "/images/movies/dawn-logo.PNG",
+    "bg": "/images/movies/dawn-back.PNG",
+    "desc": "رحلة توثّق فجر النهضة العربية.",
+    "id": "dawn",
+    "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    "share-url": "https://rawafid.jassim.one/video/dawn"
   }
 ]
