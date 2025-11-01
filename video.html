@@ -34,9 +34,10 @@
       overflow-x: hidden;
     }
 
-    /* الخلفية */
-    .video-hero {
+    /* ======= مشغل الفيديو ======= */
+    .video-wrapper {
       position: relative;
+      width: 100%;
       height: 70vh;
       background-size: cover;
       background-position: center;
@@ -45,74 +46,73 @@
       justify-content: center;
     }
 
-    .video-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-    }
-
-    .video-info {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      color: white;
-      max-width: 700px;
-      padding: 20px;
-    }
-
-    .video-info img {
-      width: 180px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-
-    .video-info p {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: #f1f1f1;
-      margin-top: 10px;
-    }
-
-    /* مشغل الفيديو */
-    .video-player {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 40px auto;
-      max-width: 1000px;
-      padding: 0 20px;
-    }
-
     video {
       width: 100%;
-      border-radius: 12px;
+      height: 100%;
+      object-fit: cover;
+      border: none;
       outline: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      background-color: #000;
     }
 
-    .share-link {
-      text-align: center;
-      margin-bottom: 50px;
+    /* ======= معلومات الفيلم ======= */
+    .movie-info {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 20px;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+      flex-wrap: wrap;
     }
 
-    .share-link a {
+    .movie-info img {
+      width: 160px;
+      border-radius: 12px;
+    }
+
+    .movie-text {
+      flex: 1;
+      text-align: right;
+    }
+
+    .movie-text h2 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .movie-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    /* ======= زر المشاركة ======= */
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--primary-color);
-      color: white;
-      padding: 10px 16px;
-      border-radius: 8px;
-      text-decoration: none;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
       font-weight: 600;
+      cursor: pointer;
       transition: 0.3s;
+      margin-top: 20px;
     }
 
-    .share-link a:hover {
+    .share-btn:hover {
       background: #1422a5;
     }
 
     @media (max-width: 768px) {
-      .video-info img { width: 130px; }
-      .video-info p { font-size: 0.9rem; }
+      .movie-info img { width: 120px; }
+      .movie-text h2 { font-size: 1.3rem; }
+      .movie-text p { font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -120,41 +120,37 @@
 
   <div id="topbar-container"></div>
 
-  <!-- القسم العلوي -->
-  <section class="video-hero" id="video-hero">
-    <div class="video-overlay"></div>
-    <div class="video-info">
-      <img id="video-logo" alt="شعار الفيلم">
-      <h2 id="video-title"></h2>
-      <p id="video-desc"></p>
-    </div>
-  </section>
-
   <!-- مشغل الفيديو -->
-  <div class="video-player">
+  <div class="video-wrapper" id="video-wrapper">
     <video id="movie-player" controls poster="">
       متصفحك لا يدعم تشغيل الفيديو.
     </video>
   </div>
 
-  <!-- رابط المشاركة -->
-  <div class="share-link">
-    <a id="share-link" target="_blank"><i class="fas fa-share"></i> رابط المشاركة</a>
-  </div>
+  <!-- معلومات الفيلم -->
+  <section class="movie-info">
+    <img id="movie-logo" alt="شعار الفيلم">
+    <div class="movie-text">
+      <h2 id="movie-title"></h2>
+      <p id="movie-desc"></p>
+      <button class="share-btn" id="share-btn">
+        <i class="fas fa-share"></i> مشاركة
+      </button>
+    </div>
+  </section>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // استخراج قيمة id من الرابط
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieId = urlParams.get("id");
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get("id");
 
-    const hero = document.getElementById("video-hero");
-    const logo = document.getElementById("video-logo");
-    const title = document.getElementById("video-title");
-    const desc = document.getElementById("video-desc");
+    const wrapper = document.getElementById("video-wrapper");
     const player = document.getElementById("movie-player");
-    const shareLink = document.getElementById("share-link");
+    const logo = document.getElementById("movie-logo");
+    const title = document.getElementById("movie-title");
+    const desc = document.getElementById("movie-desc");
+    const shareBtn = document.getElementById("share-btn");
 
     if (!movieId) {
       document.body.innerHTML = "<h2 style='text-align:center;margin-top:150px;'>⚠️ لم يتم العثور على الفيلم المطلوب.</h2>";
@@ -164,12 +160,23 @@
         .then(movies => {
           const movie = movies.find(m => m.id === movieId);
           if (movie) {
-            hero.style.backgroundImage = `url('${movie.bg}')`;
+            wrapper.style.backgroundImage = `url('${movie.bg}')`;
+            player.src = movie.url;
             logo.src = movie.logo;
             title.textContent = movie.title;
             desc.textContent = movie.desc;
-            player.src = movie.url;
-            shareLink.href = movie["share-url"];
+
+            shareBtn.onclick = () => {
+              if (navigator.share) {
+                navigator.share({
+                  title: movie.title,
+                  text: movie.desc,
+                  url: movie["share-url"]
+                }).catch(err => console.log("إلغاء المشاركة:", err));
+              } else {
+                window.open(movie["share-url"], "_blank");
+              }
+            };
           } else {
             document.body.innerHTML = "<h2 style='text-align:center;margin-top:150px;'>⚠️ لم يتم العثور على هذا الفيلم في البيانات.</h2>";
           }
