@@ -11,6 +11,7 @@
   <link rel="icon" href="images/favicon.png" type="image/jpg">
   <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="topbar.css" />
 
   <style>
     :root {
@@ -32,7 +33,7 @@
       color: #2d2d2d;
       min-height: 100vh;
       padding: 20px;
-      padding-top: 80px;
+      padding-top: 100px;
     }
 
     .container {
@@ -44,6 +45,50 @@
       padding: 20px;
     }
 
+    /* ===== التوب بار ===== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      height: 65px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .topbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Baloo Bhaijaan 2", sans-serif;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .topbar .logo img {
+      width: 38px;
+      height: 38px;
+    }
+
+    .topbar nav a {
+      color: #333;
+      font-weight: 600;
+      margin-left: 18px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .topbar nav a:hover {
+      color: var(--primary-color);
+    }
+
+    /* ===== محتوى الفيديو ===== */
     .video-header {
       display: flex;
       align-items: center;
@@ -162,11 +207,21 @@
       border-radius: 8px;
     }
 
-    .loading {
+    /* ===== الفوتر ===== */
+    footer {
       text-align: center;
-      font-size: 1.1rem;
-      color: #666;
-      margin: 20px 0;
+      padding: 30px 15px;
+      background: #fff;
+      color: #444;
+      font-size: 0.9rem;
+      border-top: 1px solid #e6e6e6;
+      margin-top: 50px;
+    }
+
+    footer a {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
     }
 
     @media (max-width: 768px) {
@@ -185,6 +240,21 @@
 </head>
 <body>
 
+  <!-- التوب بار -->
+  <header class="topbar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="شعار روافد">
+      <span>روافد</span>
+    </div>
+    <nav>
+      <a href="/index.html">الرئيسية</a>
+      <a href="/courses.html">المقررات</a>
+      <a href="/videos.html">الفيديوهات</a>
+      <a href="/about.html">عن روافد</a>
+    </nav>
+  </header>
+
+  <!-- محتوى الصفحة -->
   <div class="container">
     <div class="video-header">
       <img id="movie-logo" src="" alt="شعار الفيلم" class="movie-logo">
@@ -211,8 +281,13 @@
     <div id="error-message" class="error-message"></div>
   </div>
 
+  <!-- الفوتر -->
+  <footer>
+    <p>© 2025 جميع الحقوق محفوظة لـ <a href="https://rawafid.jassim.one">روافد</a></p>
+    <p>منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية</p>
+  </footer>
+
   <script>
-    // بيانات الفيديوهات - JSON مصحح
     const moviesData = [
       {
         "title": "الأمين على الكلمة",
@@ -225,36 +300,39 @@
       }
     ];
 
-    // الحصول على معرف الفيديو من الرابط
     function getVideoIdFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('id');
     }
 
-    // تحميل بيانات الفيديو
+    function showError(message) {
+      document.getElementById('error-message').textContent = message;
+      document.querySelector('.video-header').style.display = 'none';
+      document.querySelector('.video-player').style.display = 'none';
+      document.querySelector('.video-desc').style.display = 'none';
+      document.getElementById('share-btn').style.display = 'none';
+    }
+
+    function hideError() {
+      document.getElementById('error-message').textContent = '';
+      document.querySelector('.video-header').style.display = 'flex';
+      document.querySelector('.video-player').style.display = 'block';
+      document.querySelector('.video-desc').style.display = 'block';
+      document.getElementById('share-btn').style.display = 'flex';
+    }
+
     function loadVideoData() {
       const videoId = getVideoIdFromURL();
-      
-      // إذا لم يتم تحديد معرف، نستخدم أول فيديو كافتراضي
-      if (!videoId) {
-        console.warn('لم يتم تحديد معرف الفيديو، استخدام الفيديو الافتراضي');
-        return moviesData[0];
-      }
-      
+      if (!videoId) return moviesData[0];
       const movie = moviesData.find(m => m.id === videoId);
-      
       if (movie) {
         document.title = `${movie.title} - روافد`;
         document.getElementById('movie-title').textContent = movie.title;
         document.getElementById('movie-logo').src = movie.logo;
-        document.getElementById('movie-logo').alt = movie.title;
         document.getElementById('video-poster').style.backgroundImage = `url('${movie.bg}')`;
         document.getElementById('video-desc').textContent = movie.desc;
-        
         const videoElement = document.getElementById('video-element');
         videoElement.src = movie.url;
-        videoElement.poster = movie.bg;
-        
         return movie;
       } else {
         showError('الفيديو المطلوب غير موجود.');
@@ -262,86 +340,33 @@
       }
     }
 
-    // عرض رسالة خطأ
-    function showError(message) {
-      document.getElementById('error-message').textContent = message;
-      // إخفاء العناصر الأخرى
-      document.querySelector('.video-header').style.display = 'none';
-      document.querySelector('.video-player').style.display = 'none';
-      document.querySelector('.video-desc').style.display = 'none';
-      document.getElementById('share-btn').style.display = 'none';
-    }
-
-    // إخفاء رسالة الخطأ
-    function hideError() {
-      document.getElementById('error-message').textContent = '';
-      // إظهار العناصر مرة أخرى
-      document.querySelector('.video-header').style.display = 'flex';
-      document.querySelector('.video-player').style.display = 'block';
-      document.querySelector('.video-desc').style.display = 'block';
-      document.getElementById('share-btn').style.display = 'flex';
-    }
-
-    // تهيئة الفيديو
     function initVideo() {
       const movie = loadVideoData();
-      if (!movie) {
-        return;
-      }
-
+      if (!movie) return;
       hideError();
-      
       const videoPoster = document.getElementById('video-poster');
       const videoElement = document.getElementById('video-element');
       const playButton = document.querySelector('.play-button');
-      
       playButton.addEventListener('click', function() {
         videoPoster.style.display = 'none';
         videoElement.style.display = 'block';
-        videoElement.play().catch(e => {
-          console.error('خطأ في تشغيل الفيديو:', e);
-        });
+        videoElement.play().catch(console.error);
       });
-      
-      // زر المشاركة
       const shareBtn = document.getElementById('share-btn');
       const shareStatus = document.getElementById('share-status');
-      
       shareBtn.addEventListener('click', async () => {
         const url = movie['share-url'];
         if (navigator.share) {
-          try {
-            await navigator.share({ title: movie.title, url });
-          } catch (err) {
-            console.error('فشل المشاركة:', err);
-          }
+          await navigator.share({ title: movie.title, url });
         } else {
-          try {
-            await navigator.clipboard.writeText(url);
-            shareStatus.style.display = 'block';
-            shareStatus.textContent = "تم نسخ الرابط ✅";
-            setTimeout(() => shareStatus.style.display = 'none', 2000);
-          } catch (err) {
-            console.error('فشل نسخ الرابط:', err);
-            shareStatus.style.display = 'block';
-            shareStatus.textContent = "فشل نسخ الرابط ❌";
-            shareStatus.style.color = "red";
-            setTimeout(() => shareStatus.style.display = 'none', 2000);
-          }
+          await navigator.clipboard.writeText(url);
+          shareStatus.style.display = 'block';
+          shareStatus.textContent = "تم نسخ الرابط ✅";
+          setTimeout(() => shareStatus.style.display = 'none', 2000);
         }
-      });
-
-      // معالجة أخطاء تحميل الصور
-      document.getElementById('movie-logo').addEventListener('error', function() {
-        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgZmlsbD0iI0YwRjBGMCIvPgo8cGF0aCBkPSJNMzAgMTZDMjYuOCAxNiAyNCAxOC44IDI0IDIyQzI0IDI1LjIgMjYuOCAyOCAzMCAyOEMzMy4yIDI4IDM2IDI1LjIgMzYgMjJDMzYgMTguOCAzMy4yIDE2IDMwIDE2Wk0zMCA0MEMyMy42IDQwIDE4IDM2LjY0IDE4IDMyLjI4QzE4IDI3LjkyIDIzLjYgMjAgMzAgMjBDMzYuNCAyMCA0MiAyNy45MiA0MiAzMi4yOEM0MiAzNi42NCAzNi40IDQwIDMwIDQwWiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K';
-      });
-
-      document.getElementById('video-poster').addEventListener('error', function() {
-        this.style.backgroundImage = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
       });
     }
 
-    // تهيئة الصفحة عند التحميل
     document.addEventListener('DOMContentLoaded', initVideo);
   </script>
 </body>
