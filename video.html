@@ -5,369 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مشغل الفيديو - روافد</title>
 
-  <!-- خطوط -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  <link rel="icon" href="images/favicon.png" type="image/jpg">
-  <!-- أيقونات -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" />
+  <!-- الخط -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --primary-color: #1a2ac6;
-      --hover-bg: #e0e7ff;
-      --light-bg: #f0f2f7;
-      --light-border: #ccd1e0;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Noto Kufi Arabic", sans-serif;
-    }
-
     body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
-      min-height: 100vh;
-      padding: 20px;
-      padding-top: 100px;
+      margin: 0;
+      font-family: "Noto Kufi Arabic", sans-serif;
+      background-color: #000;
+      color: #fff;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 20px;
-    }
-
-    /* ===== التوب بار ===== */
-    .topbar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      background: white;
-      border-bottom: 1px solid #e0e0e0;
-      height: 65px;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
-
-    .topbar .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: "Baloo Bhaijaan 2", sans-serif;
-      font-size: 1.3rem;
-      color: var(--primary-color);
-      font-weight: 700;
-    }
-
-    .topbar .logo img {
-      width: 38px;
-      height: 38px;
-    }
-
-    .topbar nav a {
-      color: #333;
-      font-weight: 600;
-      margin-left: 18px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .topbar nav a:hover {
-      color: var(--primary-color);
-    }
-
-    /* ===== محتوى الفيديو ===== */
-    .video-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--light-border);
-    }
-
-    .movie-logo {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      border-radius: 8px;
-      background-color: #f0f0f0;
-    }
-
-    .movie-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #1d1d1d;
-    }
-
-    .video-player {
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #000;
-      aspect-ratio: 16 / 9;
-      margin-bottom: 20px;
+    /* السلايدر */
+    .slider {
       position: relative;
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
     }
 
-    .video-poster {
+    .slider::before {
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-size: cover;
       background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      filter: brightness(40%);
+      z-index: -1;
+      transition: background-image 1s ease-in-out;
     }
 
-    .play-button {
-      width: 80px;
-      height: 80px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2rem;
-      transition: all 0.3s ease;
+    .slider-content {
+      z-index: 2;
+      padding: 20px;
+      max-width: 700px;
     }
 
-    .play-button:hover {
-      background: rgba(0, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      display: none;
-    }
-
-    .video-desc {
-      margin: 15px 0;
-      line-height: 1.6;
-      color: #555;
-      text-align: center;
-    }
-
-    .share-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      margin: 0 auto;
-    }
-
-    .share-btn:hover {
-      background: #1422a5;
-    }
-
-    #share-status {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 0.9rem;
-      color: green;
-      display: none;
-    }
-
-    .error-message {
-      text-align: center;
-      color: red;
-      font-size: 1.2rem;
-      margin: 20px 0;
-      padding: 15px;
-      background-color: #ffeaea;
+    .slider-content img {
+      width: 200px;
+      margin-bottom: 20px;
       border-radius: 8px;
     }
 
-    /* ===== الفوتر ===== */
-    footer {
-      text-align: center;
-      padding: 30px 15px;
-      background: #fff;
-      color: #444;
-      font-size: 0.9rem;
-      border-top: 1px solid #e6e6e6;
-      margin-top: 50px;
+    .slider-content h2 {
+      font-size: 26px;
+      margin: 10px 0;
     }
 
-    footer a {
-      color: var(--primary-color);
-      font-weight: 600;
-      text-decoration: none;
+    .slider-content p {
+      line-height: 1.8;
+      color: #ddd;
+      margin-bottom: 25px;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
-      .movie-title {
-        font-size: 1.1rem;
-      }
-      .movie-logo {
-        width: 50px;
-        height: 50px;
-      }
+    .slider-content button {
+      background-color: #e50914;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .slider-content button:hover {
+      background-color: #b00610;
+    }
+
+    /* القسم الثاني */
+    .section {
+      padding: 50px 20px;
+      background-color: #111;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin-bottom: 30px;
+      text-align: right;
+      border-right: 4px solid #e50914;
+      padding-right: 10px;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .movie-card {
+      background-color: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .movie-card h3 {
+      font-size: 18px;
+      margin: 10px;
+      color: #fff;
+    }
+
+    .movie-card p {
+      font-size: 14px;
+      margin: 0 10px 15px;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
 
   <!-- التوب بار -->
-  <header class="topbar">
-    <div class="logo">
-      <img src="/images/logo.png" alt="شعار روافد">
-      <span>روافد</span>
+  <div id="topbar"></div>
+  <script>
+    fetch('/assets/includes/topbar.html')
+      .then(res => res.text())
+      .then(data => document.getElementById('topbar').innerHTML = data);
+  </script>
+
+  <!-- السلايدر -->
+  <div class="slider" id="slider">
+    <div class="slider-content" id="slider-content">
+      <img id="slider-logo" src="" alt="شعار الفيلم">
+      <h2 id="slider-title"></h2>
+      <p id="slider-description"></p>
+      <button id="play-button">▶ عرض الفيلم</button>
     </div>
-    <nav>
-      <a href="/index.html">الرئيسية</a>
-      <a href="/courses.html">المقررات</a>
-      <a href="/videos.html">الفيديوهات</a>
-      <a href="/about.html">عن روافد</a>
-    </nav>
-  </header>
+  </div>
 
-  <!-- محتوى الصفحة -->
-  <div class="container">
-    <div class="video-header">
-      <img id="movie-logo" src="" alt="شعار الفيلم" class="movie-logo">
-      <h1 id="movie-title" class="movie-title">تحميل...</h1>
-    </div>
-
-    <div class="video-player">
-      <div id="video-poster" class="video-poster">
-        <div class="play-button">
-          <i class="fas fa-play"></i>
-        </div>
-      </div>
-      <video controls id="video-element">
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
-    </div>
-
-    <p id="video-desc" class="video-desc"></p>
-
-    <button class="share-btn" id="share-btn">
-      <i class="fas fa-share"></i> مشاركة الرابط
-    </button>
-    <p id="share-status">تم نسخ الرابط ✅</p>
-    <div id="error-message" class="error-message"></div>
+  <!-- القسم الثاني -->
+  <div class="section">
+    <h2>الأفلام المميزة</h2>
+    <div class="movie-grid" id="movie-grid"></div>
   </div>
 
   <!-- الفوتر -->
-  <footer>
-    <p>© 2025 جميع الحقوق محفوظة لـ <a href="https://rawafid.jassim.one">روافد</a></p>
-    <p>منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية</p>
-  </footer>
-
+  <div id="footer"></div>
   <script>
-    const moviesData = [
-      {
-        "title": "الأمين على الكلمة",
-        "logo": "/images/movies/ameen-logo.PNG",
-        "bg": "/images/movies/ameen-back.PNG",
-        "desc": "سيرة أحمد أمين.",
-        "id": "ameen",
-        "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-        "share-url": "https://rawafid.jassim.one/video/ameen" 
-      }
-    ];
-
-    function getVideoIdFromURL() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('id');
-    }
-
-    function showError(message) {
-      document.getElementById('error-message').textContent = message;
-      document.querySelector('.video-header').style.display = 'none';
-      document.querySelector('.video-player').style.display = 'none';
-      document.querySelector('.video-desc').style.display = 'none';
-      document.getElementById('share-btn').style.display = 'none';
-    }
-
-    function hideError() {
-      document.getElementById('error-message').textContent = '';
-      document.querySelector('.video-header').style.display = 'flex';
-      document.querySelector('.video-player').style.display = 'block';
-      document.querySelector('.video-desc').style.display = 'block';
-      document.getElementById('share-btn').style.display = 'flex';
-    }
-
-    function loadVideoData() {
-      const videoId = getVideoIdFromURL();
-      if (!videoId) return moviesData[0];
-      const movie = moviesData.find(m => m.id === videoId);
-      if (movie) {
-        document.title = `${movie.title} - روافد`;
-        document.getElementById('movie-title').textContent = movie.title;
-        document.getElementById('movie-logo').src = movie.logo;
-        document.getElementById('video-poster').style.backgroundImage = `url('${movie.bg}')`;
-        document.getElementById('video-desc').textContent = movie.desc;
-        const videoElement = document.getElementById('video-element');
-        videoElement.src = movie.url;
-        return movie;
-      } else {
-        showError('الفيديو المطلوب غير موجود.');
-        return null;
-      }
-    }
-
-    function initVideo() {
-      const movie = loadVideoData();
-      if (!movie) return;
-      hideError();
-      const videoPoster = document.getElementById('video-poster');
-      const videoElement = document.getElementById('video-element');
-      const playButton = document.querySelector('.play-button');
-      playButton.addEventListener('click', function() {
-        videoPoster.style.display = 'none';
-        videoElement.style.display = 'block';
-        videoElement.play().catch(console.error);
-      });
-      const shareBtn = document.getElementById('share-btn');
-      const shareStatus = document.getElementById('share-status');
-      shareBtn.addEventListener('click', async () => {
-        const url = movie['share-url'];
-        if (navigator.share) {
-          await navigator.share({ title: movie.title, url });
-        } else {
-          await navigator.clipboard.writeText(url);
-          shareStatus.style.display = 'block';
-          shareStatus.textContent = "تم نسخ الرابط ✅";
-          setTimeout(() => shareStatus.style.display = 'none', 2000);
-        }
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', initVideo);
+    fetch('/assets/includes/footer.html')
+      .then(res => res.text())
+      .then(data => document.getElementById('footer').innerHTML = data);
   </script>
+
+  <!-- جلب بيانات JSON -->
+  <script>
+    // تحميل بيانات السلايدر
+    fetch('/assets/doc/slider.json')
+      .then(res => res.json())
+      .then(data => {
+        const slider = document.getElementById('slider');
+        const slide = data[0]; // أول فيلم في السلايدر
+        document.querySelector('.slider::before');
+        slider.style.setProperty('--bg', `url(${slide.background})`);
+        slider.querySelector('::before');
+        slider.style.backgroundImage = `url(${slide.background})`;
+        document.getElementById('slider-logo').src = slide.logo;
+        document.getElementById('slider-title').textContent = slide.title;
+        document.getElementById('slider-description').textContent = slide.description;
+        document.getElementById('play-button').onclick = () => window.location.href = slide.link;
+        slider.style.setProperty('--bg', `url(${slide.background})`);
+        slider.style.backgroundImage = `url(${slide.background})`;
+      });
+
+    // تحميل بيانات الأفلام
+    fetch('/assets/doc/movies.json')
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.getElementById('movie-grid');
+        data.forEach(movie => {
+          const card = document.createElement('div');
+          card.className = 'movie-card';
+          card.innerHTML = `
+            <img src="${movie.image}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+            <p>${movie.description}</p>
+          `;
+          card.onclick = () => window.location.href = movie.link;
+          grid.appendChild(card);
+        });
+      });
+  </script>
+
 </body>
 </html>
