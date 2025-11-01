@@ -38,12 +38,20 @@
     .video-wrapper {
       position: relative;
       width: 100%;
-      height: 70vh;
       background-size: cover;
       background-position: center;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
     }
 
     video {
@@ -69,6 +77,8 @@
     .movie-info img {
       width: 160px;
       border-radius: 12px;
+      background: var(--primary-color);
+      padding: 10px;
     }
 
     .movie-text {
@@ -122,9 +132,11 @@
 
   <!-- مشغل الفيديو -->
   <div class="video-wrapper" id="video-wrapper">
-    <video id="movie-player" controls poster="">
-      متصفحك لا يدعم تشغيل الفيديو.
-    </video>
+    <div class="video-container">
+      <video id="movie-player" controls poster="">
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
+    </div>
   </div>
 
   <!-- معلومات الفيلم -->
