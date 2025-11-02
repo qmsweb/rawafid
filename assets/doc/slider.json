@@ -4,7 +4,7 @@
     "logo": "/images/movies/ameen-logo.PNG",
     "bg": "images/movies/ameen-back.PNG",
     "desc": "سيرة أحمد أمين إبراهيم.",
-    "link": "video.html?src=movie1.mp4"
+    "link": "video?id=ameen"
   },
   {
     "title": "الفيلم الثاني",
