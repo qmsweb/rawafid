@@ -359,7 +359,7 @@
         .question-image {
             width: 100%;
             max-width: 500px;
-            margin: 15px 0;
+            margin: 15px 0;.instructions-question
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             display: block;
@@ -368,6 +368,29 @@
         .image-question-container {
             text-align: center;
             margin: 15px 0;
+        }
+
+        /* أنماط جديدة للتعليمات */
+        .instructions-question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed var(--light-border);
+            border-radius: 12px;
+            background: #f8f9fa;
+            text-align: right;
+        }
+
+        .instructions-header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .instructions-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.7;
         }
     </style>
 </head>
@@ -458,6 +481,7 @@
                     quizData[currentQuiz].questions.forEach(q => {
                         if (q.divider) return;
                         if (q.type === 'info') return;
+                        if (q.type === 'instructions') return;
                         totalPoints += q.points || 1;
                     });
                     subjectTotalScoreElement.textContent = totalPoints;
@@ -488,6 +512,29 @@
                     dividerDiv.textContent = q.divider;
                     questionsContainer.appendChild(dividerDiv);
                     return;
+                }
+                
+                // معالجة النوع الجديد instructions
+                if (q.type === 'instructions') {
+                    const instructionsDiv = document.createElement('div');
+                    instructionsDiv.className = 'instructions-question';
+                    
+                    if (q.mainTitle) {
+                        const mainTitle = document.createElement('div');
+                        mainTitle.className = 'instructions-header';
+                        mainTitle.textContent = q.mainTitle;
+                        instructionsDiv.appendChild(mainTitle);
+                    }
+                    
+                    if (q.description) {
+                        const description = document.createElement('p');
+                        description.className = 'instructions-description';
+                        description.textContent = q.description;
+                        instructionsDiv.appendChild(description);
+                    }
+                    
+                    questionsContainer.appendChild(instructionsDiv);
+                    return; // نخرج من الدالة ولا نزيد رقم السؤال
                 }
                 
                 const questionDiv = document.createElement('div');
@@ -630,7 +677,7 @@
             const quiz = quizData[currentQuiz];
             let allAnswered = true;
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider || q.type === 'info') return;
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
                 if (userAnswers[qIndex] === undefined) {
                     allAnswered = false;
                 }
@@ -646,7 +693,7 @@
             wrongAnswers.length = 0;
 
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider || q.type === 'info') return;
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
 
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
@@ -729,7 +776,7 @@
 
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
-                if (q.divider || q.type === 'info') return;
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
 
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
 
