@@ -10,6 +10,7 @@
   { "name": "الصرف", "type": "التخصصية", "code": "ARAB215", "color": "#D24545" },
   { "name": "مناهج اللغة العربية", "type": "التربوية", "code": "EDUC431", "color": "#59c9f1" },
   { "name": "علم الصوتيات", "type": "التخصصية", "code": "ARAB229", "color": "#4b31de" },
+  { "name": "اللسانيات", "type": "التخصصية", "code": "ARAB311", "color": "#4b31de" },
   { "name": "الشعر الجاهلي", "type": "التخصصية", "code": "ARAB111", "color": "#bdba12" },
   { "name": "الشعر الإسلامي والأموي", "type": "التخصصية", "code": "ARAB122", "color": "#bdba12" },
   { "name": "الشعر العباسي", "type": "التخصصية", "code": "ARAB212", "color": "#bdba12" },
