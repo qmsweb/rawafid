@@ -21,7 +21,7 @@
   <meta name="twitter:title" content="المقررات - روافد" id="twitter-title">
   <meta name="twitter:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة." id="twitter-description">
   <meta name="twitter:image" content="/images/cover2.png" id="twitter-image">
-  
+   
   <style>
     :root {
       --primary-color: #1a2ac6;
@@ -191,6 +191,25 @@
       margin-bottom: 15px;
     }
 
+    /* ============ تنسيق الصورة الجديد ============ */
+    .item-image {
+      width: 100%;
+      margin-bottom: 15px; /* مسافة أسفل الصورة */
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #f9f9f9;
+      border: 1px solid #eee;
+    }
+    
+    .item-image img {
+      width: 100%;
+      height: auto;
+      max-height: 300px; /* أقصى ارتفاع للصورة */
+      object-fit: cover; /* لضمان عدم تشوه الأبعاد */
+      display: block;
+    }
+    /* ========================================= */
+
     .item-footer {
       display: flex;
       gap: 10px;
@@ -265,18 +284,16 @@
       .view-toggle i {
         flex-shrink: 0;
       }
-      
-.materials-list.grid-view .material-item {
-  display: flex;
-  flex-direction: column;
-}
+       
+      .materials-list.grid-view .material-item {
+        display: flex;
+        flex-direction: column;
+      }
 
-.materials-list.grid-view .item-footer {
-  margin-top: auto;
-  justify-content: flex-end; 
-}
-
-
+      .materials-list.grid-view .item-footer {
+        margin-top: auto;
+        justify-content: flex-end; 
+      }
     }
   </style>
 </head>
@@ -310,10 +327,6 @@
     <div class="materials-list" id="materials-list"></div>
       <div id="footer-placeholder"></div> 
   </div>
-  
-    <div id="footer-placeholder"></div> 
-  </div>
-
 
 <script>
   // تحميل الفوتر (كما في الكود الأصلي)
@@ -325,6 +338,7 @@
     .catch(err => {
       console.error("فشل تحميل الفوتر:", err);
     });
+
 /* ======= عناصر DOM ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
@@ -411,6 +425,17 @@ function renderMaterials(filter = 'all') {
       previewBtn = `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${iconClass}"></i> ${buttonText}</a>`;
     }
 
+    // ==== الجزء المضاف: معالجة الصورة ====
+    let imageHTML = '';
+    if (item.image_url) { // إذا كان العنصر يحتوي على رابط صورة
+        imageHTML = `
+            <div class="item-image">
+                <img src="${item.image_url}" alt="${item.title}" loading="lazy">
+            </div>
+        `;
+    }
+    // ===================================
+
     let badgeHTML = '';
     const now = Date.now();
     const timeMs = item['time-ms'];
@@ -421,12 +446,14 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
+    // تم إضافة متغير imageHTML أسفل الوصف
     el.innerHTML = `
       <div class="item-title">
         <i class="${getIconClass(item.type)}" style="background:#f3f3f3; color:${getIconColor(item.type)};"></i>
         <h3>${item.title}</h3>
       </div>
       <p class="item-description">${item.description}</p>
+      ${imageHTML} 
       ${badgeHTML}
       <div class="item-footer">
         ${downloadBtn}
@@ -552,7 +579,6 @@ fetch("topbar.html")
   })
   .catch(() => {});
 </script>
-
 
 </body>
 </html>
