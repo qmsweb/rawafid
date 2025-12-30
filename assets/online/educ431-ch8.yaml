@@ -1,6 +1,6 @@
-- title: اختبار الأسس النفسية والاجتماعية للمنهج الدراسي
-  subject-name: أصول التربية والمناهج
-  subject-code: EDUC2025
+- title: اختبار في الأسس النفسية والاجتماعية
+  subject-name: مناهج اللغة العربية
+  subject-code: EDUC431
   questions:
     - type: instructions
       mainTitle: "أولًا: الأسئلة الموضوعية (اختيار من متعدد)"
