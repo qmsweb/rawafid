@@ -8,63 +8,77 @@
       "description": "",
       "type": "documents",
       "download_url": "https://m.jassim.one/EDUC431/%D9%85%D9%86%D8%A7%D9%87%D8%AC%20%D8%A7%D9%84%D9%84%D8%BA%D8%A9%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9%20%D9%85%D9%82%D8%A7%D8%B1%D9%86%D8%A9%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85%20%D9%88%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%B3%20%D9%88%D8%A7%D9%84%D8%AA%D9%82%D9%88%D9%8A%D9%85.pdf",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208971"
     },
     {
       "title": "ملخص لأول أربع شباتر (فصول)",
       "description": "إعداد: هاجر الجحافية",
       "type": "documents",
       "download_url": "https://m.jassim.one/EDUC431/%E2%80%8E%E2%81%A8%D9%85%D9%84%D8%AE%D8%B5%20%D9%85%D9%86%D8%A7%D9%87%D8%AC%20%D8%A7%D9%84%D9%84%D8%BA%D8%A9%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-%20%D8%A7%D9%94%D9%88%D9%84%20%D8%A7%D9%94%D8%B1%D8%A8%D8%B9%20%D8%B4%D8%A8%D8%A7%D8%AA%D8%B1%20.pdf",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في أنشطة التعلم والتقويم (الشبتر الخامس)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch5",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في الأساس المعرفي (الشبتر السابع)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch7n",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في الأسس النفسية والاجتماعية (الشبتر الثامن)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch8",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في تصميم المنهج ونماذج بنائه (الشبتر التاسع)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch9",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في تطوير المنهج (الشبتر العاشر)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch10",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في تقويم المنهج (الشبتر الحادي عشر)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch11",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
     },
     {
       "title": "اختبار تفاعلي في مواصفات الكتاب المدرسي (الشبتر الثاني عشر)",
       "description": "",
       "type": "quizzes",
       "preview_url": "https://rawafid.jassim.one/exam?i=educ431-ch12",
-      "time-ms": "1767123189055"
+      "time-ms": "1767124208972"
+    },
+    {
+      "title": "اختبار تفاعلي (الاختبار الأول)",
+      "description": "",
+      "type": "links",
+      "preview_url": "https://rawafid.jassim.one/exam?i=educ431-genral1",
+      "time-ms": "1767124208972"
+    },
+    {
+      "title": "اختبار تفاعلي (الاختبار الثاني)",
+      "description": "",
+      "type": "quizzes",
+      "preview_url": "https://rawafid.jassim.one/exam?i=educ431-genral2",
+      "time-ms": "1767124208972"
     }
   ]
 }
