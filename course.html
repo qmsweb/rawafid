@@ -54,6 +54,27 @@
       text-align: right;
     }
 
+    /* === تنسيق صندوق النص التحفيزي الجديد === */
+    .motivation-box {
+      background-color: #e3f2fd; /* أزرق فاتح جداً */
+      color: #1565c0; /* لون أزرق للنص */
+      border: 1px solid #bbdefb;
+      padding: 10px 15px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px; /* مسافة تفصله عن العنوان */
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .motivation-box i {
+      color: #fbc02d; /* لون أيقونة الفكرة أصفر */
+      font-size: 1.1rem;
+    }
+    /* ========================================= */
+
     .header h1 {
       font-size: 2.0rem;
       color: #1e1e2f;
@@ -302,6 +323,11 @@
 
   <div class="container">
     <div class="header">
+      
+      <div class="motivation-box">
+        <i class="fas fa-lightbulb"></i>
+        <span>ثق بالله، وأخلص نيتك له سبحانه، وحتمًا ستصل إلى هدفك.</span>
+      </div>
       <h1></h1>
       <h2></h2>
       <div id="share-button" class="share-button">
