@@ -54,7 +54,7 @@
       text-align: right;
     }
 
-    /* === تنسيق صندوق النص التحفيزي الجديد === */
+    /* === تنسيق صندوق النص التحفيزي === */
     .motivation-box {
       background-color: #e3f2fd; /* أزرق فاتح جداً */
       color: #1565c0; /* لون أزرق للنص */
@@ -64,7 +64,8 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 15px; /* مسافة تفصله عن العنوان */
+      margin-top: 10px;    /* مسافة من الأعلى */
+      margin-bottom: 15px; /* مسافة من الأسفل */
       font-size: 0.95rem;
       font-weight: 500;
     }
@@ -212,10 +213,10 @@
       margin-bottom: 15px;
     }
 
-    /* ============ تنسيق الصورة الجديد ============ */
+    /* ============ تنسيق الصورة ============ */
     .item-image {
       width: 100%;
-      margin-bottom: 15px; /* مسافة أسفل الصورة */
+      margin-bottom: 15px; 
       border-radius: 8px;
       overflow: hidden;
       background-color: #f9f9f9;
@@ -225,8 +226,8 @@
     .item-image img {
       width: 100%;
       height: auto;
-      max-height: 300px; /* أقصى ارتفاع للصورة */
-      object-fit: cover; /* لضمان عدم تشوه الأبعاد */
+      max-height: 300px; 
+      object-fit: cover; 
       display: block;
     }
     /* ========================================= */
@@ -324,11 +325,12 @@
   <div class="container">
     <div class="header">
       
+      <h1></h1>
+      
       <div class="motivation-box">
         <i class="fas fa-lightbulb"></i>
-        <span>ثق بالله، وأخلص نيتك له سبحانه، وحتمًا ستصل إلى هدفك.</span>
+        <span>ثق باللَّه، وأخلص نيتك له سبحانه، وحتمًا ستصل إلى هدفك.</span>
       </div>
-      <h1></h1>
       <h2></h2>
       <div id="share-button" class="share-button">
         <i class="fas fa-share-alt"></i> مشاركة الرابط
@@ -451,9 +453,9 @@ function renderMaterials(filter = 'all') {
       previewBtn = `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="${iconClass}"></i> ${buttonText}</a>`;
     }
 
-    // ==== الجزء المضاف: معالجة الصورة ====
+    // ==== معالجة الصورة ====
     let imageHTML = '';
-    if (item.image_url) { // إذا كان العنصر يحتوي على رابط صورة
+    if (item.image_url) { 
         imageHTML = `
             <div class="item-image">
                 <img src="${item.image_url}" alt="${item.title}" loading="lazy">
@@ -472,7 +474,6 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
-    // تم إضافة متغير imageHTML أسفل الوصف
     el.innerHTML = `
       <div class="item-title">
         <i class="${getIconClass(item.type)}" style="background:#f3f3f3; color:${getIconColor(item.type)};"></i>
