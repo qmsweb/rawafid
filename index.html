@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>روافد</title>
 
-  <!-- خطوط -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
   <link rel="icon" href="images/favicon.png" type="image/jpg">
-  <!-- أيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="topbar.css" />
 
@@ -166,6 +164,27 @@
       margin-bottom: 15px;
     }
 
+    /* --- كود CSS الجديد للعنصر الثابت --- */
+    .special-feedback-item {
+      background: linear-gradient(135deg, #fff, #fef9f9);
+      border: 2px dashed #1a2ac6 !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special-feedback-item .item-icon {
+      background: #1a2ac6 !important;
+      color: white !important;
+    }
+
+    .special-feedback-item:hover {
+      background-color: #fff0f5;
+      border-color: #1a2ac6 !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.15) !important;
+    }
+    /* ---------------------------------- */
+
     @media (max-width: 768px) {
       .materials-list.grid-view {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -199,18 +218,16 @@
 
   <div class="container">
     <div class="filter-bar" id="filter-bar">
-      <!-- تُملأ ديناميكيًا -->
-    </div>
+      </div>
 
     <div class="materials-list" id="materials-list">
-      <!-- تُعرض المواد -->
-    </div>
+      </div>
 
     <div id="footer-placeholder"></div> 
   </div>
 
  <script>
-  // تحميل الفوتر (كما في الكود الأصلي)
+  // تحميل الفوتر
   fetch("/footer.html")
     .then(response => response.text())
     .then(data => {
@@ -226,6 +243,26 @@
 
   function renderMaterialItems(items) {
     materialsList.innerHTML = '';
+
+    // +++ إضافة العنصر الثابت الخاص بالتقييم +++
+    const feedbackEl = document.createElement('div');
+    feedbackEl.className = 'material-item special-feedback-item';
+    feedbackEl.style.cursor = 'pointer';
+    
+    feedbackEl.addEventListener('click', () => {
+      window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9dOQBjSZfwyT1CYlChetni7Af8_B6p67XBpQutv0hxnpG7w/viewform?usp=header', '_blank');
+    });
+
+    feedbackEl.innerHTML = `
+      <div class="item-title">
+        <i class="fas fa-rocket item-icon"></i>
+        <h3>ساهم في تطوير المنصة</h3>
+      </div>
+      <p class="item-code" style="color: #1a2ac6; font-weight: bold; font-size: 0.9rem;">اضغط هنا لتقييم المنصة وتقديم مقترحاتك</p>
+    `;
+    materialsList.appendChild(feedbackEl);
+    // +++++++++++++++++++++++++++++++++++++++
+
     items.forEach((item) => {
       const el = document.createElement('div');
       el.className = 'material-item';
@@ -272,7 +309,7 @@
       filterBar.appendChild(filterBtn);
     });
 
-    // ← نضيف أزرار العرض بعد الفلاتر
+    // إضافة أزرار العرض
     const viewToggle = document.createElement('div');
     viewToggle.className = 'view-toggle';
 
@@ -283,7 +320,6 @@
 
     filterBar.appendChild(viewToggle);
 
-    // ربط الأحداث بعد إنشائهم
     const gridBtn = viewToggle.querySelector('#grid-view');
     const listBtn = viewToggle.querySelector('#list-view');
 
@@ -307,7 +343,6 @@
     gridBtn.addEventListener('click', () => setView('grid'));
     listBtn.addEventListener('click', () => setView('list'));
 
-    // التعيين التلقائي عند أول مرة: نحترم savedMode إذا وُجد
     const savedMode = localStorage.getItem('viewMode');
     if (savedMode) {
       applyVisualState(savedMode);
@@ -316,14 +351,11 @@
       applyVisualState(isMobile ? 'list' : 'grid');
     }
 
-    // إذا لم يكن هناك وضع محفوظ، نُحدِّث الوضع تلقائيًا عند تغيير حجم النافذة
-    // (لا نغيّر إذا المستخدم حَفِظ تفضيله)
     if (!savedMode) {
       const mq = window.matchMedia("(max-width: 768px)");
       const onChange = (e) => {
         applyVisualState(e.matches ? 'list' : 'grid');
       };
-      // دعم الإضافة للكائن media query
       if (typeof mq.addEventListener === 'function') {
         mq.addEventListener('change', onChange);
       } else if (typeof mq.addListener === 'function') {
@@ -345,7 +377,7 @@
       });
   });
 
-  // تحميل التوب بار (كما في الكود الأصلي)
+  // تحميل التوب بار
   fetch("topbar.html")
     .then(res => res.text())
     .then(html => {
