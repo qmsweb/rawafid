@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>روافد</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/favicon.png" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="topbar.css" />
+
+<meta property="og:title" content="روافد" id="og-title">
+  <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية." id="og-description">
+  <meta property="og:image" content="/images/cover.png" id="og-image">
+  <meta property="og:url" content="https://rawafid.jassim.one/index.html">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="روافد" id="twitter-title">
+  <meta name="twitter:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية." id="twitter-description">
+  <meta name="twitter:image" content="/images/cover.png" id="twitter-image">
+  
+
+  <style>
+    :root {
+      --primary-color: #1a2ac6;
+      --hover-bg: #e0e7ff;
+      --light-bg: #f0f2f7;
+      --light-border: #ccd1e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Kufi Arabic", sans-serif;
+    }
+
+    body {
+      background-color: #f4f6fb;
+      color: #2d2d2d;
+      min-height: 100vh;
+      padding: 20px;
+      padding-top: 80px;   
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      align-items: center;
+      padding: 10px 0;
+      margin-bottom: 25px;
+    }
+
+    .filter-item {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: var(--light-bg);
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.75rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .filter-item:hover {
+      background: var(--hover-bg);
+      border-color: var(--primary-color);
+    }
+
+    .filter-item.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .view-toggle i {
+      font-size: 1.1rem;
+      color: var(--primary-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--light-border);
+      background-color: var(--light-bg);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .view-toggle i:hover {
+      background-color: var(--hover-bg);
+    }
+
+    .view-toggle i.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .materials-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .materials-list.grid-view {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .material-item {
+      border: 1px solid #e7e7e7;
+      border-radius: 12px;
+      background: white;
+      padding: 10px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .material-item:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .item-title {
+      display: flex;
+      align-items: self-start;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .item-title i {
+      font-size: 1.4rem;
+      background: var(--hover-bg);
+      color: var(--primary-color);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .item-title h3 {
+      font-size: 1.0rem;
+      color: #1d1d1d;
+    }
+
+    .item-description {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    /* --- كود CSS الجديد للعنصر الثابت --- */
+    .special-feedback-item {
+      background: linear-gradient(135deg, #fff, #fef9f9);
+      border: 2px dashed #e91e63 !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special-feedback-item .item-icon {
+      background: #e91e63 !important;
+      color: white !important;
+    }
+
+    .special-feedback-item:hover {
+      background-color: #fff0f5;
+      border-color: #c2185b !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.15) !important;
+    }
+    /* ---------------------------------- */
+
+    @media (max-width: 768px) {
+      .materials-list.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .filter-item,
+      .view-toggle i {
+        flex-shrink: 0;
+      }
+
+      .item-title i.item-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        background: var(--hover-bg);
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar-container"></div>
+
+  <div class="container">
+    <div class="filter-bar" id="filter-bar">
+      </div>
+
+    <div class="materials-list" id="materials-list">
+      </div>
+
+    <div id="footer-placeholder"></div> 
+  </div>
+
+ <script>
+  // تحميل الفوتر
+  fetch("/footer.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("footer-placeholder").innerHTML = data;
+    })
+    .catch(err => {
+      console.error("فشل تحميل الفوتر:", err);
+    });
+
+  const materialsList = document.getElementById('materials-list');
+  const filterBar = document.getElementById('filter-bar');
+  let allCourses = [];
+
+  function renderMaterialItems(items) {
+    materialsList.innerHTML = '';
+
+    // +++ إضافة العنصر الثابت الخاص بالتقييم +++
+    const feedbackEl = document.createElement('div');
+    feedbackEl.className = 'material-item special-feedback-item';
+    feedbackEl.style.cursor = 'pointer';
+    
+    feedbackEl.addEventListener('click', () => {
+      window.open('https://rawafid.jassim.one/r1', '_blank');
+    });
+
+    feedbackEl.innerHTML = `
+      <div class="item-title">
+        <i class="fas fa-rocket item-icon"></i>
+        <h3>ساهم في تطوير المنصة</h3>
+      </div>
+      <p class="item-code" style="color: #d81b60; font-weight: bold; font-size: 0.9rem;">اضغط هنا لتقييم المنصة وتقديم مقترحاتك</p>
+    `;
+    materialsList.appendChild(feedbackEl);
+    // +++++++++++++++++++++++++++++++++++++++
+
+    items.forEach((item) => {
+      const el = document.createElement('div');
+      el.className = 'material-item';
+      el.style.cursor = 'pointer';
+
+      const iconColor = item.color || '#333';
+      const iconClass = item.icon || 'fa-book';
+
+      el.addEventListener('click', () => {
+        window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
+      });
+
+      el.innerHTML = `
+        <div class="item-title">
+          <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
+          <h3>${item.name}</h3>
+        </div>
+        ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
+      `;
+      materialsList.appendChild(el);
+    });
+  }
+
+  function createFilters(courses) {
+    // جمع الأنواع (types) ووضع 'all' أولاً
+    const types = [...new Set(courses.map(c => c.type))];
+    types.unshift('all');
+
+    types.forEach(type => {
+      const filterBtn = document.createElement('div');
+      filterBtn.className = 'filter-item';
+      filterBtn.dataset.filter = type;
+      filterBtn.textContent = type === 'all' ? 'الكل' : type;
+      if (type === 'all') filterBtn.classList.add('active');
+
+      filterBtn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+        filterBtn.classList.add('active');
+
+        const filtered = type === 'all' ? allCourses : allCourses.filter(c => c.type === type);
+        renderMaterialItems(filtered);
+      });
+
+      filterBar.appendChild(filterBtn);
+    });
+
+    // إضافة أزرار العرض
+    const viewToggle = document.createElement('div');
+    viewToggle.className = 'view-toggle';
+
+    viewToggle.innerHTML = `
+      <i class="fas fa-list" id="list-view" title="عرض قائمة"></i>
+      <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+    `;
+
+    filterBar.appendChild(viewToggle);
+
+    const gridBtn = viewToggle.querySelector('#grid-view');
+    const listBtn = viewToggle.querySelector('#list-view');
+
+    function applyVisualState(mode) {
+      if (mode === 'grid') {
+        materialsList.classList.add('grid-view');
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+      } else {
+        materialsList.classList.remove('grid-view');
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+      }
+    }
+
+    function setView(mode, save = true) {
+      applyVisualState(mode);
+      if (save) localStorage.setItem('viewMode', mode);
+    }
+
+    gridBtn.addEventListener('click', () => setView('grid'));
+    listBtn.addEventListener('click', () => setView('list'));
+
+    const savedMode = localStorage.getItem('viewMode');
+    if (savedMode) {
+      applyVisualState(savedMode);
+    } else {
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      applyVisualState(isMobile ? 'list' : 'grid');
+    }
+
+    if (!savedMode) {
+      const mq = window.matchMedia("(max-width: 768px)");
+      const onChange = (e) => {
+        applyVisualState(e.matches ? 'list' : 'grid');
+      };
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', onChange);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(onChange);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch("assets/data/materials.json")
+      .then(res => res.json())
+      .then(data => {
+        allCourses = data;
+        createFilters(data);
+        renderMaterialItems(data);
+      })
+      .catch(err => {
+        materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
+      });
+  });
+
+  // تحميل التوب بار
+  fetch("topbar.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("topbar-container").innerHTML = html;
+      const script = document.createElement("script");
+      script.src = "topbar.js";
+      document.body.appendChild(script);
+    })
+    .catch(err => console.error("فشل تحميل التوب بار:", err));
+</script>
+
+</body>
+</html>
