@@ -2,15 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بطاقات الأسئلة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* === إعدادات الصفحة العامة === */
         :root {
             --card-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            --glow-color: rgba(32, 58, 67, 0.6);
             --text-color: #ffffff;
         }
 
@@ -18,11 +16,12 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent; /* إزالة وميض النقر في الموبايل */
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #000; /* خلفية سوداء */
+            background-color: #000;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -31,34 +30,38 @@
             position: relative;
         }
 
-        /* === تأثير الضباب الأزرق في الخلفية === */
         .background-blur {
             position: absolute;
-            width: 600px;
-            height: 600px;
+            width: 80vw;
+            height: 80vw;
             background: radial-gradient(circle, #004e92 0%, transparent 70%);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            filter: blur(50px);
+            filter: blur(60px);
             z-index: -1;
             opacity: 0.5;
         }
 
-        /* === حاوية البطاقة === */
         .main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 20px;
             width: 100%;
-            max-width: 350px;
+            height: 100%;
+            padding: 20px;
         }
 
+        /* تعديل أبعاد البطاقة لتكون متجاوبة */
         .card-scene {
-            width: 300px;
-            height: 450px; /* بطاقة عمودية */
-            perspective: 1000px; /* لتمكين التأثير ثلاثي الأبعاد */
+            width: 90%; /* تأخذ 90% من عرض الشاشة */
+            max-width: 320px; /* لا تتجاوز هذا العرض */
+            height: 60vh; /* الارتفاع نسبة من الشاشة */
+            max-height: 500px;
+            min-height: 350px;
+            perspective: 1000px;
             cursor: pointer;
         }
 
@@ -72,66 +75,59 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* عند إضافة كلاس flipped يتم تدوير البطاقة */
         .card.is-flipped {
             transform: rotateY(180deg);
         }
 
-        /* === وجه وظهر البطاقة === */
         .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* إخفاء الوجه الخلفي عند الدوران */
+            backface-visibility: hidden;
             border-radius: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             color: var(--text-color);
-            background: var(--card-gradient); /* الأزرق الغامق المتدرج */
+            background: var(--card-gradient);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* الوجه الأمامي (السؤال) */
-        .card-front {
-            /* الافتراضي */
-        }
-
-        /* الوجه الخلفي (الإجابة) */
         .card-back {
             transform: rotateY(180deg);
-            background: linear-gradient(135deg, #141e30 0%, #243b55 100%); /* تدرج مختلف قليلاً للتمييز */
+            background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
         }
 
         .label {
             font-size: 0.9rem;
             color: #aaa;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .content-text {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .hint {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 0.8rem;
             color: #888;
             opacity: 0.8;
         }
 
-        /* === أزرار التحكم === */
+        /* === منطقة التحكم === */
         .controls {
             display: flex;
-            justify-content: space-between;
-            width: 300px;
+            justify-content: space-between; /* توزيع العناصر */
+            align-items: center;
+            width: 90%;
+            max-width: 320px;
         }
 
         button {
@@ -144,23 +140,32 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            width: 100px;
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 5px;
         }
 
-        button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 78, 146, 0.4);
-        }
-
         button:active {
-            transform: translateY(0);
+            transform: scale(0.95);
         }
 
-        button i {
-            font-style: normal;
+        /* تنسيق حالة التعطيل للزر */
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background-color: transparent;
+            border-color: rgba(255, 255, 255, 0.05);
+            transform: none !important;
+        }
+
+        /* تنسيق العداد */
+        .counter {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
         }
 
     </style>
@@ -170,102 +175,94 @@
     <div class="background-blur"></div>
 
     <div class="main-container">
+        
         <div class="card-scene" onclick="toggleCard()">
             <div class="card" id="flashcard">
                 <div class="card-face card-front">
                     <div class="label">السؤال</div>
-                    <div class="content-text" id="question-text">
-                        </div>
-                    <div class="hint">(انقر لإظهار الإجابة)</div>
+                    <div class="content-text" id="question-text"></div>
+                    <div class="hint">(انقر للإجابة)</div>
                 </div>
 
                 <div class="card-face card-back">
                     <div class="label">الإجابة</div>
-                    <div class="content-text" id="answer-text">
-                        </div>
+                    <div class="content-text" id="answer-text"></div>
                 </div>
             </div>
         </div>
 
         <div class="controls">
-            <button onclick="prevQuestion()">
-                 السابق &#8594;
+            <button id="prevBtn" onclick="prevQuestion()">
+                 &#8594; السابق
             </button>
-            <button onclick="nextQuestion()">
-                &#8592; التالي
+            
+            <div class="counter" id="counter">1 / 5</div>
+
+            <button id="nextBtn" onclick="nextQuestion()">
+                التالي &#8592;
             </button>
         </div>
     </div>
 
     <script>
-        // === بيانات الأسئلة (5 أسئلة للتجريب) ===
         const questions = [
-            {
-                q: "ما هي عاصمة المملكة العربية السعودية؟",
-                a: "الرياض"
-            },
-            {
-                q: "كم عدد ألوان قوس قزح؟",
-                a: "7 ألوان"
-            },
-            {
-                q: "ما هو أسرع حيوان بري في العالم؟",
-                a: "الفهد (الشيتا)"
-            },
-            {
-                q: "من هو أول إنسان نزل على سطح القمر؟",
-                a: "نيل أرمسترونج"
-            },
-            {
-                q: "ما هي أكبر قارة في العالم من حيث المساحة؟",
-                a: "قارة آسيا"
-            }
+            { q: "ما هي عاصمة المملكة العربية السعودية؟", a: "الرياض" },
+            { q: "كم عدد ألوان قوس قزح؟", a: "7 ألوان" },
+            { q: "ما هو أسرع حيوان بري في العالم؟", a: "الفهد (الشيتا)" },
+            { q: "من هو أول إنسان نزل على سطح القمر؟", a: "نيل أرمسترونج" },
+            { q: "ما هي أكبر قارة في العالم من حيث المساحة؟", a: "قارة آسيا" }
         ];
 
         let currentIndex = 0;
         const cardElement = document.getElementById('flashcard');
         const questionText = document.getElementById('question-text');
         const answerText = document.getElementById('answer-text');
+        const counterElement = document.getElementById('counter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
 
-        // دالة لقلب البطاقة
         function toggleCard() {
             cardElement.classList.toggle('is-flipped');
         }
 
-        // دالة لتحديث محتوى البطاقة
-        function loadCard(index) {
-            // إعادة البطاقة لوجه السؤال إذا كانت مقلوبة
+        // دالة لعرض البيانات وتحديث حالة الأزرار والعداد
+        function updateUI() {
+            // 1. إعادة البطاقة لوجه السؤال
             cardElement.classList.remove('is-flipped');
             
-            // تأخير بسيط لتغيير النص حتى لا يظهر التغيير أثناء دوران البطاقة (اختياري)
             setTimeout(() => {
-                questionText.textContent = questions[index].q;
-                answerText.textContent = questions[index].a;
-            }, 200);
+                // 2. تحديث النصوص
+                questionText.textContent = questions[currentIndex].q;
+                answerText.textContent = questions[currentIndex].a;
+                
+                // 3. تحديث العداد
+                counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+                // 4. تحديث حالة الأزرار (تفعيل/تعطيل)
+                // إذا كنا في السؤال الأول (index 0)، عطل زر السابق
+                prevBtn.disabled = (currentIndex === 0);
+
+                // إذا كنا في السؤال الأخير، عطل زر التالي
+                nextBtn.disabled = (currentIndex === questions.length - 1);
+            }, 150);
         }
 
-        // الانتقال للسؤال التالي
         function nextQuestion() {
             if (currentIndex < questions.length - 1) {
                 currentIndex++;
-            } else {
-                currentIndex = 0; // العودة للأول عند النهاية
+                updateUI();
             }
-            loadCard(currentIndex);
         }
 
-        // الانتقال للسؤال السابق
         function prevQuestion() {
             if (currentIndex > 0) {
                 currentIndex--;
-            } else {
-                currentIndex = questions.length - 1; // الذهاب للأخير عند البداية
+                updateUI();
             }
-            loadCard(currentIndex);
         }
 
-        // تحميل السؤال الأول عند فتح الصفحة
-        window.onload = () => loadCard(currentIndex);
+        // التشغيل عند البدء
+        window.onload = updateUI;
 
     </script>
 </body>
