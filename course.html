@@ -54,27 +54,59 @@
       text-align: right;
     }
 
-    /* === تنسيق صندوق النص التحفيزي === */
-    .motivation-box {
-      background-color: #e3f2fd; /* أزرق فاتح جداً */
-      color: #1565c0; /* لون أزرق للنص */
-      border: 1px solid #bbdefb;
-      padding: 10px 15px;
-      border-radius: 8px;
+    /* === بداية تنسيق صندوق التقييم الجديد === */
+    .feedback-banner {
+      background: linear-gradient(135deg, #fff, #fef9f9);
+      border: 2px dashed var(--primary-color);
+      padding: 12px 15px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;    /* مسافة من الأعلى */
-      margin-bottom: 15px; /* مسافة من الأسفل */
-      font-size: 0.95rem;
-      font-weight: 500;
+      gap: 12px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      max-width: 100%;
     }
 
-    .motivation-box i {
-      color: #fbc02d; /* لون أيقونة الفكرة أصفر */
-      font-size: 1.1rem;
+    .feedback-banner:hover {
+      background-color: #fff0f5;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(26, 42, 198, 0.1);
     }
-    /* ========================================= */
+
+    .feedback-banner i {
+      background: var(--primary-color);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .feedback-content {
+      text-align: right;
+    }
+
+    .feedback-content h3 {
+      font-size: 0.95rem;
+      color: #1d1d1d;
+      margin-bottom: 2px;
+    }
+
+    .feedback-content p {
+      font-size: 0.8rem;
+      color: var(--primary-color);
+      font-weight: bold;
+      margin: 0 !important;
+    }
+    /* === نهاية تنسيق صندوق التقييم الجديد === */
 
     .header h1 {
       font-size: 2.0rem;
@@ -206,16 +238,14 @@
       border-radius: 10px;
     }
 
-      .item-description {
+    .item-description {
       font-size: 0.95rem;
       color: #444;
       line-height: 1.6;
       margin-bottom: 15px;
-      white-space: pre-wrap; /* هذا هو السطر الجديد المطلوب إضافته */
+      white-space: pre-wrap;
     }
 
-
-    /* ============ تنسيق الصورة ============ */
     .item-image {
       width: 100%;
       margin-bottom: 15px; 
@@ -232,7 +262,6 @@
       object-fit: cover; 
       display: block;
     }
-    /* ========================================= */
 
     .item-footer {
       display: flex;
@@ -329,9 +358,12 @@
       
       <h1></h1>
       
-      <div class="motivation-box">
-        <i class="fas fa-lightbulb"></i>
-        <span>ثق باللَّه، وأخلص نيتك له سبحانه، وحتمًا ستصل إلى هدفك.</span>
+      <div class="feedback-banner" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9dOQBjSZfwyT1CYlChetni7Af8_B6p67XBpQutv0hxnpG7w/viewform?usp=header', '_blank')">
+        <i class="fas fa-rocket"></i>
+        <div class="feedback-content">
+          <h3>تقييم منصة روافد</h3>
+          <p>اضغط هنا لتقييم المنصة وتقديم مقترحاتك</p>
+        </div>
       </div>
       <h2></h2>
       <div id="share-button" class="share-button">
