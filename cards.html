@@ -13,11 +13,14 @@
             --text-color: #ffffff;
         }
 
+        /* === التعديل الجذري هنا === */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            /* تطبيق منع التكبير على كل العناصر بلا استثناء */
+            touch-action: manipulation; 
         }
 
         body {
@@ -29,8 +32,6 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            /* هذا السطر يمنع التكبير عند النقر المزدوج */
-            touch-action: manipulation; 
         }
 
         .background-blur {
@@ -65,7 +66,6 @@
             min-height: 350px;
             perspective: 1000px;
             cursor: pointer;
-            touch-action: manipulation; 
         }
 
         .card {
@@ -90,12 +90,9 @@
             border-radius: 20px;
             display: flex;
             flex-direction: column;
-            
-            /* الوضع الافتراضي (للسؤال): توسيط كامل */
             justify-content: center; 
             align-items: center;     
             text-align: center;
-            
             padding: 25px;
             color: var(--text-color);
             background: var(--card-gradient);
@@ -103,17 +100,13 @@
             user-select: none;
         }
 
-        /* === تنسيق الوجه الخلفي (الإجابة) === */
         .card-back {
             transform: rotateY(180deg);
             background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
-            
-            /* محاذاة للأعلى واليمين */
             justify-content: flex-start; 
             align-items: flex-start;     
             text-align: right;           
-            
-            padding-top: 40px; /* مسافة من الأعلى لعدم التصاق النص بالحافة */
+            padding-top: 40px; 
         }
 
         .content-text {
@@ -153,8 +146,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* منع التكبير عند النقر السريع على الأزرار */
-            touch-action: manipulation;
         }
 
         button:active {
@@ -212,6 +203,12 @@
     </div>
 
     <script>
+        // === كود منع التكبير الجذري ===
+        document.addEventListener('dblclick', function(event) {
+            event.preventDefault();
+        }, { passive: false });
+        // ============================
+
         const questions = [
             { q: "ما هي عاصمة سلطنة عمان؟", a: "مسقط" },
             { q: "كم عدد ألوان قوس قزح؟", a: "7 ألوان" },
