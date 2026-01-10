@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>بطاقات الأسئلة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -16,7 +17,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent; /* إزالة وميض النقر في الموبايل */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -28,6 +29,8 @@
             align-items: center;
             overflow: hidden;
             position: relative;
+            /* هذا السطر يمنع التكبير المزدوج ويحسن استجابة اللمس */
+            touch-action: manipulation;
         }
 
         .background-blur {
@@ -54,15 +57,16 @@
             padding: 20px;
         }
 
-        /* تعديل أبعاد البطاقة لتكون متجاوبة */
         .card-scene {
-            width: 90%; /* تأخذ 90% من عرض الشاشة */
-            max-width: 320px; /* لا تتجاوز هذا العرض */
-            height: 60vh; /* الارتفاع نسبة من الشاشة */
+            width: 90%;
+            max-width: 320px;
+            height: 60vh;
             max-height: 500px;
             min-height: 350px;
             perspective: 1000px;
             cursor: pointer;
+            /* منع الزوم عند النقر السريع على البطاقة */
+            touch-action: manipulation; 
         }
 
         .card {
@@ -94,6 +98,7 @@
             color: var(--text-color);
             background: var(--card-gradient);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            user-select: none; /* يمنع تحديد النص بالخطأ عند النقر */
         }
 
         .card-back {
@@ -124,7 +129,7 @@
         /* === منطقة التحكم === */
         .controls {
             display: flex;
-            justify-content: space-between; /* توزيع العناصر */
+            justify-content: space-between;
             align-items: center;
             width: 90%;
             max-width: 320px;
@@ -134,24 +139,29 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 30px;
+            /* تغيير الشكل ليصبح دائرياً مناسباً للأيقونات */
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            padding: 0;
+            
             font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
+            font-size: 1.2rem; /* تكبير الأيقونة قليلاً */
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            
+            /* منع الزوم عند النقر السريع على الأزرار */
+            touch-action: manipulation;
         }
 
         button:active {
-            transform: scale(0.95);
+            transform: scale(0.90);
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* تنسيق حالة التعطيل للزر */
         button:disabled {
             opacity: 0.3;
             cursor: not-allowed;
@@ -160,7 +170,6 @@
             transform: none !important;
         }
 
-        /* تنسيق العداد */
         .counter {
             color: rgba(255, 255, 255, 0.8);
             font-weight: bold;
@@ -192,14 +201,14 @@
         </div>
 
         <div class="controls">
-            <button id="prevBtn" onclick="prevQuestion()">
-                 &#8594; السابق
+            <button id="prevBtn" onclick="prevQuestion()" aria-label="السابق">
+                 <i class="fas fa-chevron-right"></i>
             </button>
             
             <div class="counter" id="counter">1 / 5</div>
 
-            <button id="nextBtn" onclick="nextQuestion()">
-                التالي &#8592;
+            <button id="nextBtn" onclick="nextQuestion()" aria-label="التالي">
+                <i class="fas fa-chevron-left"></i>
             </button>
         </div>
     </div>
@@ -225,24 +234,16 @@
             cardElement.classList.toggle('is-flipped');
         }
 
-        // دالة لعرض البيانات وتحديث حالة الأزرار والعداد
         function updateUI() {
-            // 1. إعادة البطاقة لوجه السؤال
             cardElement.classList.remove('is-flipped');
             
             setTimeout(() => {
-                // 2. تحديث النصوص
                 questionText.textContent = questions[currentIndex].q;
                 answerText.textContent = questions[currentIndex].a;
                 
-                // 3. تحديث العداد
                 counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
 
-                // 4. تحديث حالة الأزرار (تفعيل/تعطيل)
-                // إذا كنا في السؤال الأول (index 0)، عطل زر السابق
                 prevBtn.disabled = (currentIndex === 0);
-
-                // إذا كنا في السؤال الأخير، عطل زر التالي
                 nextBtn.disabled = (currentIndex === questions.length - 1);
             }, 150);
         }
@@ -261,7 +262,6 @@
             }
         }
 
-        // التشغيل عند البدء
         window.onload = updateUI;
 
     </script>
