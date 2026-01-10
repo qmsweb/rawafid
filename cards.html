@@ -2,31 +2,32 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>بطاقات الأسئلة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
+            /* نفس ألوان البطاقة لاستخدامها في الخلفية */
             --card-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             --text-color: #ffffff;
         }
 
-        /* === التعديل الجذري هنا === */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            /* تطبيق منع التكبير على كل العناصر بلا استثناء */
             touch-action: manipulation; 
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             background-color: #000;
-            height: 100vh;
+            /* استخدام dvh يضمن التوسط الحقيقي في الموبايل بتجاهل شريط العنوان */
+            height: 100dvh; 
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -36,23 +37,24 @@
 
         .background-blur {
             position: absolute;
-            width: 80vw;
-            height: 80vw;
-            background: radial-gradient(circle, #004e92 0%, transparent 70%);
+            width: 90vw;
+            height: 90vw;
+            /* تم تغيير الألوان هنا لتتطابق مع ألوان البطاقة (درجات الأخضر المزرق/التركواز) */
+            background: radial-gradient(circle, #2c5364 0%, #203a43 40%, transparent 70%);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            filter: blur(60px);
+            filter: blur(80px); /* زيادة التغبيش لنعومة أكثر */
             z-index: -1;
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         .main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 20px;
+            justify-content: center; /* ضمان توسط المحتوى داخل الحاوية أيضاً */
+            gap: 25px;
             width: 100%;
             height: 100%;
             padding: 20px;
@@ -61,9 +63,9 @@
         .card-scene {
             width: 90%;
             max-width: 320px;
-            height: 60vh;
-            max-height: 500px;
-            min-height: 350px;
+            height: 55vh; /* تقليل الارتفاع قليلاً لضمان عدم خروجها عن الشاشة في الهواتف الصغيرة */
+            max-height: 450px;
+            min-height: 300px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -72,10 +74,10 @@
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1); /* تحسين انسيابية الحركة */
             transform-style: preserve-3d;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
         .card.is-flipped {
@@ -96,7 +98,7 @@
             padding: 25px;
             color: var(--text-color);
             background: var(--card-gradient);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             user-select: none;
         }
 
@@ -110,7 +112,7 @@
         }
 
         .content-text {
-            font-size: 1.4rem;
+            font-size: 1.5rem; /* تكبير الخط قليلاً للوضوح */
             font-weight: 700;
             line-height: 1.6;
             width: 100%;
@@ -118,9 +120,8 @@
 
         .hint {
             margin-top: 25px;
-            font-size: 0.8rem;
-            color: #888;
-            opacity: 0.8;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .controls {
@@ -135,22 +136,22 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 50px;
-            height: 50px;
+            width: 55px; /* تكبير منطقة اللمس */
+            height: 55px;
             border-radius: 50%;
             padding: 0;
             font-family: 'Cairo', sans-serif;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         button:active {
-            transform: scale(0.90);
-            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(0.92);
+            background-color: rgba(255, 255, 255, 0.25);
         }
 
         button:disabled {
@@ -162,10 +163,11 @@
         }
 
         .counter {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
     </style>
@@ -203,14 +205,13 @@
     </div>
 
     <script>
-        // === كود منع التكبير الجذري ===
+        // منع التكبير المزدوج
         document.addEventListener('dblclick', function(event) {
             event.preventDefault();
         }, { passive: false });
-        // ============================
 
         const questions = [
-            { q: "ما هي عاصمة قطر؟", a: "الدوحة" },
+            { q: "ما هي عاصمة سلطنة عمان؟", a: "مسقط" },
             { q: "كم عدد ألوان قوس قزح؟", a: "7 ألوان" },
             { q: "ما هو أسرع حيوان بري في العالم؟", a: "الفهد (الشيتا)" },
             { q: "من هو أول إنسان نزل على سطح القمر؟", a: "نيل أرمسترونج" },
@@ -240,7 +241,7 @@
 
                 prevBtn.disabled = (currentIndex === 0);
                 nextBtn.disabled = (currentIndex === questions.length - 1);
-            }, 150);
+            }, 150); // توقيت سريع لتحديث النص أثناء انقلاب البطاقة
         }
 
         function nextQuestion() {
