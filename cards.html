@@ -29,7 +29,8 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            touch-action: manipulation;
+            /* هذا السطر يمنع التكبير عند النقر المزدوج */
+            touch-action: manipulation; 
         }
 
         .background-blur {
@@ -89,33 +90,37 @@
             border-radius: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* توسيط عمودي افتراضي (للسؤال) */
-            align-items: center;     /* توسيط أفقي افتراضي (للسؤال) */
+            
+            /* الوضع الافتراضي (للسؤال): توسيط كامل */
+            justify-content: center; 
+            align-items: center;     
+            text-align: center;
+            
             padding: 25px;
-            text-align: center;      /* محاذاة النص في المنتصف (للسؤال) */
             color: var(--text-color);
             background: var(--card-gradient);
             border: 1px solid rgba(255, 255, 255, 0.1);
             user-select: none;
         }
 
-        /* تنسيق خاص للوجه الخلفي (الإجابة) */
+        /* === تنسيق الوجه الخلفي (الإجابة) === */
         .card-back {
             transform: rotateY(180deg);
             background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
             
-            /* التعديلات الجديدة للإجابة */
-            justify-content: flex-start; /* محاذاة للأعلى */
-            align-items: flex-start;     /* محاذاة لليمين (بسبب RTL) */
-            text-align: right;           /* محاذاة النص لليمين */
-            padding-top: 40px;           /* مسافة من الأعلى */
+            /* محاذاة للأعلى واليمين */
+            justify-content: flex-start; 
+            align-items: flex-start;     
+            text-align: right;           
+            
+            padding-top: 40px; /* مسافة من الأعلى لعدم التصاق النص بالحافة */
         }
 
         .content-text {
             font-size: 1.4rem;
             font-weight: 700;
             line-height: 1.6;
-            width: 100%; /* لضمان أخذ العرض الكامل للمحاذاة */
+            width: 100%;
         }
 
         .hint {
@@ -148,6 +153,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* منع التكبير عند النقر السريع على الأزرار */
             touch-action: manipulation;
         }
 
@@ -255,7 +261,6 @@
         }
 
         window.onload = updateUI;
-
     </script>
 </body>
 </html>
