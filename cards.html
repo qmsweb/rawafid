@@ -29,7 +29,6 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            /* هذا السطر يمنع التكبير المزدوج ويحسن استجابة اللمس */
             touch-action: manipulation;
         }
 
@@ -65,7 +64,6 @@
             min-height: 350px;
             perspective: 1000px;
             cursor: pointer;
-            /* منع الزوم عند النقر السريع على البطاقة */
             touch-action: manipulation; 
         }
 
@@ -91,32 +89,33 @@
             border-radius: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; /* توسيط عمودي افتراضي (للسؤال) */
+            align-items: center;     /* توسيط أفقي افتراضي (للسؤال) */
             padding: 25px;
-            text-align: center;
+            text-align: center;      /* محاذاة النص في المنتصف (للسؤال) */
             color: var(--text-color);
             background: var(--card-gradient);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            user-select: none; /* يمنع تحديد النص بالخطأ عند النقر */
+            user-select: none;
         }
 
+        /* تنسيق خاص للوجه الخلفي (الإجابة) */
         .card-back {
             transform: rotateY(180deg);
             background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
-        }
-
-        .label {
-            font-size: 0.9rem;
-            color: #aaa;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+            
+            /* التعديلات الجديدة للإجابة */
+            justify-content: flex-start; /* محاذاة للأعلى */
+            align-items: flex-start;     /* محاذاة لليمين (بسبب RTL) */
+            text-align: right;           /* محاذاة النص لليمين */
+            padding-top: 40px;           /* مسافة من الأعلى */
         }
 
         .content-text {
             font-size: 1.4rem;
             font-weight: 700;
             line-height: 1.6;
+            width: 100%; /* لضمان أخذ العرض الكامل للمحاذاة */
         }
 
         .hint {
@@ -126,7 +125,6 @@
             opacity: 0.8;
         }
 
-        /* === منطقة التحكم === */
         .controls {
             display: flex;
             justify-content: space-between;
@@ -139,21 +137,17 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            /* تغيير الشكل ليصبح دائرياً مناسباً للأيقونات */
             width: 50px;
             height: 50px;
             border-radius: 50%;
             padding: 0;
-            
             font-family: 'Cairo', sans-serif;
-            font-size: 1.2rem; /* تكبير الأيقونة قليلاً */
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
-            
-            /* منع الزوم عند النقر السريع على الأزرار */
             touch-action: manipulation;
         }
 
@@ -188,13 +182,11 @@
         <div class="card-scene" onclick="toggleCard()">
             <div class="card" id="flashcard">
                 <div class="card-face card-front">
-                    <div class="label">السؤال</div>
                     <div class="content-text" id="question-text"></div>
                     <div class="hint">(انقر للإجابة)</div>
                 </div>
 
                 <div class="card-face card-back">
-                    <div class="label">الإجابة</div>
                     <div class="content-text" id="answer-text"></div>
                 </div>
             </div>
@@ -216,7 +208,7 @@
     <script>
         const questions = [
             { q: "ما هي عاصمة سلطنة عمان؟", a: "مسقط" },
-            { q: "كم عدد سور القرآن الكريم؟", a: "114 سورة" },
+            { q: "كم عدد ألوان قوس قزح؟", a: "7 ألوان" },
             { q: "ما هو أسرع حيوان بري في العالم؟", a: "الفهد (الشيتا)" },
             { q: "من هو أول إنسان نزل على سطح القمر؟", a: "نيل أرمسترونج" },
             { q: "ما هي أكبر قارة في العالم من حيث المساحة؟", a: "قارة آسيا" }
