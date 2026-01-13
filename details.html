@@ -2,144 +2,327 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تفاصيل المادة - روافد</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>روافد</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link rel="icon" href="images/favicon.png" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" /> <style>
-    /* ... (استخدم نفس الـ CSS الموجود في صفحتك الرئيسية لضمان التناسق) ... */
-    /* سأضع هنا التنسيقات الضرورية فقط */
-    :root { --primary-color: #1a2ac6; --light-bg: #f4f6fb; }
-    body { font-family: "Noto Kufi Arabic", sans-serif; background-color: var(--light-bg); padding: 20px; padding-top: 80px; }
-    .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-    
-    .item-header { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-    .item-title { font-size: 1.8rem; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-    .item-meta { color: #666; font-size: 0.9rem; margin-bottom: 15px; }
-    
-    .description-box { background: #f9f9f9; padding: 20px; border-radius: 10px; line-height: 1.8; color: #444; margin-bottom: 30px; white-space: pre-wrap; }
-    
-    .image-container img { max-width: 100%; border-radius: 10px; margin-bottom: 20px; }
-    
-    .actions-bar { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
-    
-    .btn { padding: 12px 25px; border-radius: 8px; text-decoration: none; color: white; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; }
-    .btn-download { background-color: var(--primary-color); }
-    .btn-download:hover { background-color: #1522a0; }
-    .btn-preview { background-color: #e63946; }
-    .btn-share { background-color: #2e8b57; }
-    .btn-back { background-color: #6c757d; }
+  <link rel="stylesheet" href="topbar.css" />
 
-    /* أيقونة التحميل */
-    .loading { text-align: center; padding: 50px; font-size: 1.2rem; color: #666; }
+  <style>
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #121e9ec4;
+      --text-color: #1d1d1d;
+      --bg-color: #f8f9fc;
+      --white: #ffffff;
+      --gray-light: #f0f2f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Noto Kufi Arabic", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--white);
+      color: var(--text-color);
+      padding-bottom: 100px; /* مسافة عشان الشريط السفلي ما يغطي المحتوى */
+      padding-top: 60px; /* مسافة للتوب بار */
+    }
+
+    /* === شريط التنقل العلوي === */
+    .nav-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      /* border-bottom: 1px solid #eee; */
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #eff3ff;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    
+    .back-btn:hover {
+      background: #e0e7ff;
+    }
+
+    /* === حاوية المحتوى === */
+    .content-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 10px 25px;
+    }
+
+    /* === العنوان والوصف === */
+    .item-title {
+      font-size: 1.6rem;
+      font-weight: 900; /* عريض جداً */
+      color: #000;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      margin-top: 0;
+    }
+
+    .item-meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-meta i {
+      color: var(--primary-color);
+    }
+
+    .item-description {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.8;
+      margin-bottom: 25px;
+      white-space: pre-wrap; /* يحافظ على التنسيق والأسطر */
+    }
+
+    /* === الصورة === */
+    .image-wrapper {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid #eee;
+      background: #fafafa;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
+    /* === الشريط السفلي الثابت === */
+    .sticky-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--white);
+      padding: 15px 20px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+      justify-content: center; /* لتوسط الأزرار */
+    }
+
+    .footer-inner {
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      flex: 1; /* الأزرار تأخذ مساحة متساوية */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    /* الزر الأساسي (أزرق) */
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      box-shadow: 0 4px 12px rgba(26, 42, 198, 0.3);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* زر ثانوي (فاتح) */
+    .btn-secondary {
+      background-color: #eff3ff;
+      color: var(--primary-color);
+      flex: 0 0 auto; /* لا يتمدد كثيراً */
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0e7ff;
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 50px;
+      color: #888;
+    }
+    
+    /* إخفاء العناصر عند عدم وجودها */
+    .hidden { display: none !important; }
+
   </style>
 </head>
 <body>
 
   <div id="topbar-container"></div>
 
-  <div class="container" id="content-area">
-    <div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري جلب التفاصيل...</div>
+  <div class="nav-header">
+    <a href="#" id="back-link" class="back-btn">
+      <i class="fas fa-arrow-right"></i> عودة للمقرر
+    </a>
+  </div>
+
+  <div class="content-container" id="main-content">
+    <div class="loading-state">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>
+        جاري تحميل التفاصيل...
+    </div>
+  </div>
+
+  <div class="sticky-footer hidden" id="actions-footer">
+    <div class="footer-inner" id="footer-buttons">
+       </div>
   </div>
 
 <script>
-  // دوال مساعدة (نفس الدوال السابقة)
+  /* دوال مساعدة للأيقونات */
   function getIconClass(type) {
     switch (type) {
-      case 'documents': return 'fas fa-file-alt';
       case 'videos': return 'fab fa-youtube';
-      case 'resources': return 'fas fa-bullhorn';
       case 'quizzes': return 'fas fa-question-circle';
       case 'links': return 'fas fa-globe';
-      default: return 'fas fa-file';
+      default: return 'fas fa-file-alt';
     }
   }
 
-  // المنطق الرئيسي
   document.addEventListener('DOMContentLoaded', () => {
-    // جلب الباراميترات من الرابط (i = الكورس، id = رقم العنصر)
     const urlParams = new URLSearchParams(window.location.search);
     const courseCode = urlParams.get('i');
     const itemId = urlParams.get('id');
+    
+    const contentDiv = document.getElementById('main-content');
+    const footerDiv = document.getElementById('actions-footer');
+    const footerBtns = document.getElementById('footer-buttons');
+    const backLink = document.getElementById('back-link');
 
-    const contentArea = document.getElementById('content-area');
+    // ضبط رابط العودة
+    if(courseCode) {
+        backLink.href = `index.html?i=${courseCode}`;
+    } else {
+        backLink.style.display = 'none';
+    }
 
     if (!courseCode || !itemId) {
-      contentArea.innerHTML = '<p style="text-align:center; color:red">رابط غير صحيح. تأكد من الكود والمعرف.</p>';
+      contentDiv.innerHTML = '<p style="text-align:center; color:red">رابط غير صحيح.</p>';
       return;
     }
 
-    // جلب ملف الـ JSON
     fetch(`assets/data/${courseCode}.json`)
       .then(res => {
          if (!res.ok) throw new Error("ملف البيانات غير موجود");
          return res.json();
       })
       .then(data => {
-        // البحث عن العنصر الذي يحمل نفس الـ id
-        // نستخدم == للمقارنة المرنة بين الرقم والنص
-        const item = data.items.find(x => x.id == itemId); 
+        // البحث عن العنصر باستخدام ID (تساهل في النوع ==)
+        const item = data.items.find(x => x.id == itemId);
 
         if (!item) {
-          contentArea.innerHTML = '<p style="text-align:center">عذراً، هذا العنصر غير موجود.</p>';
+          contentDiv.innerHTML = '<p style="text-align:center">عذراً، هذا العنصر غير موجود.</p>';
           return;
         }
 
-        // تحديث عنوان الصفحة
-        document.title = `${item.title} - ${data.name}`;
-
-        // تجهيز الأزرار
-        let buttonsHTML = '';
+        // 1. تحديث العنوان والوصف (الجزء العلوي)
+        document.title = item.title;
         
-        // زر التحميل
-        if (item.download_url) {
-            buttonsHTML += `<a href="${item.download_url}" class="btn btn-download" download><i class="fas fa-download"></i> تحميل الملف</a>`;
+        let imageHTML = '';
+        if (item.image_url) {
+            imageHTML = `
+            <div class="image-wrapper">
+                <img src="${item.image_url}" alt="${item.title}">
+            </div>`;
         }
 
-        // زر المعاينة/المشاهدة
-        if (item.preview_url) {
-            let btnText = item.type === 'videos' ? 'مشاهدة الفيديو' : 'معاينة';
-            buttonsHTML += `<a href="${item.preview_url}" class="btn btn-preview" target="_blank"><i class="fas fa-eye"></i> ${btnText}</a>`;
-        }
-
-        // زر المشاركة
-        buttonsHTML += `<button onclick="sharePage()" class="btn btn-share"><i class="fas fa-share-alt"></i> مشاركة</button>`;
-        
-        // زر العودة
-        buttonsHTML += `<a href="index.html?i=${courseCode}" class="btn btn-back"><i class="fas fa-arrow-right"></i> عودة للمقرر</a>`;
-
-        // تجهيز الصورة
-        let imageHTML = item.image_url ? `<div class="image-container"><img src="${item.image_url}" alt="${item.title}"></div>` : '';
-
-        // عرض المحتوى
-        contentArea.innerHTML = `
-            <div class="item-header">
-                <div class="item-title">
-                    <i class="${getIconClass(item.type)}" style="color: var(--primary-color);"></i>
-                    ${item.title}
-                </div>
-                <div class="item-meta">المقرر: ${data.name} (${data.code})</div>
+        contentDiv.innerHTML = `
+            <h1 class="item-title">${item.title}</h1>
+            
+            <div class="item-meta">
+                <i class="${getIconClass(item.type)}"></i>
+                <span>${data.name}</span>
             </div>
 
+            <div class="item-description">${item.description || 'لا يوجد وصف إضافي.'}</div>
+            
             ${imageHTML}
+            
+            <br><br><br> `;
 
-            <div class="description-box">
-                ${item.description || 'لا يوجد وصف متاح.'}
-            </div>
+        // 2. تحديث الشريط السفلي الثابت
+        let buttonsHTML = '';
 
-            <div class="actions-bar">
-                ${buttonsHTML}
-            </div>
+        // زر التحميل (أساسي)
+        if (item.download_url) {
+            buttonsHTML += `
+            <a href="${item.download_url}" class="action-btn btn-primary" download>
+                <i class="fas fa-download"></i> تحميل
+            </a>`;
+        } 
+        // أو زر المعاينة/الرابط (أساسي إذا لم يوجد تحميل)
+        else if (item.preview_url) {
+             let btnText = 'فتح الرابط';
+             if(item.type === 'videos') btnText = 'مشاهدة الفيديو';
+             
+             buttonsHTML += `
+            <a href="${item.preview_url}" class="action-btn btn-primary" target="_blank">
+                <i class="fas fa-external-link-alt"></i> ${btnText}
+            </a>`;
+        }
+
+        // زر المشاركة (ثانوي)
+        buttonsHTML += `
+            <button onclick="sharePage()" class="action-btn btn-secondary">
+                <i class="fas fa-share-alt"></i>
+            </button>
         `;
+
+        footerBtns.innerHTML = buttonsHTML;
+        footerDiv.classList.remove('hidden');
 
       })
       .catch(err => {
-        contentArea.innerHTML = `<p style="text-align:center">حدث خطأ: ${err.message}</p>`;
+        contentDiv.innerHTML = `<p style="text-align:center">حدث خطأ: ${err.message}</p>`;
       });
-      
-      // تحميل التوب بار (اختياري)
+
+      // تحميل التوب بار الأساسي
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
 
@@ -151,7 +334,7 @@
       }).catch(console.error);
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ رابط الصفحة!');
+      alert('تم نسخ الرابط للحافظة!');
     }
   }
 </script>
