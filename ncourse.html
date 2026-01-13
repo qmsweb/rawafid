@@ -18,7 +18,7 @@
   <meta property="og:type" content="website">
 
   <style>
-    /* نفس المتغيرات الأساسية */
+    /* المتغيرات الأساسية */
     :root {
       --primary-color: #1a2ac6;
       --hover-bg: #e0e7ff;
@@ -48,7 +48,7 @@
 
     .header { text-align: right; }
 
-    /* === تنسيقات الهيدر والبانر (كما هي) === */
+    /* === بانر التقييم === */
     .feedback-banner {
       background: linear-gradient(135deg, #fff, #fef9f9);
       border: 2px dashed var(--primary-color);
@@ -94,7 +94,7 @@
     .share-button:hover { background: #dbe4ff; }
     .header p { color: #555; font-size: 1rem; max-width: 700px; line-height: 1.6; }
 
-    /* === الفلتر وأدوات العرض === */
+    /* === الفلتر === */
     .filter-bar {
       display: flex; gap: 10px; overflow-x: auto; align-items: center;
       padding: 10px 0; margin-bottom: 25px;
@@ -125,10 +125,14 @@
 
     .material-item {
       border: 1px solid #e7e7e7; border-radius: 12px; background: white;
-      padding: 15px; transition: all 0.3s ease; cursor: pointer; /* جعل البطاقة تبدو قابلة للنقر */
+      padding: 15px; transition: all 0.3s ease;
+      cursor: pointer; /* مؤشر اليد */
+      position: relative;
     }
     .material-item:hover {
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06); transform: translateY(-2px); border-color: var(--primary-color);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); 
+      transform: translateY(-3px); 
+      border-color: var(--primary-color);
     }
 
     .item-title {
@@ -137,52 +141,27 @@
     .item-title i { font-size: 1.4rem; padding: 10px; border-radius: 10px; flex-shrink: 0;}
     .item-title h3 { margin: 0; font-size: 1.1rem; }
 
-    /* وصف مختصر مع قص النص الزائد */
     .item-description-preview {
-      font-size: 0.9rem; color: #666; line-height: 1.6; margin-bottom: 15px;
+      font-size: 0.9rem; color: #666; line-height: 1.6; margin-bottom: 10px;
       display: -webkit-box;
-      -webkit-line-clamp: 2; /* إظهار سطرين فقط */
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .item-image {
-      width: 100%; margin-bottom: 15px; border-radius: 8px; overflow: hidden;
+      width: 100%; margin-bottom: 10px; border-radius: 8px; overflow: hidden;
       background-color: #f9f9f9; border: 1px solid #eee;
     }
     .item-image img {
-      width: 100%; height: 180px; /* ارتفاع ثابت للصورة في القائمة */
-      object-fit: cover; display: block;
-    }
-
-    .item-footer { margin-top: auto; }
-
-    /* زر التفاصيل الموحد */
-    .btn-details {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      padding: 10px;
-      background-color: var(--light-bg);
-      color: var(--primary-color);
-      border: 1px solid var(--light-border);
-      border-radius: 8px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .btn-details:hover {
-      background-color: var(--primary-color);
-      color: white;
+      width: 100%; height: 180px; object-fit: cover; display: block;
     }
 
     /* الشارات */
     .badge { display: inline-block; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; font-weight: 600; margin-top: 5px; }
-    .badge-important { background: #e3f2fd; color: var(--primary-color); border: 1px solid #bbdefb; margin-bottom: 10px; }
-    .badge-new { background: #fff9e6; color: #a79835; border: 1px solid #ffecb3; margin-bottom: 10px; }
+    .badge-important { background: #e3f2fd; color: var(--primary-color); border: 1px solid #bbdefb; }
+    .badge-new { background: #fff9e6; color: #a79835; border: 1px solid #ffecb3; }
 
     @media (max-width: 768px) {
       .materials-list.grid-view { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
@@ -289,19 +268,16 @@ function renderMaterials(filter = 'all') {
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
   filtered.forEach(item => {
-    // التأكد من وجود ID، إذا لم يوجد ننشئ رابطاً وهمياً (للحماية من الأخطاء)
+    // التأكد من وجود ID
     const itemId = item.id ? item.id : '#';
     const detailsUrl = `details.html?i=${courseCode}&id=${itemId}`;
 
     const el = document.createElement('div');
     el.className = 'material-item';
     
-    // عند النقر على أي مكان في البطاقة، يذهب للتفاصيل
-    el.onclick = function(e) {
-        // منع التكرار إذا نقر على الزر مباشرة
-        if(!e.target.closest('a')) {
-            window.location.href = detailsUrl;
-        }
+    // عند النقر على البطاقة بالكامل ننتقل للصفحة
+    el.onclick = function() {
+        window.location.href = detailsUrl;
     };
 
     // ==== معالجة الصورة ====
@@ -325,7 +301,7 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
-    // ==== بناء HTML العنصر ====
+    // ==== بناء HTML العنصر (بدون أزرار) ====
     el.innerHTML = `
       <div class="item-title">
         <i class="${getIconClass(item.type)}" style="background:#f3f3f3; color:${getIconColor(item.type)};"></i>
@@ -338,18 +314,12 @@ function renderMaterials(filter = 'all') {
 
       ${imageHTML} 
       ${badgeHTML}
-
-      <div class="item-footer">
-        <a href="${detailsUrl}" class="btn-details">
-            <i class="fas fa-eye"></i> عرض التفاصيل والتحميل
-        </a>
-      </div>
     `;
     materialsList.appendChild(el);
   });
 }
 
-/* ======= الفلاتر وأزرار العرض (نفس السابق) ======= */
+/* ======= الفلاتر وأزرار العرض ======= */
 filterItems.forEach(item => {
   item.addEventListener('click', function () {
     filterItems.forEach(el => el.classList.remove('active'));
@@ -395,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p) p.textContent = data.description || '';
       document.title = data.name || 'روافد';
       
-      // تحديث Meta Tags
       if (data.name) {
         ['og-title', 'twitter-title'].forEach(id => {
             const el = document.getElementById(id);
