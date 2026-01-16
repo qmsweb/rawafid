@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>بطاقات الأسئلة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* الألوان الافتراضية (الوضع الداكن) */
+            --bg-color: #000;
+            --card-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --card-back-gradient: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+            --text-color: #ffffff;
+            --hint-color: rgba(255, 255, 255, 0.7);
+            --blur-bg: radial-gradient(circle, #2c5364 0%, #203a43 40%, transparent 70%);
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --btn-border: rgba(255, 255, 255, 0.2);
+            --btn-text: white;
+            --counter-color: rgba(255, 255, 255, 0.9);
+            --card-border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* متغيرات الوضع الفاتح */
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, #e6e9f0 100%);
+            --card-back-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --text-color: #2c3e50;
+            --hint-color: rgba(0, 0, 0, 0.5);
+            --blur-bg: radial-gradient(circle, #a8edea 0%, #fed6e3 40%, transparent 70%); /* ألوان فاتحة للتغبيش */
+            --btn-bg: rgba(0, 0, 0, 0.05);
+            --btn-border: rgba(0, 0, 0, 0.1);
+            --btn-text: #2c3e50;
+            --counter-color: #2c3e50;
+            --card-border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; 
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            /* استخدام dvh يضمن التوسط الحقيقي في الموبايل بتجاهل شريط العنوان */
+            height: 100dvh; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.4s ease;
+        }
+
+        .background-blur {
+            position: absolute;
+            width: 90vw;
+            height: 90vw;
+            background: var(--blur-bg);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            transition: background 0.4s ease;
+        }
+
+        /* زر تبديل الثيم */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px; /* في اليسار لأن الصفحة RTL */
+            z-index: 100;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: var(--btn-border);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .card-scene {
+            width: 90%;
+            max-width: 320px;
+            height: 55vh;
+            max-height: 450px;
+            min-height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* تخفيف الظل قليلاً ليتناسب مع الفاتح والداكن */
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;      
+            text-align: center;
+            padding: 25px;
+            color: var(--text-color);
+            background: var(--card-gradient);
+            border: var(--card-border);
+            user-select: none;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: var(--card-back-gradient);
+            justify-content: flex-start; 
+            align-items: flex-start;      
+            text-align: right;            
+            padding-top: 40px; 
+        }
+
+        .content-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.6;
+            width: 100%;
+        }
+
+        .hint {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: var(--hint-color);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        button.control-btn {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: var(--btn-border);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button.control-btn:active {
+            transform: scale(0.92);
+            opacity: 0.8;
+        }
+
+        button.control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .counter {
+            color: var(--counter-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            transition: color 0.4s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="تبديل الوضع">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
+    <div class="background-blur"></div>
+
+    <div class="main-container">
+        
+        <div class="card-scene" onclick="toggleCard()">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front">
+                    <div class="content-text" id="question-text"></div>
+                    <div class="hint">(انقر للإجابة)</div>
+                </div>
+
+                <div class="card-face card-back">
+                    <div class="content-text" id="answer-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="prevBtn" onclick="prevQuestion()" aria-label="السابق">
+                 <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="counter" id="counter">1 / 5</div>
+
+            <button class="control-btn" id="nextBtn" onclick="nextQuestion()" aria-label="التالي">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- إدارة الثيم (الوضع الداكن/الفاتح) ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        // التحقق من الذاكرة (localStorage) عند التحميل
+        // الافتراضي هو الداكن، لذا إذا لم يكن هناك شيء محفوظ، أو كان محفوظاً "dark"، لا نفعل شيئاً
+        // إذا كان المحفوظ "light"، نقوم بالتغيير
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.className = 'fas fa-moon'; // تغيير الأيقونة للقمر (لأننا في وضع النهار)
+        } else {
+            themeIcon.className = 'fas fa-sun'; // الأيقونة شمس (لأننا في الوضع الداكن)
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                // التحويل للداكن
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark'); // حفظ في الذاكرة
+            } else {
+                // التحويل للفاتح
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light'); // حفظ في الذاكرة
+            }
+        }
+
+        // --- منطق البطاقات ---
+        document.addEventListener('dblclick', function(event) {
+            event.preventDefault();
+        }, { passive: false });
+
+        const questions = [
+            { q: "ما هي عاصمة سلطنة عمان؟", a: "مسقط" },
+            { q: "ما هي ألوان علم السلطنة؟", a: "الأبيض والأحمر والأخضر" },
+            { q: "كم عدد محافظات سلطنة عمان؟", a: "11" },
+            { q: "من السلطان الذي بنى النهضة الحديثة؟", a: "السلطان قابوس بن سعيد" },
+            { q: "ما اسم السلطان الحالي لعمان؟", a: "السلطان هيثم بن طارق -حفظه الله-" }
+        ];
+
+        let currentIndex = 0;
+        const cardElement = document.getElementById('flashcard');
+        const questionText = document.getElementById('question-text');
+        const answerText = document.getElementById('answer-text');
+        const counterElement = document.getElementById('counter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function toggleCard() {
+            cardElement.classList.toggle('is-flipped');
+        }
+
+        function updateUI() {
+            cardElement.classList.remove('is-flipped');
+            
+            setTimeout(() => {
+                questionText.textContent = questions[currentIndex].q;
+                answerText.textContent = questions[currentIndex].a;
+                
+                counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+                prevBtn.disabled = (currentIndex === 0);
+                nextBtn.disabled = (currentIndex === questions.length - 1);
+            }, 150);
+        }
+
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                updateUI();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateUI();
+            }
+        }
+
+        // عند تحميل الصفحة
+        updateUI();
+    </script>
+</body>
+</html>
