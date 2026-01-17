@@ -207,10 +207,13 @@
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
-    
     let conversationHistory = [
-        { role: "system", content: "You are a helpful assistant. You speak Arabic primarily." }
-    ];
+    { 
+      role: "system", 
+      content: "You are an Arabic AI assistant. Your Name is كليم. You MUST reply ONLY in Arabic. Do not use Chinese or any other language under any circumstances. Translate any non-Arabic input to Arabic." 
+    }
+];
+
 
     function autoResize(el) {
         el.style.height = 'auto';
