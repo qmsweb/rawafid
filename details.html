@@ -52,7 +52,7 @@
     .image-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; background: #fafafa; }
     .image-wrapper img { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
 
-    /* === تنسيق حاوية العارض (مهم جداً) === */
+    /* === تنسيق حاوية العارض === */
     .pdf-container {
       width: 100%;
       height: 80vh; /* ارتفاع الشاشة 80% */
@@ -108,7 +108,7 @@
   </div>
 
 <script>
-  // تأكد أن المسار صحيح نسبة لملف details.html
+  // مسار العارض المحلي
   const VIEWER_PATH = 'js/pdfjs/web/viewer.html'; 
 
   function getIconClass(type) {
@@ -137,36 +137,30 @@
         document.title = item.title;
         let mediaHTML = '';
 
-        // === فحص الشروط (Debug) ===
+        // 1. التحقق من أن الملف PDF
         const isTypePdf = item.type === 'pdf';
-        const isUrlPdf = item.preview_url && item.preview_url.toLowerCase().endsWith('.pdf');
+        // نفحص download_url للتأكد من الامتداد أيضاً
+        const isUrlPdf = item.download_url && item.download_url.toLowerCase().endsWith('.pdf');
         
-        console.log("نوع الملف في البيانات:", item.type);
-        console.log("الرابط:", item.preview_url);
-        console.log("هل تم التعرف عليه كـ PDF؟", isTypePdf || isUrlPdf);
+        // هل هو PDF؟
+        const isPdf = isTypePdf || isUrlPdf;
 
-        if (isTypePdf || isUrlPdf) {
-            // تحويل الرابط إلى رابط كامل
-            const absolutePdfUrl = new URL(item.preview_url, window.location.href).href;
+        // 2. منطق العرض (نستخدم download_url كمصدر)
+        if (isPdf && item.download_url) {
+            
+            // تحويل رابط التحميل إلى رابط كامل
+            const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
+            
+            // دمج رابط العارض + رابط الملف
             const viewerSrc = `${VIEWER_PATH}?file=${encodeURIComponent(absolutePdfUrl)}`;
             
-            // طباعة الرابط النهائي للتأكد
-            console.log("رابط العارض النهائي:", viewerSrc);
-
             mediaHTML = `
-            <div class="pdf-container" style="border:2px solid red;"> <iframe src="${viewerSrc}" class="pdf-frame" allowfullscreen></iframe>
-            </div>
-            <p style="font-size:10px; color:gray; text-align:center;">مسار العارض: ${viewerSrc}</p>
-            `;
-        } else {
-            mediaHTML = `<div style="padding:20px; background:#fff3cd; border:1px solid #ffeeba; color:#856404;">
-                تنبيه: النظام لا يرى هذا الملف كـ PDF.<br>
-                النوع المسجل: ${item.type}<br>
-                نهاية الرابط: ${item.preview_url ? item.preview_url.slice(-4) : 'لا يوجد'}
+            <div class="pdf-container">
+                <iframe src="${viewerSrc}" class="pdf-frame" allowfullscreen webkitallowfullscreen></iframe>
             </div>`;
-            if (item.image_url) {
-                mediaHTML += `<div class="image-wrapper"><img src="${item.image_url}"></div>`;
-            }
+        } 
+        else if (item.image_url) {
+            mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
 
         contentDiv.innerHTML = `
@@ -176,26 +170,39 @@
             ${mediaHTML}
             <br><br><br>`;
 
-        // الأزرار
+        // 3. الأزرار السفلية
         let buttonsHTML = '';
+        
+        // زر التحميل
         if (item.download_url) {
-            buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download>تحميل</a>`;
-        }
-        if ((isTypePdf || isUrlPdf) && item.preview_url) {
-             const absolutePdfUrl = new URL(item.preview_url, window.location.href).href;
-             const viewerSrc = `${VIEWER_PATH}?file=${encodeURIComponent(absolutePdfUrl)}`;
-             buttonsHTML += `<a href="${viewerSrc}" class="action-btn btn-primary" target="_blank">فتح في نافذة جديدة</a>`;
-        } else if (item.preview_url) {
-             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank">فتح الرابط</a>`;
+            buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download><i class="fas fa-download"></i> تحميل</a>`;
         }
         
+        // زر ملء الشاشة للـ PDF (يستخدم download_url أيضاً)
+        if (isPdf && item.download_url) {
+             const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
+             const viewerSrc = `${VIEWER_PATH}?file=${encodeURIComponent(absolutePdfUrl)}`;
+             buttonsHTML += `<a href="${viewerSrc}" class="action-btn btn-primary" target="_blank"><i class="fas fa-expand"></i> ملء الشاشة</a>`;
+        } 
+        // زر الفتح العادي (للروابط الخارجية أو الفيديو)
+        else if (item.preview_url) {
+             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> فتح الرابط</a>`;
+        }
+        
+        buttonsHTML += `<button onclick="sharePage()" class="action-btn btn-secondary"><i class="fas fa-share-alt"></i></button>`;
+
         footerBtns.innerHTML = buttonsHTML;
         footerDiv.classList.remove('hidden');
       })
-      .catch(err => contentDiv.innerHTML = `خطأ: ${err.message}`);
+      .catch(err => contentDiv.innerHTML = `<p style="text-align:center">خطأ: ${err.message}</p>`);
       
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
+
+  function sharePage() {
+    if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
+    else { navigator.clipboard.writeText(window.location.href); alert('تم النسخ!'); }
+  }
 </script>
 </body>
 </html>
