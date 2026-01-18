@@ -30,7 +30,7 @@
       padding: 0;
       background-color: var(--white);
       color: var(--text-color);
-      padding-bottom: 100px; /* مسافة عشان الشريط السفلي ما يغطي المحتوى */
+      padding-bottom: 100px; /* مسافة عشان الشريط السفلي */
       padding-top: 60px; /* مسافة للتوب بار */
     }
 
@@ -41,7 +41,6 @@
       align-items: center;
       gap: 10px;
       background: var(--white);
-      /* border-bottom: 1px solid #eee; */
     }
 
     .back-btn {
@@ -64,7 +63,7 @@
 
     /* === حاوية المحتوى === */
     .content-container {
-      max-width: 800px;
+      max-width: 900px; /* زدت العرض قليلاً ليناسب ملفات PDF */
       margin: 0 auto;
       padding: 10px 25px;
     }
@@ -72,7 +71,7 @@
     /* === العنوان والوصف === */
     .item-title {
       font-size: 1.6rem;
-      font-weight: 900; /* عريض جداً */
+      font-weight: 900;
       color: #000;
       line-height: 1.4;
       margin-bottom: 10px;
@@ -97,7 +96,7 @@
       color: #333;
       line-height: 1.8;
       margin-bottom: 25px;
-      white-space: pre-wrap; /* يحافظ على التنسيق والأسطر */
+      white-space: pre-wrap;
     }
 
     /* === الصورة === */
@@ -118,6 +117,24 @@
       object-fit: cover;
     }
 
+    /* === تنسيق عارض PDF (الجديد) === */
+    .pdf-container {
+      width: 100%;
+      height: 75vh; /* يأخذ 75% من ارتفاع الشاشة */
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f1f1f1;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    .pdf-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     /* === الشريط السفلي الثابت === */
     .sticky-footer {
       position: fixed;
@@ -130,7 +147,7 @@
       display: flex;
       gap: 12px;
       z-index: 1000;
-      justify-content: center; /* لتوسط الأزرار */
+      justify-content: center;
     }
 
     .footer-inner {
@@ -141,7 +158,7 @@
     }
 
     .action-btn {
-      flex: 1; /* الأزرار تأخذ مساحة متساوية */
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -156,7 +173,6 @@
       transition: 0.2s;
     }
 
-    /* الزر الأساسي (أزرق) */
     .btn-primary {
       background-color: var(--primary-color);
       color: white;
@@ -168,11 +184,10 @@
       transform: translateY(-2px);
     }
 
-    /* زر ثانوي (فاتح) */
     .btn-secondary {
       background-color: #eff3ff;
       color: var(--primary-color);
-      flex: 0 0 auto; /* لا يتمدد كثيراً */
+      flex: 0 0 auto;
       padding-left: 20px;
       padding-right: 20px;
     }
@@ -187,7 +202,6 @@
       color: #888;
     }
     
-    /* إخفاء العناصر عند عدم وجودها */
     .hidden { display: none !important; }
 
   </style>
@@ -215,12 +229,16 @@
   </div>
 
 <script>
-  /* دوال مساعدة للأيقونات */
+  /* === إعدادات مسار العارض === */
+  // تأكد من أن هذا المسار يطابق مكان مجلد pdfjs في مشروعك
+  const PDF_VIEWER_PATH = 'js/pdfjs/web/viewer.html'; 
+
   function getIconClass(type) {
     switch (type) {
       case 'videos': return 'fab fa-youtube';
       case 'quizzes': return 'fas fa-question-circle';
       case 'links': return 'fas fa-globe';
+      case 'pdf': return 'fas fa-file-pdf'; // أيقونة خاصة بالكتب
       default: return 'fas fa-file-alt';
     }
   }
@@ -253,7 +271,6 @@
          return res.json();
       })
       .then(data => {
-        // البحث عن العنصر باستخدام ID (تساهل في النوع ==)
         const item = data.items.find(x => x.id == itemId);
 
         if (!item) {
@@ -261,17 +278,39 @@
           return;
         }
 
-        // 1. تحديث العنوان والوصف (الجزء العلوي)
+        // 1. تحديث العنوان
         document.title = item.title;
         
-        let imageHTML = '';
-        if (item.image_url) {
-            imageHTML = `
+        // متغير لتخزين كود العرض (صورة أو PDF)
+        let mediaHTML = '';
+
+        // التحقق: هل العنصر PDF؟
+        // نفترض هنا أن نوع العنصر هو 'pdf' أو أن الرابط ينتهي بـ .pdf
+        const isPdf = item.type === 'pdf' || (item.preview_url && item.preview_url.toLowerCase().endsWith('.pdf'));
+
+        if (isPdf && item.preview_url) {
+            // === دمج عارض PDF هنا ===
+            // نقوم بتشفير الرابط لضمان عدم حدوث أخطاء في الرموز
+            const encodedPdfUrl = encodeURIComponent(item.preview_url);
+            
+            mediaHTML = `
+            <div class="pdf-container">
+                <iframe 
+                    src="${PDF_VIEWER_PATH}?file=${encodedPdfUrl}" 
+                    class="pdf-frame" 
+                    allowfullscreen>
+                </iframe>
+            </div>`;
+        } 
+        else if (item.image_url) {
+            // عرض الصورة العادية إذا لم يكن PDF
+            mediaHTML = `
             <div class="image-wrapper">
                 <img src="${item.image_url}" alt="${item.title}">
             </div>`;
         }
 
+        // بناء المحتوى النهائي
         contentDiv.innerHTML = `
             <h1 class="item-title">${item.title}</h1>
             
@@ -282,22 +321,22 @@
 
             <div class="item-description">${item.description || 'لا يوجد وصف إضافي.'}</div>
             
-            ${imageHTML}
+            ${mediaHTML}
             
             <br><br><br> `;
 
         // 2. تحديث الشريط السفلي الثابت
         let buttonsHTML = '';
 
-        // زر التحميل (أساسي)
+        // زر التحميل
         if (item.download_url) {
             buttonsHTML += `
             <a href="${item.download_url}" class="action-btn btn-primary" download>
                 <i class="fas fa-download"></i> تحميل
             </a>`;
         } 
-        // أو زر المعاينة/الرابط (أساسي إذا لم يوجد تحميل)
-        else if (item.preview_url) {
+        else if (item.preview_url && !isPdf) { 
+            // إذا لم يكن PDF ولديه رابط معاينة (مثل فيديو أو موقع)
              let btnText = 'فتح الرابط';
              if(item.type === 'videos') btnText = 'مشاهدة الفيديو';
              
@@ -305,9 +344,14 @@
             <a href="${item.preview_url}" class="action-btn btn-primary" target="_blank">
                 <i class="fas fa-external-link-alt"></i> ${btnText}
             </a>`;
+        } else if (isPdf && item.preview_url) {
+            // زر بديل لفتح الـ PDF في نافذة جديدة
+             buttonsHTML += `
+            <a href="${PDF_VIEWER_PATH}?file=${encodeURIComponent(item.preview_url)}" class="action-btn btn-primary" target="_blank">
+                <i class="fas fa-expand"></i> ملء الشاشة
+            </a>`;
         }
 
-        // زر المشاركة (ثانوي)
         buttonsHTML += `
             <button onclick="sharePage()" class="action-btn btn-secondary">
                 <i class="fas fa-share-alt"></i>
@@ -322,7 +366,6 @@
         contentDiv.innerHTML = `<p style="text-align:center">حدث خطأ: ${err.message}</p>`;
       });
 
-      // تحميل التوب بار الأساسي
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
 
