@@ -108,17 +108,12 @@
   </div>
 
 <script>
-  /* ==========================================================
-     إعداد المسار: هنا التغيير المهم!
-     هذا المسار يشير للملفات التي رفعتها على موقعك
-     ========================================================== */
+  // تأكد أن المسار صحيح نسبة لملف details.html
   const VIEWER_PATH = 'js/pdfjs/web/viewer.html'; 
 
   function getIconClass(type) {
     if (type === 'pdf') return 'fas fa-file-pdf';
     if (type === 'videos') return 'fab fa-youtube';
-    if (type === 'quizzes') return 'fas fa-question-circle';
-    if (type === 'links') return 'fas fa-globe';
     return 'fas fa-file-alt';
   }
 
@@ -127,98 +122,80 @@
     const courseCode = urlParams.get('i');
     const itemId = urlParams.get('id');
     const contentDiv = document.getElementById('main-content');
-    const footerDiv = document.getElementById('actions-footer');
     const footerBtns = document.getElementById('footer-buttons');
+    const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
 
     if(courseCode) backLink.href = `index.html?i=${courseCode}`;
-    else backLink.style.display = 'none';
-
-    if (!courseCode || !itemId) {
-      contentDiv.innerHTML = '<p style="text-align:center; color:red">رابط غير صحيح.</p>';
-      return;
-    }
 
     fetch(`assets/data/${courseCode}.json`)
-      .then(res => {
-         if (!res.ok) throw new Error("ملف البيانات غير موجود");
-         return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
         const item = data.items.find(x => x.id == itemId);
-        if (!item) {
-          contentDiv.innerHTML = '<p style="text-align:center">عنصر غير موجود.</p>';
-          return;
-        }
+        if (!item) return;
 
         document.title = item.title;
         let mediaHTML = '';
 
-        // التحقق مما إذا كان الملف PDF
-        const isPdf = item.type === 'pdf' || (item.preview_url && item.preview_url.toLowerCase().endsWith('.pdf'));
+        // === فحص الشروط (Debug) ===
+        const isTypePdf = item.type === 'pdf';
+        const isUrlPdf = item.preview_url && item.preview_url.toLowerCase().endsWith('.pdf');
+        
+        console.log("نوع الملف في البيانات:", item.type);
+        console.log("الرابط:", item.preview_url);
+        console.log("هل تم التعرف عليه كـ PDF؟", isTypePdf || isUrlPdf);
 
-        if (isPdf && item.preview_url) {
-            /* تحويل رابط ملف الـ PDF إلى رابط كامل (Absolute URL)
-               هذا ضروري جداً ليعمل العارض بشكل صحيح مع GitHub Pages
-            */
+        if (isTypePdf || isUrlPdf) {
+            // تحويل الرابط إلى رابط كامل
             const absolutePdfUrl = new URL(item.preview_url, window.location.href).href;
-            
-            // دمج رابط العارض المحلي + رابط ملف الـ PDF
             const viewerSrc = `${VIEWER_PATH}?file=${encodeURIComponent(absolutePdfUrl)}`;
+            
+            // طباعة الرابط النهائي للتأكد
+            console.log("رابط العارض النهائي:", viewerSrc);
 
             mediaHTML = `
-            <div class="pdf-container">
-                <iframe src="${viewerSrc}" class="pdf-frame" allowfullscreen webkitallowfullscreen></iframe>
+            <div class="pdf-container" style="border:2px solid red;"> <iframe src="${viewerSrc}" class="pdf-frame" allowfullscreen></iframe>
+            </div>
+            <p style="font-size:10px; color:gray; text-align:center;">مسار العارض: ${viewerSrc}</p>
+            `;
+        } else {
+            mediaHTML = `<div style="padding:20px; background:#fff3cd; border:1px solid #ffeeba; color:#856404;">
+                تنبيه: النظام لا يرى هذا الملف كـ PDF.<br>
+                النوع المسجل: ${item.type}<br>
+                نهاية الرابط: ${item.preview_url ? item.preview_url.slice(-4) : 'لا يوجد'}
             </div>`;
-        } 
-        else if (item.image_url) {
-            mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
+            if (item.image_url) {
+                mediaHTML += `<div class="image-wrapper"><img src="${item.image_url}"></div>`;
+            }
         }
 
-        // عرض المحتوى
         contentDiv.innerHTML = `
             <h1 class="item-title">${item.title}</h1>
-            <div class="item-meta">
-                <i class="${getIconClass(item.type)}"></i> <span>${data.name}</span>
-            </div>
+            <div class="item-meta"><i class="${getIconClass(item.type)}"></i> <span>${data.name}</span></div>
             <div class="item-description">${item.description || ''}</div>
             ${mediaHTML}
             <br><br><br>`;
 
-        // الأزرار السفلية
+        // الأزرار
         let buttonsHTML = '';
-        
-        // 1. زر التحميل
         if (item.download_url) {
-            buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download><i class="fas fa-download"></i> تحميل</a>`;
-        } 
-        // 2. زر ملء الشاشة للـ PDF (يفتح في تبويب جديد باستخدام العارض)
-        else if (isPdf) {
+            buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download>تحميل</a>`;
+        }
+        if ((isTypePdf || isUrlPdf) && item.preview_url) {
              const absolutePdfUrl = new URL(item.preview_url, window.location.href).href;
              const viewerSrc = `${VIEWER_PATH}?file=${encodeURIComponent(absolutePdfUrl)}`;
-             buttonsHTML += `<a href="${viewerSrc}" class="action-btn btn-primary" target="_blank"><i class="fas fa-expand"></i> ملء الشاشة</a>`;
-        } 
-        // 3. زر فتح الروابط الأخرى (فيديو، موقع، الخ)
-        else if (item.preview_url) {
-             let btnText = 'فتح الرابط';
-             if(item.type === 'videos') btnText = 'مشاهدة الفيديو';
-             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> ${btnText}</a>`;
+             buttonsHTML += `<a href="${viewerSrc}" class="action-btn btn-primary" target="_blank">فتح في نافذة جديدة</a>`;
+        } else if (item.preview_url) {
+             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank">فتح الرابط</a>`;
         }
-
-        buttonsHTML += `<button onclick="sharePage()" class="action-btn btn-secondary"><i class="fas fa-share-alt"></i></button>`;
         
         footerBtns.innerHTML = buttonsHTML;
         footerDiv.classList.remove('hidden');
       })
-      .catch(err => contentDiv.innerHTML = `<p style="text-align:center">خطأ: ${err.message}</p>`);
-
+      .catch(err => contentDiv.innerHTML = `خطأ: ${err.message}`);
+      
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
-
-  function sharePage() {
-    if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
-    else { navigator.clipboard.writeText(window.location.href); alert('تم النسخ!'); }
-  }
 </script>
 </body>
 </html>
