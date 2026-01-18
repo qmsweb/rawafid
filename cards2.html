@@ -286,90 +286,131 @@
         </div>
     </div>
 
-    <script>
-        // --- إدارة الثيم (الوضع الداكن/الفاتح) ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            themeIcon.className = 'fas fa-moon'; 
+   <script>
+    // --- 1. إعداد المتغيرات الأساسية ---
+    // التقاط اسم الملف من الرابط (مثال: page.html?i=history)
+    const deckId = new URLSearchParams(window.location.search).get('i');
+    
+    // مصفوفة الأسئلة (فارغة مبدئياً)
+    let questions = [];
+    let currentIndex = 0;
+
+    // عناصر الواجهة
+    const cardElement = document.getElementById('flashcard');
+    const questionText = document.getElementById('question-text');
+    const answerText = document.getElementById('answer-text');
+    const counterElement = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // --- 2. إدارة الثيم (كما هي) ---
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fas fa-moon'; 
+    } else {
+        themeIcon.className = 'fas fa-sun'; 
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+            themeIcon.className = 'fas fa-sun';
+            localStorage.setItem('theme', 'dark');
         } else {
-            themeIcon.className = 'fas fa-sun'; 
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.className = 'fas fa-moon';
+            localStorage.setItem('theme', 'light');
         }
+    }
 
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
+    // --- 3. وظائف البطاقات ---
+    document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+    }, { passive: false });
+
+    function toggleCard() {
+        // لا تقلب البطاقة إذا لم يكن هناك بيانات
+        if (questions.length === 0) return;
+        cardElement.classList.toggle('is-flipped');
+    }
+
+    function updateUI() {
+        // إعادة البطاقة للوجه الأمامي
+        cardElement.classList.remove('is-flipped');
+        
+        // التحقق من وجود بيانات
+        if (questions.length === 0) return;
+
+        setTimeout(() => {
+            // تحديث النصوص من المصفوفة المحملة
+            questionText.textContent = questions[currentIndex].q;
+            answerText.textContent = questions[currentIndex].a;
             
-            if (currentTheme === 'light') {
-                // التحويل للداكن
-                document.documentElement.removeAttribute('data-theme');
-                themeIcon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                // التحويل للفاتح
-                document.documentElement.setAttribute('data-theme', 'light');
-                themeIcon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light');
-            }
+            counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === questions.length - 1);
+        }, 150);
+    }
+
+    function nextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            updateUI();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateUI();
+        }
+    }
+
+    // --- 4. جلب البيانات (الجزء الجديد) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // إذا لم يوجد معرف في الرابط
+        if (!deckId) {
+            questionText.textContent = "تنبيه";
+            answerText.textContent = "لم يتم تحديد ملف البطاقات في الرابط.";
+            counterElement.textContent = "- / -";
+            return;
         }
 
-        // --- منطق البطاقات ---
-        document.addEventListener('dblclick', function(event) {
-            event.preventDefault();
-        }, { passive: false });
+        // إظهار حالة التحميل
+        questionText.textContent = "جاري التحميل...";
+        answerText.textContent = "...";
 
-        const questions = [
-            { q: "ما هي عاصمة سلطنة عمان؟", a: "مسقط" },
-            { q: "ما هي ألوان علم السلطنة؟", a: "الأبيض والأحمر والأخضر" },
-            { q: "كم عدد محافظات سلطنة عمان؟", a: "11" },
-            { q: "من السلطان الذي بنى النهضة الحديثة؟", a: "السلطان قابوس بن سعيد" },
-            { q: "ما اسم السلطان الحالي لعمان؟", a: "السلطان هيثم بن طارق -حفظه الله-" }
-        ];
+        // طلب ملف JSON
+        fetch(`assets/cards/${deckId}.json`)
+            .then(response => {
+                if (!response.ok) throw new Error("الملف غير موجود");
+                return response.json();
+            })
+            .then(data => {
+                // تخزين البيانات في المصفوفة
+                questions = data.cards || []; 
 
-        let currentIndex = 0;
-        const cardElement = document.getElementById('flashcard');
-        const questionText = document.getElementById('question-text');
-        const answerText = document.getElementById('answer-text');
-        const counterElement = document.getElementById('counter');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+                // تحديث عنوان الصفحة إذا وجد
+                if (data.title) document.title = data.title;
 
-        function toggleCard() {
-            cardElement.classList.toggle('is-flipped');
-        }
-
-        function updateUI() {
-            cardElement.classList.remove('is-flipped');
-            
-            setTimeout(() => {
-                questionText.textContent = questions[currentIndex].q;
-                answerText.textContent = questions[currentIndex].a;
-                
-                counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
-
-                prevBtn.disabled = (currentIndex === 0);
-                nextBtn.disabled = (currentIndex === questions.length - 1);
-            }, 150);
-        }
-
-        function nextQuestion() {
-            if (currentIndex < questions.length - 1) {
-                currentIndex++;
-                updateUI();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateUI();
-            }
-        }
-
-        // عند تحميل الصفحة
-        updateUI();
-    </script>
+                if (questions.length > 0) {
+                    updateUI(); // عرض أول بطاقة
+                } else {
+                    questionText.textContent = "عذراً";
+                    answerText.textContent = "هذا الملف فارغ.";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                questionText.textContent = "خطأ";
+                answerText.textContent = "تعذر تحميل البيانات. تأكد من صحة الرابط.";
+            });
+    });
+</script>
 </body>
 </html>
