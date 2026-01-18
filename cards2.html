@@ -21,6 +21,9 @@
             --btn-text: white;
             --counter-color: rgba(255, 255, 255, 0.9);
             --card-border: 1px solid rgba(255, 255, 255, 0.15);
+            
+            /* لون الشعار الافتراضي (أبيض) */
+            --logo-color: #ffffff; 
         }
 
         /* متغيرات الوضع الفاتح */
@@ -30,12 +33,15 @@
             --card-back-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             --text-color: #2c3e50;
             --hint-color: rgba(0, 0, 0, 0.5);
-            --blur-bg: radial-gradient(circle, #a8edea 0%, #fed6e3 40%, transparent 70%); /* ألوان فاتحة للتغبيش */
+            --blur-bg: radial-gradient(circle, #a8edea 0%, #fed6e3 40%, transparent 70%);
             --btn-bg: rgba(0, 0, 0, 0.05);
             --btn-border: rgba(0, 0, 0, 0.1);
             --btn-text: #2c3e50;
             --counter-color: #2c3e50;
             --card-border: 1px solid rgba(0, 0, 0, 0.05);
+
+            /* لون الشعار في الوضع الفاتح */
+            --logo-color: #1a2ac6; 
         }
 
         * {
@@ -49,7 +55,6 @@
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-color);
-            /* استخدام dvh يضمن التوسط الحقيقي في الموبايل بتجاهل شريط العنوان */
             height: 100dvh; 
             width: 100%;
             display: flex;
@@ -78,7 +83,7 @@
         .theme-toggle-btn {
             position: absolute;
             top: 20px;
-            left: 20px; /* في اليسار لأن الصفحة RTL */
+            left: 20px; /* أقصى اليسار */
             z-index: 100;
             background-color: var(--btn-bg);
             color: var(--btn-text);
@@ -92,6 +97,33 @@
             align-items: center;
             font-size: 1.2rem;
             transition: all 0.3s ease;
+        }
+
+        /* --- تنسيقات الشعار الجديد --- */
+        .app-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* أقصى اليمين */
+            z-index: 100;
+            width: 80px; /* عرض الشعار - يمكن تعديله حسب الحاجة */
+            height: 50px; /* ارتفاع الشعار - يمكن تعديله */
+            
+            /* هذه الخصائص تستخدم الصورة كقناع (Mask) لقص الخلفية */
+            -webkit-mask-image: url('images/Rawafid-white.png');
+            mask-image: url('images/Rawafid-white.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center; /* محاذاة في المنتصف */
+            mask-position: center;
+
+            /* تلوين الخلفية بناءً على المتغير (أبيض أو أزرق) */
+            background-color: var(--logo-color);
+            transition: background-color 0.3s ease;
+            
+            /* في حالة لم تعمل الأقنعة في متصفحات قديمة جداً (احتياطي) */
+            pointer-events: none; /* لتجنب التداخل مع النقر */
         }
 
         .main-container {
@@ -122,7 +154,7 @@
             transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             transform-style: preserve-3d;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* تخفيف الظل قليلاً ليتناسب مع الفاتح والداكن */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .card.is-flipped {
@@ -218,6 +250,8 @@
 </head>
 <body>
 
+    <div class="app-logo" aria-label="شعار روافد"></div>
+
     <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="تبديل الوضع">
         <i class="fas fa-sun" id="themeIcon"></i>
     </button>
@@ -257,15 +291,12 @@
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         
-        // التحقق من الذاكرة (localStorage) عند التحميل
-        // الافتراضي هو الداكن، لذا إذا لم يكن هناك شيء محفوظ، أو كان محفوظاً "dark"، لا نفعل شيئاً
-        // إذا كان المحفوظ "light"، نقوم بالتغيير
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
-            themeIcon.className = 'fas fa-moon'; // تغيير الأيقونة للقمر (لأننا في وضع النهار)
+            themeIcon.className = 'fas fa-moon'; 
         } else {
-            themeIcon.className = 'fas fa-sun'; // الأيقونة شمس (لأننا في الوضع الداكن)
+            themeIcon.className = 'fas fa-sun'; 
         }
 
         function toggleTheme() {
@@ -275,12 +306,12 @@
                 // التحويل للداكن
                 document.documentElement.removeAttribute('data-theme');
                 themeIcon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark'); // حفظ في الذاكرة
+                localStorage.setItem('theme', 'dark');
             } else {
                 // التحويل للفاتح
                 document.documentElement.setAttribute('data-theme', 'light');
                 themeIcon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light'); // حفظ في الذاكرة
+                localStorage.setItem('theme', 'light');
             }
         }
 
