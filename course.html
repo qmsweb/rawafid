@@ -551,8 +551,13 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
+    // التعديل هنا: إذا كان اختبار، افتح الرابط مباشرة
     el.onclick = function() {
-        window.location.href = detailsUrl;
+        if (item.type === 'quizzes' && item.url) {
+            window.location.href = item.url;
+        } else {
+            window.location.href = detailsUrl;
+        }
     };
 
     let imageHTML = '';
