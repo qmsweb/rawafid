@@ -220,7 +220,7 @@
     backLink.addEventListener('click', (e) => {
         // إذا كان هناك كود للمقرر، اذهب إليه
         if (courseCode && courseCode !== 'null') {
-            backLink.href = `index.html?i=${courseCode}`;
+            backLink.href = `course.html?i=${courseCode}`;
         } else {
             // إذا لم يكن، عد للصفحة السابقة في المتصفح
             e.preventDefault();
