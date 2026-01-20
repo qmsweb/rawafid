@@ -202,7 +202,7 @@
     }
     .filter-bar::-webkit-scrollbar { display: none; }
 
-    /* أزرار العرض (في اليمين الآن) */
+    /* أزرار العرض */
     .view-toggle {
       display: flex;
       gap: 5px;
@@ -210,7 +210,7 @@
       padding: 4px;
       border-radius: 50px;
       border: 1px solid #eee;
-      flex-shrink: 0; /* منع الانكماش */
+      flex-shrink: 0;
     }
     .view-toggle i {
       width: 35px; height: 35px;
@@ -225,7 +225,6 @@
       color: var(--primary-color);
     }
 
-    /* فاصل عمودي صغير */
     .filter-divider {
         width: 1px;
         height: 25px;
@@ -257,7 +256,7 @@
     }
 
 
-    /* === قائمة المواد (الافتراضي: قائمة List) === */
+    /* === قائمة المواد === */
     .materials-list {
       display: flex;
       flex-direction: column;
@@ -273,8 +272,6 @@
       position: relative;
       border: 1px solid transparent;
       box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-      
-      /* إعدادات Flex داخل البطاقة */
       display: flex;
       flex-direction: column;
     }
@@ -284,7 +281,6 @@
       border-color: rgba(26, 42, 198, 0.1);
     }
 
-    /* تنسيق وضع القائمة (الافتراضي) */
     .item-header {
       display: flex;
       align-items: center;
@@ -314,7 +310,6 @@
       font-size: 0.9rem;
       color: #666;
       line-height: 1.6;
-      /* في وضع القائمة: نضع هامش ليكون تحت النص وليس الأيقونة */
       margin-right: 65px; 
       margin-bottom: 10px;
       display: -webkit-box;
@@ -323,7 +318,6 @@
       overflow: hidden;
     }
 
-    /* الشارات في وضع القائمة */
     .badges-container {
       display: flex;
       gap: 8px;
@@ -331,47 +325,38 @@
     }
 
     .item-image {
-        display: none; /* إخفاء الصورة في وضع القائمة افتراضياً أو حسب الرغبة */
-        /* إذا كنت تريد إظهارها في القائمة أيضاً، احذف هذا السطر */
+        display: none; 
     }
 
-    /* ========================================= */
-    /* === وضع الشبكة (Grid View) - التصحيح === */
-    /* ========================================= */
-    
+    /* === وضع الشبكة (Grid View) === */
     .materials-list.grid-view {
-      display: grid !important; /* فرض الشبكة */
+      display: grid !important;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 25px;
     }
 
-    /* تعديل البطاقة داخل الشبكة */
     .materials-list.grid-view .material-item {
-      height: 100%; /* ملء ارتفاع الخلية */
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
     }
 
-    /* تعديل الهيدر داخل الشبكة */
     .materials-list.grid-view .item-header {
       margin-bottom: 15px;
     }
 
-    /* تعديل الوصف داخل الشبكة (إلغاء الهامش الجانبي) */
     .materials-list.grid-view .item-description-preview {
       margin-right: 0 !important;
       margin-bottom: 15px;
-      flex-grow: 1; /* دفع العناصر السفلية للأسفل لتساوي البطاقات */
+      flex-grow: 1; 
     }
 
-    /* تعديل الشارات داخل الشبكة */
     .materials-list.grid-view .badges-container {
       margin-right: 0 !important;
-      margin-top: auto; /* لصقها بالأسفل إذا كان هناك فراغ */
+      margin-top: auto;
     }
 
-    /* إظهار الصورة في وضع الشبكة بشكل جميل */
     .materials-list.grid-view .item-image {
         display: block;
         width: 100%;
@@ -386,7 +371,7 @@
       object-fit: cover;
     }
 
-    /* الشارات عام */
+    /* الشارات */
     .badge { 
       font-size: 0.7rem; 
       padding: 4px 12px; 
@@ -397,13 +382,30 @@
     .badge-important { background: #e3f2fd; color: var(--primary-color); }
     .badge-new { background: #fffde7; color: #fbc02d; }
 
+    /* === Responsive (تعديلات الموبايل) === */
     @media (max-width: 768px) {
       .header-top-row { flex-direction: column; gap: 15px; }
       .share-button { width: 100%; justify-content: center; }
       
-      /* في الموبايل، الشبكة تصبح عمود واحد (تشبه القائمة ولكن بتنسيق البطاقات الكبير) */
+      /* تعديل هام للشبكة على الموبايل */
       .materials-list.grid-view { 
-          grid-template-columns: 1fr; 
+          /* اجبار العرض على عمودين بدل عمود واحد */
+          grid-template-columns: repeat(2, 1fr); 
+          gap: 12px; /* تقليل المسافة بين العناصر */
+      }
+
+      /* تصغير العناصر قليلاً داخل الشبكة في الموبايل */
+      .materials-list.grid-view .material-item {
+          padding: 12px; /* تقليل الحواف الداخلية */
+      }
+      .materials-list.grid-view .item-icon {
+          width: 40px; height: 40px; font-size: 1.1rem; /* تصغير الايقونة */
+      }
+      .materials-list.grid-view .item-title-text h3 {
+          font-size: 0.95rem; /* تصغير الخط قليلا */
+      }
+      .materials-list.grid-view .item-description-preview {
+          font-size: 0.8rem;
       }
       
       .item-description-preview, .badges-container { margin-right: 0; }
@@ -553,7 +555,6 @@ function renderMaterials(filter = 'all') {
         window.location.href = detailsUrl;
     };
 
-    // تجهيز الصورة
     let imageHTML = '';
     if (item.image_url) { 
         imageHTML = `
@@ -563,7 +564,6 @@ function renderMaterials(filter = 'all') {
         `;
     }
 
-    // تجهيز الشارات
     let badgeHTML = '';
     const now = Date.now();
     const timeMs = item['time-ms'];
@@ -574,7 +574,6 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
-    // تجهيز الوصف (إخفاء الفارغ)
     let descriptionHTML = '';
     if (item.description && item.description.trim() !== "") {
         descriptionHTML = `
@@ -584,7 +583,6 @@ function renderMaterials(filter = 'all') {
         `;
     }
 
-    // بناء HTML العنصر
     el.innerHTML = `
       <div class="item-header">
         <div class="item-icon" style="background:${getIconBg(item.type)}; color:${getIconColor(item.type)};">
