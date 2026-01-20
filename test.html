@@ -187,7 +187,7 @@
       z-index: 90;
       margin-bottom: 25px;
       padding: 10px 0;
-      background: rgba(244, 246, 251, 0.95); /* شفافية أقل لتقليل التشتت */
+      background: rgba(244, 246, 251, 0.95);
       border-bottom: 1px solid rgba(0,0,0,0.05);
       margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
     }
@@ -210,15 +210,13 @@
       color: #666;
       font-weight: 600;
       font-size: 0.85rem;
-      border: 1px solid #eee; /* حدود خفيفة بدلاً من الظل */
+      border: 1px solid #eee;
       cursor: pointer;
-      /* تم إلغاء الانتقالات الحركية */
     }
     .filter-item:hover {
       background: #f9f9f9;
       color: var(--primary-color);
       border-color: var(--light-border);
-      /* تم إلغاء transform */
     }
     .filter-item.active {
       background: var(--primary-color);
@@ -259,7 +257,7 @@
       background: white;
       border-radius: var(--radius-md);
       padding: 20px;
-      transition: box-shadow 0.2s ease; /* فقط الظل يتغير بنعومة */
+      transition: box-shadow 0.2s ease;
       cursor: pointer;
       position: relative;
       border: 1px solid transparent;
@@ -300,7 +298,7 @@
       font-size: 0.9rem;
       color: #666;
       line-height: 1.6;
-      margin-right: 65px; /* RTL محاذاة */
+      margin-right: 65px;
       margin-bottom: 10px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -318,7 +316,7 @@
     .materials-list.grid-view .material-item {
       display: flex;
       flex-direction: column;
-      height: 100%; /* لضمان تساوي الأطوال */
+      height: 100%;
     }
 
     .materials-list.grid-view .item-header {
@@ -326,9 +324,9 @@
     }
 
     .materials-list.grid-view .item-description-preview {
-      margin-right: 0 !important; /* إلغاء الهامش الجانبي في الشبكة */
+      margin-right: 0 !important;
       margin-bottom: 15px;
-      flex-grow: 1; /* دفع العناصر السفلية للأسفل */
+      flex-grow: 1;
     }
 
     .materials-list.grid-view .badges-container {
@@ -353,8 +351,8 @@
     .badges-container {
       display: flex;
       gap: 8px;
-      margin-top: auto; /* يضمن بقاء الشارات في الأسفل في وضع الشبكة */
-      margin-right: 65px; /* RTL محاذاة */
+      margin-top: auto;
+      margin-right: 65px;
     }
     .materials-list.grid-view .badges-container { margin-right: 0; }
 
@@ -368,7 +366,6 @@
     .badge-important { background: #e3f2fd; color: var(--primary-color); }
     .badge-new { background: #fffde7; color: #fbc02d; }
 
-    /* === Responsive === */
     @media (max-width: 768px) {
       .header-top-row { flex-direction: column; gap: 15px; }
       .share-button { width: 100%; justify-content: center; }
@@ -387,15 +384,15 @@
       <div class="header-content">
         <div class="header-top-row">
           <div class="titles-group">
-            <h1>...</h1>
-            <h2></h2>
+            <h1 id="course-title">...</h1>
+            <h2 id="course-code"></h2>
           </div>
           
           <div id="share-button" class="share-button">
             <i class="fas fa-share-nodes"></i> مشاركة المقرر
           </div>
         </div>
-        <p class="header-desc"></p>
+        <p class="header-desc" id="course-desc"></p>
       </div>
     </div>
 
@@ -434,21 +431,24 @@
   </div>
 
 <script>
+  // تحميل الفوتر
   fetch("/footer.html").then(r => r.text()).then(d => document.getElementById("footer-placeholder").innerHTML = d).catch(e => {});
 
-/* ======= عناصر DOM ======= */
+/* ======= المتغيرات والثوابت ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
 const gridBtn = document.getElementById('grid-view');
 const listBtn = document.getElementById('list-view');
 const shareButton = document.getElementById('share-button');
+
+// جلب رمز المقرر من الرابط
 const courseCode = new URLSearchParams(window.location.search).get('i');
 
 let materialsData = [];
 let userToggledView = false; 
 let courseShareURL = null; 
 
-/* ======= دوال مساعدة ======= */
+/* ======= دوال مساعدة للأيقونات والألوان ======= */
 function getIconClass(type) {
   switch (type) {
     case 'documents': return 'fas fa-file-lines';
@@ -480,7 +480,7 @@ function getIconBg(type) {
   }
 }
 
-/* ضبط نوع العرض */
+/* ======= دالة ضبط العرض (قائمة / شبكة) ======= */
 function setView(view, save = true) {
   if (view === 'grid') {
     materialsList.classList.add('grid-view');
@@ -494,10 +494,15 @@ function setView(view, save = true) {
   if (save) localStorage.setItem('viewMode', view);
 }
 
-/* ====== دالة العرض الرئيسية المعدلة ====== */
+/* ======= دالة عرض المواد (Render) ======= */
 function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
+
+  if (filtered.length === 0) {
+      materialsList.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">لا توجد مواد في هذا القسم.</p>';
+      return;
+  }
 
   filtered.forEach(item => {
     const itemId = item.id ? item.id : '#';
@@ -506,4 +511,172 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
+    // عند النقر نفتح التفاصيل
     el.onclick = function() {
+        window.location.href = detailsUrl;
+    };
+
+    // تجهيز الصورة
+    let imageHTML = '';
+    if (item.image_url) { 
+        imageHTML = `
+            <div class="item-image">
+                <img src="${item.image_url}" alt="${item.title}" loading="lazy">
+            </div>
+        `;
+    }
+
+    // تجهيز الشارات
+    let badgeHTML = '';
+    const now = Date.now();
+    const timeMs = item['time-ms'];
+    const MS_IN_DAY = 86400000;
+    if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
+      badgeHTML = `<span class="badge badge-new">${item.badgeText}</span>`;
+    } else if (item.badge) {
+      badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
+    }
+
+    // تجهيز الوصف (يتم إخفاؤه إذا كان فارغاً)
+    let descriptionHTML = '';
+    if (item.description && item.description.trim() !== "") {
+        descriptionHTML = `
+            <p class="item-description-preview">
+                ${item.description}
+            </p>
+        `;
+    }
+
+    // بناء HTML العنصر
+    el.innerHTML = `
+      <div class="item-header">
+        <div class="item-icon" style="background:${getIconBg(item.type)}; color:${getIconColor(item.type)};">
+            <i class="${getIconClass(item.type)}"></i>
+        </div>
+        <div class="item-title-text">
+            <h3>${item.title}</h3>
+        </div>
+      </div>
+      
+      ${descriptionHTML}
+
+      ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
+      ${imageHTML} 
+    `;
+    materialsList.appendChild(el);
+  });
+}
+
+/* ======= تهيئة الصفحة والأحداث ======= */
+document.addEventListener('DOMContentLoaded', () => {
+  // تفعيل الفلاتر
+  filterItems.forEach(item => {
+    item.addEventListener('click', function () {
+      filterItems.forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
+      renderMaterials(this.dataset.filter);
+    });
+  });
+
+  // تفعيل أزرار العرض
+  gridBtn.addEventListener('click', () => { userToggledView = true; setView('grid'); });
+  listBtn.addEventListener('click', () => { userToggledView = true; setView('list'); });
+
+  // التحقق من عرض الشاشة
+  const mq = window.matchMedia('(min-width: 992px)');
+  function applyDefaultView() {
+    if (!userToggledView && !localStorage.getItem('viewMode')) {
+      if (mq.matches) setView('grid', false);
+      else setView('list', false);
+    }
+  }
+  applyDefaultView();
+
+  // === جلب البيانات (Fetch Data) ===
+  if (!courseCode) {
+    materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:#777;">⚠️ يرجى اختيار مقرر لعرض محتوياته (تأكد من الرابط).</p>';
+    return;
+  }
+
+  fetch(`assets/data/${courseCode}.json`)
+    .then(res => {
+      if (!res.ok) throw new Error("لم يتم العثور على الملف");
+      return res.json();
+    })
+    .then(data => {
+      materialsData = data.items || [];
+
+      // تحديث عناصر الهيدر باستخدام ID لضمان الدقة
+      const titleEl = document.getElementById('course-title');
+      const codeEl = document.getElementById('course-code');
+      const descEl = document.getElementById('course-desc');
+      
+      if (titleEl) titleEl.textContent = data.name || '';
+      
+      if (codeEl) {
+          if(data.code) {
+             codeEl.textContent = data.code; 
+             codeEl.style.display = 'inline-block';
+          } else {
+             codeEl.style.display = 'none';
+          }
+      }
+      
+      if (descEl) descEl.textContent = data.description || '';
+      
+      // تحديث عنوان الصفحة و Meta
+      document.title = data.name || 'روافد';
+      
+      if (data.name) {
+        const ogTitle = document.getElementById('og-title');
+        if(ogTitle) ogTitle.setAttribute('content', data.name);
+      }
+      if (data.description) {
+         const ogDesc = document.getElementById('og-description');
+         if(ogDesc) ogDesc.setAttribute('content', data.description);
+      }
+
+      courseShareURL = (data && data.url) ? data.url : window.location.href;
+
+      // استعادة وضع العرض المحفوظ
+      const savedMode = localStorage.getItem('viewMode');
+      if (savedMode) setView(savedMode, false);
+
+      // رسم المواد
+      renderMaterials();
+    })
+    .catch(err => {
+      console.error(err);
+      materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:10px">حدث خطأ أثناء تحميل المقرر، أو المقرر غير موجود.</p></div>`;
+    });
+});
+
+/* ======= زر المشاركة ======= */
+if (shareButton) {
+  shareButton.addEventListener('click', () => {
+    const shareUrl = courseShareURL || window.location.href;
+    const title = document.title || '';
+    if (navigator.share) {
+      navigator.share({ title, url: shareUrl }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      const originalText = shareButton.innerHTML;
+      shareButton.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+      setTimeout(() => shareButton.innerHTML = originalText, 2000);
+    }
+  });
+}
+
+/* ======= تحميل التوب بار ======= */
+fetch("topbar.html").then(res => res.text())
+  .then(html => {
+    const container = document.getElementById("topbar-container");
+    if (container) container.innerHTML = html;
+    const script = document.createElement("script");
+    script.src = "topbar.js";
+    document.body.appendChild(script);
+  }).catch(() => {});
+</script>
+
+</body>
+</html>
