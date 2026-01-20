@@ -17,78 +17,74 @@
       --text-color: #1d1d1d;
       --bg-color: #f8f9fc;
       --white: #ffffff;
-      --gray-light: #f0f2f5;
     }
 
     * { box-sizing: border-box; font-family: "Noto Kufi Arabic", sans-serif; }
 
     body {
       margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color);
-      /* تم تقليل البادينج السفلي */
-      padding-bottom: 80px; 
+      padding-bottom: 90px; /* مسافة للفوتر */
       padding-top: 60px; /* مسافة للتوب بار */
       transition: background 0.3s;
     }
 
     /* === شريط التنقل وزر العودة === */
     .nav-header {
-      /* تم ضبط المسافة العلوية 15 بكسل كما طلبت */
-      padding: 15px 20px 10px 20px; 
-      display: flex; align-items: center; gap: 10px; 
-      background: transparent;
-      max-width: 900px; margin: 0 auto;
+      /* تعديل: زيادة المسافة العلوية لتبتعد عن التوب بار */
+      margin-top: 30px; 
+      padding: 0 20px;
+      margin-bottom: 15px;
+      display: flex; align-items: center; 
+      max-width: 900px; margin-left: auto; margin-right: auto;
     }
 
     .back-btn {
-      text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 0.85rem;
+      text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 0.9rem;
       display: inline-flex; align-items: center; gap: 8px; 
-      /* تقليل حجم الزر قليلاً */
-      padding: 8px 14px;
+      padding: 8px 16px;
       background: var(--white); border-radius: 50px; transition: 0.3s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      border: 1px solid rgba(26, 42, 198, 0.1);
+      /* حدود خفيفة جداً لتمييز الزر */
+      border: 1px solid #e0e0e0;
+      cursor: pointer; /* لضمان ظهور مؤشر اليد */
     }
-    .back-btn:hover { background: var(--primary-color); color: var(--white); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(26, 42, 198, 0.2); }
+    .back-btn:hover { background: var(--primary-color); color: var(--white); border-color: var(--primary-color); }
 
     /* === المحتوى === */
     .content-container { 
       max-width: 900px; margin: 0 auto; 
-      /* تقليل المسافات الداخلية للحاوية */
-      padding: 20px; 
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-      margin-bottom: 20px;
+      padding: 0 20px; /* إزالة البادينج العلوي والسفلي، والاكتفاء بالجانبي */
+      
+      /* تعديل: إزالة الستايل الخاص بالبطاقة (الظل والخلفية والحدود) */
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
     }
 
-    /* تقليل المسافات بين العنوان والتفاصيل */
-    .item-title { font-size: 1.5rem; font-weight: 800; color: #000; margin-bottom: 8px; margin-top: 0; line-height: 1.3; }
+    .item-title { font-size: 1.6rem; font-weight: 800; color: #000; margin-bottom: 5px; margin-top: 0; line-height: 1.3; }
 
     .item-meta { 
-      font-size: 0.85rem; color: #666; 
-      /* تقليل المسافة أسفل المعلومات الوصفية */
-      margin-bottom: 15px; padding-bottom: 10px; 
+      font-size: 0.9rem; color: #666; 
+      margin-bottom: 20px; 
       display: flex; align-items: center; gap: 8px; 
-      border-bottom: 1px solid #eee; 
     }
     .item-meta i { color: var(--primary-color); }
 
     .item-description { 
-      font-size: 0.95rem; color: #444; 
-      /* تقليل ارتفاع السطر والمسافة السفلية */
-      line-height: 1.6; 
+      font-size: 1rem; color: #333; 
+      line-height: 1.7; 
       margin-bottom: 20px; 
       white-space: pre-wrap; 
     }
 
-    .image-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; border: 1px solid #eee; background: #fafafa; }
-    .image-wrapper img { width: 100%; height: auto; display: block; max-height: 450px; object-fit: contain; }
+    .image-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; border: 1px solid #ddd; }
+    .image-wrapper img { width: 100%; height: auto; display: block; max-height: 450px; object-fit: contain; background: #fff; }
 
     /* === تنسيق حاوية العارض === */
     .pdf-container {
       width: 100%;
       height: 75vh;
-      border: 1px solid #e1e4e8;
+      border: 1px solid #ccc; /* حدود عادية للعارض فقط */
       border-radius: 12px;
       overflow: hidden;
       background: #f4f4f7; 
@@ -102,37 +98,58 @@
     .exit-fullscreen-btn {
         display: none;
         position: fixed; top: 20px; left: 20px; z-index: 99999;
-        background: rgba(0, 0, 0, 0.7); color: white; border: none;
-        padding: 8px 16px; border-radius: 30px; cursor: pointer;
-        font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s; font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.8); color: white; border: none;
+        padding: 10px 20px; border-radius: 30px; cursor: pointer;
+        font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s;
     }
-    .exit-fullscreen-btn:hover { background: rgba(0, 0, 0, 0.9); transform: scale(1.05); }
+    .exit-fullscreen-btn:hover { background: #000; transform: scale(1.05); }
 
     /* === الشريط السفلي === */
     .sticky-footer {
       position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
-      padding: 12px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; gap: 10px; z-index: 1000; justify-content: center;
-      border-top: 1px solid #f0f0f0;
+      padding: 15px 20px; 
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05); 
+      display: flex; justify-content: center; 
+      z-index: 1000;
+      border-top: 1px solid #eee;
     }
 
-    .footer-inner { max-width: 800px; width: 100%; display: flex; gap: 10px; }
+    /* تعديل: ضبط المحاذاة لزر المشاركة */
+    .footer-inner { 
+        max-width: 800px; width: 100%; 
+        display: flex; 
+        align-items: stretch; /* يضمن أن جميع الأزرار بنفس الارتفاع */
+        gap: 10px; 
+    }
 
     .action-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; 
-      /* تقليل حجم الأزرار قليلاً */
-      padding: 10px;
-      border-radius: 10px; font-weight: 700; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer; transition: 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px; 
+      padding: 0 15px; /* إزالة البادينج العمودي وضبطه عبر الارتفاع */
+      height: 48px; /* ارتفاع ثابت لجميع الأزرار */
+      border-radius: 10px; font-weight: 700; font-size: 0.95rem; 
+      text-decoration: none; border: none; cursor: pointer; transition: 0.2s;
     }
 
-    .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 4px 10px rgba(26, 42, 198, 0.2); }
-    .btn-secondary { background-color: #eff3ff; color: var(--primary-color); flex: 0 0 auto; padding: 0 18px;}
+    /* الزر الأساسي يأخذ المساحة المتبقية */
+    .btn-primary { 
+        background-color: var(--primary-color); color: white; 
+        flex: 1; /* يتمدد ليأخذ المساحة */
+    }
+    
+    /* زر المشاركة لا ينمو ولا يتقلص */
+    .btn-secondary { 
+        background-color: #eff3ff; color: var(--primary-color); 
+        width: 50px; /* عرض ثابت لزر المشاركة */
+        flex: 0 0 auto; 
+    }
     
     .hidden { display: none !important; }
     .loading-state { text-align: center; padding: 60px 20px; color: #888; }
 
     /* === وضع ملء الشاشة === */
-    body.fullscreen-active { padding: 0 !important; overflow: hidden; background: #333; }
-    body.fullscreen-active .content-container { position: static; padding: 0; margin: 0; border-radius: 0; background: transparent; box-shadow: none; max-width: none; }
+    body.fullscreen-active { padding: 0 !important; overflow: hidden; background: #222; }
+    body.fullscreen-active .content-container { padding: 0; margin: 0; max-width: none; }
+    /* نخفي كل شيء ما عدا العناصر الضرورية */
     body.fullscreen-active .item-title,
     body.fullscreen-active .item-meta,
     body.fullscreen-active .item-description,
@@ -146,15 +163,6 @@
         width: 100vw; height: 100vh; z-index: 9999; margin: 0; border-radius: 0; border: none; background: #000;
     }
     body.fullscreen-active .exit-fullscreen-btn { display: block; }
-
-    @media (max-width: 768px) {
-        .content-container { padding: 15px; margin-top: 5px; }
-        .item-title { font-size: 1.2rem; }
-        .pdf-container { height: 60vh; }
-        .footer-inner { flex-wrap: wrap; gap: 8px; }
-        .action-btn { width: 100%; flex: 1 1 45%; }
-        .btn-secondary { flex: 1 1 100%; }
-    }
   </style>
 </head>
 <body>
@@ -166,14 +174,14 @@
   <div id="topbar-container"></div>
 
   <div class="nav-header">
-    <a href="index.html" id="back-link" class="back-btn">
+    <a href="#" id="back-link" class="back-btn">
       <i class="fas fa-arrow-right"></i> عودة للمقرر
     </a>
   </div>
 
   <div class="content-container" id="main-content">
     <div class="loading-state">
-        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br>
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
         جاري التحميل...
     </div>
   </div>
@@ -208,13 +216,24 @@
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
 
-    // إصلاح منطق زر العودة
-    if(courseCode) {
-        backLink.href = `index.html?i=${courseCode}`;
-    } else {
-        // إذا لم يكن هناك كود مقرر، يذهب للصفحة الرئيسية
-        backLink.href = 'index.html'; 
-    }
+    // === إصلاح زر العودة ===
+    backLink.addEventListener('click', (e) => {
+        // إذا كان هناك كود للمقرر، اذهب إليه
+        if (courseCode && courseCode !== 'null') {
+            backLink.href = `index.html?i=${courseCode}`;
+        } else {
+            // إذا لم يكن، عد للصفحة السابقة في المتصفح
+            e.preventDefault();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html'; // أو للصفحة الرئيسية
+            }
+        }
+    });
+    // تعيين الرابط أيضاً للتحسين البصري (hover status)
+    if(courseCode) backLink.href = `index.html?i=${courseCode}`;
+
 
     fetch(`assets/data/${courseCode}.json`)
       .then(res => res.json())
