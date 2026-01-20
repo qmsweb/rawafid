@@ -24,21 +24,26 @@
 
     body {
       margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color);
-      padding-bottom: 100px; padding-top: 60px;
+      /* تم تقليل البادينج السفلي */
+      padding-bottom: 80px; 
+      padding-top: 60px; /* مسافة للتوب بار */
       transition: background 0.3s;
     }
 
-    /* === شريط التنقل === */
+    /* === شريط التنقل وزر العودة === */
     .nav-header {
-      padding: 15px 20px; display: flex; align-items: center; gap: 10px; 
-      /* إزالة الخلفية البيضاء لتندمج مع الصفحة أو جعلها شفافة قليلاً */
+      /* تم ضبط المسافة العلوية 15 بكسل كما طلبت */
+      padding: 15px 20px 10px 20px; 
+      display: flex; align-items: center; gap: 10px; 
       background: transparent;
       max-width: 900px; margin: 0 auto;
     }
 
     .back-btn {
-      text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 0.9rem;
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px;
+      text-decoration: none; color: var(--primary-color); font-weight: 700; font-size: 0.85rem;
+      display: inline-flex; align-items: center; gap: 8px; 
+      /* تقليل حجم الزر قليلاً */
+      padding: 8px 14px;
       background: var(--white); border-radius: 50px; transition: 0.3s;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       border: 1px solid rgba(26, 42, 198, 0.1);
@@ -46,149 +51,107 @@
     .back-btn:hover { background: var(--primary-color); color: var(--white); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(26, 42, 198, 0.2); }
 
     /* === المحتوى === */
-    /* تحسين: جعل المحتوى داخل بطاقة بيضاء نظيفة */
     .content-container { 
-      max-width: 900px; margin: 0 auto; padding: 30px; 
+      max-width: 900px; margin: 0 auto; 
+      /* تقليل المسافات الداخلية للحاوية */
+      padding: 20px; 
       background: var(--white);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      margin-bottom: 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+      margin-bottom: 20px;
     }
 
-    .item-title { font-size: 1.8rem; font-weight: 800; color: #000; margin-bottom: 12px; margin-top: 0; line-height: 1.4; }
+    /* تقليل المسافات بين العنوان والتفاصيل */
+    .item-title { font-size: 1.5rem; font-weight: 800; color: #000; margin-bottom: 8px; margin-top: 0; line-height: 1.3; }
 
-    .item-meta { font-size: 0.9rem; color: #666; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .item-meta { 
+      font-size: 0.85rem; color: #666; 
+      /* تقليل المسافة أسفل المعلومات الوصفية */
+      margin-bottom: 15px; padding-bottom: 10px; 
+      display: flex; align-items: center; gap: 8px; 
+      border-bottom: 1px solid #eee; 
+    }
     .item-meta i { color: var(--primary-color); }
 
-    .item-description { font-size: 1.05rem; color: #444; line-height: 1.9; margin-bottom: 30px; white-space: pre-wrap; }
+    .item-description { 
+      font-size: 0.95rem; color: #444; 
+      /* تقليل ارتفاع السطر والمسافة السفلية */
+      line-height: 1.6; 
+      margin-bottom: 20px; 
+      white-space: pre-wrap; 
+    }
 
-    .image-wrapper { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; background: #fafafa; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .image-wrapper img { width: 100%; height: auto; display: block; max-height: 500px; object-fit: contain; }
+    .image-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; border: 1px solid #eee; background: #fafafa; }
+    .image-wrapper img { width: 100%; height: auto; display: block; max-height: 450px; object-fit: contain; }
 
     /* === تنسيق حاوية العارض === */
     .pdf-container {
       width: 100%;
       height: 75vh;
       border: 1px solid #e1e4e8;
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
       background: #f4f4f7; 
       margin-bottom: 10px;
       position: relative;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.03);
     }
     
     .pdf-frame { width: 100%; height: 100%; border: none; display: block; }
 
-    /* زر إغلاق وضع ملء الشاشة (مخفي افتراضياً) */
+    /* زر إغلاق وضع ملء الشاشة */
     .exit-fullscreen-btn {
         display: none;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 99999;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-weight: bold;
-        backdrop-filter: blur(5px);
-        transition: 0.3s;
+        position: fixed; top: 20px; left: 20px; z-index: 99999;
+        background: rgba(0, 0, 0, 0.7); color: white; border: none;
+        padding: 8px 16px; border-radius: 30px; cursor: pointer;
+        font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s; font-size: 0.9rem;
     }
     .exit-fullscreen-btn:hover { background: rgba(0, 0, 0, 0.9); transform: scale(1.05); }
 
     /* === الشريط السفلي === */
     .sticky-footer {
       position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
-      padding: 15px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; gap: 12px; z-index: 1000; justify-content: center;
+      padding: 12px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; gap: 10px; z-index: 1000; justify-content: center;
       border-top: 1px solid #f0f0f0;
     }
 
-    .footer-inner { max-width: 800px; width: 100%; display: flex; gap: 12px; }
+    .footer-inner { max-width: 800px; width: 100%; display: flex; gap: 10px; }
 
     .action-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px;
-      border-radius: 12px; font-weight: 700; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: 0.2s;
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; 
+      /* تقليل حجم الأزرار قليلاً */
+      padding: 10px;
+      border-radius: 10px; font-weight: 700; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer; transition: 0.2s;
     }
 
     .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 4px 10px rgba(26, 42, 198, 0.2); }
-    .btn-primary:hover { background-color: var(--primary-dark); box-shadow: 0 6px 15px rgba(26, 42, 198, 0.3); }
-    
-    .btn-secondary { background-color: #eff3ff; color: var(--primary-color); flex: 0 0 auto; padding: 0 24px;}
-    .btn-secondary:hover { background-color: #e0e7ff; }
+    .btn-secondary { background-color: #eff3ff; color: var(--primary-color); flex: 0 0 auto; padding: 0 18px;}
     
     .hidden { display: none !important; }
-    .loading-state { text-align: center; padding: 80px 20px; color: #888; }
-    .loading-state i { color: var(--primary-color); margin-bottom: 15px; opacity: 0.7; }
+    .loading-state { text-align: center; padding: 60px 20px; color: #888; }
 
-    /* === وضع ملء الشاشة (CSS Logic) === */
-    body.fullscreen-active {
-        padding: 0 !important;
-        overflow: hidden; /* منع السكرول للصفحة الرئيسية */
-        background: #333; /* خلفية داكنة للتركيز */
-    }
-
-    /* إخفاء العناصر غير الضرورية في وضع ملء الشاشة */
-    body.fullscreen-active #topbar-container,
+    /* === وضع ملء الشاشة === */
+    body.fullscreen-active { padding: 0 !important; overflow: hidden; background: #333; }
+    body.fullscreen-active .content-container { position: static; padding: 0; margin: 0; border-radius: 0; background: transparent; box-shadow: none; max-width: none; }
+    body.fullscreen-active .item-title,
+    body.fullscreen-active .item-meta,
+    body.fullscreen-active .item-description,
+    body.fullscreen-active .image-wrapper,
     body.fullscreen-active .nav-header,
-    body.fullscreen-active .item-title,
-    body.fullscreen-active .item-meta,
-    body.fullscreen-active .item-description,
     body.fullscreen-active .sticky-footer,
-    body.fullscreen-active .content-container {
-        /* نخفي كل شيء ما عدا العناصر التي نحددها يدوياً أو نغير خصائص الكونتينر */
-    }
-
-    /* طريقة أفضل: إخفاء الكونتينر الأساسي وإخراج الـ PDF منه */
-    body.fullscreen-active .content-container {
-        position: static;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        max-width: none;
-    }
-
-    body.fullscreen-active .item-title,
-    body.fullscreen-active .item-meta,
-    body.fullscreen-active .item-description,
-    body.fullscreen-active .image-wrapper { /* إخفاء الصور إذا كانت موجودة مع PDF */
-        display: none !important;
-    }
-    
-    body.fullscreen-active .nav-header { display: none !important; }
-    body.fullscreen-active .sticky-footer { display: none !important; }
     body.fullscreen-active #topbar-container { display: none !important; }
 
-    /* تكبير عارض الـ PDF ليملأ الشاشة */
     body.fullscreen-active .pdf-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 9999;
-        margin: 0;
-        border-radius: 0;
-        border: none;
-        background: #000;
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        width: 100vw; height: 100vh; z-index: 9999; margin: 0; border-radius: 0; border: none; background: #000;
     }
+    body.fullscreen-active .exit-fullscreen-btn { display: block; }
 
-    body.fullscreen-active .exit-fullscreen-btn {
-        display: block; /* إظهار زر الخروج */
-    }
-
-    /* Responsiveness */
     @media (max-width: 768px) {
-        .content-container { padding: 20px; margin-top: 10px; border-radius: 0; box-shadow: none; background: transparent; }
-        .item-title { font-size: 1.4rem; }
+        .content-container { padding: 15px; margin-top: 5px; }
+        .item-title { font-size: 1.2rem; }
         .pdf-container { height: 60vh; }
-        .footer-inner { flex-wrap: wrap; }
+        .footer-inner { flex-wrap: wrap; gap: 8px; }
         .action-btn { width: 100%; flex: 1 1 45%; }
         .btn-secondary { flex: 1 1 100%; }
     }
@@ -197,21 +160,21 @@
 <body>
 
   <button id="exit-fullscreen" class="exit-fullscreen-btn" onclick="toggleFullScreen(false)">
-      <i class="fas fa-times"></i> خروج من وضع ملء الشاشة
+      <i class="fas fa-times"></i> خروج
   </button>
 
   <div id="topbar-container"></div>
 
   <div class="nav-header">
-    <a href="#" id="back-link" class="back-btn">
+    <a href="index.html" id="back-link" class="back-btn">
       <i class="fas fa-arrow-right"></i> عودة للمقرر
     </a>
   </div>
 
   <div class="content-container" id="main-content">
     <div class="loading-state">
-        <i class="fas fa-circle-notch fa-spin fa-3x"></i><br>
-        جاري تحميل المحتوى...
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br>
+        جاري التحميل...
     </div>
   </div>
 
@@ -220,7 +183,6 @@
   </div>
 
 <script>
-  // رابط عارض موزيلا الرسمي من جت هب
   const MOZILLA_VIEWER_URL = 'https://mozilla.github.io/pdf.js/web/viewer.html'; 
 
   function getIconClass(type) {
@@ -229,19 +191,12 @@
     return 'fas fa-file-alt';
   }
 
-  // دالة تبديل وضع ملء الشاشة
   function toggleFullScreen(forceState) {
       const body = document.body;
       const isActive = body.classList.contains('fullscreen-active');
-      
-      // إذا تم تمرير forceState نستخدمه، وإلا نقوم بالعكس
       const newState = (typeof forceState !== 'undefined') ? forceState : !isActive;
-
-      if (newState) {
-          body.classList.add('fullscreen-active');
-      } else {
-          body.classList.remove('fullscreen-active');
-      }
+      if (newState) body.classList.add('fullscreen-active');
+      else body.classList.remove('fullscreen-active');
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -253,7 +208,13 @@
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
 
-    if(courseCode) backLink.href = `index.html?i=${courseCode}`;
+    // إصلاح منطق زر العودة
+    if(courseCode) {
+        backLink.href = `index.html?i=${courseCode}`;
+    } else {
+        // إذا لم يكن هناك كود مقرر، يذهب للصفحة الرئيسية
+        backLink.href = 'index.html'; 
+    }
 
     fetch(`assets/data/${courseCode}.json`)
       .then(res => res.json())
@@ -263,25 +224,14 @@
 
         document.title = item.title;
         let mediaHTML = '';
-
-        const isTypePdf = item.type === 'pdf';
-        const isUrlPdf = item.download_url && item.download_url.toLowerCase().endsWith('.pdf');
-        const isPdf = isTypePdf || isUrlPdf;
-
-        // متغير لتخزين رابط العارض لاستخدامه في الأزرار
         let finalViewerSrc = '';
 
+        const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
+
         if (isPdf && item.download_url) {
-            // تحويل رابط الملف إلى رابط مطلق (مهم لعارض موزيلا الخارجي)
             const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
-            
-            // تكوين رابط عارض موزيلا
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
-            
-            mediaHTML = `
-            <div class="pdf-container">
-                <iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe>
-            </div>`;
+            mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
         } 
         else if (item.image_url) {
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
@@ -292,23 +242,18 @@
             <div class="item-meta"><i class="${getIconClass(item.type)}"></i> <span>${data.name}</span></div>
             <div class="item-description">${item.description || ''}</div>
             ${mediaHTML}
-            <div style="height: 20px;"></div>`;
+            <div style="height: 10px;"></div>`;
 
-        // 3. الأزرار السفلية
         let buttonsHTML = '';
-        
-        // زر التحميل
         if (item.download_url) {
             buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download target="_blank"><i class="fas fa-download"></i> تحميل</a>`;
         }
         
-        // زر ملء الشاشة (تم تعديله ليعمل داخل الصفحة)
         if (isPdf && item.download_url) {
-             // هنا نستدعي دالة الجافاسكربت بدلاً من فتح رابط
              buttonsHTML += `<button onclick="toggleFullScreen(true)" class="action-btn btn-primary"><i class="fas fa-expand"></i> ملء الشاشة</button>`;
         } 
         else if (item.preview_url) {
-             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> فتح الرابط</a>`;
+             buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> فتح</a>`;
         }
         
         buttonsHTML += `<button onclick="sharePage()" class="action-btn btn-secondary"><i class="fas fa-share-alt"></i></button>`;
@@ -317,7 +262,7 @@
         footerDiv.classList.remove('hidden');
       })
       .catch(err => {
-          contentDiv.innerHTML = `<div style="text-align:center; padding:50px; color:red;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>حدث خطأ أثناء تحميل الملف<br><small>${err.message}</small></div>`;
+          contentDiv.innerHTML = `<div style="text-align:center; padding:30px; color:red;">خطأ في التحميل: ${err.message}</div>`;
       });
       
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
@@ -325,7 +270,7 @@
 
   function sharePage() {
     if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
-    else { navigator.clipboard.writeText(window.location.href); alert('تم نسخ الرابط للحافظة!'); }
+    else { navigator.clipboard.writeText(window.location.href); alert('تم النسخ'); }
   }
 </script>
 </body>
