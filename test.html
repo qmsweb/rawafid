@@ -180,7 +180,7 @@
     .feedback-banner:hover .feedback-arrow { color: var(--primary-color); }
 
 
-    /* === شريط الفلتر (بدون حركات) === */
+    /* === شريط الفلتر (Sticky) === */
     .sticky-filter-container {
       position: sticky;
       top: 90px;
@@ -201,6 +201,38 @@
       scrollbar-width: none;
     }
     .filter-bar::-webkit-scrollbar { display: none; }
+
+    /* أزرار العرض (في اليمين الآن) */
+    .view-toggle {
+      display: flex;
+      gap: 5px;
+      background: white;
+      padding: 4px;
+      border-radius: 50px;
+      border: 1px solid #eee;
+      flex-shrink: 0; /* منع الانكماش */
+    }
+    .view-toggle i {
+      width: 35px; height: 35px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      font-size: 1rem;
+      color: #888;
+      cursor: pointer;
+    }
+    .view-toggle i.active {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+    }
+
+    /* فاصل عمودي صغير */
+    .filter-divider {
+        width: 1px;
+        height: 25px;
+        background-color: #ddd;
+        margin: 0 5px;
+        flex-shrink: 0;
+    }
 
     .filter-item {
       flex: 0 0 auto;
@@ -224,29 +256,8 @@
       border-color: var(--primary-color);
     }
 
-    .view-toggle {
-      display: flex;
-      gap: 5px;
-      margin-right: auto;
-      background: white;
-      padding: 4px;
-      border-radius: 50px;
-      border: 1px solid #eee;
-    }
-    .view-toggle i {
-      width: 35px; height: 35px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%;
-      font-size: 1rem;
-      color: #888;
-      cursor: pointer;
-    }
-    .view-toggle i.active {
-      background-color: var(--primary-light);
-      color: var(--primary-color);
-    }
 
-    /* === قائمة المواد === */
+    /* === قائمة المواد (الافتراضي: قائمة List) === */
     .materials-list {
       display: flex;
       flex-direction: column;
@@ -262,6 +273,10 @@
       position: relative;
       border: 1px solid transparent;
       box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      
+      /* إعدادات Flex داخل البطاقة */
+      display: flex;
+      flex-direction: column;
     }
 
     .material-item:hover {
@@ -269,11 +284,12 @@
       border-color: rgba(26, 42, 198, 0.1);
     }
 
+    /* تنسيق وضع القائمة (الافتراضي) */
     .item-header {
       display: flex;
       align-items: center;
       gap: 15px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .item-icon {
@@ -298,7 +314,8 @@
       font-size: 0.9rem;
       color: #666;
       line-height: 1.6;
-      margin-right: 65px;
+      /* في وضع القائمة: نضع هامش ليكون تحت النص وليس الأيقونة */
+      margin-right: 65px; 
       margin-bottom: 10px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -306,40 +323,62 @@
       overflow: hidden;
     }
 
-    /* === إصلاح وضع الشبكة (Grid Fixes) === */
+    /* الشارات في وضع القائمة */
+    .badges-container {
+      display: flex;
+      gap: 8px;
+      margin-right: 65px; 
+    }
+
+    .item-image {
+        display: none; /* إخفاء الصورة في وضع القائمة افتراضياً أو حسب الرغبة */
+        /* إذا كنت تريد إظهارها في القائمة أيضاً، احذف هذا السطر */
+    }
+
+    /* ========================================= */
+    /* === وضع الشبكة (Grid View) - التصحيح === */
+    /* ========================================= */
+    
     .materials-list.grid-view {
-      display: grid !important;
+      display: grid !important; /* فرض الشبكة */
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 25px;
     }
 
+    /* تعديل البطاقة داخل الشبكة */
     .materials-list.grid-view .material-item {
+      height: 100%; /* ملء ارتفاع الخلية */
       display: flex;
       flex-direction: column;
-      height: 100%;
+      justify-content: flex-start;
     }
 
+    /* تعديل الهيدر داخل الشبكة */
     .materials-list.grid-view .item-header {
       margin-bottom: 15px;
     }
 
+    /* تعديل الوصف داخل الشبكة (إلغاء الهامش الجانبي) */
     .materials-list.grid-view .item-description-preview {
       margin-right: 0 !important;
       margin-bottom: 15px;
-      flex-grow: 1;
+      flex-grow: 1; /* دفع العناصر السفلية للأسفل لتساوي البطاقات */
     }
 
+    /* تعديل الشارات داخل الشبكة */
     .materials-list.grid-view .badges-container {
       margin-right: 0 !important;
+      margin-top: auto; /* لصقها بالأسفل إذا كان هناك فراغ */
     }
 
-    /* الصور */
-    .item-image {
-      width: 100%;
-      margin-top: 15px;
-      border-radius: 10px;
-      overflow: hidden;
-      aspect-ratio: 16/9;
+    /* إظهار الصورة في وضع الشبكة بشكل جميل */
+    .materials-list.grid-view .item-image {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
     }
     .item-image img {
       width: 100%;
@@ -347,15 +386,7 @@
       object-fit: cover;
     }
 
-    /* الشارات */
-    .badges-container {
-      display: flex;
-      gap: 8px;
-      margin-top: auto;
-      margin-right: 65px;
-    }
-    .materials-list.grid-view .badges-container { margin-right: 0; }
-
+    /* الشارات عام */
     .badge { 
       font-size: 0.7rem; 
       padding: 4px 12px; 
@@ -369,9 +400,13 @@
     @media (max-width: 768px) {
       .header-top-row { flex-direction: column; gap: 15px; }
       .share-button { width: 100%; justify-content: center; }
-      .materials-list.grid-view { grid-template-columns: 1fr; }
+      
+      /* في الموبايل، الشبكة تصبح عمود واحد (تشبه القائمة ولكن بتنسيق البطاقات الكبير) */
+      .materials-list.grid-view { 
+          grid-template-columns: 1fr; 
+      }
+      
       .item-description-preview, .badges-container { margin-right: 0; }
-      .filter-bar { padding-bottom: 10px; }
     }
   </style>
 </head>
@@ -411,17 +446,20 @@
 
     <div class="sticky-filter-container">
       <div class="filter-bar">
+        
+        <div class="view-toggle">
+            <i class="fas fa-list-ul active" id="list-view" title="قائمة"></i>
+            <i class="fas fa-border-all" id="grid-view" title="شبكة"></i>
+        </div>
+        
+        <div class="filter-divider"></div>
+
         <div class="filter-item active" data-filter="all">الكل</div>
         <div class="filter-item" data-filter="documents">المستندات</div>
         <div class="filter-item" data-filter="videos">فيديو</div>
         <div class="filter-item" data-filter="resources">ملاحظات</div>
         <div class="filter-item" data-filter="quizzes">اختبارات</div>
         <div class="filter-item" data-filter="links">روابط</div>
-
-        <div class="view-toggle">
-          <i class="fas fa-list-ul active" id="list-view" title="قائمة"></i>
-          <i class="fas fa-border-all" id="grid-view" title="شبكة"></i>
-        </div>
       </div>
     </div>
 
@@ -448,7 +486,7 @@ let materialsData = [];
 let userToggledView = false; 
 let courseShareURL = null; 
 
-/* ======= دوال مساعدة للأيقونات والألوان ======= */
+/* ======= دوال مساعدة ======= */
 function getIconClass(type) {
   switch (type) {
     case 'documents': return 'fas fa-file-lines';
@@ -480,7 +518,7 @@ function getIconBg(type) {
   }
 }
 
-/* ======= دالة ضبط العرض (قائمة / شبكة) ======= */
+/* ======= دالة ضبط العرض ======= */
 function setView(view, save = true) {
   if (view === 'grid') {
     materialsList.classList.add('grid-view');
@@ -494,7 +532,7 @@ function setView(view, save = true) {
   if (save) localStorage.setItem('viewMode', view);
 }
 
-/* ======= دالة عرض المواد (Render) ======= */
+/* ======= دالة رسم المواد ======= */
 function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
@@ -511,7 +549,6 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
-    // عند النقر نفتح التفاصيل
     el.onclick = function() {
         window.location.href = detailsUrl;
     };
@@ -537,7 +574,7 @@ function renderMaterials(filter = 'all') {
       badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
     }
 
-    // تجهيز الوصف (يتم إخفاؤه إذا كان فارغاً)
+    // تجهيز الوصف (إخفاء الفارغ)
     let descriptionHTML = '';
     if (item.description && item.description.trim() !== "") {
         descriptionHTML = `
@@ -561,15 +598,16 @@ function renderMaterials(filter = 'all') {
       ${descriptionHTML}
 
       ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
-      ${imageHTML} 
+      
+      ${imageHTML}
     `;
     materialsList.appendChild(el);
   });
 }
 
-/* ======= تهيئة الصفحة والأحداث ======= */
+/* ======= تهيئة الصفحة ======= */
 document.addEventListener('DOMContentLoaded', () => {
-  // تفعيل الفلاتر
+  
   filterItems.forEach(item => {
     item.addEventListener('click', function () {
       filterItems.forEach(el => el.classList.remove('active'));
@@ -578,11 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // تفعيل أزرار العرض
   gridBtn.addEventListener('click', () => { userToggledView = true; setView('grid'); });
   listBtn.addEventListener('click', () => { userToggledView = true; setView('list'); });
 
-  // التحقق من عرض الشاشة
   const mq = window.matchMedia('(min-width: 992px)');
   function applyDefaultView() {
     if (!userToggledView && !localStorage.getItem('viewMode')) {
@@ -592,9 +628,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   applyDefaultView();
 
-  // === جلب البيانات (Fetch Data) ===
+  // === جلب البيانات ===
   if (!courseCode) {
-    materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:#777;">⚠️ يرجى اختيار مقرر لعرض محتوياته (تأكد من الرابط).</p>';
+    materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:#777;">⚠️ يرجى اختيار مقرر لعرض محتوياته.</p>';
     return;
   }
 
@@ -606,7 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       materialsData = data.items || [];
 
-      // تحديث عناصر الهيدر باستخدام ID لضمان الدقة
       const titleEl = document.getElementById('course-title');
       const codeEl = document.getElementById('course-code');
       const descEl = document.getElementById('course-desc');
@@ -624,7 +659,6 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (descEl) descEl.textContent = data.description || '';
       
-      // تحديث عنوان الصفحة و Meta
       document.title = data.name || 'روافد';
       
       if (data.name) {
@@ -638,16 +672,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       courseShareURL = (data && data.url) ? data.url : window.location.href;
 
-      // استعادة وضع العرض المحفوظ
       const savedMode = localStorage.getItem('viewMode');
       if (savedMode) setView(savedMode, false);
 
-      // رسم المواد
       renderMaterials();
     })
     .catch(err => {
       console.error(err);
-      materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:10px">حدث خطأ أثناء تحميل المقرر، أو المقرر غير موجود.</p></div>`;
+      materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:10px">حدث خطأ أثناء تحميل المقرر.</p></div>`;
     });
 });
 
