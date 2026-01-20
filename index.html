@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>روافد</title>
+  <title>روافد - الرئيسية</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="topbar.css" />
 
-<meta property="og:title" content="روافد" id="og-title">
+  <meta property="og:title" content="روافد" id="og-title">
   <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية." id="og-description">
   <meta property="og:image" content="/images/cover.png" id="og-image">
   <meta property="og:url" content="https://rawafid.jassim.one/index.html">
@@ -21,14 +21,19 @@
   <meta name="twitter:title" content="روافد" id="twitter-title">
   <meta name="twitter:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية." id="twitter-description">
   <meta name="twitter:image" content="/images/cover.png" id="twitter-image">
-  
 
   <style>
+    /* === المتغيرات ونظام التصميم الجديد === */
     :root {
       --primary-color: #1a2ac6;
+      --primary-light: #eff1ff;
       --hover-bg: #e0e7ff;
       --light-bg: #f0f2f7;
       --light-border: #ccd1e0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
+      --radius-lg: 20px;
+      --radius-md: 12px;
     }
 
     * {
@@ -36,47 +41,96 @@
       padding: 0;
       box-sizing: border-box;
       font-family: "Noto Kufi Arabic", sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: #f4f6fb;
       color: #2d2d2d;
       min-height: 100vh;
-      padding: 20px;
       padding-top: 80px;   
+      padding-bottom: 40px;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* === شريط الفلتر (Sticky Filter) === */
+    .sticky-filter-container {
+      position: sticky;
+      top: 90px;
+      z-index: 90;
+      margin-bottom: 25px;
+      /* إضافة مساحة علوية صغيرة لتعويض حذف الصندوق */
+      margin-top: 20px; 
+      padding: 10px 0;
+      background: rgba(244, 246, 251, 0.95);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
     }
 
     .filter-bar {
       display: flex;
       gap: 10px;
-      overflow-x: auto;
       align-items: center;
-      padding: 10px 0;
-      margin-bottom: 25px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    /* أزرار العرض */
+    .view-toggle {
+      display: flex;
+      gap: 5px;
+      background: white;
+      padding: 4px;
+      border-radius: 50px;
+      border: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    .view-toggle i {
+      width: 35px; height: 35px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      font-size: 1rem;
+      color: #888;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .view-toggle i.active {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+    }
+
+    .filter-divider {
+        width: 1px;
+        height: 25px;
+        background-color: #ddd;
+        margin: 0 5px;
+        flex-shrink: 0;
     }
 
     .filter-item {
       flex: 0 0 auto;
-      padding: 10px 18px;
-      border-radius: 10px;
-      background: var(--light-bg);
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 0.75rem;
-      border: 1px solid transparent;
+      padding: 8px 20px;
+      border-radius: 50px;
+      background: white;
+      color: #666;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid #eee;
       cursor: pointer;
-      transition: 0.3s ease;
-      white-space: nowrap;
+      transition: 0.2s;
     }
 
     .filter-item:hover {
-      background: var(--hover-bg);
-      border-color: var(--primary-color);
+      background: #f9f9f9;
+      color: var(--primary-color);
+      border-color: var(--light-border);
     }
 
     .filter-item.active {
@@ -85,130 +139,116 @@
       border-color: var(--primary-color);
     }
 
-    .view-toggle {
-      display: flex;
-      gap: 8px;
-      margin-left: auto;
-    }
-
-    .view-toggle i {
-      font-size: 1.1rem;
-      color: var(--primary-color);
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--light-border);
-      background-color: var(--light-bg);
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .view-toggle i:hover {
-      background-color: var(--hover-bg);
-    }
-
-    .view-toggle i.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
+    /* === قائمة المقررات === */
     .materials-list {
       display: flex;
       flex-direction: column;
+      gap: 16px;
+    }
+
+    .material-item {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+      position: relative;
+      border: 1px solid transparent;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
       gap: 15px;
     }
 
+    .material-item:hover {
+      box-shadow: var(--hover-shadow);
+      transform: translateY(-3px);
+      border-color: rgba(26, 42, 198, 0.1);
+    }
+
+    .item-icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      background: var(--light-bg);
+      transition: transform 0.3s;
+    }
+    
+    .material-item:hover .item-icon-box {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .item-content {
+      flex-grow: 1;
+    }
+
+    .item-title h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1d1d1d;
+      margin-bottom: 4px;
+    }
+
+    .item-code {
+      font-size: 0.85rem;
+      color: #666;
+      background: #f4f6fb;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* === وضع الشبكة (Grid View) === */
     .materials-list.grid-view {
       display: grid !important;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
 
-    .material-item {
-      border: 1px solid #e7e7e7;
-      border-radius: 12px;
-      background: white;
-      padding: 10px;
-      transition: all 0.3s ease;
-      cursor: pointer;
+    .materials-list.grid-view .material-item {
+      flex-direction: column;
+      align-items: flex-start;
+      height: 100%;
+      padding: 25px;
     }
 
-    .material-item:hover {
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
-      transform: translateY(-2px);
-    }
-
-    .item-title {
-      display: flex;
-      align-items: self-start;
-      gap: 15px;
-      margin-bottom: 10px;
-    }
-
-    .item-title i {
-      font-size: 1.4rem;
-      background: var(--hover-bg);
-      color: var(--primary-color);
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    .item-title h3 {
-      font-size: 1.0rem;
-      color: #1d1d1d;
-    }
-
-    .item-description {
-      font-size: 0.95rem;
-      color: #444;
-      line-height: 1.6;
+    .materials-list.grid-view .item-icon-box {
       margin-bottom: 15px;
+      width: 60px;
+      height: 60px;
+      font-size: 1.6rem;
     }
 
-    /* --- كود CSS الجديد للعنصر الثابت --- */
-    .special-feedback-item {
-      background: linear-gradient(135deg, #fff, #fef9f9);
-      border: 2px dashed #1a2ac6 !important;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .special-feedback-item .item-icon {
-      background: #1a2ac6 !important;
-      color: white !important;
-    }
-
-    .special-feedback-item:hover {
-      background-color: #fff0f5;
-      border-color: #1a2ac6 !important;
-      transform: translateY(-5px) !important;
-      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.15) !important;
-    }
-    /* ---------------------------------- */
-
+    /* === Responsive === */
     @media (max-width: 768px) {
+      /* تعديل الشبكة للموبايل لتصبح مربعين */
       .materials-list.grid-view {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      .materials-list.grid-view .material-item {
+          padding: 15px;
+          text-align: center;
+          align-items: center;
       }
 
-      .filter-bar {
-        flex-wrap: nowrap;
-        overflow-x: auto;
+      .materials-list.grid-view .item-icon-box {
+          margin-bottom: 10px;
+          width: 45px; height: 45px; font-size: 1.2rem;
       }
 
-      .filter-item,
-      .view-toggle i {
-        flex-shrink: 0;
+      .materials-list.grid-view .item-title h3 {
+          font-size: 0.9rem;
       }
-
-      .item-title i.item-icon {
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4rem;
-        background: var(--hover-bg);
-        border-radius: 10px;
+      
+      .materials-list.grid-view .item-code {
+          font-size: 0.75rem;
       }
     }
   </style>
@@ -217,8 +257,11 @@
   <div id="topbar-container"></div>
 
   <div class="container">
-    <div class="filter-bar" id="filter-bar">
-      </div>
+    
+    <div class="sticky-filter-container">
+      <div class="filter-bar" id="filter-bar">
+        </div>
+    </div>
 
     <div class="materials-list" id="materials-list">
       </div>
@@ -226,68 +269,74 @@
     <div id="footer-placeholder"></div> 
   </div>
 
- <script>
+<script>
   // تحميل الفوتر
   fetch("/footer.html")
     .then(response => response.text())
     .then(data => {
       document.getElementById("footer-placeholder").innerHTML = data;
     })
-    .catch(err => {
-      console.error("فشل تحميل الفوتر:", err);
-    });
+    .catch(err => {});
 
   const materialsList = document.getElementById('materials-list');
   const filterBar = document.getElementById('filter-bar');
   let allCourses = [];
+  let userToggledView = false;
 
+  // دالة رسم البطاقات
   function renderMaterialItems(items) {
     materialsList.innerHTML = '';
 
-    // +++ إضافة العنصر الثابت الخاص بالتقييم +++
-    const feedbackEl = document.createElement('div');
-    feedbackEl.className = 'material-item special-feedback-item';
-    feedbackEl.style.cursor = 'pointer';
-    
-    feedbackEl.addEventListener('click', () => {
-      window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9dOQBjSZfwyT1CYlChetni7Af8_B6p67XBpQutv0hxnpG7w/viewform?usp=header', '_blank');
-    });
-
-    feedbackEl.innerHTML = `
-      <div class="item-title">
-        <i class="fas fa-rocket item-icon"></i>
-        <h3>ساهم في تطوير المنصة</h3>
-      </div>
-      <p class="item-code" style="color: #1a2ac6; font-weight: bold; font-size: 0.9rem;">اضغط هنا لتقييم المنصة وتقديم مقترحاتك</p>
-    `;
-    materialsList.appendChild(feedbackEl);
-    // +++++++++++++++++++++++++++++++++++++++
+    if (items.length === 0) {
+        materialsList.innerHTML = '<p style="text-align:center; color:#777; padding:20px; width:100%;">لا توجد مقررات في هذا التصنيف.</p>';
+        return;
+    }
 
     items.forEach((item) => {
       const el = document.createElement('div');
       el.className = 'material-item';
-      el.style.cursor = 'pointer';
-
-      const iconColor = item.color || '#333';
+      
+      const iconColor = item.color || '#1a2ac6';
       const iconClass = item.icon || 'fa-book';
+      const iconBg = iconColor + '15'; 
 
       el.addEventListener('click', () => {
         window.location.href = `https://rawafid.jassim.one/course?i=${item.code}`;
       });
 
       el.innerHTML = `
-        <div class="item-title">
-          <i class="fas ${iconClass} item-icon" style="color: ${iconColor};"></i>
-          <h3>${item.name}</h3>
+        <div class="item-icon-box" style="color: ${iconColor}; background-color: ${iconBg};">
+          <i class="fas ${iconClass}"></i>
         </div>
-        ${item.hideCode ? '' : `<p class="item-code">رمز المقرر: ${item.code}</p>`}
+        <div class="item-content">
+            <div class="item-title">
+                <h3>${item.name}</h3>
+            </div>
+            ${item.hideCode ? '' : `<div class="item-code">${item.code}</div>`}
+        </div>
       `;
       materialsList.appendChild(el);
     });
   }
 
   function createFilters(courses) {
-    // جمع الأنواع (types) ووضع 'all' أولاً
+    filterBar.innerHTML = '';
+
+    // إضافة أزرار العرض
+    const viewToggle = document.createElement('div');
+    viewToggle.className = 'view-toggle';
+    viewToggle.innerHTML = `
+      <i class="fas fa-list" id="list-view" title="عرض قائمة"></i>
+      <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
+    `;
+    filterBar.appendChild(viewToggle);
+
+    // الفاصل
+    const divider = document.createElement('div');
+    divider.className = 'filter-divider';
+    filterBar.appendChild(divider);
+
+    // الفلاتر
     const types = [...new Set(courses.map(c => c.type))];
     types.unshift('all');
 
@@ -309,17 +358,7 @@
       filterBar.appendChild(filterBtn);
     });
 
-    // إضافة أزرار العرض
-    const viewToggle = document.createElement('div');
-    viewToggle.className = 'view-toggle';
-
-    viewToggle.innerHTML = `
-      <i class="fas fa-list" id="list-view" title="عرض قائمة"></i>
-      <i class="fas fa-th-large" id="grid-view" title="عرض شبكي"></i>
-    `;
-
-    filterBar.appendChild(viewToggle);
-
+    // إعدادات أزرار العرض
     const gridBtn = viewToggle.querySelector('#grid-view');
     const listBtn = viewToggle.querySelector('#list-view');
 
@@ -336,6 +375,7 @@
     }
 
     function setView(mode, save = true) {
+      userToggledView = true;
       applyVisualState(mode);
       if (save) localStorage.setItem('viewMode', mode);
     }
@@ -343,24 +383,13 @@
     gridBtn.addEventListener('click', () => setView('grid'));
     listBtn.addEventListener('click', () => setView('list'));
 
+    // استعادة الوضع المحفوظ أو الافتراضي
     const savedMode = localStorage.getItem('viewMode');
     if (savedMode) {
       applyVisualState(savedMode);
     } else {
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
       applyVisualState(isMobile ? 'list' : 'grid');
-    }
-
-    if (!savedMode) {
-      const mq = window.matchMedia("(max-width: 768px)");
-      const onChange = (e) => {
-        applyVisualState(e.matches ? 'list' : 'grid');
-      };
-      if (typeof mq.addEventListener === 'function') {
-        mq.addEventListener('change', onChange);
-      } else if (typeof mq.addListener === 'function') {
-        mq.addListener(onChange);
-      }
     }
   }
 
@@ -373,7 +402,7 @@
         renderMaterialItems(data);
       })
       .catch(err => {
-        materialsList.innerHTML = `<p>❌ تعذر تحميل المواد: ${err}</p>`;
+        materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p>تعذر تحميل قائمة المواد.</p></div>`;
       });
   });
 
@@ -386,7 +415,7 @@
       script.src = "topbar.js";
       document.body.appendChild(script);
     })
-    .catch(err => console.error("فشل تحميل التوب بار:", err));
+    .catch(err => {});
 </script>
 
 </body>
