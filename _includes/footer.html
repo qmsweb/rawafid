@@ -27,27 +27,28 @@
 </footer>
 
 <style>
-  /* تعريف المتغيرات فقط */
+  /* تعريف المتغيرات */
   :root {
-    --footer-bg: #1e293b; 
-    --footer-text: #94a3b8;
-    --footer-accent: #38bdf8;
+    --footer-bg: transparent; /* خلفية شفافة */
+    --footer-text: #000000;   /* نصوص سوداء */
+    --footer-accent: #333333; /* لون التحويم غامق */
     --whatsapp-green: #25D366;
   }
 
-  /* تنسيق الفوتر كعنصر مستقل تماماً */
+  /* تنسيق الفوتر */
   .site-footer {
     background-color: var(--footer-bg);
     color: var(--footer-text);
-    padding: 2rem 1rem; /* مسافة داخلية مريحة */
-    margin-top: 4rem;   /* المسافة العلوية المطلوبة لفصله عن المحتوى */
-    width: 100%;        /* عرض كامل */
+    padding: 2rem 1rem;
+    margin-top: 4rem;
+    width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.9rem;
     direction: rtl;
-    box-sizing: border-box; /* لضمان عدم تجاوز العرض 100% */
+    box-sizing: border-box;
     text-align: right;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    /* تمت إزالة البوردر العلوي ليكون شفافاً بالكامل، أو يمكنك جعله أسود خفيف إذا أردت */
+    border-top: none; 
   }
 
   .footer-container {
@@ -56,7 +57,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap; /* للسماح بالعناصر بالنزول لسطر جديد في الشاشات الصغيرة */
+    flex-wrap: wrap;
     gap: 1.5rem;
   }
 
@@ -70,7 +71,9 @@
   .footer-logo {
     height: 40px;
     width: auto;
-    filter: brightness(0) invert(1) opacity(0.8);
+    /* تحويل الشعار للأسود بالكامل */
+    filter: brightness(0); 
+    opacity: 1;
   }
 
   .copyright-group {
@@ -80,8 +83,16 @@
     line-height: 1.4;
   }
 
-  .copy-year { font-weight: bold; color: #cbd5e1; }
-  .rights-text { font-size: 0.8rem; opacity: 0.7; }
+  .copy-year { 
+    font-weight: bold; 
+    color: #000000; /* سنة النشر بالأسود */
+  }
+  
+  .rights-text { 
+    font-size: 0.8rem; 
+    opacity: 0.8; /* تقليل الشفافية قليلاً للتمييز */
+    color: #000000;
+  }
 
   /* 2. الروابط */
   .footer-links {
@@ -91,18 +102,19 @@
   }
 
   .footer-links a {
-    color: var(--footer-text);
+    color: var(--footer-text); /* أسود */
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600; /* زيادة السمك قليلاً ليكون أوضح على الشفاف */
     transition: color 0.3s ease;
     position: relative;
   }
 
   .footer-links a:hover {
-    color: var(--footer-accent);
+    color: #555; /* رمادي عند التحويم */
+    text-decoration: underline;
   }
 
-  /* 3. زر الواتساب */
+  /* 3. زر الواتساب - لم يتم التغيير */
   .whatsapp-btn-compact {
     display: inline-flex;
     align-items: center;
@@ -154,4 +166,3 @@
     }
   }
 </style>
-
