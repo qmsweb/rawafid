@@ -27,15 +27,14 @@
 </footer>
 
 <style>
-  /* تعريف المتغيرات */
   :root {
-    --footer-bg: transparent; /* خلفية شفافة */
-    --footer-text: #000000;   /* نصوص سوداء */
-    --footer-accent: #333333; /* لون التحويم غامق */
+    --footer-bg: transparent; 
+    --footer-text: #000000;
+    --btn-blue: #1a2ac6;      /* الكود الأزرق الجديد */
     --whatsapp-green: #25D366;
+    --btn-radius: 50px;       /* توحيد الـ radius */
   }
 
-  /* تنسيق الفوتر */
   .site-footer {
     background-color: var(--footer-bg);
     color: var(--footer-text);
@@ -47,7 +46,6 @@
     direction: rtl;
     box-sizing: border-box;
     text-align: right;
-    /* تمت إزالة البوردر العلوي ليكون شفافاً بالكامل، أو يمكنك جعله أسود خفيف إذا أردت */
     border-top: none; 
   }
 
@@ -71,9 +69,7 @@
   .footer-logo {
     height: 40px;
     width: auto;
-    /* تحويل الشعار للأسود بالكامل */
-    filter: brightness(0); 
-    opacity: 1;
+    filter: brightness(0); /* جعل الشعار أسود بالكامل */
   }
 
   .copyright-group {
@@ -83,47 +79,45 @@
     line-height: 1.4;
   }
 
-  .copy-year { 
-    font-weight: bold; 
-    color: #000000; /* سنة النشر بالأسود */
-  }
-  
-  .rights-text { 
-    font-size: 0.8rem; 
-    opacity: 0.8; /* تقليل الشفافية قليلاً للتمييز */
-    color: #000000;
-  }
+  .copy-year { font-weight: bold; color: #000; }
+  .rights-text { font-size: 0.8rem; opacity: 0.8; color: #000; }
 
-  /* 2. الروابط */
+  /* 2. الروابط - تم تحويلها لأزرار زرقاء */
   .footer-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 10px; /* تقليل المسافة قليلاً لأن الأزرار لها حواف */
     flex-wrap: wrap;
   }
 
   .footer-links a {
-    color: var(--footer-text); /* أسود */
+    background-color: var(--btn-blue); /* خلفية زرقاء */
+    color: #ffffff !important;         /* نص أبيض */
+    padding: 8px 20px;                 /* نفس حشوة زر الواتساب تقريباً */
+    border-radius: var(--btn-radius);  /* نفس الـ Radius */
     text-decoration: none;
-    font-weight: 600; /* زيادة السمك قليلاً ليكون أوضح على الشفاف */
-    transition: color 0.3s ease;
-    position: relative;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: transform 0.2s ease, background-color 0.2s;
+    display: inline-block;
+    border: 1px solid var(--btn-blue);
   }
 
   .footer-links a:hover {
-    color: #555; /* رمادي عند التحويم */
-    text-decoration: underline;
+    transform: translateY(-2px);
+    background-color: #1522a0; /* درجة أغمق قليلاً عند التحويم */
+    text-decoration: none;
   }
 
-  /* 3. زر الواتساب - لم يتم التغيير */
+  /* 3. زر الواتساب - أخضر بالكامل */
   .whatsapp-btn-compact {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: rgba(255, 255, 255, 0.03);
-    color: var(--whatsapp-green);
-    border: 1px solid rgba(37, 211, 102, 0.3);
+    background-color: var(--whatsapp-green); /* خلفية خضراء */
+    color: #ffffff;                          /* نص وأيقونة أبيض */
+    border: 1px solid var(--whatsapp-green);
     padding: 8px 16px;
-    border-radius: 50px;
+    border-radius: var(--btn-radius);        /* نفس الـ Radius */
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: bold;
@@ -131,15 +125,15 @@
   }
 
   .whatsapp-btn-compact:hover {
-    background-color: var(--whatsapp-green);
-    color: #fff;
-    border-color: var(--whatsapp-green);
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
     transform: translateY(-2px);
+    background-color: #1ebc57; /* تغيير طفيف عند التحويم */
+    color: #ffffff;
   }
 
   .whatsapp-btn-compact svg {
     animation: pulse-mini 2s infinite;
+    fill: currentColor; /* لضمان أن الأيقونة تأخذ اللون الأبيض */
   }
 
   @keyframes pulse-mini {
@@ -153,7 +147,7 @@
     .footer-container {
       flex-direction: column;
       text-align: center;
-      gap: 2rem;
+      gap: 1.5rem;
     }
     
     .footer-brand {
@@ -162,7 +156,6 @@
 
     .footer-links {
       justify-content: center;
-      gap: 1rem;
     }
   }
 </style>
