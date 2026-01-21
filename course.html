@@ -546,7 +546,7 @@ function renderMaterials(filter = 'all') {
 
   filtered.forEach(item => {
     const itemId = item.id ? item.id : '#';
-    const detailsUrl = `details.html?i=${courseCode}&id=${itemId}`;
+    const detailsUrl = `details?i=${courseCode}&id=${itemId}`;
 
     const el = document.createElement('div');
     el.className = 'material-item';
