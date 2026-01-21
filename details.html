@@ -53,7 +53,7 @@
     .content-container { 
       max-width: 900px; margin: 0 auto; 
       padding: 0 20px; /* إزالة البادينج العلوي والسفلي، والاكتفاء بالجانبي */
-      
+     
       /* تعديل: إزالة الستايل الخاص بالبطاقة (الظل والخلفية والحدود) */
       background: transparent;
       box-shadow: none;
@@ -91,16 +91,16 @@
       margin-bottom: 10px;
       position: relative;
     }
-    
+   
     .pdf-frame { width: 100%; height: 100%; border: none; display: block; }
 
     /* زر إغلاق وضع ملء الشاشة */
     .exit-fullscreen-btn {
-        display: none;
-        position: fixed; top: 20px; left: 20px; z-index: 99999;
-        background: rgba(0, 0, 0, 0.8); color: white; border: none;
-        padding: 10px 20px; border-radius: 30px; cursor: pointer;
-        font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s;
+       display: none;
+       position: fixed; top: 20px; left: 20px; z-index: 99999;
+       background: rgba(0, 0, 0, 0.8); color: white; border: none;
+       padding: 10px 20px; border-radius: 30px; cursor: pointer;
+       font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s;
     }
     .exit-fullscreen-btn:hover { background: #000; transform: scale(1.05); }
 
@@ -116,10 +116,10 @@
 
     /* تعديل: ضبط المحاذاة لزر المشاركة */
     .footer-inner { 
-        max-width: 800px; width: 100%; 
-        display: flex; 
-        align-items: stretch; /* يضمن أن جميع الأزرار بنفس الارتفاع */
-        gap: 10px; 
+       max-width: 800px; width: 100%; 
+       display: flex; 
+       align-items: stretch; /* يضمن أن جميع الأزرار بنفس الارتفاع */
+       gap: 10px; 
     }
 
     .action-btn {
@@ -132,17 +132,17 @@
 
     /* الزر الأساسي يأخذ المساحة المتبقية */
     .btn-primary { 
-        background-color: var(--primary-color); color: white; 
-        flex: 1; /* يتمدد ليأخذ المساحة */
+       background-color: var(--primary-color); color: white; 
+       flex: 1; /* يتمدد ليأخذ المساحة */
     }
-    
+   
     /* زر المشاركة لا ينمو ولا يتقلص */
     .btn-secondary { 
-        background-color: #eff3ff; color: var(--primary-color); 
-        width: 50px; /* عرض ثابت لزر المشاركة */
-        flex: 0 0 auto; 
+       background-color: #eff3ff; color: var(--primary-color); 
+       width: 50px; /* عرض ثابت لزر المشاركة */
+       flex: 0 0 auto; 
     }
-    
+   
     .hidden { display: none !important; }
     .loading-state { text-align: center; padding: 60px 20px; color: #888; }
 
@@ -159,8 +159,8 @@
     body.fullscreen-active #topbar-container { display: none !important; }
 
     body.fullscreen-active .pdf-container {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        width: 100vw; height: 100vh; z-index: 9999; margin: 0; border-radius: 0; border: none; background: #000;
+       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+       width: 100vw; height: 100vh; z-index: 9999; margin: 0; border-radius: 0; border: none; background: #000;
     }
     body.fullscreen-active .exit-fullscreen-btn { display: block; }
   </style>
@@ -256,9 +256,10 @@
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
 
+        // تم تغيير الترتيب هنا: اسم المقرر أولاً ثم العنوان
         contentDiv.innerHTML = `
-            <h1 class="item-title">${item.title}</h1>
             <div class="item-meta"><i class="${getIconClass(item.type)}"></i> <span>${data.name}</span></div>
+            <h1 class="item-title">${item.title}</h1>
             <div class="item-description">${item.description || ''}</div>
             ${mediaHTML}
             <div style="height: 10px;"></div>`;
@@ -267,14 +268,14 @@
         if (item.download_url) {
             buttonsHTML += `<a href="${item.download_url}" class="action-btn btn-primary" download target="_blank"><i class="fas fa-download"></i> تحميل</a>`;
         }
-        
+       
         if (isPdf && item.download_url) {
              buttonsHTML += `<button onclick="toggleFullScreen(true)" class="action-btn btn-primary"><i class="fas fa-expand"></i> ملء الشاشة</button>`;
         } 
         else if (item.preview_url) {
              buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> فتح</a>`;
         }
-        
+       
         buttonsHTML += `<button onclick="sharePage()" class="action-btn btn-secondary"><i class="fas fa-share-alt"></i></button>`;
 
         footerBtns.innerHTML = buttonsHTML;
@@ -283,7 +284,7 @@
       .catch(err => {
           contentDiv.innerHTML = `<div style="text-align:center; padding:30px; color:red;">خطأ في التحميل: ${err.message}</div>`;
       });
-      
+     
       fetch("topbar.html").then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
 
