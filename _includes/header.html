@@ -1,8 +1,135 @@
-<nav class="navbar">
-    <div class="logo">RAWAFID</div>
-    <ul>
-        <li><a href="/">الرئيسية</a></li>
-        <li><a href="/about.html">من نحن</a></li>
-        <li><a href="/contact.html">اتصل بنا</a></li>
+<style>
+  /* إعدادات أساسية لضمان عمل النافبار بشكل صحيح */
+  body {
+    padding-top: 70px; /* ضروري لتعويض النافبار الثابت */
+  }
+
+  .navbar {
+    background-color: #1a2ac6;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    font-family: 'Poppins', sans-serif; /* تطبيق الخط هنا لضمان ظهوره في النافبار */
+  }
+
+  .logo img {
+    height: 40px;
+    vertical-align: middle;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0; /* تصحيح المارجن الافتراضي */
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding: 0.5rem 0;
+  }
+
+  .nav-links a:hover {
+    color: #ffcc00;
+  }
+
+  /* زر القائمة - مخفي افتراضيًا */
+  .menu-toggle {
+    display: none; /* إزالة !important للسماح بالتحكم عبر الميديا كويري */
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+  }
+
+  /* تصميم الجوال */
+  @media (max-width: 768px) {
+    .menu-toggle {
+      display: block;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 70px; /* ارتفاع النافبار */
+      right: -100%; /* مخفي خارج الشاشة */
+      width: 80%;
+      max-width: 300px;
+      background-color: #1a2ac6;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
+      height: calc(100vh - 70px);
+      transition: right 0.3s ease-in-out;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-links.active {
+      right: 0; /* إظهار القائمة */
+    }
+
+    .nav-links li {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="https://rawafid.jassim.one" class="logo">
+      <img src="https://github.com/qmsweb/rawafid/raw/main/images/Rawafid-white.png" alt="شعار روافد" />
+    </a>
+    
+    <i class="fas fa-bars menu-toggle" id="menu-toggle"></i>
+    
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الرئيسية</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li><a href="/tools">الأدوات التابعة</a></li>
+      <li><a href="/contact">اتصل بنا</a></li>
     </ul>
-</nav>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        
+        // تغيير أيقونة القائمة (اختياري)
+        if (navLinks.classList.contains('active')) {
+          menuToggle.classList.remove('fa-bars');
+          menuToggle.classList.add('fa-times');
+        } else {
+          menuToggle.classList.remove('fa-times');
+          menuToggle.classList.add('fa-bars');
+        }
+      });
+    }
+  });
+</script>
