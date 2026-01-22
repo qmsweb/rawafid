@@ -139,9 +139,6 @@
       color: white;
     }
 
-    /* === بانر التقييم === */
-   
-
     /* === شريط الفلتر (Sticky) === */
     .sticky-filter-container {
       position: sticky;
@@ -504,13 +501,18 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
+    // === هنا التعديل المطلوب لفتح رابط الاختبار مباشرة ===
     el.onclick = function() {
+        // إذا كان النوع "اختبار" (quizzes) ولديه رابط، نفتح الرابط مباشرة
         if (item.type === 'quizzes' && item.url) {
             window.location.href = item.url;
-        } else {
+        } 
+        // خلاف ذلك نذهب لصفحة التفاصيل
+        else {
             window.location.href = detailsUrl;
         }
     };
+    // ===================================================
 
     let imageHTML = '';
     if (item.image_url) { 
