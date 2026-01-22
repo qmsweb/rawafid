@@ -140,45 +140,7 @@
     }
 
     /* === بانر التقييم === */
-    .feedback-banner {
-      background: linear-gradient(135deg, #fff, #fff9f9);
-      border: 1px solid #ffebeb;
-      padding: 15px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .feedback-banner::after {
-      content: '';
-      position: absolute;
-      right: 0; top: 0; bottom: 0;
-      width: 4px;
-      background: var(--primary-color);
-    }
-    .feedback-banner:hover {
-      box-shadow: var(--card-shadow);
-    }
-    .feedback-info { display: flex; align-items: center; gap: 15px; }
-    .feedback-icon-box {
-      width: 45px; height: 45px;
-      background: var(--primary-light);
-      color: var(--primary-color);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-    }
-    .feedback-text h3 { font-size: 0.95rem; margin-bottom: 2px; color: #333; }
-    .feedback-text p { font-size: 0.8rem; color: #777; margin: 0; }
-    .feedback-arrow { color: #ccc; transition: 0.3s; }
-    .feedback-banner:hover .feedback-arrow { color: var(--primary-color); }
-
+   
 
     /* === شريط الفلتر (Sticky) === */
     .sticky-filter-container {
@@ -434,18 +396,7 @@
       </div>
     </div>
 
-    <div class="feedback-banner" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf9dOQBjSZfwyT1CYlChetni7Af8_B6p67XBpQutv0hxnpG7w/viewform?usp=header', '_blank')">
-      <div class="feedback-info">
-        <div class="feedback-icon-box">
-          <i class="fas fa-rocket"></i>
-        </div>
-        <div class="feedback-text">
-          <h3>كيف ترى منصة روافد؟</h3>
-          <p>رأيك يهمنا لتحسين التجربة</p>
-        </div>
-      </div>
-      <i class="fas fa-chevron-left feedback-arrow"></i>
-    </div>
+        
 
     <div class="sticky-filter-container">
       <div class="filter-bar">
