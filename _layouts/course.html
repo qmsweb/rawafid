@@ -42,7 +42,6 @@
       background-color: #f4f6fb;
       color: #2d2d2d;
       min-height: 100vh;
-      /* تم تعديل الحشوة العلوية لتناسب الهيدر الثابت */
       padding-top: 80px; 
       padding-bottom: 40px;
     }
@@ -346,22 +345,19 @@
       .header-top-row { flex-direction: column; gap: 15px; }
       .share-button { width: 100%; justify-content: center; }
       
-      /* تعديل هام للشبكة على الموبايل */
       .materials-list.grid-view { 
-          /* اجبار العرض على عمودين بدل عمود واحد */
           grid-template-columns: repeat(2, 1fr); 
-          gap: 12px; /* تقليل المسافة بين العناصر */
+          gap: 12px; 
       }
 
-      /* تصغير العناصر قليلاً داخل الشبكة في الموبايل */
       .materials-list.grid-view .material-item {
-          padding: 12px; /* تقليل الحواف الداخلية */
+          padding: 12px;
       }
       .materials-list.grid-view .item-icon {
-          width: 40px; height: 40px; font-size: 1.1rem; /* تصغير الايقونة */
+          width: 40px; height: 40px; font-size: 1.1rem;
       }
       .materials-list.grid-view .item-title-text h3 {
-          font-size: 0.95rem; /* تصغير الخط قليلا */
+          font-size: 0.95rem;
       }
       .materials-list.grid-view .item-description-preview {
           font-size: 0.8rem;
@@ -393,8 +389,6 @@
       </div>
     </div>
 
-        
-
     <div class="sticky-filter-container">
       <div class="filter-bar">
         
@@ -422,8 +416,6 @@
   </div>
 
 <script>
-  /* ملاحظة: تم حذف أكواد تحميل الهيدر والفوتر لأن Jekyll قام بها */
-
 /* ======= المتغيرات والثوابت ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
@@ -501,18 +493,18 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
-    // === هنا التعديل المطلوب لفتح رابط الاختبار مباشرة ===
+    // ============= التغيير هنا =============
     el.onclick = function() {
-        // إذا كان النوع "اختبار" (quizzes) ولديه رابط، نفتح الرابط مباشرة
-        if (item.type === 'quizzes' && item.url) {
+        // التأكد من أن العنصر اختبار وأنه يحتوي على رابط صالح
+        // تم إضافة شرط "url" لضمان عدم حدوث خطأ إذا كان الرابط فارغاً
+        if (item.type === 'quizzes' && item.url && item.url.trim() !== "") {
             window.location.href = item.url;
-        } 
-        // خلاف ذلك نذهب لصفحة التفاصيل
-        else {
+        } else {
+            // في أي حالة أخرى (فيديو، مستند، أو اختبار ليس له رابط) يفتح التفاصيل
             window.location.href = detailsUrl;
         }
     };
-    // ===================================================
+    // =======================================
 
     let imageHTML = '';
     if (item.image_url) { 
