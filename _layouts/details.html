@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{{ '/assets/css/topbar.css' | relative_url }}" />
 
   <style>
+    /* المتغيرات والأنماط الأساسية */
     :root {
       --primary-color: #1a2ac6;
       --primary-dark: #121e9ec4;
@@ -170,6 +171,7 @@
 
   <div class="content-container" id="main-content">
     {{ content }}
+    
     <div class="loading-state">
         <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
         جاري التحميل...
@@ -181,7 +183,7 @@
   </div>
 
 <script>
-  // نستخدم Liquid لطباعة رابط الموقع الأساسي داخل متغير JS
+  // تهيئة متغير المسار الأساسي (مهم جداً للروابط)
   const BASE_URL = "{{ site.baseurl }}"; 
   const MOZILLA_VIEWER_URL = 'https://mozilla.github.io/pdf.js/web/viewer.html'; 
 
@@ -208,10 +210,10 @@
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
 
-    // التعامل مع زر الرجوع
+    // منطق زر العودة
     backLink.addEventListener('click', (e) => {
         if (courseCode && courseCode !== 'null') {
-            // افترضنا هنا أن صفحة المقرر اسمها course.html
+            // العودة لصفحة المقرر (course.html)
             backLink.href = `${BASE_URL}/course.html?i=${courseCode}`;
         } else {
             e.preventDefault();
@@ -224,13 +226,12 @@
     });
 
     if(courseCode) {
-        // تحديث الرابط مبدئياً ليكون جاهزاً
         backLink.href = `${BASE_URL}/course.html?i=${courseCode}`;
     }
 
     const timestamp = new Date().getTime();
     
-    // جلب البيانات JSON
+    // جلب البيانات مع استخدام BASE_URL
     fetch(`${BASE_URL}/assets/data/${courseCode}.json?v=${timestamp}`, { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
