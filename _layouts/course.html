@@ -493,18 +493,19 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
-    // ============= التغيير هنا =============
+    // ============= التغيير هنا (تم إصلاحه ليتوافق مع JSON) =============
     el.onclick = function() {
-        // التأكد من أن العنصر اختبار وأنه يحتوي على رابط صالح
-        // تم إضافة شرط "url" لضمان عدم حدوث خطأ إذا كان الرابط فارغاً
-        if (item.type === 'quizzes' && item.url && item.url.trim() !== "") {
-            window.location.href = item.url;
+        // نتحقق مما إذا كان هناك رابط معاينة (للإختبارات) أو رابط عادي
+        // في ملف JSON الخاص بك، الاختبار يمتلك "preview_url"
+        const targetUrl = item.preview_url || item.url;
+
+        if (item.type === 'quizzes' && targetUrl) {
+            window.location.href = targetUrl;
         } else {
-            // في أي حالة أخرى (فيديو، مستند، أو اختبار ليس له رابط) يفتح التفاصيل
             window.location.href = detailsUrl;
         }
     };
-    // =======================================
+    // =================================================================
 
     let imageHTML = '';
     if (item.image_url) { 
