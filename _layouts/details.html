@@ -8,10 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet"> 
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
   <link rel="stylesheet" href="{{ '/assets/css/topbar.css' | relative_url }}" />
 
   <style>
-    /* تم نقل الأنماط كما هي */
     :root {
       --primary-color: #1a2ac6;
       --primary-dark: #121e9ec4;
@@ -181,7 +181,7 @@
   </div>
 
 <script>
-  // تحديد المتغيرات الأساسية للمسارات باستخدام Liquid
+  // نستخدم Liquid لطباعة رابط الموقع الأساسي داخل متغير JS
   const BASE_URL = "{{ site.baseurl }}"; 
   const MOZILLA_VIEWER_URL = 'https://mozilla.github.io/pdf.js/web/viewer.html'; 
 
@@ -208,24 +208,29 @@
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
 
-    // تعديل رابط العودة ليعمل مع Jekyll
+    // التعامل مع زر الرجوع
     backLink.addEventListener('click', (e) => {
         if (courseCode && courseCode !== 'null') {
+            // افترضنا هنا أن صفحة المقرر اسمها course.html
             backLink.href = `${BASE_URL}/course.html?i=${courseCode}`;
         } else {
             e.preventDefault();
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = `${BASE_URL}/index.html`;
+                backLink.href = `${BASE_URL}/index.html`;
             }
         }
     });
-    if(courseCode) backLink.href = `${BASE_URL}/index.html?i=${courseCode}`;
+
+    if(courseCode) {
+        // تحديث الرابط مبدئياً ليكون جاهزاً
+        backLink.href = `${BASE_URL}/course.html?i=${courseCode}`;
+    }
 
     const timestamp = new Date().getTime();
     
-    // جلب البيانات: تم تعديل المسار ليعمل مع Jekyll Assets
+    // جلب البيانات JSON
     fetch(`${BASE_URL}/assets/data/${courseCode}.json?v=${timestamp}`, { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
@@ -239,7 +244,6 @@
         const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
 
         if (isPdf && item.download_url) {
-            // معالجة رابط الـ PDF ليكون مطلقاً أو نسبياً بشكل صحيح
             const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
             mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
@@ -275,9 +279,6 @@
       .catch(err => {
           contentDiv.innerHTML = `<div style="text-align:center; padding:30px; color:red;">خطأ في التحميل: ${err.message}</div>`;
       });
-     
-      // إذا كنت لا تزال تريد تحديث التوب بار عبر JS، اترك هذا السطر، وإلا قم بحذفه إذا استخدمت {% include %}
-      // fetch(`${BASE_URL}/topbar.html?v=${timestamp}`).then(r=>r.text()).then(h=> document.getElementById('topbar-container').innerHTML = h).catch(()=>{});
   });
 
   function sharePage() {
