@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ page.title | default: "روافد" }}</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
   <link rel="icon" href="images/favicon.png" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -18,18 +18,76 @@
   <meta property="og:image" content="/images/cover2.png" id="og-image">
   <meta property="og:type" content="website">
 
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
   <style>
-    /* === المتغيرات الأساسية === */
+    /* === تعريف المتغيرات للأوضاع (Light & Dark) === */
     :root {
+      /* الوضع الفاتح */
       --primary-color: #1a2ac6;
       --primary-light: #eff1ff;
-      --hover-bg: #e0e7ff;
-      --light-bg: #f0f2f7;
-      --light-border: #ccd1e0;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-sticky: rgba(244, 246, 251, 0.95);
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-header: #1e1e2f;
+      --text-muted: #666666;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
+      --hover-bg: #e0e7ff;
       --radius-lg: 20px;
       --radius-md: 12px;
+
+      /* ألوان أيقونات المواد (الفاتح) */
+      --icon-doc-color: #3b82f6; --icon-doc-bg: #eff6ff;
+      --icon-vid-color: #ef4444; --icon-vid-bg: #fef2f2;
+      --icon-res-color: #f59e0b; --icon-res-bg: #fffbeb;
+      --icon-quiz-color: #8b5cf6; --icon-quiz-bg: #f5f3ff;
+      --icon-link-color: #10b981; --icon-link-bg: #ecfdf5;
+      --icon-def-color: #6b7280; --icon-def-bg: #f3f4f6;
+
+      /* الشارات */
+      --badge-new-bg: #fffde7; --badge-new-text: #fbc02d;
+      --badge-imp-bg: #e3f2fd; --badge-imp-text: #1a2ac6;
+    }
+
+    /* الوضع الداكن */
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-light: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-sticky: rgba(18, 18, 18, 0.95);
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-header: #ffffff;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+      --hover-bg: #2c2e3e;
+
+      /* ألوان أيقونات المواد (الداكن - نستخدم شفافية بدلاً من الألوان الفاتحة) */
+      --icon-doc-color: #60a5fa; --icon-doc-bg: rgba(59, 130, 246, 0.15);
+      --icon-vid-color: #f87171; --icon-vid-bg: rgba(239, 68, 68, 0.15);
+      --icon-res-color: #fbbf24; --icon-res-bg: rgba(245, 158, 11, 0.15);
+      --icon-quiz-color: #a78bfa; --icon-quiz-bg: rgba(139, 92, 246, 0.15);
+      --icon-link-color: #34d399; --icon-link-bg: rgba(16, 185, 129, 0.15);
+      --icon-def-color: #9ca3af; --icon-def-bg: rgba(107, 114, 128, 0.15);
+
+      /* الشارات الداكنة */
+      --badge-new-bg: rgba(251, 192, 45, 0.15); --badge-new-text: #fbc02d;
+      --badge-imp-bg: rgba(26, 42, 198, 0.2); --badge-imp-text: #7986cb;
     }
 
     * {
@@ -41,11 +99,12 @@
     }
 
     body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
+      background-color: var(--bg-body);
+      color: var(--text-main);
       min-height: 100vh;
       padding-top: 80px; 
       padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .container {
@@ -56,7 +115,7 @@
 
     /* === Hero Section === */
     .course-header-card {
-      background: white;
+      background: var(--bg-card);
       border-radius: var(--radius-lg);
       padding: 30px;
       margin-top: 20px;
@@ -64,7 +123,8 @@
       box-shadow: var(--card-shadow);
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid var(--border-color);
+      transition: background 0.3s, border-color 0.3s;
     }
     
     .course-header-card::before {
@@ -98,7 +158,7 @@
 
     .titles-group h1 {
       font-size: 1.8rem;
-      color: #1e1e2f;
+      color: var(--text-header);
       font-weight: 800;
       line-height: 1.3;
     }
@@ -115,14 +175,14 @@
     }
 
     .header-desc {
-      color: #666;
+      color: var(--text-muted);
       font-size: 0.95rem;
       line-height: 1.7;
       max-width: 800px;
     }
 
     .share-button {
-      background: white;
+      background: var(--bg-card);
       color: var(--primary-color);
       border: 1px solid var(--primary-color);
       padding: 8px 20px;
@@ -137,7 +197,7 @@
     }
     .share-button:hover {
       background: var(--primary-color);
-      color: white;
+      color: #fff; /* النص أبيض عند التمرير دائماً */
     }
 
     /* === شريط الفلتر (Sticky) === */
@@ -147,9 +207,11 @@
       z-index: 90;
       margin-bottom: 25px;
       padding: 10px 0;
-      background: rgba(244, 246, 251, 0.95);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      background: var(--bg-sticky);
+      border-bottom: 1px solid var(--border-color);
       margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
+      backdrop-filter: blur(5px);
+      transition: background-color 0.3s;
     }
 
     .filter-bar {
@@ -166,19 +228,21 @@
     .view-toggle {
       display: flex;
       gap: 5px;
-      background: white;
+      background: var(--bg-card);
       padding: 4px;
       border-radius: 50px;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
       flex-shrink: 0;
+      transition: background 0.3s, border 0.3s;
     }
     .view-toggle i {
       width: 35px; height: 35px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       font-size: 1rem;
-      color: #888;
+      color: var(--text-muted);
       cursor: pointer;
+      transition: 0.2s;
     }
     .view-toggle i.active {
       background-color: var(--primary-light);
@@ -188,7 +252,7 @@
     .filter-divider {
         width: 1px;
         height: 25px;
-        background-color: #ddd;
+        background-color: var(--border-color);
         margin: 0 5px;
         flex-shrink: 0;
     }
@@ -197,21 +261,22 @@
       flex: 0 0 auto;
       padding: 8px 20px;
       border-radius: 50px;
-      background: white;
-      color: #666;
+      background: var(--bg-card);
+      color: var(--text-muted);
       font-weight: 600;
       font-size: 0.85rem;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
       cursor: pointer;
+      transition: 0.2s;
     }
     .filter-item:hover {
-      background: #f9f9f9;
+      background: var(--hover-bg);
       color: var(--primary-color);
-      border-color: var(--light-border);
+      border-color: var(--border-color);
     }
     .filter-item.active {
       background: var(--primary-color);
-      color: white;
+      color: #fff;
       border-color: var(--primary-color);
     }
 
@@ -224,13 +289,13 @@
     }
 
     .material-item {
-      background: white;
+      background: var(--bg-card);
       border-radius: var(--radius-md);
       padding: 20px;
-      transition: box-shadow 0.2s ease;
+      transition: box-shadow 0.2s ease, background 0.3s, border-color 0.3s;
       cursor: pointer;
       position: relative;
-      border: 1px solid transparent;
+      border: 1px solid var(--border-color);
       box-shadow: 0 2px 10px rgba(0,0,0,0.02);
       display: flex;
       flex-direction: column;
@@ -238,7 +303,7 @@
 
     .material-item:hover {
       box-shadow: var(--hover-shadow);
-      border-color: rgba(26, 42, 198, 0.1);
+      border-color: var(--primary-color);
     }
 
     .item-header {
@@ -257,18 +322,19 @@
       justify-content: center;
       font-size: 1.4rem;
       flex-shrink: 0;
+      transition: background 0.3s, color 0.3s;
     }
 
     .item-title-text h3 {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #333;
+      color: var(--text-main);
       margin-bottom: 4px;
     }
 
     .item-description-preview {
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text-muted);
       line-height: 1.6;
       margin-right: 65px; 
       margin-bottom: 10px;
@@ -339,8 +405,8 @@
       font-weight: 700; 
       letter-spacing: 0.5px;
     }
-    .badge-important { background: #e3f2fd; color: var(--primary-color); }
-    .badge-new { background: #fffde7; color: #fbc02d; }
+    .badge-important { background: var(--badge-imp-bg); color: var(--badge-imp-text); }
+    .badge-new { background: var(--badge-new-bg); color: var(--badge-new-text); }
 
     /* === Responsive (تعديلات الموبايل) === */
     @media (max-width: 768px) {
@@ -418,6 +484,17 @@
   </div>
 
 <script>
+/* ======= آلية الوضع الداكن (مكررة لضمان العمل) ======= */
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+    
+    // ملاحظة: الألوان تتحدث تلقائياً بسبب استخدام CSS Variables
+}
+
 /* ======= المتغيرات والثوابت ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
@@ -432,7 +509,7 @@ let materialsData = [];
 let userToggledView = false; 
 let courseShareURL = null; 
 
-/* ======= دوال مساعدة ======= */
+/* ======= دوال مساعدة (تم التعديل لتدعم CSS Variables) ======= */
 function getIconClass(type) {
   switch (type) {
     case 'documents': return 'fas fa-file-lines';
@@ -443,24 +520,26 @@ function getIconClass(type) {
     default: return 'fas fa-layer-group';
   }
 }
-function getIconColor(type) {
+
+// بدلاً من إرجاع كود اللون مباشرة، نرجع المتغير، ليقوم الـ CSS بالتبديل
+function getIconColorVar(type) {
   switch (type) {
-    case 'documents': return '#3b82f6';
-    case 'videos': return '#ef4444';
-    case 'resources': return '#f59e0b';
-    case 'quizzes': return '#8b5cf6';
-    case 'links': return '#10b981';
-    default: return '#6b7280';
+    case 'documents': return 'var(--icon-doc-color)';
+    case 'videos': return 'var(--icon-vid-color)';
+    case 'resources': return 'var(--icon-res-color)';
+    case 'quizzes': return 'var(--icon-quiz-color)';
+    case 'links': return 'var(--icon-link-color)';
+    default: return 'var(--icon-def-color)';
   }
 }
-function getIconBg(type) {
+function getIconBgVar(type) {
   switch (type) {
-    case 'documents': return '#eff6ff';
-    case 'videos': return '#fef2f2';
-    case 'resources': return '#fffbeb';
-    case 'quizzes': return '#f5f3ff';
-    case 'links': return '#ecfdf5';
-    default: return '#f3f4f6';
+    case 'documents': return 'var(--icon-doc-bg)';
+    case 'videos': return 'var(--icon-vid-bg)';
+    case 'resources': return 'var(--icon-res-bg)';
+    case 'quizzes': return 'var(--icon-quiz-bg)';
+    case 'links': return 'var(--icon-link-bg)';
+    default: return 'var(--icon-def-bg)';
   }
 }
 
@@ -483,174 +562,4 @@ function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-  if (filtered.length === 0) {
-      materialsList.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">لا توجد مواد في هذا القسم.</p>';
-      return;
-  }
-
-  filtered.forEach(item => {
-    const itemId = item.id ? item.id : '#';
-    const detailsUrl = `details.html?i=${courseCode}&id=${itemId}`;
-
-    const el = document.createElement('div');
-    el.className = 'material-item';
-    
-    // ============= التغيير هنا (تم إصلاحه ليتوافق مع JSON) =============
-    el.onclick = function() {
-        // نتحقق مما إذا كان هناك رابط معاينة (للإختبارات) أو رابط عادي
-        // في ملف JSON الخاص بك، الاختبار يمتلك "preview_url"
-        const targetUrl = item.preview_url || item.url;
-
-        if (item.type === 'quizzes' && targetUrl) {
-            window.location.href = targetUrl;
-        } else {
-            window.location.href = detailsUrl;
-        }
-    };
-    // =================================================================
-
-    let imageHTML = '';
-    if (item.image_url) { 
-        imageHTML = `
-            <div class="item-image">
-                <img src="${item.image_url}" alt="${item.title}" loading="lazy">
-            </div>
-        `;
-    }
-
-    let badgeHTML = '';
-    const now = Date.now();
-    const timeMs = item['time-ms'];
-    const MS_IN_DAY = 86400000;
-    if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
-      badgeHTML = `<span class="badge badge-new">${item.badgeText}</span>`;
-    } else if (item.badge) {
-      badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
-    }
-
-    let descriptionHTML = '';
-    if (item.description && item.description.trim() !== "") {
-        descriptionHTML = `
-            <p class="item-description-preview">
-                ${item.description}
-            </p>
-        `;
-    }
-
-    el.innerHTML = `
-      <div class="item-header">
-        <div class="item-icon" style="background:${getIconBg(item.type)}; color:${getIconColor(item.type)};">
-            <i class="${getIconClass(item.type)}"></i>
-        </div>
-        <div class="item-title-text">
-            <h3>${item.title}</h3>
-        </div>
-      </div>
-      
-      ${descriptionHTML}
-
-      ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
-      
-      ${imageHTML}
-    `;
-    materialsList.appendChild(el);
-  });
-}
-
-/* ======= تهيئة الصفحة ======= */
-document.addEventListener('DOMContentLoaded', () => {
-  
-  filterItems.forEach(item => {
-    item.addEventListener('click', function () {
-      filterItems.forEach(el => el.classList.remove('active'));
-      this.classList.add('active');
-      renderMaterials(this.dataset.filter);
-    });
-  });
-
-  gridBtn.addEventListener('click', () => { userToggledView = true; setView('grid'); });
-  listBtn.addEventListener('click', () => { userToggledView = true; setView('list'); });
-
-  const mq = window.matchMedia('(min-width: 992px)');
-  function applyDefaultView() {
-    if (!userToggledView && !localStorage.getItem('viewMode')) {
-      if (mq.matches) setView('grid', false);
-      else setView('list', false);
-    }
-  }
-  applyDefaultView();
-
-  // === جلب البيانات ===
-  if (!courseCode) {
-    materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:#777;">⚠️ يرجى اختيار مقرر لعرض محتوياته.</p>';
-    return;
-  }
-
-  fetch(`assets/data/${courseCode}.json`)
-    .then(res => {
-      if (!res.ok) throw new Error("لم يتم العثور على الملف");
-      return res.json();
-    })
-    .then(data => {
-      materialsData = data.items || [];
-
-      const titleEl = document.getElementById('course-title');
-      const codeEl = document.getElementById('course-code');
-      const descEl = document.getElementById('course-desc');
-      
-      if (titleEl) titleEl.textContent = data.name || '';
-      
-      if (codeEl) {
-          if(data.code) {
-             codeEl.textContent = data.code; 
-             codeEl.style.display = 'inline-block';
-          } else {
-             codeEl.style.display = 'none';
-          }
-      }
-      
-      if (descEl) descEl.textContent = data.description || '';
-      
-      document.title = data.name || 'روافد';
-      
-      if (data.name) {
-        const ogTitle = document.getElementById('og-title');
-        if(ogTitle) ogTitle.setAttribute('content', data.name);
-      }
-      if (data.description) {
-         const ogDesc = document.getElementById('og-description');
-         if(ogDesc) ogDesc.setAttribute('content', data.description);
-      }
-
-      courseShareURL = (data && data.url) ? data.url : window.location.href;
-
-      const savedMode = localStorage.getItem('viewMode');
-      if (savedMode) setView(savedMode, false);
-
-      renderMaterials();
-    })
-    .catch(err => {
-      console.error(err);
-      materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:10px">حدث خطأ أثناء تحميل المقرر.</p></div>`;
-    });
-});
-
-/* ======= زر المشاركة ======= */
-if (shareButton) {
-  shareButton.addEventListener('click', () => {
-    const shareUrl = courseShareURL || window.location.href;
-    const title = document.title || '';
-    if (navigator.share) {
-      navigator.share({ title, url: shareUrl }).catch(()=>{});
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      const originalText = shareButton.innerHTML;
-      shareButton.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
-      setTimeout(() => shareButton.innerHTML = originalText, 2000);
-    }
-  });
-}
-</script>
-
-</body>
-</html>
+  if (filtered.length ===
