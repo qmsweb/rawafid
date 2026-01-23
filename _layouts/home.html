@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
+<html lang="ar" dir="rtl" data-theme="light"> <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ page.title | default: "روافد - الرئيسية" }}</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -18,18 +17,55 @@
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
   <style>
-    /* === المتغيرات ونظام التصميم === */
+    /* === تعريف المتغيرات للأوضاع (Light & Dark) === */
     :root {
+      /* الوضع الفاتح (الافتراضي) */
       --primary-color: #1a2ac6;
-      --primary-light: #eff1ff;
-      --hover-bg: #e0e7ff;
-      --light-bg: #f0f2f7;
-      --light-border: #ccd1e0;
+      --primary-light-bg: #eff1ff; /* خلفية الأزرار النشطة */
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-sticky: rgba(244, 246, 251, 0.95);
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
+      --hover-bg: #f9f9f9;
+      --item-icon-bg-opacity: 0.1; /* شفافية خلفية الأيقونة */
+      
       --radius-lg: 20px;
       --radius-md: 12px;
+    }
+
+    /* الوضع الداكن (عند تفعيله) */
+    [data-theme="dark"] {
+      --primary-color: #7986cb; /* أزرق فاتح لتباين أفضل */
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-sticky: rgba(18, 18, 18, 0.95);
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+      --hover-bg: #2c2e3e;
+      --item-icon-bg-opacity: 0.2; /* زيادة الشفافية في الداكن */
     }
 
     * {
@@ -40,11 +76,16 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Transition Smoothness: انتقال ناعم للألوان عند التبديل */
+    body, .material-item, .filter-item, .view-toggle, .sticky-filter-container {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
     body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
+      background-color: var(--bg-body);
+      color: var(--text-main);
       min-height: 100vh;
-      padding-top: 80px; /* متوافق مع النافبار الثابت */
+      padding-top: 80px;
       padding-bottom: 40px;
     }
 
@@ -57,14 +98,15 @@
     /* === شريط الفلتر (Sticky Filter) === */
     .sticky-filter-container {
       position: sticky;
-      top: 70px; /* تم التعديل ليكون تحت النافبار مباشرة */
+      top: 70px;
       z-index: 90;
       margin-bottom: 25px;
       margin-top: 20px; 
       padding: 10px 0;
-      background: rgba(244, 246, 251, 0.95);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      background: var(--bg-sticky);
+      border-bottom: 1px solid var(--border-color);
       margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
+      backdrop-filter: blur(5px);
     }
 
     .filter-bar {
@@ -81,10 +123,10 @@
     .view-toggle {
       display: flex;
       gap: 5px;
-      background: white;
+      background: var(--bg-card);
       padding: 4px;
       border-radius: 50px;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
       flex-shrink: 0;
     }
     .view-toggle i {
@@ -92,19 +134,19 @@
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       font-size: 1rem;
-      color: #888;
+      color: var(--text-muted);
       cursor: pointer;
       transition: 0.2s;
     }
     .view-toggle i.active {
-      background-color: var(--primary-light);
+      background-color: var(--primary-light-bg);
       color: var(--primary-color);
     }
 
     .filter-divider {
         width: 1px;
         height: 25px;
-        background-color: #ddd;
+        background-color: var(--border-color);
         margin: 0 5px;
         flex-shrink: 0;
     }
@@ -113,24 +155,24 @@
       flex: 0 0 auto;
       padding: 8px 20px;
       border-radius: 50px;
-      background: white;
-      color: #666;
+      background: var(--bg-card);
+      color: var(--text-muted);
       font-weight: 600;
       font-size: 0.85rem;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
       cursor: pointer;
       transition: 0.2s;
     }
 
     .filter-item:hover {
-      background: #f9f9f9;
+      background: var(--hover-bg);
       color: var(--primary-color);
-      border-color: var(--light-border);
+      border-color: var(--border-color);
     }
 
     .filter-item.active {
       background: var(--primary-color);
-      color: white;
+      color: #fff; /* النص يبقى أبيض دائمًا في الزر النشط */
       border-color: var(--primary-color);
     }
 
@@ -142,7 +184,7 @@
     }
 
     .material-item {
-      background: white;
+      background: var(--bg-card);
       border-radius: var(--radius-md);
       padding: 20px;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -153,12 +195,13 @@
       display: flex;
       align-items: center;
       gap: 15px;
+      border: 1px solid var(--border-color);
     }
 
     .material-item:hover {
       box-shadow: var(--hover-shadow);
       transform: translateY(-3px);
-      border-color: rgba(26, 42, 198, 0.1);
+      border-color: var(--primary-color);
     }
 
     .item-icon-box {
@@ -170,8 +213,8 @@
       justify-content: center;
       font-size: 1.4rem;
       flex-shrink: 0;
-      background: var(--light-bg);
       transition: transform 0.3s;
+      /* الخلفية تعتمد على السكربت أو الشفافية */
     }
     
     .material-item:hover .item-icon-box {
@@ -185,14 +228,14 @@
     .item-title h3 {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #1d1d1d;
+      color: var(--text-main);
       margin-bottom: 4px;
     }
 
     .item-code {
       font-size: 0.85rem;
-      color: #666;
-      background: #f4f6fb;
+      color: var(--text-muted);
+      background: var(--bg-code);
       display: inline-block;
       padding: 2px 8px;
       border-radius: 6px;
@@ -267,19 +310,33 @@
   </div>
 
 <script>
-  // ملاحظة: تم حذف أكواد تحميل الهيدر والفوتر لأن Jekyll يتكفل بها
+  /* === 1. آلية إدارة الوضع الليلي/النهاري === */
+  // يتم استدعاء هذه الدالة عندما يتم الضغط على الزر (الذي ستضيفه لاحقاً)
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+    
+    // (اختياري) تحديث ألوان الأيقونات إذا لزم الأمر في الوقت الفعلي
+    // renderMaterialItems(allCourses); // إعادة رسم البطاقات لتحديث ألوان خلفيات الأيقونات بدقة
+  }
 
+  // ملاحظة: يمكنك اختبار الدالة الآن بكتابة toggleTheme() في الكونسول بالمتصفح
+
+
+  /* === 2. منطق عرض المواد والفلاتر === */
   const materialsList = document.getElementById('materials-list');
   const filterBar = document.getElementById('filter-bar');
   let allCourses = [];
   let userToggledView = false;
 
-  // دالة رسم البطاقات
   function renderMaterialItems(items) {
     materialsList.innerHTML = '';
 
     if (items.length === 0) {
-        materialsList.innerHTML = '<p style="text-align:center; color:#777; padding:20px; width:100%;">لا توجد مقررات في هذا التصنيف.</p>';
+        materialsList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px; width:100%;">لا توجد مقررات في هذا التصنيف.</p>';
         return;
     }
 
@@ -289,10 +346,12 @@
       
       const iconColor = item.color || '#1a2ac6';
       const iconClass = item.icon || 'fa-book';
+      
+      // نستخدم Hex مع الشفافية، لكن هنا سنعتمد على المتغيرات لاحقًا لتحكم أفضل
+      // كحل سريع: نضيف شفافية 15 للون الهيكس
       const iconBg = iconColor + '15'; 
 
       el.addEventListener('click', () => {
-        // استخدام relative_url لضمان عمل الروابط بشكل صحيح في Jekyll
         window.location.href = `{{ '/course' | relative_url }}?i=${item.code}`;
       });
 
@@ -314,7 +373,6 @@
   function createFilters(courses) {
     filterBar.innerHTML = '';
 
-    // إضافة أزرار العرض
     const viewToggle = document.createElement('div');
     viewToggle.className = 'view-toggle';
     viewToggle.innerHTML = `
@@ -323,12 +381,10 @@
     `;
     filterBar.appendChild(viewToggle);
 
-    // الفاصل
     const divider = document.createElement('div');
     divider.className = 'filter-divider';
     filterBar.appendChild(divider);
 
-    // الفلاتر
     const types = [...new Set(courses.map(c => c.type))];
     types.unshift('all');
 
@@ -350,7 +406,6 @@
       filterBar.appendChild(filterBtn);
     });
 
-    // إعدادات أزرار العرض
     const gridBtn = viewToggle.querySelector('#grid-view');
     const listBtn = viewToggle.querySelector('#list-view');
 
@@ -375,7 +430,6 @@
     gridBtn.addEventListener('click', () => setView('grid'));
     listBtn.addEventListener('click', () => setView('list'));
 
-    // استعادة الوضع المحفوظ أو الافتراضي
     const savedMode = localStorage.getItem('viewMode');
     if (savedMode) {
       applyVisualState(savedMode);
@@ -386,8 +440,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // جلب ملف البيانات
-    // تأكد من أن ملف materials.json موجود في هذا المسار
     fetch("{{ '/assets/data/materials.json' | relative_url }}")
       .then(res => res.json())
       .then(data => {
@@ -396,7 +448,7 @@
         renderMaterialItems(data);
       })
       .catch(err => {
-        materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:#999;"><i class="fas fa-exclamation-triangle fa-2x"></i><p>تعذر تحميل قائمة المواد.</p></div>`;
+        materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-exclamation-triangle fa-2x"></i><p>تعذر تحميل قائمة المواد.</p></div>`;
       });
   });
 </script>
