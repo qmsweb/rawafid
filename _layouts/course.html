@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="light">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  <link rel="icon" href="images/favicon.png" type="image/jpg">
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="/css/topbar.css">
+  
+  <link rel="stylesheet" href="{{ '/css/topbar.css' | relative_url }}">
 
   <meta property="og:title" content="المقررات - روافد" id="og-title">
   <meta property="og:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة." id="og-description">
-  <meta property="og:image" content="/images/cover2.png" id="og-image">
+  <meta property="og:image" content="{{ '/images/cover2.png' | relative_url }}" id="og-image">
   <meta property="og:type" content="website">
 
   <script>
@@ -31,9 +32,9 @@
   </script>
 
   <style>
-    /* === تعريف المتغيرات للأوضاع (Light & Dark) === */
+    /* === 1. متغيرات الألوان (الأساس للوضع الداكن والفاتح) === */
     :root {
-      /* الوضع الفاتح */
+      /* الوضع الفاتح (الأصلي) */
       --primary-color: #1a2ac6;
       --primary-light: #eff1ff;
       --bg-body: #f4f6fb;
@@ -49,20 +50,16 @@
       --radius-lg: 20px;
       --radius-md: 12px;
 
-      /* ألوان أيقونات المواد (الفاتح) */
-      --icon-doc-color: #3b82f6; --icon-doc-bg: #eff6ff;
-      --icon-vid-color: #ef4444; --icon-vid-bg: #fef2f2;
-      --icon-res-color: #f59e0b; --icon-res-bg: #fffbeb;
-      --icon-quiz-color: #8b5cf6; --icon-quiz-bg: #f5f3ff;
-      --icon-link-color: #10b981; --icon-link-bg: #ecfdf5;
-      --icon-def-color: #6b7280; --icon-def-bg: #f3f4f6;
-
-      /* الشارات */
-      --badge-new-bg: #fffde7; --badge-new-text: #fbc02d;
-      --badge-imp-bg: #e3f2fd; --badge-imp-text: #1a2ac6;
+      /* ألوان الأيقونات (فاتح) */
+      --icon-doc-bg: #eff6ff; --icon-doc-cl: #3b82f6;
+      --icon-vid-bg: #fef2f2; --icon-vid-cl: #ef4444;
+      --icon-res-bg: #fffbeb; --icon-res-cl: #f59e0b;
+      --icon-quiz-bg: #f5f3ff; --icon-quiz-cl: #8b5cf6;
+      --icon-link-bg: #ecfdf5; --icon-link-cl: #10b981;
+      --icon-def-bg: #f3f4f6; --icon-def-cl: #6b7280;
     }
 
-    /* الوضع الداكن */
+    /* الوضع الداكن (عند التفعيل) */
     [data-theme="dark"] {
       --primary-color: #7986cb;
       --primary-light: #282a36;
@@ -77,23 +74,18 @@
       --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
       --hover-bg: #2c2e3e;
 
-      /* ألوان أيقونات المواد (الداكن - نستخدم شفافية بدلاً من الألوان الفاتحة) */
-      --icon-doc-color: #60a5fa; --icon-doc-bg: rgba(59, 130, 246, 0.15);
-      --icon-vid-color: #f87171; --icon-vid-bg: rgba(239, 68, 68, 0.15);
-      --icon-res-color: #fbbf24; --icon-res-bg: rgba(245, 158, 11, 0.15);
-      --icon-quiz-color: #a78bfa; --icon-quiz-bg: rgba(139, 92, 246, 0.15);
-      --icon-link-color: #34d399; --icon-link-bg: rgba(16, 185, 129, 0.15);
-      --icon-def-color: #9ca3af; --icon-def-bg: rgba(107, 114, 128, 0.15);
-
-      /* الشارات الداكنة */
-      --badge-new-bg: rgba(251, 192, 45, 0.15); --badge-new-text: #fbc02d;
-      --badge-imp-bg: rgba(26, 42, 198, 0.2); --badge-imp-text: #7986cb;
+      /* ألوان الأيقونات (داكن) */
+      --icon-doc-bg: rgba(59, 130, 246, 0.15); --icon-doc-cl: #60a5fa;
+      --icon-vid-bg: rgba(239, 68, 68, 0.15); --icon-vid-cl: #f87171;
+      --icon-res-bg: rgba(245, 158, 11, 0.15); --icon-res-cl: #fbbf24;
+      --icon-quiz-bg: rgba(139, 92, 246, 0.15); --icon-quiz-cl: #a78bfa;
+      --icon-link-bg: rgba(16, 185, 129, 0.15); --icon-link-cl: #34d399;
+      --icon-def-bg: rgba(107, 114, 128, 0.15); --icon-def-cl: #9ca3af;
     }
 
+    /* === 2. التنسيقات العامة === */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       font-family: "IBM Plex Sans Arabic", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
@@ -102,335 +94,208 @@
       background-color: var(--bg-body);
       color: var(--text-main);
       min-height: 100vh;
-      padding-top: 80px; 
-      padding-bottom: 40px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      padding-top: 80px; padding-bottom: 40px;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px;
+      max-width: 1100px; margin: 0 auto; padding: 0 20px;
     }
 
-    /* === Hero Section === */
+    /* === Hero Card === */
     .course-header-card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
-      padding: 30px;
-      margin-top: 20px;
-      margin-bottom: 30px;
+      padding: 30px; margin-top: 20px; margin-bottom: 30px;
       box-shadow: var(--card-shadow);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
       border: 1px solid var(--border-color);
-      transition: background 0.3s, border-color 0.3s;
     }
     
     .course-header-card::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      left: -50px;
-      width: 150px;
-      height: 150px;
+      content: ''; position: absolute; top: -50px; left: -50px;
+      width: 150px; height: 150px;
       background: var(--primary-light);
-      border-radius: 50%;
-      opacity: 0.6;
-      z-index: 0;
+      border-radius: 50%; opacity: 0.6; z-index: 0;
     }
 
     .header-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 15px;
     }
 
     .header-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 20px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+      flex-wrap: wrap; gap: 20px;
     }
 
     .titles-group h1 {
-      font-size: 1.8rem;
-      color: var(--text-header);
-      font-weight: 800;
-      line-height: 1.3;
+      font-size: 1.8rem; color: var(--text-header);
+      font-weight: 800; line-height: 1.3;
     }
     
     .titles-group h2 {
-      font-size: 1rem;
-      color: var(--primary-color);
+      font-size: 1rem; color: var(--primary-color);
       background: var(--primary-light);
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-top: 8px;
-      font-weight: 600;
+      display: inline-block; padding: 4px 12px;
+      border-radius: 20px; margin-top: 8px; font-weight: 600;
     }
 
     .header-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      max-width: 800px;
+      color: var(--text-muted); font-size: 0.95rem;
+      line-height: 1.7; max-width: 800px;
     }
 
     .share-button {
-      background: var(--bg-card);
-      color: var(--primary-color);
+      background: var(--bg-card); color: var(--primary-color);
       border: 1px solid var(--primary-color);
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 8px 20px; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
     }
     .share-button:hover {
-      background: var(--primary-color);
-      color: #fff; /* النص أبيض عند التمرير دائماً */
+      background: var(--primary-color); color: #fff;
     }
 
-    /* === شريط الفلتر (Sticky) === */
+    /* === Sticky Filter === */
     .sticky-filter-container {
-      position: sticky;
-      top: 90px;
-      z-index: 90;
-      margin-bottom: 25px;
-      padding: 10px 0;
+      position: sticky; top: 90px; z-index: 90;
+      margin-bottom: 25px; padding: 10px 0;
       background: var(--bg-sticky);
       border-bottom: 1px solid var(--border-color);
       margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
       backdrop-filter: blur(5px);
-      transition: background-color 0.3s;
     }
 
     .filter-bar {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      overflow-x: auto;
-      padding-bottom: 5px;
-      scrollbar-width: none;
+      display: flex; gap: 10px; align-items: center;
+      overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;
     }
     .filter-bar::-webkit-scrollbar { display: none; }
 
-    /* أزرار العرض */
     .view-toggle {
-      display: flex;
-      gap: 5px;
-      background: var(--bg-card);
-      padding: 4px;
-      border-radius: 50px;
-      border: 1px solid var(--border-color);
-      flex-shrink: 0;
-      transition: background 0.3s, border 0.3s;
+      display: flex; gap: 5px; background: var(--bg-card);
+      padding: 4px; border-radius: 50px;
+      border: 1px solid var(--border-color); flex-shrink: 0;
     }
     .view-toggle i {
       width: 35px; height: 35px;
       display: flex; align-items: center; justify-content: center;
-      border-radius: 50%;
-      font-size: 1rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: 0.2s;
+      border-radius: 50%; font-size: 1rem;
+      color: var(--text-muted); cursor: pointer; transition: 0.2s;
     }
     .view-toggle i.active {
-      background-color: var(--primary-light);
-      color: var(--primary-color);
+      background-color: var(--primary-light); color: var(--primary-color);
     }
 
     .filter-divider {
-        width: 1px;
-        height: 25px;
-        background-color: var(--border-color);
-        margin: 0 5px;
-        flex-shrink: 0;
+        width: 1px; height: 25px; background-color: var(--border-color);
+        margin: 0 5px; flex-shrink: 0;
     }
 
     .filter-item {
-      flex: 0 0 auto;
-      padding: 8px 20px;
-      border-radius: 50px;
-      background: var(--bg-card);
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.85rem;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: 0.2s;
+      flex: 0 0 auto; padding: 8px 20px; border-radius: 50px;
+      background: var(--bg-card); color: var(--text-muted);
+      font-weight: 600; font-size: 0.85rem;
+      border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s;
     }
     .filter-item:hover {
-      background: var(--hover-bg);
-      color: var(--primary-color);
+      background: var(--hover-bg); color: var(--primary-color);
       border-color: var(--border-color);
     }
     .filter-item.active {
-      background: var(--primary-color);
-      color: #fff;
+      background: var(--primary-color); color: #fff;
       border-color: var(--primary-color);
     }
 
-
-    /* === قائمة المواد === */
+    /* === Materials List === */
     .materials-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: flex; flex-direction: column; gap: 16px;
     }
 
     .material-item {
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      transition: box-shadow 0.2s ease, background 0.3s, border-color 0.3s;
-      cursor: pointer;
-      position: relative;
+      background: var(--bg-card); border-radius: var(--radius-md);
+      padding: 20px; cursor: pointer; position: relative;
       border: 1px solid var(--border-color);
       box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
+      transition: all 0.3s;
     }
 
     .material-item:hover {
-      box-shadow: var(--hover-shadow);
-      border-color: var(--primary-color);
+      box-shadow: var(--hover-shadow); border-color: var(--primary-color);
     }
 
     .item-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 15px; margin-bottom: 10px;
     }
 
     .item-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-      transition: background 0.3s, color 0.3s;
+      width: 50px; height: 50px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
     }
 
     .item-title-text h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 4px;
+      font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;
     }
 
     .item-description-preview {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-right: 65px; 
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;
+      margin-right: 65px; margin-bottom: 10px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
     .badges-container {
-      display: flex;
-      gap: 8px;
-      margin-right: 65px; 
+      display: flex; gap: 8px; margin-right: 65px; 
     }
 
-    .item-image {
-        display: none; 
-    }
+    .item-image { display: none; }
 
-    /* === وضع الشبكة (Grid View) === */
+    /* Grid View */
     .materials-list.grid-view {
-      display: grid !important;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
+      display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
     }
-
     .materials-list.grid-view .material-item {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+      height: 100%; justify-content: flex-start;
     }
-
-    .materials-list.grid-view .item-header {
-      margin-bottom: 15px;
-    }
-
+    .materials-list.grid-view .item-header { margin-bottom: 15px; }
     .materials-list.grid-view .item-description-preview {
-      margin-right: 0 !important;
-      margin-bottom: 15px;
-      flex-grow: 1; 
+      margin-right: 0 !important; margin-bottom: 15px; flex-grow: 1; 
     }
-
     .materials-list.grid-view .badges-container {
-      margin-right: 0 !important;
-      margin-top: auto;
+      margin-right: 0 !important; margin-top: auto;
     }
-
     .materials-list.grid-view .item-image {
-        display: block;
-        width: 100%;
-        margin-top: 15px;
-        border-radius: 10px;
-        overflow: hidden;
-        aspect-ratio: 16/9;
+        display: block; width: 100%; margin-top: 15px;
+        border-radius: 10px; overflow: hidden; aspect-ratio: 16/9;
     }
     .item-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
     }
 
-    /* الشارات */
+    /* Badges */
     .badge { 
-      font-size: 0.7rem; 
-      padding: 4px 12px; 
-      border-radius: 20px; 
-      font-weight: 700; 
-      letter-spacing: 0.5px;
+      font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; 
+      font-weight: 700; letter-spacing: 0.5px;
     }
-    .badge-important { background: var(--badge-imp-bg); color: var(--badge-imp-text); }
-    .badge-new { background: var(--badge-new-bg); color: var(--badge-new-text); }
+    .badge-important { background: #e3f2fd; color: #1a2ac6; }
+    .badge-new { background: #fffde7; color: #fbc02d; }
+    
+    /* تعديل الشارات للوضع الداكن */
+    [data-theme="dark"] .badge-important { background: rgba(26, 42, 198, 0.3); color: #9fa8da; }
+    [data-theme="dark"] .badge-new { background: rgba(251, 192, 45, 0.2); color: #fbc02d; }
 
-    /* === Responsive (تعديلات الموبايل) === */
+    /* Responsive */
     @media (max-width: 768px) {
       .header-top-row { flex-direction: column; gap: 15px; }
       .share-button { width: 100%; justify-content: center; }
-      
-      .materials-list.grid-view { 
-          grid-template-columns: repeat(2, 1fr); 
-          gap: 12px; 
-      }
-
-      .materials-list.grid-view .material-item {
-          padding: 12px;
-      }
-      .materials-list.grid-view .item-icon {
-          width: 40px; height: 40px; font-size: 1.1rem;
-      }
-      .materials-list.grid-view .item-title-text h3 {
-          font-size: 0.95rem;
-      }
-      .materials-list.grid-view .item-description-preview {
-          font-size: 0.8rem;
-      }
-      
+      .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .materials-list.grid-view .material-item { padding: 12px; }
+      .materials-list.grid-view .item-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+      .materials-list.grid-view .item-title-text h3 { font-size: 0.95rem; }
+      .materials-list.grid-view .item-description-preview { font-size: 0.8rem; }
       .item-description-preview, .badges-container { margin-right: 0; }
     }
   </style>
@@ -459,14 +324,11 @@
 
     <div class="sticky-filter-container">
       <div class="filter-bar">
-        
         <div class="view-toggle">
             <i class="fas fa-list-ul active" id="list-view" title="قائمة"></i>
             <i class="fas fa-border-all" id="grid-view" title="شبكة"></i>
         </div>
-        
         <div class="filter-divider"></div>
-
         <div class="filter-item active" data-filter="all">الكل</div>
         <div class="filter-item" data-filter="documents">المستندات</div>
         <div class="filter-item" data-filter="videos">فيديو</div>
@@ -484,18 +346,15 @@
   </div>
 
 <script>
-/* ======= آلية الوضع الداكن (مكررة لضمان العمل) ======= */
+/* ======= 1. دالة تغيير الوضع (للربط مع الهيدر) ======= */
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('rawafed-theme', newTheme);
-    
-    // ملاحظة: الألوان تتحدث تلقائياً بسبب استخدام CSS Variables
 }
 
-/* ======= المتغيرات والثوابت ======= */
+/* ======= 2. تعريف المتغيرات ======= */
 const materialsList = document.getElementById('materials-list');
 const filterItems = document.querySelectorAll('.filter-item');
 const gridBtn = document.getElementById('grid-view');
@@ -509,7 +368,7 @@ let materialsData = [];
 let userToggledView = false; 
 let courseShareURL = null; 
 
-/* ======= دوال مساعدة (تم التعديل لتدعم CSS Variables) ======= */
+/* ======= 3. دوال مساعدة (للأيقونات) ======= */
 function getIconClass(type) {
   switch (type) {
     case 'documents': return 'fas fa-file-lines';
@@ -520,30 +379,19 @@ function getIconClass(type) {
     default: return 'fas fa-layer-group';
   }
 }
-
-// بدلاً من إرجاع كود اللون مباشرة، نرجع المتغير، ليقوم الـ CSS بالتبديل
-function getIconColorVar(type) {
+// استخدام متغيرات CSS بدلاً من الألوان الثابتة
+function getIconStyles(type) {
   switch (type) {
-    case 'documents': return 'var(--icon-doc-color)';
-    case 'videos': return 'var(--icon-vid-color)';
-    case 'resources': return 'var(--icon-res-color)';
-    case 'quizzes': return 'var(--icon-quiz-color)';
-    case 'links': return 'var(--icon-link-color)';
-    default: return 'var(--icon-def-color)';
-  }
-}
-function getIconBgVar(type) {
-  switch (type) {
-    case 'documents': return 'var(--icon-doc-bg)';
-    case 'videos': return 'var(--icon-vid-bg)';
-    case 'resources': return 'var(--icon-res-bg)';
-    case 'quizzes': return 'var(--icon-quiz-bg)';
-    case 'links': return 'var(--icon-link-bg)';
-    default: return 'var(--icon-def-bg)';
+    case 'documents': return 'background: var(--icon-doc-bg); color: var(--icon-doc-cl);';
+    case 'videos': return 'background: var(--icon-vid-bg); color: var(--icon-vid-cl);';
+    case 'resources': return 'background: var(--icon-res-bg); color: var(--icon-res-cl);';
+    case 'quizzes': return 'background: var(--icon-quiz-bg); color: var(--icon-quiz-cl);';
+    case 'links': return 'background: var(--icon-link-bg); color: var(--icon-link-cl);';
+    default: return 'background: var(--icon-def-bg); color: var(--icon-def-cl);';
   }
 }
 
-/* ======= دالة ضبط العرض ======= */
+/* ======= 4. ضبط العرض (شبكة/قائمة) ======= */
 function setView(view, save = true) {
   if (view === 'grid') {
     materialsList.classList.add('grid-view');
@@ -557,9 +405,161 @@ function setView(view, save = true) {
   if (save) localStorage.setItem('viewMode', view);
 }
 
-/* ======= دالة رسم المواد ======= */
+/* ======= 5. رسم المواد ======= */
 function renderMaterials(filter = 'all') {
   materialsList.innerHTML = '';
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
-  if (filtered.length ===
+  if (filtered.length === 0) {
+      materialsList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">لا توجد مواد في هذا القسم.</p>';
+      return;
+  }
+
+  // استخدام relative_url لضمان صحة الرابط للصفحة الداخلية
+  const detailsBaseUrl = "{{ '/details.html' | relative_url }}";
+
+  filtered.forEach(item => {
+    const itemId = item.id ? item.id : '#';
+    // بناء الرابط
+    const detailsUrl = `${detailsBaseUrl}?i=${courseCode}&id=${itemId}`;
+
+    const el = document.createElement('div');
+    el.className = 'material-item';
+    
+    // حدث النقر
+    el.onclick = function() {
+        const targetUrl = item.preview_url || item.url;
+        if (item.type === 'quizzes' && targetUrl) {
+            window.location.href = targetUrl;
+        } else {
+            window.location.href = detailsUrl;
+        }
+    };
+
+    let imageHTML = '';
+    if (item.image_url) { 
+        imageHTML = `<div class="item-image"><img src="${item.image_url}" alt="${item.title}" loading="lazy"></div>`;
+    }
+
+    let badgeHTML = '';
+    const now = Date.now();
+    const timeMs = item['time-ms'];
+    const MS_IN_DAY = 86400000;
+    if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
+      badgeHTML = `<span class="badge badge-new">${item.badgeText}</span>`;
+    } else if (item.badge) {
+      badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
+    }
+
+    let descriptionHTML = '';
+    if (item.description && item.description.trim() !== "") {
+        descriptionHTML = `<p class="item-description-preview">${item.description}</p>`;
+    }
+
+    el.innerHTML = `
+      <div class="item-header">
+        <div class="item-icon" style="${getIconStyles(item.type)}">
+            <i class="${getIconClass(item.type)}"></i>
+        </div>
+        <div class="item-title-text">
+            <h3>${item.title}</h3>
+        </div>
+      </div>
+      ${descriptionHTML}
+      ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
+      ${imageHTML}
+    `;
+    materialsList.appendChild(el);
+  });
+}
+
+/* ======= 6. تشغيل الصفحة ======= */
+document.addEventListener('DOMContentLoaded', () => {
+  
+  filterItems.forEach(item => {
+    item.addEventListener('click', function () {
+      filterItems.forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
+      renderMaterials(this.dataset.filter);
+    });
+  });
+
+  gridBtn.addEventListener('click', () => { userToggledView = true; setView('grid'); });
+  listBtn.addEventListener('click', () => { userToggledView = true; setView('list'); });
+
+  const mq = window.matchMedia('(min-width: 992px)');
+  function applyDefaultView() {
+    if (!userToggledView && !localStorage.getItem('viewMode')) {
+      if (mq.matches) setView('grid', false);
+      else setView('list', false);
+    } else if (localStorage.getItem('viewMode')) {
+        setView(localStorage.getItem('viewMode'), false);
+    }
+  }
+  applyDefaultView();
+
+  if (!courseCode) {
+    materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:var(--text-muted);">⚠️ يرجى اختيار مقرر لعرض محتوياته.</p>';
+    return;
+  }
+
+  // === تصحيح مسار الجلب ===
+  // نستخدم Liquid لتحديد المجلد الأساسي، ثم نضيف اسم الملف في JS
+  const dataBasePath = "{{ '/assets/data/' | relative_url }}";
+  const fetchUrl = dataBasePath + courseCode + ".json";
+
+  fetch(fetchUrl)
+    .then(res => {
+      if (!res.ok) throw new Error("لم يتم العثور على الملف");
+      return res.json();
+    })
+    .then(data => {
+      materialsData = data.items || [];
+      const titleEl = document.getElementById('course-title');
+      const codeEl = document.getElementById('course-code');
+      const descEl = document.getElementById('course-desc');
+      
+      if (titleEl) titleEl.textContent = data.name || '';
+      if (codeEl) {
+          if(data.code) { codeEl.textContent = data.code; codeEl.style.display = 'inline-block'; }
+          else { codeEl.style.display = 'none'; }
+      }
+      if (descEl) descEl.textContent = data.description || '';
+      document.title = data.name || 'روافد';
+      
+      if (data.name) {
+        const ogTitle = document.getElementById('og-title');
+        if(ogTitle) ogTitle.setAttribute('content', data.name);
+      }
+      if (data.description) {
+         const ogDesc = document.getElementById('og-description');
+         if(ogDesc) ogDesc.setAttribute('content', data.description);
+      }
+
+      courseShareURL = (data && data.url) ? data.url : window.location.href;
+      renderMaterials();
+    })
+    .catch(err => {
+      console.error(err);
+      materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:10px">حدث خطأ أثناء تحميل المقرر.</p></div>`;
+    });
+});
+
+if (shareButton) {
+  shareButton.addEventListener('click', () => {
+    const shareUrl = courseShareURL || window.location.href;
+    const title = document.title || '';
+    if (navigator.share) {
+      navigator.share({ title, url: shareUrl }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      const originalText = shareButton.innerHTML;
+      shareButton.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+      setTimeout(() => shareButton.innerHTML = originalText, 2000);
+    }
+  });
+}
+</script>
+
+</body>
+</html>
