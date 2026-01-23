@@ -2,9 +2,9 @@
   <div class="footer-container">
     
     <div class="footer-brand">
-      <img src="images/jassim-logo.png" alt="شعار" class="footer-logo">
+      <img src="{{ '/images/jassim-logo.png' | relative_url }}" alt="شعار" class="footer-logo">
       <div class="copyright-group">
-        <span class="copy-year">&copy; 2026 جاسم الفارسي.</span>
+        <span class="copy-year">&copy; {{ site.time | date: '%Y' }} جاسم الفارسي.</span>
         <span class="rights-text">جميع الحقوق محفوظة.</span>
       </div>
     </div>
@@ -28,11 +28,29 @@
 
 <style>
   :root {
+    /* الوضع الفاتح */
     --footer-bg: transparent; 
     --footer-text: #000000;
-    --btn-blue: #1a2ac6;      /* الكود الأزرق الجديد */
+    --footer-copy-text: #000000;
+    --btn-blue: #1a2ac6;
+    --btn-hover: #1522a0;
     --whatsapp-green: #25D366;
-    --btn-radius: 50px;       /* توحيد الـ radius */
+    --btn-radius: 50px;
+    
+    /* فلتر الصورة للوضع الفاتح (أسود بالكامل) */
+    --logo-filter: brightness(0);
+  }
+
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --footer-bg: transparent; /* أو لون داكن إذا أردت */
+    --footer-text: #e0e0e0;
+    --footer-copy-text: #e0e0e0;
+    --btn-blue: #2c2e3e; /* لون داكن للأزرار */
+    --btn-hover: #3e4155;
+    
+    /* فلتر الصورة للوضع الداكن (أبيض بالكامل ليظهر على الخلفية الداكنة) */
+    --logo-filter: brightness(0) invert(1);
   }
 
   .site-footer {
@@ -47,6 +65,7 @@
     box-sizing: border-box;
     text-align: right;
     border-top: none; 
+    transition: color 0.3s;
   }
 
   .footer-container {
@@ -69,7 +88,9 @@
   .footer-logo {
     height: 40px;
     width: auto;
-    filter: brightness(0); /* جعل الشعار أسود بالكامل */
+    /* تطبيق الفلتر بناءً على المتغير */
+    filter: var(--logo-filter);
+    transition: filter 0.3s;
   }
 
   .copyright-group {
@@ -79,33 +100,46 @@
     line-height: 1.4;
   }
 
-  .copy-year { font-weight: bold; color: #000; }
-  .rights-text { font-size: 0.8rem; opacity: 0.8; color: #000; }
+  .copy-year { 
+    font-weight: bold; 
+    color: var(--footer-copy-text); 
+  }
+  
+  .rights-text { 
+    font-size: 0.8rem; 
+    opacity: 0.8; 
+    color: var(--footer-copy-text); 
+  }
 
   /* 2. الروابط - تم تحويلها لأزرار زرقاء */
   .footer-links {
     display: flex;
-    gap: 10px; /* تقليل المسافة قليلاً لأن الأزرار لها حواف */
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   .footer-links a {
-    background-color: var(--btn-blue); /* خلفية زرقاء */
-    color: #ffffff !important;         /* نص أبيض */
-    padding: 8px 20px;                 /* نفس حشوة زر الواتساب تقريباً */
-    border-radius: var(--btn-radius);  /* نفس الـ Radius */
+    background-color: var(--btn-blue);
+    color: #ffffff !important;
+    padding: 8px 20px;
+    border-radius: var(--btn-radius);
     text-decoration: none;
     font-weight: bold;
     font-size: 0.85rem;
     transition: transform 0.2s ease, background-color 0.2s;
     display: inline-block;
-    border: 1px solid var(--btn-blue);
+    border: 1px solid transparent;
   }
 
   .footer-links a:hover {
     transform: translateY(-2px);
-    background-color: #1522a0; /* درجة أغمق قليلاً عند التحويم */
+    background-color: var(--btn-hover);
     text-decoration: none;
+  }
+
+  /* في الوضع الداكن، نضيف حدوداً خفيفة للأزرار لتمييزها */
+  [data-theme="dark"] .footer-links a {
+    border: 1px solid #444;
   }
 
   /* 3. زر الواتساب - أخضر بالكامل */
@@ -113,11 +147,11 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: var(--whatsapp-green); /* خلفية خضراء */
-    color: #ffffff;                          /* نص وأيقونة أبيض */
+    background-color: var(--whatsapp-green);
+    color: #ffffff;
     border: 1px solid var(--whatsapp-green);
     padding: 8px 16px;
-    border-radius: var(--btn-radius);        /* نفس الـ Radius */
+    border-radius: var(--btn-radius);
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: bold;
@@ -127,13 +161,13 @@
   .whatsapp-btn-compact:hover {
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
     transform: translateY(-2px);
-    background-color: #1ebc57; /* تغيير طفيف عند التحويم */
+    background-color: #1ebc57;
     color: #ffffff;
   }
 
   .whatsapp-btn-compact svg {
     animation: pulse-mini 2s infinite;
-    fill: currentColor; /* لضمان أن الأيقونة تأخذ اللون الأبيض */
+    fill: currentColor;
   }
 
   @keyframes pulse-mini {
