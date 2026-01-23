@@ -17,8 +17,8 @@
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
       const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-        document.documentElement.setAttribute('data-theme', 'dark');
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
       }
