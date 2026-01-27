@@ -1,0 +1,18 @@
+{
+  "name": "فقه اللغة",
+  "code": "ARAB321",
+  "description": "",
+  "url": "",
+  "items": [
+    {
+      "id": "item-ea4jfyia3",
+      "type": "resources",
+      "title": "تنويه",
+      "description": "الصفحة في وضع الاختبار",
+      "url": "",
+      "badge": "new",
+      "badgeText": "جديد",
+      "time-ms": 1769558400000
+    }
+  ]
+}
