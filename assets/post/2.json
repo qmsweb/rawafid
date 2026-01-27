@@ -1,0 +1,74 @@
+{
+  "title": "نصائح للطلاب الجدد",
+  "author": "جاسم الفارسي",
+  "date": "2026-01-28",
+  "cover_image": "",
+  "content": [
+    {
+      "type": "colored_text",
+      "text": "إليكم أبرز النصائح\n",
+      "color": "#d32f2f",
+      "background": "#f0f0f0"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "افتح"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "1"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة\n"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "افتح"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": ""
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة 1افتح"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "1"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "1\n"
+    },
+    {
+      "type": "header",
+      "level": "h3",
+      "text": "تجربة 1"
+    }
+  ]
+}
