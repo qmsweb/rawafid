@@ -13,6 +13,16 @@
       "badge": "new",
       "badgeText": "جديد",
       "time-ms": 1769558400000
+    },
+    {
+      "id": "item-3wjk9604l",
+      "type": "quizzes",
+      "title": "اختبار تفاعلي في الوحدة الأولى",
+      "description": "",
+      "url": "https://",
+      "badge": "important",
+      "badgeText": "مهم",
+      "time-ms": 1769558400000
     }
   ]
 }
