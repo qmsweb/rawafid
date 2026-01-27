@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر المقالات - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #f57c00; /* لون بلوجر البرتقالي */
+            --bg-gray: #f8f9fa;
+            --border: #dadce0;
+            --text: #3c4043;
+        }
+
+        * { box-sizing: border-box; font-family: 'IBM Plex Sans Arabic', sans-serif; }
+        
+        body { margin: 0; background: var(--bg-gray); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* === الشريط العلوي === */
+        .top-bar {
+            background: white; border-bottom: 1px solid var(--border);
+            padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+            height: 60px;
+        }
+        
+        .logo-area { font-weight: bold; color: var(--text); font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+        .post-title-input {
+            border: none; font-size: 1.2rem; outline: none; flex: 1; margin: 0 20px; font-weight: bold; color: #202124;
+        }
+        .post-title-input::placeholder { color: #bdc1c6; }
+
+        .publish-btn {
+            background-color: var(--primary); color: white; border: none;
+            padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
+        }
+        .publish-btn:hover { background-color: #e65100; }
+
+        /* === منطقة العمل الرئيسية === */
+        .workspace { display: flex; flex: 1; height: calc(100vh - 60px); }
+
+        /* === القائمة الجانبية (الإعدادات) === */
+        .sidebar {
+            width: 300px; background: white; border-left: 1px solid var(--border);
+            padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
+        }
+        .sidebar-section h3 { font-size: 0.9rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; color: #5f6368; margin-bottom: 5px; }
+        .input-group input, .input-group textarea {
+            width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem;
+        }
+        .file-name-hint { font-size: 0.75rem; color: #888; margin-top: 5px; }
+
+        /* === المحرر === */
+        .editor-container { flex: 1; display: flex; flex-direction: column; background: white; margin: 20px; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+        /* شريط الأدوات */
+        .toolbar {
+            padding: 10px; border-bottom: 1px solid var(--border); background: #fff;
+            display: flex; gap: 5px; align-items: center; flex-wrap: wrap; border-radius: 8px 8px 0 0;
+        }
+        .tool-btn {
+            background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 4px; color: #5f6368; font-size: 1rem; position: relative;
+        }
+        .tool-btn:hover { background: #f1f3f4; color: #202124; }
+        .separator { width: 1px; height: 20px; background: var(--border); margin: 0 5px; }
+        
+        /* منطقة الكتابة */
+        #editor-content {
+            flex: 1; padding: 40px; outline: none; overflow-y: auto; font-size: 1.1rem; line-height: 1.8; color: #202124;
+        }
+        
+        /* تنسيقات داخل المحرر لتشبه النتيجة النهائية */
+        #editor-content h2 { color: #1a2ac6; margin-top: 30px; }
+        #editor-content h3 { color: #333; margin-top: 20px; }
+        #editor-content img { max-width: 100%; border-radius: 8px; border: 1px solid #eee; margin: 10px 0; cursor: pointer; }
+        #editor-content .custom-btn {
+            background: #1a2ac6; color: white; padding: 8px 20px; border-radius: 8px; 
+            text-decoration: none; display: inline-block; font-size: 0.9rem; margin: 10px 0;
+        }
+        #editor-content .colored-text { padding: 2px 5px; border-radius: 4px; }
+
+        /* مساعدة بصرية */
+        .placeholder:empty:before {
+            content: 'اكتب محتوى المقال هنا...'; color: #bdc1c6; cursor: text;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo-area">
+            <i class="fab fa-blogger" style="color: var(--primary); font-size: 1.5rem;"></i>
+            <input type="text" id="post-title" class="post-title-input" placeholder="عنوان المشاركة">
+        </div>
+        <div>
+            <button class="publish-btn" onclick="generateAndDownloadJSON()">
+                <i class="fas fa-paper-plane"></i> نشر (تحميل JSON)
+            </button>
+        </div>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="editor-container">
+            <div class="toolbar">
+                <button class="tool-btn" onclick="formatDoc('formatBlock', 'H2')" title="عنوان رئيسي"><i class="fas fa-heading"></i> 1</button>
+                <button class="tool-btn" onclick="formatDoc('formatBlock', 'H3')" title="عنوان فرعي"><i class="fas fa-heading" style="font-size: 0.8rem;"></i> 2</button>
+                <div class="separator"></div>
+                <button class="tool-btn" onclick="formatDoc('bold')" title="عريض"><i class="fas fa-bold"></i></button>
+                <button class="tool-btn" onclick="formatDoc('italic')" title="مائل"><i class="fas fa-italic"></i></button>
+                <button class="tool-btn" onclick="applyColor('#d32f2f')" title="نص أحمر" style="color: #d32f2f;"><i class="fas fa-font"></i></button>
+                <button class="tool-btn" onclick="applyColor('#1a2ac6')" title="نص أزرق (اللون الأساسي)" style="color: #1a2ac6;"><i class="fas fa-font"></i></button>
+                <div class="separator"></div>
+                <button class="tool-btn" onclick="insertImage()" title="إدراج صورة"><i class="far fa-image"></i></button>
+                <button class="tool-btn" onclick="insertLinkBtn()" title="إدراج زر رابط"><i class="fas fa-link"></i></button>
+                <button class="tool-btn" onclick="formatDoc('removeFormat')" title="مسح التنسيق"><i class="fas fa-eraser"></i></button>
+            </div>
+            
+            <div id="editor-content" class="placeholder" contenteditable="true"></div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3><i class="fas fa-cog"></i> إعدادات المشاركة</h3>
+                
+                <div class="input-group">
+                    <label>اسم الملف (ID) (بالانجليزية)</label>
+                    <input type="text" id="post-id" placeholder="example: ai-article">
+                    <div class="file-name-hint">سيتم حفظ الملف بهذا الاسم .json</div>
+                </div>
+
+                <div class="input-group">
+                    <label>الكاتب</label>
+                    <input type="text" id="post-author" value="فريق التحرير">
+                </div>
+
+                <div class="input-group">
+                    <label>تاريخ النشر</label>
+                    <input type="date" id="post-date">
+                </div>
+
+                <div class="input-group">
+                    <label>رابط الصورة البارزة (Cover)</label>
+                    <textarea id="post-cover" rows="3" placeholder="https://..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تعيين تاريخ اليوم تلقائياً
+        document.getElementById('post-date').valueAsDate = new Date();
+
+        // === أدوات التنسيق ===
+        function formatDoc(cmd, value = null) {
+            if (value) {
+                document.execCommand(cmd, false, value);
+            } else {
+                document.execCommand(cmd);
+            }
+            document.getElementById('editor-content').focus();
+        }
+
+        // دالة تلوين النص بطريقة متوافقة مع JSON لاحقاً
+        function applyColor(color) {
+            document.execCommand('foreColor', false, color);
+        }
+
+        // دالة إدراج صورة
+        function insertImage() {
+            const url = prompt('أدخل رابط الصورة:');
+            if (url) {
+                const imgHtml = `<img src="${url}" style="display:block; margin: 10px auto; max-width:100%;">`;
+                document.execCommand('insertHTML', false, imgHtml);
+                document.execCommand('insertHTML', false, '<p><br></p>'); // سطر جديد بعد الصورة
+            }
+        }
+
+        // دالة إدراج زر
+        function insertLinkBtn() {
+            const url = prompt('أدخل الرابط:');
+            const text = prompt('أدخل نص الزر:');
+            if (url && text) {
+                const btnHtml = `<a href="${url}" class="custom-btn" contenteditable="false">${text}</a>`;
+                document.execCommand('insertHTML', false, btnHtml);
+                document.execCommand('insertHTML', false, '<p><br></p>');
+            }
+        }
+
+        // === المحرك: تحويل HTML إلى JSON ===
+        function generateAndDownloadJSON() {
+            const title = document.getElementById('post-title').value;
+            const id = document.getElementById('post-id').value || 'untitled-post';
+            const author = document.getElementById('post-author').value;
+            const date = document.getElementById('post-date').value;
+            const cover = document.getElementById('post-cover').value;
+            
+            if (!title) { alert('يرجى كتابة عنوان للمقال'); return; }
+
+            const editor = document.getElementById('editor-content');
+            const blocks = [];
+
+            // نقوم بالمرور على كل عنصر داخل المحرر وتحويله لكتلة JSON
+            for (let node of editor.childNodes) {
+                // تجاهل النصوص الفارغة
+                if (node.nodeType === 3 && node.textContent.trim() === '') continue;
+
+                let type = 'paragraph';
+                let content = {};
+
+                // 1. التعامل مع العناوين
+                if (node.tagName === 'H2') {
+                    blocks.push({ type: 'header', level: 'h2', text: node.innerText });
+                } 
+                else if (node.tagName === 'H3') {
+                    blocks.push({ type: 'header', level: 'h3', text: node.innerText });
+                }
+                // 2. التعامل مع الصور
+                else if (node.tagName === 'IMG') {
+                    blocks.push({ type: 'image', src: node.src, caption: node.alt || '' });
+                }
+                // 3. التعامل مع الأزرار (الروابط)
+                else if (node.tagName === 'A' && node.classList.contains('custom-btn')) {
+                    blocks.push({ type: 'button', label: node.innerText, link: node.href, style: 'primary' });
+                }
+                // 4. التعامل مع الفقرات والنصوص الملونة
+                else {
+                    // إذا كان العنصر يحتوي على لون
+                    let text = node.innerText || node.textContent;
+                    if (!text.trim()) continue; // تخطي الأسطر الفارغة تماماً
+
+                    // فحص إذا كان هناك لون مطبق
+                    let color = null;
+                    if (node.nodeType === 1 && node.querySelector('font')) {
+                        color = node.querySelector('font').color;
+                    } else if (node.tagName === 'FONT') {
+                        color = node.color;
+                    }
+
+                    if (color) {
+                        blocks.push({ type: 'colored_text', text: text, color: color, background: '#f0f0f0' });
+                    } else {
+                        blocks.push({ type: 'paragraph', text: text });
+                    }
+                }
+            }
+
+            // بناء ملف JSON النهائي
+            const articleData = {
+                title: title,
+                author: author,
+                date: date,
+                cover_image: cover,
+                content: blocks
+            };
+
+            // إنشاء الملف وتنزيله
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(articleData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", id + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    </script>
+</body>
+</html>
