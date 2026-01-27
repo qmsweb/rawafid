@@ -1,0 +1,48 @@
+{
+  "articles": [
+    {
+      "id": "post-1",
+      "title": "كيف تبدأ تعلم البرمجة؟",
+      "author": "أحمد محمد",
+      "date": "2024-01-20",
+      "cover_image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",
+      "content": [
+        {
+          "type": "header",
+          "level": "h2",
+          "text": "المقدمة الأساسية"
+        },
+        {
+          "type": "paragraph",
+          "text": "البرمجة هي مهارة العصر، وفي هذا المقال سنتعلم الأساسيات. يمكنك قراءة النص التالي بتمعن."
+        },
+        {
+          "type": "paragraph",
+          "text": "هذه فقرة مهمة جداً تم تمييزها بلون مختلف لجذب الانتباه.",
+          "color": "#d32f2f",
+          "background": "#ffebee"
+        },
+        {
+          "type": "image",
+          "src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+          "caption": "صورة توضيحية لبيئة العمل"
+        },
+        {
+          "type": "header",
+          "level": "h3",
+          "text": "خطوات البدء"
+        },
+        {
+          "type": "paragraph",
+          "text": "ابدأ باختيار لغة سهلة مثل Python أو JavaScript. لا تشتت نفسك بالمصادر الكثيرة."
+        },
+        {
+          "type": "button",
+          "label": "شاهد الكورس التدريبي",
+          "link": "https://youtube.com",
+          "style": "primary"
+        }
+      ]
+    }
+  ]
+}
