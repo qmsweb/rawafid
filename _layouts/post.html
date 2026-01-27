@@ -24,7 +24,7 @@
   </script>
 
   <style>
-    /* === نفس متغيرات الألوان الخاصة بك === */
+    /* === إعدادات الألوان === */
     :root {
       --primary-color: #1a2ac6;
       --primary-dark: #121e9ec4;
@@ -55,12 +55,13 @@
       margin: 0; padding: 0; 
       background-color: var(--bg-color); 
       color: var(--text-color);
-      padding-bottom: 90px;
+      /* تم تقليل الهامش السفلي لأنه لم يعد هناك فوتر ثابت */
+      padding-bottom: 40px; 
       padding-top: 60px;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* === تنسيقات الهيدر والعودة (موجودة سابقاً) === */
+    /* === تنسيقات الهيدر والعودة === */
     .nav-header {
       margin-top: 30px; padding: 0 20px; margin-bottom: 15px;
       display: flex; align-items: center; max-width: 800px; margin-left: auto; margin-right: auto;
@@ -86,20 +87,20 @@
     .article-title { font-size: 1.8rem; font-weight: 800; line-height: 1.4; margin: 10px 0 20px 0; color: var(--text-color); }
     .cover-image { width: 100%; height: auto; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
 
-    /* === تنسيقات كتل المحتوى (Blocks Styles) === */
+    /* === تنسيقات كتل المحتوى === */
     .block-h2 { font-size: 1.4rem; font-weight: 700; margin-top: 40px; margin-bottom: 15px; color: var(--primary-color); }
     .block-h3 { font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 10px; }
     
     .block-paragraph { 
       font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px; color: var(--text-color); opacity: 0.95; 
-      padding: 0 5px; border-radius: 8px; /* في حال وجود خلفية ملونة */
+      padding: 0 5px; border-radius: 8px;
     }
 
     .block-image-wrapper { margin: 30px 0; text-align: center; }
     .block-image { max-width: 100%; border-radius: 12px; border: 1px solid var(--border-color); }
     .block-caption { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; display: block; }
 
-    /* زر داخل المقال */
+    /* === تنسيقات الأزرار داخل المقال === */
     .block-button-wrapper { margin: 30px 0; text-align: center; }
     .article-btn {
       display: inline-flex; align-items: center; justify-content: center;
@@ -110,25 +111,7 @@
     .article-btn.secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); }
     .article-btn:hover { transform: translateY(-3px); }
 
-    /* === الفوتر الثابت (للأدوات العامة) === */
-    .sticky-footer {
-      position: fixed; bottom: 0; left: 0; width: 100%; 
-      background: var(--bg-card); padding: 12px 20px; 
-      border-top: 1px solid var(--border-color);
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 1000;
-    }
-    .footer-actions { display: flex; gap: 10px; margin-right: auto; }
-    .footer-icon-btn {
-      width: 45px; height: 45px; border-radius: 50%; border: none;
-      background: var(--btn-secondary-bg); color: var(--btn-secondary-text);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; cursor: pointer; transition: 0.2s;
-    }
-    .footer-icon-btn:hover { background: var(--primary-color); color: white; }
-
     .loading-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-    .hidden { display: none !important; }
 
   </style>
 </head>
@@ -151,17 +134,7 @@
     </div>
   </div>
 
-  <div class="sticky-footer hidden" id="article-footer">
-    <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted)">
-      <span id="footer-read-time">قراءة ممتعة</span>
-    </div>
-    <div class="footer-actions">
-      <button onclick="window.print()" class="footer-icon-btn" title="طباعة"><i class="fas fa-print"></i></button>
-      <button onclick="sharePage()" class="footer-icon-btn" title="مشاركة"><i class="fas fa-share-alt"></i></button>
-    </div>
-  </div>
-
-<script>
+  <script>
   // === الإعدادات الأساسية ===
   const BASE_URL = "{{ site.baseurl }}"; 
   
@@ -173,7 +146,7 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  // دالة المشاركة
+  // دالة المشاركة (احتفظنا بها كأداة مساعدة إذا احتجتها لاحقاً داخل النص)
   function sharePage() {
     if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
     else { navigator.clipboard.writeText(window.location.href); alert('تم نسخ الرابط'); }
@@ -183,7 +156,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     
     // 1. قراءة معرف الملف من الرابط
-    // مثال: article.html?id=lesson-1
     const urlParams = new URLSearchParams(window.location.search);
     const articleFileName = urlParams.get('id'); 
     
@@ -198,17 +170,15 @@
       return;
     }
 
-    // 2. جلب ملف JSON الخاص بالمقال من المسار الجديد assets/post/
+    // 2. جلب ملف JSON
     const timestamp = new Date().getTime(); 
     
-    // التغيير هنا: قراءة الملف مباشرة بناءً على اسمه
     fetch(`${BASE_URL}/assets/post/${articleFileName}.json?v=${timestamp}`) 
       .then(res => {
         if (!res.ok) throw new Error("المقال غير موجود");
         return res.json();
       })
       .then(articleData => {
-        // بما أن الملف يحتوي على بيانات المقال مباشرة، نرسلها للدالة
         renderArticle(articleData);
       })
       .catch(err => {
@@ -216,7 +186,7 @@
         contentDiv.innerHTML = '<div style="text-align:center; color:red; padding:50px;">عذراً، لم يتم العثور على المقال المطلوب.</div>';
       });
 
-    // دالة بناء محتوى المقال (نفس الدالة السابقة دون تغيير)
+    // دالة بناء محتوى المقال
     function renderArticle(article) {
       document.title = article.title;
       
@@ -241,7 +211,7 @@
             htmlContent += `<${tag} class="${className}">${block.text}</${tag}>`;
           }
 
-          else if (block.type === 'paragraph') {
+          else if (block.type === 'paragraph' || block.type === 'colored_text') {
             const style = [];
             if (block.color) style.push(`color: ${block.color}`);
             if (block.background) style.push(`background-color: ${block.background}; padding: 10px;`);
@@ -270,7 +240,7 @@
 
       htmlContent += '<div style="height: 60px;"></div>';
       contentDiv.innerHTML = htmlContent;
-      document.getElementById('article-footer').classList.remove('hidden');
+      // تم إزالة السطر الذي كان يُظهر الفوتر القديم لتجنب الأخطاء
     }
   });
 
