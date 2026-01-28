@@ -55,7 +55,6 @@
       margin: 0; padding: 0; 
       background-color: var(--bg-color); 
       color: var(--text-color);
-      /* تم تقليل الهامش السفلي لأنه لم يعد هناك فوتر ثابت */
       padding-bottom: 40px; 
       padding-top: 60px;
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -82,36 +81,57 @@
     }
 
     /* === رأس المقال (العنوان والصورة البارزة) === */
-    .article-header { margin-bottom: 30px; }
+    .article-header { margin-bottom: 30px; animation: fadeIn 0.5s ease-in; }
     .article-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; display: flex; gap: 15px; }
     .article-title { font-size: 1.8rem; font-weight: 800; line-height: 1.4; margin: 10px 0 20px 0; color: var(--text-color); }
     .cover-image { width: 100%; height: auto; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
 
-    /* === تنسيقات كتل المحتوى === */
-    .block-h2 { font-size: 1.4rem; font-weight: 700; margin-top: 40px; margin-bottom: 15px; color: var(--primary-color); }
-    .block-h3 { font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 10px; }
+    /* === تنسيقات المحتوى (تم تحديثها لتعمل مع HTML مباشرة) === */
     
-    .block-paragraph { 
+    /* العناوين داخل المقال */
+    .article-content h2 { 
+      font-size: 1.4rem; font-weight: 700; margin-top: 40px; margin-bottom: 15px; color: var(--primary-color); 
+    }
+    .article-content h3 { 
+      font-size: 1.2rem; font-weight: 600; margin-top: 30px; margin-bottom: 10px; 
+    }
+
+    /* الفقرات */
+    .article-content p { 
       font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px; color: var(--text-color); opacity: 0.95; 
       padding: 0 5px; border-radius: 8px;
     }
 
-    .block-image-wrapper { margin: 30px 0; text-align: center; }
-    .block-image { max-width: 100%; border-radius: 12px; border: 1px solid var(--border-color); }
-    .block-caption { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; display: block; }
+    /* الصور داخل المقال */
+    .article-content img {
+      max-width: 100%; border-radius: 12px; border: 1px solid var(--border-color);
+      display: block; margin: 30px auto;
+    }
+    
+    /* الجداول (إضافة جديدة لدعم الجداول بتصميم جميل) */
+    .article-content table {
+      width: 100%; border-collapse: collapse; margin: 30px 0; font-size: 0.95rem;
+    }
+    .article-content th, .article-content td {
+      padding: 12px 15px; border-bottom: 1px solid var(--border-color); text-align: right;
+    }
+    .article-content th {
+      color: var(--primary-color); font-weight: 700; border-bottom: 2px solid var(--primary-color);
+    }
 
-    /* === تنسيقات الأزرار داخل المقال === */
-    .block-button-wrapper { margin: 30px 0; text-align: center; }
+    /* الأزرار (يمكنك استخدام الكلاس يدوياً) */
     .article-btn {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 12px 30px; border-radius: 12px; font-weight: 700; text-decoration: none;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease; margin: 20px auto;
     }
     .article-btn.primary { background: var(--primary-color); color: #fff; box-shadow: 0 4px 15px rgba(26, 42, 198, 0.2); }
     .article-btn.secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); }
     .article-btn:hover { transform: translateY(-3px); }
+    
+    .center-wrapper { text-align: center; margin: 30px 0; }
 
-    .loading-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   </style>
 </head>
@@ -122,128 +142,46 @@
   </div>
 
   <div class="nav-header">
-    <a href="#" id="back-link" class="back-btn">
+    <a href="{{ site.baseurl }}/" class="back-btn">
       <i class="fas fa-arrow-right"></i> رجوع
     </a>
   </div>
 
-  <div class="article-container" id="main-content">
-    <div class="loading-state">
-      <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
-      جاري تحميل المقالة...
+  <div class="article-container">
+    
+    <div class="article-header">
+      {% if page.cover_image %}
+        <img src="{{ page.cover_image | relative_url }}" class="cover-image" alt="{{ page.title }}">
+      {% endif %}
+      
+      <div class="article-meta">
+        {% if page.date %}
+          <span><i class="far fa-calendar"></i> {{ page.date | date: "%Y-%m-%d" }}</span>
+        {% endif %}
+        {% if page.author %}
+          <span><i class="far fa-user"></i> {{ page.author }}</span>
+        {% endif %}
+      </div>
+
+      <h1 class="article-title">{{ page.title }}</h1>
+      <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
     </div>
+
+    <div class="article-content">
+      {{ content }}
+    </div>
+
   </div>
 
   <script>
-  // === الإعدادات الأساسية ===
-  const BASE_URL = "{{ site.baseurl }}"; 
-  
-  // دالة تبديل الثيم
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('rawafed-theme', newTheme);
-  }
-
-  // دالة المشاركة (احتفظنا بها كأداة مساعدة إذا احتجتها لاحقاً داخل النص)
-  function sharePage() {
-    if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
-    else { navigator.clipboard.writeText(window.location.href); alert('تم نسخ الرابط'); }
-  }
-
-// === المنطق البرمجي لجلب وعرض المقال ===
-  document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. قراءة معرف الملف من الرابط
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleFileName = urlParams.get('id'); 
-    
-    const contentDiv = document.getElementById('main-content');
-    const backLink = document.getElementById('back-link');
-
-    // زر العودة
-    backLink.href = `${BASE_URL}/index.html`;
-
-    if (!articleFileName) {
-      contentDiv.innerHTML = '<div style="text-align:center; padding:50px;">عذراً، الرابط غير صحيح (يجب تحديد id).</div>';
-      return;
+    // دالة تبديل الثيم
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
     }
+  </script>
 
-    // 2. جلب ملف JSON
-    const timestamp = new Date().getTime(); 
-    
-    fetch(`${BASE_URL}/assets/post/${articleFileName}.json?v=${timestamp}`) 
-      .then(res => {
-        if (!res.ok) throw new Error("المقال غير موجود");
-        return res.json();
-      })
-      .then(articleData => {
-        renderArticle(articleData);
-      })
-      .catch(err => {
-        console.error(err);
-        contentDiv.innerHTML = '<div style="text-align:center; color:red; padding:50px;">عذراً، لم يتم العثور على المقال المطلوب.</div>';
-      });
-
-    // دالة بناء محتوى المقال
-    function renderArticle(article) {
-      document.title = article.title;
-      
-      let htmlContent = `
-        <div class="article-header animated fadeIn">
-          ${article.cover_image ? `<img src="${article.cover_image}" class="cover-image" alt="${article.title}">` : ''}
-          <div class="article-meta">
-            ${article.date ? `<span><i class="far fa-calendar"></i> ${article.date}</span>` : ''}
-            ${article.author ? `<span><i class="far fa-user"></i> ${article.author}</span>` : ''}
-          </div>
-          <h1 class="article-title">${article.title}</h1>
-          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
-        </div>
-      `;
-
-      if (article.content && Array.isArray(article.content)) {
-        article.content.forEach(block => {
-          
-          if (block.type === 'header') {
-            const tag = block.level || 'h2';
-            const className = tag === 'h3' ? 'block-h3' : 'block-h2';
-            htmlContent += `<${tag} class="${className}">${block.text}</${tag}>`;
-          }
-
-          else if (block.type === 'paragraph' || block.type === 'colored_text') {
-            const style = [];
-            if (block.color) style.push(`color: ${block.color}`);
-            if (block.background) style.push(`background-color: ${block.background}; padding: 10px;`);
-            htmlContent += `<p class="block-paragraph" style="${style.join(';')}">${block.text}</p>`;
-          }
-
-          else if (block.type === 'image') {
-            htmlContent += `
-              <div class="block-image-wrapper">
-                <img src="${block.src}" class="block-image" alt="image">
-                ${block.caption ? `<span class="block-caption">${block.caption}</span>` : ''}
-              </div>`;
-          }
-
-          else if (block.type === 'button') {
-            const btnClass = block.style === 'secondary' ? 'secondary' : 'primary';
-            htmlContent += `
-              <div class="block-button-wrapper">
-                <a href="${block.link}" target="_blank" class="article-btn ${btnClass}">
-                  ${block.label} <i class="fas fa-arrow-left" style="margin-right:8px; font-size:0.8em;"></i>
-                </a>
-              </div>`;
-          }
-        });
-      }
-
-      htmlContent += '<div style="height: 60px;"></div>';
-      contentDiv.innerHTML = htmlContent;
-      // تم إزالة السطر الذي كان يُظهر الفوتر القديم لتجنب الأخطاء
-    }
-  });
-
-</script>
 </body>
 </html>
