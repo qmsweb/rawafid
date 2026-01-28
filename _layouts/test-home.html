@@ -77,7 +77,7 @@ if (savedTheme === 'dark') {
     }
 
     /* Transition Smoothness: انتقال ناعم للألوان عند التبديل */
-    body, .material-item, .filter-item, .view-toggle, .sticky-filter-container, .tool-item {
+    body, .material-item, .filter-item, .view-toggle, .sticky-filter-container, .tool-item, .section-title {
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 
@@ -95,13 +95,79 @@ if (savedTheme === 'dark') {
       padding: 0 20px;
     }
 
+    /* === عنوان القسم === */
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 20px;
+      margin-bottom: 15px;
+      padding-right: 5px;
+      border-right: 4px solid var(--primary-color); /* زخرفة جانبية بسيطة */
+      padding-right: 12px;
+    }
+
+    /* === أدوات روافد (Tools Grid) === */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px; /* مسافة قبل شريط الفلتر */
+    }
+
+    .tool-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .tool-item:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-4px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .tool-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-light-bg);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: 0.3s ease;
+    }
+
+    .tool-item:hover .tool-icon {
+      background: var(--primary-color);
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .tool-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
     /* === شريط الفلتر (Sticky Filter) === */
     .sticky-filter-container {
       position: sticky;
       top: 70px;
       z-index: 90;
       margin-bottom: 25px;
-      margin-top: 20px; 
       padding: 10px 0;
       background: var(--bg-sticky);
       border-bottom: 1px solid var(--border-color);
@@ -174,61 +240,6 @@ if (savedTheme === 'dark') {
       background: var(--primary-color);
       color: #fff; /* النص يبقى أبيض دائمًا في الزر النشط */
       border-color: var(--primary-color);
-    }
-
-    /* === أدوات روافد (Tools Grid) === */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .tool-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 20px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .tool-item:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-4px);
-      box-shadow: var(--hover-shadow);
-    }
-
-    .tool-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary-light-bg);
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      transition: 0.3s ease;
-    }
-
-    .tool-item:hover .tool-icon {
-      background: var(--primary-color);
-      color: #ffffff;
-      transform: scale(1.1);
-    }
-
-    .tool-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-main);
     }
 
     /* === قائمة المقررات === */
@@ -358,10 +369,7 @@ if (savedTheme === 'dark') {
     
     {{ content }}
 
-    <div class="sticky-filter-container">
-      <div class="filter-bar" id="filter-bar">
-        </div>
-    </div>
+    <h3 class="section-title">الأدوات</h3>
 
     <div class="tools-grid">
       <div class="tool-item" onclick="window.location.href='/gpa-calculator'">
@@ -392,6 +400,11 @@ if (savedTheme === 'dark') {
         <div class="tool-name">التقويم الأكاديمي</div>
       </div>
     </div>
+    <div class="sticky-filter-container">
+      <div class="filter-bar" id="filter-bar">
+        </div>
+    </div>
+
     <div class="materials-list" id="materials-list">
       </div>
 
@@ -400,20 +413,13 @@ if (savedTheme === 'dark') {
 
 <script>
   /* === 1. آلية إدارة الوضع الليلي/النهاري === */
-  // يتم استدعاء هذه الدالة عندما يتم الضغط على الزر (الذي ستضيفه لاحقاً)
   function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('rawafed-theme', newTheme);
-    
-    // (اختياري) تحديث ألوان الأيقونات إذا لزم الأمر في الوقت الفعلي
-    // renderMaterialItems(allCourses); // إعادة رسم البطاقات لتحديث ألوان خلفيات الأيقونات بدقة
   }
-
-  // ملاحظة: يمكنك اختبار الدالة الآن بكتابة toggleTheme() في الكونسول بالمتصفح
-
 
   /* === 2. منطق عرض المواد والفلاتر === */
   const materialsList = document.getElementById('materials-list');
@@ -435,9 +441,6 @@ if (savedTheme === 'dark') {
       
       const iconColor = item.color || '#1a2ac6';
       const iconClass = item.icon || 'fa-book';
-      
-      // نستخدم Hex مع الشفافية، لكن هنا سنعتمد على المتغيرات لاحقًا لتحكم أفضل
-      // كحل سريع: نضيف شفافية 15 للون الهيكس
       const iconBg = iconColor + '15'; 
 
       el.addEventListener('click', () => {
