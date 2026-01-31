@@ -326,7 +326,7 @@
             text-align: right;
             direction: rtl;
             color: var(--text-main);
-            /* --- التعديل هنا: لإظهار الأسطر المتعددة --- */
+            /* الخاصية لإظهار الأسطر المتعددة */
             white-space: pre-wrap;
             line-height: 1.8;
         }
@@ -472,7 +472,7 @@
 
         /* === إعدادات الطباعة === */
         @media print {
-            /* --- التعديل هنا: إجبار الألوان على الوضع النهاري عند الطباعة --- */
+            /* إجبار الألوان على الوضع النهاري عند الطباعة */
             :root, [data-theme="dark"] {
                 --primary-color: #1a2ac6 !important;
                 --bg-body: #ffffff !important;
@@ -558,6 +558,9 @@
        
         {{ content }}
 
+        <div style="text-align: center; margin-bottom: 15px;">
+            <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="روافد" style="max-width: 200px; height: auto;">
+        </div>
         <div class="quiz-header">
             <button id="print-btn" onclick="printQuizPDF()">
                 <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
