@@ -103,7 +103,7 @@
         font-size: 0.85rem;
         transition: 0.2s;
         font-weight: 500;
-        display: none; /* مخفي حتى يتم تحميل البيانات */
+        display: none;
     }
     .history-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
 
@@ -114,7 +114,7 @@
         overflow: hidden;
         margin-bottom: 30px;
         border: 1px solid var(--border-color);
-        display: none; /* مخفي حتى تحميل البيانات */
+        /* display: none; ستتم إدارتها بالجافاسكربت */
     }
 
     .list-header {
@@ -194,18 +194,15 @@
     </div>
 
     <div id="past-container" class="hidden-section">
-        <div class="ios-list-group" id="past-group" style="display: block;">
+        <div class="ios-list-group">
             <div class="list-header">انتهت</div>
             <div id="past-list-content"></div>
         </div>
     </div>
 
-    <div class="ios-list-group" id="upcoming-group">
-        <div class="list-header">القادم</div>
-        <div id="upcoming-list-content">
-            <div style="padding: 20px; text-align: center; color: var(--text-muted);">
-                جاري تحميل التقويم...
-            </div>
+    <div id="semesters-container">
+        <div style="padding: 20px; text-align: center; color: var(--text-muted);">
+             جاري تحميل التقويم...
         </div>
     </div>
 
@@ -214,103 +211,115 @@
   {% include footer.html %}
 
 <script>
-    // أسماء الشهور بالعربية للعرض
     const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
     async function fetchAndRenderCalendar() {
         try {
-            // جلب ملف JSON
-            // يستخدم فلتر Jekyll لضمان صحة المسار
             const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
-            if (!response.ok) throw new Error('Failed to load calendar data');
-            
+            if (!response.ok) throw new Error('Failed to load data');
             const events = await response.json();
             
             const today = new Date();
             today.setHours(0,0,0,0);
 
-            const pastContainer = document.getElementById('past-list-content');
-            const upcomingContainer = document.getElementById('upcoming-list-content');
+            const pastContent = document.getElementById('past-list-content');
+            const semestersContainer = document.getElementById('semesters-container');
             
-            // تفريغ رسالة التحميل
-            upcomingContainer.innerHTML = '';
-            document.getElementById('upcoming-group').style.display = 'block';
+            // تفريغ المحتوى
+            semestersContainer.innerHTML = '';
 
             let hasPast = false;
+            
+            // كائن لتجميع الفصول القادمة
+            let upcomingSemesters = {};
 
             events.forEach(event => {
                 const eventDate = new Date(event.date);
-                
-                // إنشاء عنصر الـ HTML
-                const item = document.createElement('div');
-                item.className = 'event-item';
-                
-                // تحديد ما إذا كان الأسبوع الحالي
                 const weekEnd = new Date(eventDate);
                 weekEnd.setDate(weekEnd.getDate() + 7);
                 const isCurrent = (today >= eventDate && today < weekEnd);
-                
-                if (isCurrent) {
-                    item.classList.add('current-week');
-                }
 
-                // تنسيق التاريخ
+                // بناء عنصر الـ HTML
                 const day = eventDate.getDate();
                 const month = monthNames[eventDate.getMonth()];
-                
-                // تنسيق العنوان (لون أحمر للإجازات)
                 const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
                 
-                // تنسيق شارة الأسبوع الحالي
                 let badgeText = event.weekBadge;
                 let badgeStyle = '';
+                let itemClass = 'event-item';
+                
                 if (isCurrent) {
+                    itemClass += ' current-week';
                     badgeText += " (الحالي)";
                     badgeStyle = 'style="background-color:var(--primary-color); color:#fff;"';
                 }
 
-                item.innerHTML = `
-                    <div class="event-date">
-                        <span class="date-month">${month}</span>
-                        <span class="date-day">${day}</span>
-                    </div>
-                    <div class="event-content">
-                        <span class="week-badge" ${badgeStyle}>${badgeText}</span>
-                        <div class="event-title" ${titleStyle}>${event.title}</div>
-                        <div class="event-meta">
-                            <span>${event.details}</span>
+                const html = `
+                    <div class="${itemClass}">
+                        <div class="event-date">
+                            <span class="date-month">${month}</span>
+                            <span class="date-day">${day}</span>
+                        </div>
+                        <div class="event-content">
+                            <span class="week-badge" ${badgeStyle}>${badgeText}</span>
+                            <div class="event-title" ${titleStyle}>${event.title}</div>
+                            <div class="event-meta">
+                                <span>${event.details}</span>
+                            </div>
                         </div>
                     </div>
                 `;
 
-                // الفرز: ماضي أم قادم
+                // المنطق: ماضي يذهب للأرشيف، قادم يتم تجميعه حسب الفصل
                 if (weekEnd < today) {
-                    pastContainer.appendChild(item);
+                    // ماضي
+                    pastContent.insertAdjacentHTML('beforeend', html);
                     hasPast = true;
                 } else {
-                    upcomingContainer.appendChild(item);
+                    // قادم أو حالي: نضعه في المجموعة المناسبة
+                    const semName = event.semester || "أخرى";
+                    if (!upcomingSemesters[semName]) {
+                        upcomingSemesters[semName] = [];
+                    }
+                    upcomingSemesters[semName].push(html);
                 }
             });
 
-            // إظهار زر السجل إذا كان هناك بيانات ماضية
+            // إظهار زر السجل إذا وجد
             if (hasPast) {
                 document.getElementById('toggleHistoryBtn').style.display = 'block';
             }
 
+            // رسم الفصول القادمة في صناديق منفصلة
+            for (const [semesterName, itemsHtml] of Object.entries(upcomingSemesters)) {
+                // إنشاء صندوق (Box) لكل فصل
+                const box = document.createElement('div');
+                box.className = 'ios-list-group';
+                
+                // إضافة الهيدر
+                const header = document.createElement('div');
+                header.className = 'list-header';
+                header.innerText = semesterName;
+                
+                // إضافة القائمة
+                const listDiv = document.createElement('div');
+                listDiv.innerHTML = itemsHtml.join('');
+
+                box.appendChild(header);
+                box.appendChild(listDiv);
+                
+                semestersContainer.appendChild(box);
+            }
+
         } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('upcoming-list-content').innerHTML = `
-                <div style="padding:20px; text-align:center; color:red;">
-                    حدث خطأ في تحميل التقويم.
-                </div>
-            `;
+            console.error(error);
+            document.getElementById('semesters-container').innerHTML = 'حدث خطأ في تحميل البيانات.';
         }
     }
 
     function toggleHistory() {
         const section = document.getElementById('past-container');
         const btn = document.getElementById('toggleHistoryBtn');
-        
         if (section.style.display === 'block') {
             section.style.display = 'none';
             btn.innerHTML = 'عرض الأسابيع الماضية';
