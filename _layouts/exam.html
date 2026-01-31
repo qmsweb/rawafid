@@ -110,13 +110,20 @@
             transition: background-color 0.3s;
         }
 
+        /* إخفاء الشعار في العرض العادي */
+        #print-only-logo {
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         .quiz-header {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             flex-direction: row-reverse;
-            flex-wrap: wrap; /* للسماح للزر بالنزول في الشاشات الصغيرة */
+            flex-wrap: wrap; 
             gap: 10px;
         }
 
@@ -135,7 +142,6 @@
             margin: 0;
         }
 
-        /* تنسيق زر الطباعة */
         #print-btn {
             background-color: var(--text-muted);
             color: white;
@@ -149,7 +155,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            margin-right: auto; /* يدفعه للجهة اليسرى */
+            margin-right: auto;
         }
         #print-btn:hover {
             background-color: var(--primary-color);
@@ -326,7 +332,6 @@
             text-align: right;
             direction: rtl;
             color: var(--text-main);
-            /* الخاصية لإظهار الأسطر المتعددة */
             white-space: pre-wrap;
             line-height: 1.8;
         }
@@ -430,7 +435,6 @@
             background-color: var(--bg-secondary);
         }
 
-        /* أنماط الصور */
         .question-image {
             width: 100%;
             max-width: 500px;
@@ -445,7 +449,6 @@
             margin: 15px 0;
         }
 
-        /* أنماط التعليمات */
         .instructions-question {
             margin-bottom: 30px;
             padding: 20px;
@@ -472,7 +475,6 @@
 
         /* === إعدادات الطباعة === */
         @media print {
-            /* إجبار الألوان على الوضع النهاري عند الطباعة */
             :root, [data-theme="dark"] {
                 --primary-color: #1a2ac6 !important;
                 --bg-body: #ffffff !important;
@@ -493,7 +495,11 @@
                 display: none !important;
             }
 
-            /* إعادة ضبط الألوان والخلفيات للورق */
+            /* إظهار الشعار فقط في الطباعة */
+            #print-only-logo {
+                display: block !important;
+            }
+
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
@@ -508,7 +514,6 @@
                 border: none !important;
             }
 
-            /* تنسيق الأسئلة للطباعة */
             .question-item {
                 break-inside: avoid;
                 page-break-inside: avoid;
@@ -518,7 +523,6 @@
                 margin-bottom: 15px;
             }
 
-            /* إخفاء خلفية الخيارات لجعلها تبدو كاختبار ورقي */
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
@@ -528,12 +532,10 @@
                 border: 1px solid #000;
             }
 
-            /* إخفاء أي إجابات تم إظهارها داخل الأسئلة */
             .essay-answer {
                 display: none !important;
             }
 
-            /* إظهار وتنسيق ورقة الإجابة الخلفية */
             #printable-answer-key {
                 display: block !important;
                 break-before: page;
@@ -544,7 +546,6 @@
             }
         }
 
-        /* إخفاء ورقة الإجابة في العرض العادي */
         #printable-answer-key {
             display: none;
         }
@@ -558,7 +559,7 @@
        
         {{ content }}
 
-        <div style="text-align: center; margin-bottom: 15px;">
+        <div id="print-only-logo">
             <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="روافد" style="max-width: 150px; height: auto;">
         </div>
         <div class="quiz-header">
