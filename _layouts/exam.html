@@ -31,8 +31,8 @@
         (function() {
             const savedTheme = localStorage.getItem('rawafed-theme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
             } else {
                 document.documentElement.setAttribute('data-theme', 'light');
             }
@@ -44,19 +44,19 @@ if (savedTheme === 'dark') {
             /* الوضع الفاتح */
             --primary-color: #1a2ac6;
             --bg-body: #f4f6fb;
-            --bg-card: #ffffff; /* خلفية الكونتينر والأسئلة */
-            --bg-secondary: #f8f9fa; /* خلفية التعليمات والنتائج */
+            --bg-card: #ffffff;
+            --bg-secondary: #f8f9fa;
             --text-main: #2d2d2d;
             --text-muted: #666666;
             --border-color: #e7e7e7;
             --hover-bg: #e0e7ff;
-            
+           
             /* ألوان الحالة */
             --correct-bg: #4CAF50;
             --correct-text: #ffffff;
             --wrong-bg: #F44336;
             --wrong-text: #ffffff;
-            
+           
             /* أزرار المقال */
             --btn-essay-bg: #ffffff;
             --btn-essay-border: #ccd1e0;
@@ -73,7 +73,6 @@ if (savedTheme === 'dark') {
             --border-color: #333333;
             --hover-bg: #2c2e3e;
 
-            /* ألوان الحالة في الداكن (أقل سطوعاً قليلاً) */
             --correct-bg: #388e3c;
             --correct-text: #ffffff;
             --wrong-bg: #d32f2f;
@@ -117,6 +116,8 @@ if (savedTheme === 'dark') {
             justify-content: center;
             margin-bottom: 20px;
             flex-direction: row-reverse;
+            flex-wrap: wrap; /* للسماح للزر بالنزول في الشاشات الصغيرة */
+            gap: 10px;
         }
 
         .quiz-header img {
@@ -132,6 +133,26 @@ if (savedTheme === 'dark') {
             color: var(--primary-color);
             font-weight: 600;
             margin: 0;
+        }
+
+        /* تنسيق زر الطباعة */
+        #print-btn {
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: auto; /* يدفعه للجهة اليسرى */
+        }
+        #print-btn:hover {
+            background-color: var(--primary-color);
         }
 
         .divider-text {
@@ -445,19 +466,84 @@ if (savedTheme === 'dark') {
             color: var(--text-main);
             line-height: 1.7;
         }
+
+        /* === إعدادات الطباعة === */
+        @media print {
+            /* إخفاء الهيدر والفوتر والأزرار */
+            header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
+                display: none !important;
+            }
+
+            /* إعادة ضبط الألوان والخلفيات للورق */
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            /* تنسيق الأسئلة للطباعة */
+            .question-item {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+                box-shadow: none;
+                background-color: #fff !important;
+                margin-bottom: 15px;
+            }
+
+            /* إخفاء خلفية الخيارات لجعلها تبدو كاختبار ورقي */
+            .choice-label {
+                background-color: transparent !important;
+                border: none !important;
+                padding: 5px 0;
+            }
+            .choice-radio {
+                border: 1px solid #000;
+            }
+
+            /* إخفاء أي إجابات تم إظهارها داخل الأسئلة */
+            .essay-answer {
+                display: none !important;
+            }
+
+            /* إظهار وتنسيق ورقة الإجابة الخلفية */
+            #printable-answer-key {
+                display: block !important;
+                break-before: page;
+                page-break-before: always;
+                direction: rtl;
+                padding-top: 50px;
+            }
+        }
+
+        /* إخفاء ورقة الإجابة في العرض العادي */
+        #printable-answer-key {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    
+   
     {% include header.html %}
 
     <div class="container">
-        
+       
         {{ content }}
 
         <div class="quiz-header">
-            <img src="{{ '/images/favicon.png' | relative_url }}" alt="Quiz Icon">
+            <button id="print-btn" onclick="printQuizPDF()">
+                <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
+            </button>
             <h1 id="quiz-title">الاختبار</h1>
+            <img src="{{ '/images/favicon.png' | relative_url }}" alt="Quiz Icon">
         </div>
 
         <table class="quiz-info-table" id="quiz-info-table">
@@ -517,6 +603,63 @@ if (savedTheme === 'dark') {
             }
         });
 
+        // === دالة طباعة الاختبار PDF ===
+        function printQuizPDF() {
+            // التحقق من وجود بيانات
+            if (!quizData[currentQuiz] || !quizData[currentQuiz].questions) {
+                alert('لا توجد أسئلة للطباعة');
+                return;
+            }
+
+            // إزالة أي نموذج إجابة قديم
+            const oldKey = document.getElementById('printable-answer-key');
+            if (oldKey) oldKey.remove();
+
+            // إنشاء حاوية لنموذج الإجابة الخلفي
+            const keyDiv = document.createElement('div');
+            keyDiv.id = 'printable-answer-key';
+            
+            // رأس نموذج الإجابة
+            let keyHTML = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 15px;">
+                    <h2 style="margin:0; font-size: 24px;">نموذج الإجابة</h2>
+                    <p style="margin:5px 0; font-size: 16px;">${quizTitleElement.textContent}</p>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                    <thead>
+                        <tr style="background-color: #f0f0f0;">
+                            <th style="border: 1px solid #000; padding: 10px; width: 15%;">رقم السؤال</th>
+                            <th style="border: 1px solid #000; padding: 10px;">الإجابة الصحيحة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let qCount = 1;
+            quizData[currentQuiz].questions.forEach(q => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+
+                keyHTML += `
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${qCount}</td>
+                        <td style="border: 1px solid #000; padding: 10px; text-align: right;">${q.answer}</td>
+                    </tr>
+                `;
+                qCount++;
+            });
+
+            keyHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            keyDiv.innerHTML = keyHTML;
+            document.querySelector('.container').appendChild(keyDiv);
+
+            // استدعاء نافذة الطباعة
+            window.print();
+        }
+
         function getExamCode() {
             const params = new URLSearchParams(window.location.search);
             return params.get('i');
@@ -542,7 +685,7 @@ if (savedTheme === 'dark') {
                         quizTitleElement.textContent = quizData[currentQuiz].title;
                         document.title = quizData[currentQuiz].title + ' | روافد';
                     }
-                    
+                   
                     subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
                     subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
 
@@ -582,29 +725,29 @@ if (savedTheme === 'dark') {
                     questionsContainer.appendChild(dividerDiv);
                     return;
                 }
-                
+               
                 if (q.type === 'instructions') {
                     const instructionsDiv = document.createElement('div');
                     instructionsDiv.className = 'instructions-question';
-                    
+                   
                     if (q.mainTitle) {
                         const mainTitle = document.createElement('div');
                         mainTitle.className = 'instructions-header';
                         mainTitle.textContent = q.mainTitle;
                         instructionsDiv.appendChild(mainTitle);
                     }
-                    
+                   
                     if (q.description) {
                         const description = document.createElement('p');
                         description.className = 'instructions-description';
                         description.textContent = q.description;
                         instructionsDiv.appendChild(description);
                     }
-                    
+                   
                     questionsContainer.appendChild(instructionsDiv);
                     return; 
                 }
-                
+               
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 if (q.type === 'info') {
@@ -636,7 +779,7 @@ if (savedTheme === 'dark') {
                     pointsBadge.textContent = q.points || 1;
                     questionText.appendChild(pointsBadge);
                 }
-                
+               
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
                 questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
@@ -644,12 +787,12 @@ if (savedTheme === 'dark') {
                 if (q.image) {
                     const imageContainer = document.createElement('div');
                     imageContainer.className = 'image-question-container';
-                    
+                   
                     const questionImage = document.createElement('img');
                     questionImage.src = q.image;
                     questionImage.alt = 'صورة السؤال';
                     questionImage.className = 'question-image';
-                    
+                   
                     imageContainer.appendChild(questionImage);
                     questionDiv.appendChild(imageContainer);
                 }
@@ -696,9 +839,9 @@ if (savedTheme === 'dark') {
                         radio.name = `question-${qIndex}`;
                         radio.value = cIndex;
                         radio.className = 'choice-radio';
-                        
+                       
                         radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
-                        
+                       
                         label.appendChild(radio);
                         label.appendChild(document.createTextNode(choice));
                         choicesDiv.appendChild(label);
@@ -715,13 +858,13 @@ if (savedTheme === 'dark') {
         function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
             if (reviewMode) return;
             userAnswers[qIndex] = choice;
-            
+           
             const questionDiv = selectedBtn.closest('.question-item');
             const allBtns = questionDiv.querySelectorAll('.essay-btn');
             allBtns.forEach(btn => btn.classList.remove('selected-essay'));
 
             selectedBtn.classList.add('selected-essay');
-            
+           
             if (choice === 1) {
                 const answerDiv = questionDiv.querySelector('.essay-answer');
                 answerDiv.style.display = 'block';
