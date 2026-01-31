@@ -48,7 +48,6 @@
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
       
-      /* ألوان الأسبوع الحالي */
       --current-week-bg: #e8eaf6;
       --current-week-border: #1a2ac6;
     }
@@ -85,7 +84,7 @@
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
-    /* === تنسيق الهيدر الخاص بالصفحة === */
+    /* === Header Actions === */
     .tool-header {
       margin-bottom: 30px;
       border-right: 4px solid var(--primary-color);
@@ -93,12 +92,18 @@
       display: flex;
       justify-content: space-between;
       align-items: end;
-      flex-wrap: wrap; /* للسماح بالالتفاف في الشاشات الصغيرة */
+      flex-wrap: wrap;
+      gap: 15px;
     }
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
-    .history-btn {
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
         background: transparent;
         border: 1px solid var(--border-color);
         color: var(--text-muted);
@@ -108,11 +113,17 @@
         font-size: 0.85rem;
         transition: 0.2s;
         font-weight: 500;
-        display: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
-    .history-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    
+    /* أيقونة التحميل */
+    .download-btn { color: var(--primary-color); border-color: var(--primary-color); }
+    .download-btn:hover { background: var(--primary-color); color: #fff; }
 
-    /* === تنسيق القائمة === */
+    /* === القائمة === */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -172,7 +183,6 @@
     .event-meta { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
     .event-meta span { display: block; }
 
-    /* === تمييز الأسبوع الحالي === */
     .event-item.current-week {
         background-color: var(--current-week-bg);
         border-right: 6px solid var(--current-week-border);
@@ -198,44 +208,80 @@
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* === التجاوب مع الهاتف (Mobile Responsiveness) === */
-    @media (max-width: 600px) {
-        .tool-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
+    /* === عنصر الشعار للطباعة (مخفي افتراضياً) === */
+    .print-logo-container {
+        display: none; /* مخفي في الشاشة العادية */
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #000;
+    }
+    .print-logo-container img {
+        height: 60px; /* حجم مناسب مثل الهيدر */
+        /* تحويل الصورة البيضاء إلى سوداء */
+        /* brightness(0) يجعل الصورة سوداء بالكامل مهما كان لونها */
+        filter: brightness(0); 
+    }
+
+    /* === إعدادات الطباعة (Print Styles) === */
+    @media print {
+        /* إخفاء الهيدر والفوتر والأزرار */
+        header, footer, .header-actions, .tool-header p, .history-btn { 
+            display: none !important; 
+        }
+
+        /* إظهار الشعار المخصص للطباعة */
+        .print-logo-container {
+            display: block !important;
+        }
+
+        /* ضبط الجسم */
+        body { 
+            background-color: white !important; 
+            color: black !important; 
+            padding-top: 0 !important;
+        }
+
+        .container { max-width: 100%; padding: 0; }
+        .tool-header { border: none; margin-bottom: 10px; }
+        
+        /* إجبار إظهار جميع الأقسام المخفية (الأرشيف) */
+        .hidden-section { display: block !important; }
+        
+        /* إزالة الظلال والحدود الزائدة */
+        .ios-list-group { 
+            box-shadow: none; 
+            border: 1px solid #000; 
+            break-inside: avoid; /* منع قص الجدول بين الصفحات */
+            margin-bottom: 20px;
         }
         
-        .history-btn {
-            width: 100%;
-            text-align: center;
+        .list-header {
+            background-color: #eee !important;
+            color: #000 !important;
+            border-bottom: 1px solid #000;
         }
 
-        .event-item {
-            padding: 15px 12px;
+        .event-item { border-bottom: 1px solid #ccc; }
+        
+        /* إلغاء ألوان الوضع الليلي إذا كانت مفعلة */
+        .event-item.current-week {
+            background-color: #f0f0f0 !important;
+            border-right: 4px solid #000 !important;
         }
+    }
 
-        .event-date {
-            margin-left: 12px;
-            min-width: 45px;
-        }
-
-        .date-day {
-            font-size: 1.4rem;
-        }
-
-        .event-title {
-            font-size: 1rem;
-        }
-
-        .event-meta {
-            font-size: 0.85rem;
-        }
-
-        /* جعل الشارة تنزل لسطر جديد إذا كان النص طويلاً */
-        .current-label-tag {
-            margin-bottom: 5px;
-        }
+    /* === Mobile Responsive === */
+    @media (max-width: 600px) {
+        .tool-header { flex-direction: column; align-items: flex-start; }
+        .header-actions { width: 100%; flex-wrap: wrap; }
+        .action-btn { flex: 1; justify-content: center; }
+        
+        .event-item { padding: 15px 12px; }
+        .event-date { margin-left: 12px; min-width: 45px; }
+        .date-day { font-size: 1.4rem; }
+        .event-title { font-size: 1rem; }
+        .current-label-tag { margin-bottom: 5px; }
     }
   </style>
 </head>
@@ -245,14 +291,27 @@
 
   <div class="container">
     
+    <div class="print-logo-container">
+        <img src="{{ '/images/Rawafid-white.png' | relative_url }}" alt="شعار روافد">
+    </div>
+
     <div class="tool-header">
       <div>
           <h1>التقويم الجامعي</h1>
           <p>العام الأكاديمي 2025-2026</p>
       </div>
-      <button class="history-btn" id="toggleHistoryBtn" onclick="toggleHistory()">
-          عرض الأسابيع الماضية
-      </button>
+      
+      <div class="header-actions">
+          <button class="action-btn download-btn" onclick="downloadICS()">
+            <i class="fas fa-calendar-plus"></i> إضافة للتقويم
+          </button>
+          <button class="action-btn" onclick="window.print()">
+            <i class="fas fa-print"></i> طباعة PDF
+          </button>
+          <button class="action-btn history-btn" id="toggleHistoryBtn" onclick="toggleHistory()">
+              عرض السابق
+          </button>
+      </div>
     </div>
 
     <div id="past-container" class="hidden-section">
@@ -274,32 +333,64 @@
 
 <script>
     const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+    let globalEvents = []; // لتخزين البيانات لاستخدامها في التحميل
 
-    // 1. وظيفة تبديل الوضع (Fix for Theme Toggle)
+    // تهيئة زر الوضع الليلي
     function initThemeToggle() {
-        // البحث عن زر التبديل في الهيدر (يدعم عدة مسميات شائعة)
         const toggleBtn = document.querySelector('.theme-toggle, #theme-toggle, .mode-switch, button[aria-label="Toggle theme"]');
-        
         if (toggleBtn) {
             toggleBtn.addEventListener('click', function() {
                 const currentTheme = document.documentElement.getAttribute('data-theme');
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
                 document.documentElement.setAttribute('data-theme', newTheme);
                 localStorage.setItem('rawafed-theme', newTheme);
             });
         }
     }
 
-    // 2. جلب وعرض التقويم
+    // دالة إنشاء وتحميل ملف ICS
+    function downloadICS() {
+        if (!globalEvents || globalEvents.length === 0) {
+            alert("لا توجد بيانات لتحميلها");
+            return;
+        }
+
+        let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Rawafid//Academic Calendar//AR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
+
+        globalEvents.forEach(event => {
+            // تحويل التاريخ من YYYY-MM-DD إلى YYYYMMDD
+            const dateStr = event.date.replace(/-/g, '');
+            
+            icsContent += "BEGIN:VEVENT\n";
+            icsContent += "DTSTART;VALUE=DATE:" + dateStr + "\n";
+            // نجعل الحدث يستمر ليوم واحد
+            icsContent += "DTEND;VALUE=DATE:" + dateStr + "\n"; 
+            icsContent += "SUMMARY:" + event.title + "\n";
+            icsContent += "DESCRIPTION:" + event.details + " - " + event.weekBadge + "\n";
+            icsContent += "STATUS:CONFIRMED\n";
+            icsContent += "END:VEVENT\n";
+        });
+
+        icsContent += "END:VCALENDAR";
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.setAttribute('download', 'Academic_Calendar.ics');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     async function fetchAndRenderCalendar() {
         try {
             const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
             if (!response.ok) throw new Error('Failed to load data');
             let events = await response.json();
             
-            // ترتيب زمني
+            // ترتيب زمني وتخزين البيانات عالمياً
             events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            globalEvents = events; 
 
             const today = new Date();
             today.setHours(0,0,0,0);
@@ -318,7 +409,7 @@
                 weekEnd.setDate(weekEnd.getDate() + 7);
                 
                 const isCurrent = (today >= eventDate && today < weekEnd);
-                const isPast = (weekEnd < today); // الأسبوع انتهى بالكامل
+                const isPast = (weekEnd < today); 
 
                 const day = eventDate.getDate();
                 const month = monthNames[eventDate.getMonth()];
@@ -365,7 +456,7 @@
             });
 
             if (hasPast) {
-                document.getElementById('toggleHistoryBtn').style.display = 'block';
+                document.getElementById('toggleHistoryBtn').style.display = 'flex'; // استخدام flex للأزرار
             }
 
             if (upcomingSemesters.size === 0) {
@@ -400,10 +491,10 @@
         const btn = document.getElementById('toggleHistoryBtn');
         if (section.style.display === 'block') {
             section.style.display = 'none';
-            btn.innerHTML = 'عرض الأسابيع الماضية';
+            btn.innerHTML = 'عرض السابق';
         } else {
             section.style.display = 'block';
-            btn.innerHTML = 'إخفاء الأسابيع الماضية';
+            btn.innerHTML = 'إخفاء السابق';
         }
     }
 
