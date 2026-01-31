@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>{{ page.title | default: "روافد - الرئيسية" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,8 +63,8 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
     
-    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; overflow-x: hidden; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
     /* === نظام التحميل الموحد === */
     #main-content-area {
@@ -78,7 +78,7 @@
     /* === تصميم ودجيت الأسبوع الجديد === */
     .week-widget {
         display: none; 
-        background: #e8eaf6; /* اللون المطلوب */
+        background: #e8eaf6;
         border: 1px solid var(--border-color);
         border-right: 4px solid var(--primary-color);
         border-radius: var(--radius-md);
@@ -90,9 +90,10 @@
         gap: 15px;
         cursor: pointer;
         transition: transform 0.2s ease;
+        width: 100%;
     }
     
-    [data-theme="dark"] .week-widget { background: #1a1c2c; } /* خلفية مناسبة للوضع الداكن */
+    [data-theme="dark"] .week-widget { background: #1a1c2c; }
 
     .week-widget:hover { transform: translateY(-2px); background-color: #dfe1f0; }
     
@@ -105,7 +106,7 @@
         font-size: 1.2rem; flex-shrink: 0;
     }
     
-    .week-content { flex: 1; }
+    .week-content { flex: 1; min-width: 0; /* Important for flex text wrapping */ }
     
     .week-title { 
         font-size: 1.05rem; 
@@ -115,6 +116,7 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 5px;
+        line-height: 1.4;
     }
        .current-label-tag { 
         font-size: 1.00rem; 
@@ -126,7 +128,6 @@
         gap: 5px;
     }
 
-    /* وسم الأسبوع الحالي */
     .week-label  {
         background-color: var(--primary-color);
         color: #ffffff;
@@ -136,43 +137,82 @@
         vertical-align: middle;
         font-weight: 500;
         display: inline-block;
+        margin-bottom: 4px;
     }
     
-    .week-arrow { color: var(--text-muted); font-size: 0.9rem; }
+    .week-arrow { color: var(--text-muted); font-size: 0.9rem; flex-shrink: 0; }
 
-    /* === بقية التنسيقات (الأدوات، الفلاتر، المواد) === */
+    /* === بقية التنسيقات === */
     .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
 
     .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-    .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+    .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; height: 100%; justify-content: center; }
     .tool-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: var(--hover-shadow); }
-    .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; }
+    .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; flex-shrink: 0; }
     .tool-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 
     .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 25px; padding: 10px 0; background: var(--bg-sticky); border-bottom: 1px solid var(--border-color); margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; backdrop-filter: blur(5px); }
-    .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
+    .filter-bar::-webkit-scrollbar { display: none; }
     
     .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
     .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; }
     .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
     
-    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; }
+    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; }
     .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
 
     .materials-list { display: flex; flex-direction: column; gap: 16px; }
     .material-item { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; transition: all 0.3s; cursor: pointer; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color); }
     .material-item:hover { box-shadow: var(--hover-shadow); border-color: var(--primary-color); }
     .item-icon-box { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
-    .item-title h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
+    .item-title h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
     .item-code { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; }
 
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
+    /* === استعلامات الوسائط للجوال (Responsive) === */
+    @media (max-width: 992px) {
+        .container { max-width: 100%; padding: 0 15px; }
+    }
+
     @media (max-width: 768px) {
-      .tools-grid { grid-template-columns: repeat(2, 1fr); }
-      .tools-grid .tool-item:last-child { grid-column: span 2; }
+      body { padding-top: 65px; }
+      
+      /* تحسين الودجت */
+      .week-widget { padding: 12px 15px; gap: 12px; margin-top: 20px; }
+      .week-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+      .week-title { font-size: 0.95rem; }
+      .week-label { font-size: 0.7rem; padding: 2px 8px; }
+
+      /* تحسين شبكة الأدوات */
+      .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .tool-item { padding: 15px 10px; }
+      
+      /* تحسين الفلتر */
+      .sticky-filter-container { top: 60px; margin-left: -15px; margin-right: -15px; padding-left: 15px; padding-right: 15px; }
+      
+      /* تحسين قائمة المواد (الشبكة) */
       .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .materials-list.grid-view .material-item { padding: 15px; text-align: center; flex-direction: column; }
+      .materials-list.grid-view .material-item { padding: 15px; text-align: center; flex-direction: column; align-items: center; }
+      .materials-list.grid-view .item-title h3 { font-size: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      /* تحسين الأدوات للشاشات الصغيرة جداً */
+      .tools-grid { grid-template-columns: 1fr; }
+      .tools-grid .tool-item { flex-direction: row; text-align: right; justify-content: flex-start; padding: 12px 15px; }
+      .tool-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+      
+      /* تحسين قائمة المواد (القائمة العادية) */
+      .material-item { padding: 12px; gap: 12px; }
+      .item-icon-box { width: 42px; height: 42px; font-size: 1.2rem; border-radius: 10px; }
+      .item-title h3 { font-size: 1rem; }
+      .item-code { font-size: 0.75rem; }
+      
+      /* تحسين قائمة المواد (الشبكة - إجبار عمود واحد إذا كانت الشاشة ضيقة جداً) */
+      .materials-list.grid-view { grid-template-columns: 1fr; }
+      .materials-list.grid-view .material-item { flex-direction: row; text-align: right; }
     }
   </style>
 </head>
@@ -358,7 +398,6 @@
         createFilters(materialsData);
         renderMaterialItems(materialsData);
         
-        // إظهار كل شيء دفعة واحدة
         mainArea.classList.add('loaded');
     })
     .catch(err => {
