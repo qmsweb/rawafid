@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "روافد - التقويم الجامعي 2025-2026" }}</title>
+  <title>{{ page.title | default: "التقويم الجامعي - iOS Style" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
-  <meta property="og:description" content="التقويم الأكاديمي لجامعة الشرقية 2025-2026.">
+  <meta property="og:description" content="التقويم الأكاديمي لجامعة الشرقية.">
   <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:type" content="website">
 
   <script>
     (function() {
@@ -31,189 +29,188 @@
   </script>
 
   <style>
-    /* === تعريف المتغيرات (نفس التصميم الأصلي تماماً) === */
+    /* === Global Variables === */
     :root {
-      --primary-color: #1a2ac6;
-      --primary-light-bg: #eff1ff;
-      --bg-body: #f4f6fb;
-      --bg-card: #ffffff;
-      --border-color: #ccd1e0;
-      --text-main: #2d2d2d;
-      --text-muted: #666666;
-      --bg-code: #f4f6fb;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-      --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
-      --radius-md: 12px;
+      --primary-color: #007AFF; /* iOS Blue */
+      --danger-color: #FF3B30;  /* iOS Red */
+      --text-main: #000000;
+      --text-secondary: #8E8E93;
+      --bg-body: #F2F2F7;
+      --bg-card: #FFFFFF;
+      --border-color: #C6C6C8;
+      --separator: #E5E5EA;
     }
 
     [data-theme="dark"] {
-      --primary-color: #7986cb;
-      --primary-light-bg: #282a36;
-      --bg-body: #121212;
-      --bg-card: #1e1e1e;
-      --border-color: #333333;
-      --text-main: #e0e0e0;
-      --text-muted: #a0a0a0;
-      --bg-code: #2c2c2c;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
-    }
-
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: "IBM Plex Sans Arabic", sans-serif;
+      --primary-color: #0A84FF;
+      --danger-color: #FF453A;
+      --text-main: #FFFFFF;
+      --text-secondary: #8E8E93;
+      --bg-body: #000000;
+      --bg-card: #1C1C1E;
+      --border-color: #38383A;
+      --separator: #38383A;
     }
 
     body {
       background-color: var(--bg-body);
       color: var(--text-main);
-      min-height: 100vh;
-      padding-top: 80px;
+      font-family: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding-top: 80px; /* Space for Header */
       padding-bottom: 40px;
-      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 15px;
     }
 
-    /* === Header Styles === */
-    .tool-header {
-      margin-bottom: 30px;
-      border-right: 4px solid var(--primary-color);
-      padding-right: 15px;
+    /* === Header Style === */
+    .page-header {
+      margin-bottom: 20px;
+      padding: 0 10px;
     }
-    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
-    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
 
-    /* === Card Styles (Same as Citation Tool) === */
-    .citation-card {
+    /* === List Container (iOS Grouped List) === */
+    .calendar-group {
       background: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 30px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--card-shadow);
+      border-radius: 12px;
+      overflow: hidden;
       margin-bottom: 30px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.05);
     }
 
-    .semester-title {
-        font-family: 'Baloo Bhaijaan 2', cursive;
-        color: var(--primary-color);
-        font-size: 1.3rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px dashed var(--border-color);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .group-header {
+      padding: 15px 20px;
+      background: var(--bg-body); /* Sticky feel */
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* === Event Row (The Item) === */
+    .event-row {
+      display: flex;
+      padding: 15px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--separator);
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .event-row:last-child { border-bottom: none; }
+
+    /* Left Column: Date */
+    .date-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 60px;
+      margin-left: 20px;
+      padding-top: 2px;
+    }
+
+    .date-month {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--danger-color); /* Red for month like iOS */
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .date-day {
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    /* Right Column: Content */
+    .content-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .week-label {
+      font-size: 0.75rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .event-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .event-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .event-desc i { margin-left: 5px; opacity: 0.8; }
+
+    /* === Current Week Highlight === */
+    .event-row.current {
+      background: rgba(0, 122, 255, 0.08); /* Light Blue Tint */
+      border-right: 4px solid var(--primary-color);
     }
     
-    .semester-badge {
-        font-size: 0.8rem;
-        background: var(--bg-code);
-        color: var(--text-muted);
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-family: "IBM Plex Sans Arabic", sans-serif;
+    .event-row.current .date-day {
+      color: var(--primary-color);
+      font-weight: 600;
     }
 
-    /* === Calendar Rows Styling === */
-    .cal-row {
-        display: flex;
-        align-items: flex-start;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        border: 1px solid transparent;
-        transition: 0.2s;
-    }
-
-    .cal-row:last-child { margin-bottom: 0; }
-    
-    /* تصميم الأسطر العادية لتبدو مرتبة */
-    .cal-row:nth-child(even) { background-color: var(--bg-code); }
-    
-    /* تمييز الأسبوع الحالي */
-    .cal-row.active-week {
-        background-color: var(--primary-light-bg);
-        border-color: var(--primary-color);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        position: relative;
-    }
-
-    .cal-row.active-week::before {
-        content: "الأسبوع الحالي";
-        position: absolute;
-        top: -10px;
-        left: 10px;
-        background: var(--primary-color);
-        color: #fff;
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-weight: bold;
-    }
-
-    .cal-date {
-        min-width: 100px;
-        font-weight: 600;
-        color: var(--primary-color);
-        font-size: 0.9rem;
-        text-align: center;
-        border-left: 1px solid var(--border-color);
-        margin-left: 15px;
-        padding-left: 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    /* === Past Events Toggle === */
+    .history-toggle {
+      text-align: center;
+      margin-bottom: 20px;
     }
     
-    .cal-date span {
-        display: block;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        font-weight: normal;
-        margin-top: 4px;
+    .btn-toggle {
+      background: rgba(0,0,0,0.05);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    .btn-toggle:hover { background: rgba(0,0,0,0.1); }
+    
+    /* Animation for hiding/showing */
+    .hidden-section {
+      display: none;
+      animation: fadeIn 0.4s ease;
     }
 
-    .cal-content { flex-grow: 1; }
-    
-    .cal-title {
-        font-weight: 700;
-        margin-bottom: 4px;
-        font-size: 1rem;
-    }
-    
-    .cal-desc {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .cal-desc i { margin-left: 5px; color: var(--primary-color); opacity: 0.7; }
-    
-    /* أيقونات للحالات الخاصة */
-    .tag-exam { color: #d35400; font-weight: 600; }
-    .tag-holiday { color: #c0392b; font-weight: 600; }
-
-    @media (max-width: 600px) {
-        .cal-row { flex-direction: column; }
-        .cal-date { 
-            border-left: none; 
-            border-bottom: 1px solid var(--border-color); 
-            margin-left: 0; 
-            padding-left: 0; 
-            margin-bottom: 10px; 
-            padding-bottom: 10px;
-            width: 100%;
-            text-align: right;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
-    }
   </style>
 </head>
 <body>
@@ -221,174 +218,222 @@
   {% include header.html %}
 
   <div class="container">
-    
-    <div class="tool-header">
-      <h1>التقويم الأكاديمي</h1>
-      <p>جامعة الشرقية - العام الجامعي 2025-2026</p>
+    <div class="page-header">
+      <h1>التقويم الجامعي</h1>
+      <p>2025 - 2026</p>
     </div>
 
-    <div class="citation-card">
-        <div class="semester-title">
-            <span><i class="fas fa-leaf"></i> خريف 2025</span>
-            <span class="semester-badge">14 سبتمبر - 15 يناير</span>
-        </div>
+    <div class="history-toggle">
+      <button class="btn-toggle" onclick="togglePastEvents()" id="toggleBtn">
+        <i class="fas fa-history"></i> إظهار الأسابيع الماضية
+      </button>
+    </div>
 
-        <div class="calendar-list">
-            <div class="cal-row" data-start="2025-09-14" data-end="2025-09-20">
-                <div class="cal-date">أسبوع 0<span>14 سبتمبر</span></div>
-                <div class="cal-content">
-                    <div class="cal-title">التسجيل والتهيئة</div>
-                    <div class="cal-desc">
-                        <div><i class="fas fa-user-check"></i> أسبوع التسجيل والتوجيه</div>
-                        <div><i class="fas fa-laptop-code"></i> اختبارات تحديد المستوى (Math & IT)</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2025-09-21" data-end="2025-09-27">
-                <div class="cal-date">أسبوع 1<span>21 سبتمبر</span></div>
-                <div class="cal-content">
-                    <div class="cal-title">بدء الدراسة</div>
-                    <div class="cal-desc"><i class="fas fa-chalkboard-teacher"></i> بداية المحاضرات للكليات وفترة الحذف والإضافة.</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2025-10-26" data-end="2025-11-01">
-                <div class="cal-date">أسبوع 6<span>26 أكتوبر</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-exam">الاختبار الأول</div>
-                    <div class="cal-desc">تاريخ مقترح للاختبارات الأولى.</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2025-11-16" data-end="2025-11-22">
-                <div class="cal-date">أسبوع 9<span>16 نوفمبر</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-holiday">العيد الوطني</div>
-                    <div class="cal-desc">إجازة العيد الوطني (يومين بعد 20 نوفمبر).</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2026-01-04" data-end="2026-01-15">
-                <div class="cal-date">الاختبارات<span>04 يناير</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-exam">الامتحانات النهائية</div>
-                    <div class="cal-desc">فترة الامتحانات النهائية (أسبوعين).</div>
-                </div>
-            </div>
+    <div id="past-container" class="hidden-section">
+      <div class="group-header">الأحداث المنقضية</div>
+      <div class="calendar-group" id="past-list">
         </div>
     </div>
 
-    <div class="citation-card">
-        <div class="semester-title">
-            <span><i class="fas fa-cloud-sun"></i> ربيع 2026</span>
-            <span class="semester-badge">01 فبراير - 04 يونيو</span>
+    <div id="upcoming-container">
+      <div class="group-header">القادم</div>
+      <div class="calendar-group" id="upcoming-list">
+        
+        <div class="event-row" data-date="2025-09-14">
+          <div class="date-col">
+            <span class="date-month">سبتمبر</span>
+            <span class="date-day">14</span>
+          </div>
+          <div class="content-col">
+            <span class="week-label">أسبوع 0 - التهيئة</span>
+            <div class="event-title">أسبوع التسجيل والتوجيه</div>
+            <div class="event-desc">
+                <div><i class="fas fa-check-circle"></i> بدء التسجيل واختبارات تحديد المستوى</div>
+            </div>
+          </div>
         </div>
 
-        <div class="calendar-list">
-             <div class="cal-row" data-start="2026-02-01" data-end="2026-02-07">
-                <div class="cal-date">أسبوع 0<span>01 فبراير</span></div>
-                <div class="cal-content">
-                    <div class="cal-title">التهيئة والتسجيل</div>
-                    <div class="cal-desc">
-                        <div><i class="fas fa-clipboard-list"></i> فترة التسجيل (1-5 فبراير)</div>
-                        <div><i class="fas fa-file-signature"></i> اختبارات تحديد المستوى (2-3 فبراير)</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2026-02-08" data-end="2026-02-14">
-                <div class="cal-date">أسبوع 1<span>08 فبراير</span></div>
-                <div class="cal-content">
-                    <div class="cal-title">بدء الدراسة</div>
-                    <div class="cal-desc"><i class="fas fa-book-open"></i> بداية المحاضرات وفترة الحذف والإضافة.</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2026-02-15" data-end="2026-02-21">
-                <div class="cal-date">أسبوع 2<span>15 فبراير</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-holiday">شهر رمضان</div>
-                    <div class="cal-desc">بداية شهر رمضان المبارك (تقريباً 19 فبراير).</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2026-03-22" data-end="2026-03-28">
-                <div class="cal-date">أسبوع 7<span>22 مارس</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-holiday">عيد الفطر</div>
-                    <div class="cal-desc">إجازة عيد الفطر السعيد (20 مارس تقريباً).</div>
-                </div>
-            </div>
-
-            <div class="cal-row" data-start="2026-05-24" data-end="2026-06-04">
-                <div class="cal-date">الاختبارات<span>24 مايو</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-exam">الامتحانات النهائية</div>
-                    <div class="cal-desc">فترة الامتحانات النهائية للفصل الثاني.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     <div class="citation-card">
-        <div class="semester-title">
-            <span><i class="fas fa-sun"></i> صيف 2026</span>
-            <span class="semester-badge">14 يونيو - 04 أغسطس</span>
+        <div class="event-row" data-date="2025-09-21">
+          <div class="date-col">
+            <span class="date-month">سبتمبر</span>
+            <span class="date-day">21</span>
+          </div>
+          <div class="content-col">
+            <span class="week-label">أسبوع 1 - الدراسة</span>
+            <div class="event-title">بدء الفصول الدراسية</div>
+            <div class="event-desc"><i class="fas fa-university"></i> بداية المحاضرات وفترة الحذف والإضافة</div>
+          </div>
         </div>
 
-        <div class="calendar-list">
-             <div class="cal-row" data-start="2026-06-14" data-end="2026-06-20">
-                <div class="cal-date">أسبوع 1<span>14 يونيو</span></div>
-                <div class="cal-content">
-                    <div class="cal-title">التسجيل والدراسة</div>
-                    <div class="cal-desc">
-                        <div><i class="fas fa-check-circle"></i> التسجيل (14-16 يونيو)</div>
-                        <div><i class="fas fa-play"></i> بدء الدراسة (17 يونيو)</div>
-                        <div class="tag-holiday">رأس السنة الهجرية (16 يونيو)</div>
-                    </div>
-                </div>
+        <div class="event-row" data-date="2025-10-26">
+            <div class="date-col">
+              <span class="date-month">أكتوبر</span>
+              <span class="date-day">26</span>
             </div>
-
-             <div class="cal-row" data-start="2026-08-02" data-end="2026-08-04">
-                <div class="cal-date">النهائية<span>02 أغسطس</span></div>
-                <div class="cal-content">
-                    <div class="cal-title tag-exam">الامتحانات النهائية</div>
-                    <div class="cal-desc">نهاية الفصل الصيفي.</div>
-                </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 6</span>
+              <div class="event-title">الامتحان الأول</div>
+              <div class="event-desc">تاريخ مقترح للاختبارات الدورية الأولى</div>
             </div>
         </div>
-    </div>
 
-  </div> {% include footer.html %}
+        <div class="event-row" data-date="2025-11-16">
+            <div class="date-col">
+              <span class="date-month">نوفمبر</span>
+              <span class="date-day">16</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 9</span>
+              <div class="event-title" style="color:var(--danger-color)">إجازة العيد الوطني</div>
+              <div class="event-desc">إجازة رسمية (يومين بعد 20 نوفمبر)</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-01-04">
+            <div class="date-col">
+              <span class="date-month">يناير</span>
+              <span class="date-day">04</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">الاختبارات</span>
+              <div class="event-title">الامتحانات النهائية (خريف)</div>
+              [cite_start]<div class="event-desc">فترة الامتحانات النهائية لمدة أسبوعين [cite: 3]</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-02-01">
+            <div class="date-col">
+              <span class="date-month">فبراير</span>
+              <span class="date-day">01</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 0 - ربيع 26</span>
+              <div class="event-title">التسجيل والتهيئة (ربيع)</div>
+              <div class="event-desc"><i class="fas fa-clipboard-list"></i> فترة تسجيل واختبارات مستوى</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-02-08">
+            <div class="date-col">
+              <span class="date-month">فبراير</span>
+              <span class="date-day">08</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 1</span>
+              <div class="event-title">بدء الدراسة (ربيع)</div>
+              [cite_start]<div class="event-desc">بداية المحاضرات والحذف والإضافة [cite: 4]</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-02-19">
+            <div class="date-col">
+              <span class="date-month">فبراير</span>
+              <span class="date-day">19</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">مناسبة</span>
+              <div class="event-title" style="color:var(--primary-color)">بداية شهر رمضان</div>
+              [cite_start]<div class="event-desc">التاريخ تقريبي [cite: 4]</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-03-22">
+            <div class="date-col">
+              <span class="date-month">مارس</span>
+              <span class="date-day">22</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 7</span>
+              <div class="event-title" style="color:var(--danger-color)">إجازة عيد الفطر</div>
+              [cite_start]<div class="event-desc">نهاية رمضان (20 مارس) وإجازة العيد [cite: 4]</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-05-24">
+            <div class="date-col">
+              <span class="date-month">مايو</span>
+              <span class="date-day">24</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">النهائية</span>
+              <div class="event-title">الامتحانات النهائية (ربيع)</div>
+              [cite_start]<div class="event-desc">فترة أسبوعين للامتحانات [cite: 4]</div>
+            </div>
+        </div>
+
+        <div class="event-row" data-date="2026-06-14">
+            <div class="date-col">
+              <span class="date-month">يونيو</span>
+              <span class="date-day">14</span>
+            </div>
+            <div class="content-col">
+              <span class="week-label">أسبوع 1 - صيف</span>
+              <div class="event-title">بدء الفصل الصيفي</div>
+              [cite_start]<div class="event-desc">تسجيل وبدء الدراسة وإجازة رأس السنة الهجرية [cite: 5]</div>
+            </div>
+        </div>
+
+      </div> </div> </div> {% include footer.html %}
 
   <script>
-    function highlightCurrentWeek() {
+    function organizeEvents() {
         const today = new Date();
-        const rows = document.querySelectorAll('.cal-row');
-        let activeFound = false;
+        // تصفير الوقت للمقارنة الدقيقة بالتواريخ فقط
+        today.setHours(0,0,0,0);
 
-        rows.forEach(row => {
-            const start = new Date(row.dataset.start);
-            const end = new Date(row.dataset.end);
+        const allEvents = Array.from(document.querySelectorAll('.event-row'));
+        const pastList = document.getElementById('past-list');
+        const upcomingList = document.getElementById('upcoming-list');
+
+        let hasPastEvents = false;
+
+        allEvents.forEach(event => {
+            const eventDateStr = event.getAttribute('data-date');
+            const eventDate = new Date(eventDateStr);
             
-            // إضافة يوم لنهاية الفترة لضمان شمولية اليوم الأخير
-            end.setDate(end.getDate() + 1);
+            // إضافة 7 أيام للتاريخ ليعتبر الأسبوع "ماضياً" فقط بعد انتهائه تماماً
+            const weekEndDate = new Date(eventDate);
+            weekEndDate.setDate(weekEndDate.getDate() + 7);
 
-            if (today >= start && today < end) {
-                row.classList.add('active-week');
-                activeFound = true;
-                
-                // التمرير التلقائي للأسبوع الحالي إذا رغبت
-                // row.scrollIntoView({behavior: "smooth", block: "center"});
+            if (weekEndDate < today) {
+                // هذا حدث ماضي
+                pastList.appendChild(event);
+                hasPastEvents = true;
             } else {
-                row.classList.remove('active-week');
+                // هذا حدث قادم أو حالي
+                upcomingList.appendChild(event);
+
+                // التحقق إذا كان هذا هو الأسبوع الحالي (داخل نطاق 7 أيام)
+                if (today >= eventDate && today < weekEndDate) {
+                    event.classList.add('current');
+                    // إضافة كلمة "الحالي" بجانب التاريخ
+                    const label = event.querySelector('.week-label');
+                    label.innerHTML = '<i class="fas fa-dot-circle"></i> ' + label.innerHTML;
+                }
             }
         });
+
+        // إخفاء زر "إظهار السابق" إذا لم تكن هناك أحداث سابقة
+        if (!hasPastEvents) {
+            document.getElementById('toggleBtn').style.display = 'none';
+        }
     }
 
-    // تشغيل الدالة عند تحميل الصفحة
-    window.onload = highlightCurrentWeek;
+    function togglePastEvents() {
+        const container = document.getElementById('past-container');
+        const btn = document.getElementById('toggleBtn');
+        
+        if (container.style.display === 'block') {
+            container.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-history"></i> إظهار الأسابيع الماضية';
+        } else {
+            container.style.display = 'block';
+            btn.innerHTML = '<i class="fas fa-chevron-up"></i> إخفاء الأسابيع الماضية';
+        }
+    }
+
+    // تشغيل الترتيب عند التحميل
+    document.addEventListener('DOMContentLoaded', organizeEvents);
   </script>
 
 </body>
