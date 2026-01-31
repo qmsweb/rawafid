@@ -469,35 +469,58 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === 2. منطق فحص الأسبوع الحالي (جديد) === */
+  /* === 2. منطق فحص الأسبوع الحالي (تم الإصلاح) === */
   async function checkCurrentWeek() {
       try {
-          const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
-          if (!response.ok) return; // فشل التحميل
+          // إضافة طابع زمني للرابط لمنع المتصفح من تخزين نسخة قديمة من الملف (Caching)
+          const response = await fetch("{{ '/assets/calendar.json' | relative_url }}?v=" + new Date().getTime());
+          
+          if (!response.ok) {
+            console.error("فشل تحميل ملف التقويم");
+            return; 
+          }
           
           const events = await response.json();
+          
+          // تحديد تاريخ اليوم وتصفير الوقت تماماً
           const today = new Date();
-          today.setHours(0, 0, 0, 0); // تصفير الوقت للمقارنة الدقيقة
+          today.setHours(0, 0, 0, 0);
 
-          // البحث عن الحدث الذي يقع تاريخ اليوم في نطاق أسبوع منه
+          // البحث عن الحدث
           const currentEvent = events.find(event => {
-              const eventDate = new Date(event.date);
-              const weekEnd = new Date(eventDate);
-              weekEnd.setDate(weekEnd.getDate() + 7); // إضافة 7 أيام
+              // إصلاح مشكلة التوقيت: تفكيك التاريخ وإنشاؤه محلياً
+              // هذا يمنع تحويل التوقيت إلى UTC ويضمن تطابق التاريخ مع جهاز المستخدم
+              const parts = event.date.split('-'); // يفترض الصيغة YYYY-MM-DD
+              const eventDate = new Date(parts[0], parts[1] - 1, parts[2]);
               
-              return (today >= eventDate && today < weekEnd);
+              // حساب الفرق بالأيام
+              const diffTime = today.getTime() - eventDate.getTime();
+              const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+              // الشرط: إذا كان الفرق بين 0 (بداية الأسبوع) و 6 (نهاية الأسبوع)
+              // وتم استبعاد العطلات (isHoliday) إذا أردت، أو تركها
+              return (diffDays >= 0 && diffDays <= 6);
           });
 
           const banner = document.getElementById('current-week-display');
           
           if (currentEvent) {
-              document.getElementById('week-title-text').innerText = `${currentEvent.weekBadge}: ${currentEvent.title}`;
-              banner.style.display = 'flex'; // إظهار الخانة
+              // التأكد من وجود البيانات قبل عرضها
+              const badge = currentEvent.weekBadge || "أسبوع دراسي";
+              const title = currentEvent.title || "";
+              
+              document.getElementById('week-title-text').innerText = `${badge}: ${title}`;
+              banner.style.display = 'flex';
+              
+              // Console log للتأكد من العمل
+              console.log("تم العثور على أسبوع حالي:", title);
           } else {
-              banner.style.display = 'none'; // إخفاء الخانة
+              banner.style.display = 'none';
+              console.log("لا يوجد أسبوع دراسي يوافق تاريخ اليوم.");
           }
+
       } catch (error) {
-          console.error("Error loading calendar data:", error);
+          console.error("حدث خطأ أثناء معالجة التقويم:", error);
           document.getElementById('current-week-display').style.display = 'none';
       }
   }
@@ -506,12 +529,11 @@
   const materialsList = document.getElementById('materials-list');
   const filterBar = document.getElementById('filter-bar');
   let allCourses = [];
-  let userToggledView = false;
 
   function renderMaterialItems(items) {
     materialsList.innerHTML = '';
 
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
         materialsList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px; width:100%;">لا توجد مقررات في هذا التصنيف.</p>';
         return;
     }
@@ -525,6 +547,7 @@
       const iconBg = iconColor + '15'; 
 
       el.addEventListener('click', () => {
+        // التأكد من أن الرابط يعمل بشكل صحيح
         window.location.href = `{{ '/course' | relative_url }}?i=${item.code}`;
       });
 
@@ -544,6 +567,7 @@
   }
 
   function createFilters(courses) {
+    if(!filterBar) return;
     filterBar.innerHTML = '';
 
     const viewToggle = document.createElement('div');
@@ -585,23 +609,22 @@
     function applyVisualState(mode) {
       if (mode === 'grid') {
         materialsList.classList.add('grid-view');
-        gridBtn.classList.add('active');
-        listBtn.classList.remove('active');
+        if(gridBtn) gridBtn.classList.add('active');
+        if(listBtn) listBtn.classList.remove('active');
       } else {
         materialsList.classList.remove('grid-view');
-        listBtn.classList.add('active');
-        gridBtn.classList.remove('active');
+        if(listBtn) listBtn.classList.add('active');
+        if(gridBtn) gridBtn.classList.remove('active');
       }
     }
 
     function setView(mode, save = true) {
-      userToggledView = true;
       applyVisualState(mode);
       if (save) localStorage.setItem('viewMode', mode);
     }
 
-    gridBtn.addEventListener('click', () => setView('grid'));
-    listBtn.addEventListener('click', () => setView('list'));
+    if(gridBtn) gridBtn.addEventListener('click', () => setView('grid'));
+    if(listBtn) listBtn.addEventListener('click', () => setView('list'));
 
     const savedMode = localStorage.getItem('viewMode');
     if (savedMode) {
@@ -614,7 +637,6 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     
-    // تشغيل فحص الأسبوع الحالي
     checkCurrentWeek();
 
     fetch("{{ '/assets/data/materials.json' | relative_url }}")
@@ -625,10 +647,10 @@
         renderMaterialItems(data);
       })
       .catch(err => {
-        materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-exclamation-triangle fa-2x"></i><p>تعذر تحميل قائمة المواد.</p></div>`;
+        console.error(err);
+        if(materialsList) materialsList.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-exclamation-triangle fa-2x"></i><p>تعذر تحميل قائمة المواد.</p></div>`;
       });
   });
 </script>
-
 </body>
 </html>
