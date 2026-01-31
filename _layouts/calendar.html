@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "التقويم الجامعي 2025-2026" }}</title>
+  <title>{{ page.title | default: "التقويم الجامعي" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,6 @@
     /* === المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
-      --primary-light-bg: #eff1ff; /* لون خلفية الأسبوع الحالي الفاتح */
       --bg-body: #f4f6fb;
       --bg-card: #ffffff;
       --border-color: #ccd1e0;
@@ -49,14 +48,13 @@
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
       
-      /* لون تمييز الأسبوع الحالي */
-      --current-week-bg: #e8eaf6; 
-      --current-week-border: #1a2ac6;
+      /* === ألوان الأسبوع الحالي === */
+      --current-week-bg: #e8eaf6; /* خلفية مميزة للأسبوع الحالي */
+      --current-week-border: #1a2ac6; /* لون الشريط الجانبي */
     }
 
     html[data-theme="dark"] {
       --primary-color: #7986cb;
-      --primary-light-bg: #282a36;
       --bg-body: #121212;
       --bg-card: #1e1e1e;
       --border-color: #333333;
@@ -70,8 +68,7 @@
       --badge-bg: #3f4252;
       --badge-text: #9fa8da;
       
-      /* لون تمييز الأسبوع الحالي في الوضع الليلي */
-      --current-week-bg: #2c2c3e;
+      --current-week-bg: #28359333; /* خلفية داكنة مميزة للأسبوع الحالي */
       --current-week-border: #7986cb;
     }
 
@@ -172,26 +169,29 @@
     .event-meta { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
     .event-meta span { display: block; }
 
-    /* === تصميم الأسبوع الحالي (Highlight Style) === */
+    /* === تصميم الأسبوع الحالي (Highlight) === */
     .event-item.current-week {
-        background-color: var(--current-week-bg); /* لون خلفية مختلف */
-        border-right: 5px solid var(--current-week-border); /* شريط جانبي مميز */
+        background-color: var(--current-week-bg); /* لون خلفية مميز */
+        border-right: 6px solid var(--current-week-border); /* شريط جانبي */
     }
     
     .event-item.current-week .date-day {
         color: var(--primary-color);
         font-weight: 700;
-        transform: scale(1.1); /* تكبير بسيط للتاريخ */
+        transform: scale(1.1);
     }
 
-    /* نص "الحالي" الذي يضاف بالجافاسكربت */
-    .current-badge-indicator {
+    /* تصميم شارة "الأسبوع الحالي" */
+    .current-label-tag {
         background-color: var(--primary-color);
-        color: white;
-        padding: 2px 8px;
-        border-radius: 4px;
-        margin-right: 5px;
+        color: #ffffff;
         font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-right: 8px;
+        vertical-align: middle;
+        font-weight: normal;
+        display: inline-block;
     }
 
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
@@ -216,14 +216,14 @@
 
     <div id="past-container" class="hidden-section">
         <div class="ios-list-group">
-            <div class="list-header">انتهت</div>
+            <div class="list-header">الأرشيف (فصول منتهية)</div>
             <div id="past-list-content"></div>
         </div>
     </div>
 
     <div id="semesters-container">
         <div style="padding: 20px; text-align: center; color: var(--text-muted);">
-             جاري ترتيب وتحميل التقويم...
+             جاري تحميل البيانات...
         </div>
     </div>
 
@@ -240,34 +240,32 @@
             if (!response.ok) throw new Error('Failed to load data');
             let events = await response.json();
             
-            // 1. ترتيب العناصر زمنياً بدقة (Sort by Date Ascending)
+            // ترتيب البيانات زمنياً
             events.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // تحديد تاريخ اليوم (بدون وقت للمقارنة)
+            // تحديد تاريخ اليوم
             const today = new Date();
             today.setHours(0,0,0,0);
 
             const pastContent = document.getElementById('past-list-content');
             const semestersContainer = document.getElementById('semesters-container');
             
-            semestersContainer.innerHTML = ''; // تفريغ
+            semestersContainer.innerHTML = ''; 
 
             let hasPast = false;
-            
-            // استخدام Map للحفاظ على ترتيب الفصول كما تظهر زمنياً بعد الترتيب
             let upcomingSemesters = new Map();
 
             events.forEach(event => {
                 const eventDate = new Date(event.date);
                 
-                // نفترض الأسبوع ينتهي بعد 7 أيام
+                // نفترض أن الحدث يمثل أسبوعاً كاملاً (7 أيام)
                 const weekEnd = new Date(eventDate);
                 weekEnd.setDate(weekEnd.getDate() + 7);
                 
-                // هل هذا هو الأسبوع الحالي؟ (اليوم يقع بين البداية والنهاية)
+                // التحقق: هل اليوم يقع ضمن هذا الأسبوع؟
                 const isCurrent = (today >= eventDate && today < weekEnd);
 
-                // تجهيز HTML
+                // تجهيز العناصر
                 const day = eventDate.getDate();
                 const month = monthNames[eventDate.getMonth()];
                 const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
@@ -275,12 +273,13 @@
                 let badgeText = event.weekBadge;
                 let badgeStyle = '';
                 let itemClass = 'event-item';
-                
-                // تمييز الأسبوع الحالي
+                let currentLabelHtml = '';
+
+                // === تمييز الأسبوع الحالي ===
                 if (isCurrent) {
-                    itemClass += ' current-week'; // إضافة كلاس للتمييز (اللون)
-                    badgeText += " (الحالي)";
-                    badgeStyle = 'style="background-color:var(--primary-color); color:#fff;"';
+                    itemClass += ' current-week'; // إضافة كلاس الخلفية والبوردر
+                    // إضافة نص "الأسبوع الحالي" كعنصر منفصل
+                    currentLabelHtml = `<span class="current-label-tag">الأسبوع الحالي</span>`;
                 }
 
                 const html = `
@@ -290,7 +289,10 @@
                             <span class="date-day">${day}</span>
                         </div>
                         <div class="event-content">
-                            <span class="week-badge" ${badgeStyle}>${badgeText}</span>
+                            <div style="margin-bottom: 5px;">
+                                ${currentLabelHtml}
+                                <span class="week-badge" ${badgeStyle}>${badgeText}</span>
+                            </div>
                             <div class="event-title" ${titleStyle}>${event.title}</div>
                             <div class="event-meta">
                                 <span>${event.details}</span>
@@ -299,49 +301,46 @@
                     </div>
                 `;
 
-                // المنطق: إذا انتهى الأسبوع تماماً فهو ماضي، غير ذلك فهو قادم/حالي
+                // المنطق: إذا انتهى تاريخ الأسبوع تماماً، ينتقل للأرشيف
                 if (weekEnd < today) {
-                    // ماضي
                     pastContent.insertAdjacentHTML('beforeend', html);
                     hasPast = true;
                 } else {
-                    // قادم أو حالي
+                    // إذا كان قادماً أو هو الأسبوع الحالي، يظهر في القائمة الرئيسية
                     const semName = event.semester || "أخرى";
-                    
-                    // إذا لم يكن الفصل موجوداً في الـ Map، قم بإنشائه
                     if (!upcomingSemesters.has(semName)) {
                         upcomingSemesters.set(semName, []);
                     }
-                    // أضف العنصر للقائمة
                     upcomingSemesters.get(semName).push(html);
                 }
             });
 
-            // إظهار زر السجل
+            // إظهار زر السجل فقط إذا كان هناك ماضي
             if (hasPast) {
                 document.getElementById('toggleHistoryBtn').style.display = 'block';
             }
 
-            // عرض الفصول القادمة (بما أن الأحداث مرتبة، الفصول ستظهر مرتبة أيضاً)
-            upcomingSemesters.forEach((itemsArray, semesterName) => {
-                // حاوية الفصل
-                const box = document.createElement('div');
-                box.className = 'ios-list-group';
-                
-                // العنوان
-                const header = document.createElement('div');
-                header.className = 'list-header';
-                header.innerText = semesterName;
-                
-                // القائمة
-                const listDiv = document.createElement('div');
-                listDiv.innerHTML = itemsArray.join('');
+            // عرض الفصول القادمة فقط
+            if (upcomingSemesters.size === 0) {
+                 semestersContainer.innerHTML = '<div style="padding:20px; text-align:center;">لا توجد أحداث قادمة حالياً.</div>';
+            } else {
+                upcomingSemesters.forEach((itemsArray, semesterName) => {
+                    const box = document.createElement('div');
+                    box.className = 'ios-list-group';
+                    
+                    const header = document.createElement('div');
+                    header.className = 'list-header';
+                    header.innerText = semesterName;
+                    
+                    const listDiv = document.createElement('div');
+                    listDiv.innerHTML = itemsArray.join('');
 
-                box.appendChild(header);
-                box.appendChild(listDiv);
-                
-                semestersContainer.appendChild(box);
-            });
+                    box.appendChild(header);
+                    box.appendChild(listDiv);
+                    
+                    semestersContainer.appendChild(box);
+                });
+            }
 
         } catch (error) {
             console.error(error);
