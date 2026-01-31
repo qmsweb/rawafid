@@ -1,0 +1,497 @@
+---
+layout: null
+title: "مولد التوثيق (APA7)"
+permalink: /tools/apa-citation/
+---
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "أداة توثيق المراجع" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="أداة لتوثيق المراجع والكتب والدوريات بنظام APA الإصدار السابع.">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === نفس المتغيرات والألوان من صفحة التقويم === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+      
+      --cal-red: #ff3b30;
+      --cal-separator: #e5e5ea;
+      --badge-bg: #e1e4f5;
+      --badge-text: #1a2ac6;
+      --input-bg: #ffffff;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --input-bg: #2c2c2c;
+      
+      --cal-red: #ff453a;
+      --cal-separator: #38383a;
+      --badge-bg: #3f4252;
+      --badge-text: #9fa8da;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header === */
+    .tool-header {
+      margin-bottom: 30px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    .action-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 6px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    .primary-btn { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+    .primary-btn:hover { background: #1522a0; color: #fff; border-color: #1522a0; }
+
+    /* === Card & Form Styles === */
+    .ios-list-group {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 30px;
+        border: 1px solid var(--border-color);
+    }
+
+    .list-header {
+        background: var(--bg-code);
+        padding: 15px 20px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .form-content {
+        padding: 25px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .full-width { grid-column: span 2; }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .input-field, .select-field {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--input-bg);
+        color: var(--text-main);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    
+    .input-field:focus, .select-field:focus {
+        border-color: var(--primary-color);
+    }
+
+    /* === Result Section === */
+    #result-container {
+        display: none; /* مخفي افتراضياً */
+        animation: fadeIn 0.4s ease;
+    }
+    
+    .citation-box {
+        padding: 20px;
+        background-color: var(--bg-code);
+        border-left: 4px solid var(--primary-color);
+        border-radius: 4px;
+        font-family: 'Times New Roman', Times, serif; /* APA يفضل خطوط سيرف للطباعة */
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        word-break: break-word;
+        color: var(--text-main);
+    }
+
+    /* Italics for citation */
+    .citation-box i { font-style: italic; }
+
+    .copy-feedback {
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    /* Helper Text */
+    .helper-text { font-size: 0.75rem; color: var(--text-muted); margin-top: -4px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* === Mobile Responsive === */
+    @media (max-width: 600px) {
+        .tool-header { flex-direction: column; align-items: flex-start; }
+        .header-actions { width: 100%; flex-wrap: wrap; }
+        .action-btn { flex: 1; justify-content: center; }
+        .form-grid { grid-template-columns: 1fr; }
+        .full-width { grid-column: span 1; }
+    }
+    
+    /* === Print === */
+    @media print {
+         header, footer, .header-actions, .tool-header p, .form-content { display: none !important; }
+         .tool-header { border: none; margin-bottom: 10px; }
+         body { background-color: white !important; color: black !important; }
+         .ios-list-group { border: none !important; box-shadow: none !important; }
+         #result-container { display: block !important; }
+         .citation-box { border: 1px solid #000; background: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+
+  <div class="container">
+    
+    <div class="tool-header">
+      <div>
+          <h1>توثيق المراجع (APA7)</h1>
+          <p>أداة لتوليد الاستشهادات المرجعية العلمية بدقة</p>
+      </div>
+      
+      <div class="header-actions">
+          <button class="action-btn" onclick="clearForm()">
+            <i class="fas fa-eraser"></i> مسح الحقول
+          </button>
+          <button class="action-btn" onclick="toggleTheme()">
+             <i class="fas fa-adjust"></i> المظهر
+          </button>
+      </div>
+    </div>
+
+    <div class="ios-list-group">
+        <div class="list-header">
+            <span>بيانات المرجع</span>
+            <select id="sourceType" class="select-field" style="padding: 5px 10px; font-size: 0.85rem;" onchange="updateFormFields()">
+                <option value="book">كتاب (Book)</option>
+                <option value="journal">دورية علمية (Journal Article)</option>
+                <option value="website">موقع إلكتروني (Website)</option>
+            </select>
+        </div>
+        
+        <div class="form-content">
+            <div class="form-grid">
+                
+                <div class="input-group full-width">
+                    <label>المؤلف (Authors)</label>
+                    <input type="text" id="authors" class="input-field" placeholder="مثال: Al-Said, Q. أو Smith, J. A.">
+                    <span class="helper-text">الاسم العائل، الحرف الأول. (للأجنبي) / الاسم كاملاً (للعربي)</span>
+                </div>
+
+                <div class="input-group">
+                    <label>سنة النشر (Year)</label>
+                    <input type="number" id="year" class="input-field" placeholder="2025">
+                </div>
+
+                <div class="input-group" id="date-group" style="display:none;">
+                    <label>تاريخ النشر (Date)</label>
+                    <input type="text" id="fullDate" class="input-field" placeholder="May 20 أو 20 مايو">
+                </div>
+
+                <div class="input-group full-width">
+                    <label id="titleLabel">عنوان الكتاب (Title)</label>
+                    <input type="text" id="title" class="input-field" placeholder="عنوان العمل...">
+                </div>
+
+                <div class="input-group" id="journal-name-group" style="display:none;">
+                    <label>اسم المجلة (Journal Name)</label>
+                    <input type="text" id="journalName" class="input-field">
+                </div>
+
+                <div class="input-group" id="volume-group" style="display:none;">
+                    <label>المجلد (Volume)</label>
+                    <input type="text" id="volume" class="input-field">
+                </div>
+                
+                <div class="input-group" id="issue-group" style="display:none;">
+                    <label>العدد (Issue)</label>
+                    <input type="text" id="issue" class="input-field">
+                </div>
+
+                <div class="input-group" id="pages-group" style="display:none;">
+                    <label>الصفحات (Pages)</label>
+                    <input type="text" id="pages" class="input-field" placeholder="10-25">
+                </div>
+
+                <div class="input-group full-width" id="publisher-group">
+                    <label>الناشر (Publisher)</label>
+                    <input type="text" id="publisher" class="input-field" placeholder="اسم دار النشر">
+                </div>
+                
+                <div class="input-group" id="site-name-group" style="display:none;">
+                    <label>اسم الموقع (Site Name)</label>
+                    <input type="text" id="siteName" class="input-field">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>الرابط أو المعرف (URL / DOI)</label>
+                    <input type="text" id="url" class="input-field" placeholder="https://... أو https://doi.org/...">
+                </div>
+
+            </div>
+
+            <div style="margin-top: 25px; text-align: left;">
+                <button class="action-btn primary-btn" onclick="generateCitation()" style="width: 100%; justify-content: center; padding: 12px;">
+                    <i class="fas fa-magic"></i> إنشاء التوثيق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-container">
+        <div class="ios-list-group">
+            <div class="list-header">
+                النتيجة (Reference Entry)
+                <span class="copy-feedback" id="copyMsg">تم النسخ!</span>
+            </div>
+            <div style="padding: 20px;">
+                <div id="citationOutput" class="citation-box"></div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="action-btn" onclick="copyToClipboard()">
+                        <i class="far fa-copy"></i> نسخ النص
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+  {% include footer.html %}
+
+<script>
+  // === وظائف الثيم ===
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  // === إدارة الحقول ===
+  function updateFormFields() {
+      const type = document.getElementById('sourceType').value;
+      
+      // إخفاء الكل أولاً
+      const idsToHide = ['publisher-group', 'journal-name-group', 'volume-group', 'issue-group', 'pages-group', 'site-name-group', 'date-group'];
+      idsToHide.forEach(id => document.getElementById(id).style.display = 'none');
+      
+      // إعادة ضبط الحقول المشتركة
+      const titleLabel = document.getElementById('titleLabel');
+      
+      if (type === 'book') {
+          titleLabel.innerText = "عنوان الكتاب (Book Title)";
+          document.getElementById('publisher-group').style.display = 'block'; // Full width needs logic handled by CSS grid, applied via class
+          document.getElementById('publisher-group').className = "input-group full-width";
+      } 
+      else if (type === 'journal') {
+          titleLabel.innerText = "عنوان المقال (Article Title)";
+          document.getElementById('journal-name-group').style.display = 'flex'; // Changed to flex to match input-group default
+          document.getElementById('volume-group').style.display = 'flex';
+          document.getElementById('issue-group').style.display = 'flex';
+          document.getElementById('pages-group').style.display = 'flex';
+      } 
+      else if (type === 'website') {
+          titleLabel.innerText = "عنوان الصفحة (Page Title)";
+          document.getElementById('site-name-group').style.display = 'flex';
+          document.getElementById('date-group').style.display = 'flex';
+      }
+  }
+
+  // === منطق التوثيق APA 7 ===
+  function generateCitation() {
+      const type = document.getElementById('sourceType').value;
+      
+      // جلب البيانات
+      const authors = document.getElementById('authors').value.trim();
+      let year = document.getElementById('year').value.trim();
+      const title = document.getElementById('title').value.trim();
+      const url = document.getElementById('url').value.trim();
+      
+      // تنظيف البيانات الأساسية
+      if (!year) year = "n.d."; // no date
+      const authorStr = authors ? `${authors}.` : "Title."; // إذا لم يوجد مؤلف يبدأ بالعنوان (تبسيط)
+      
+      let citationHTML = "";
+
+      // 1. Book Structure: Author. (Year). *Title*. Publisher. DOI/URL.
+      if (type === 'book') {
+          const publisher = document.getElementById('publisher').value.trim();
+          
+          citationHTML = `
+              ${authors ? authors + "." : ""} 
+              (${year}). 
+              <i>${title}</i>. 
+              ${publisher ? publisher + "." : ""} 
+              ${url}
+          `;
+      }
+
+      // 2. Journal Structure: Author. (Year). Title. *Journal*, *Vol*(Issue), Pages. DOI.
+      else if (type === 'journal') {
+          const journal = document.getElementById('journalName').value.trim();
+          const volume = document.getElementById('volume').value.trim();
+          const issue = document.getElementById('issue').value.trim();
+          const pages = document.getElementById('pages').value.trim();
+
+          citationHTML = `
+              ${authors ? authors + "." : ""} 
+              (${year}). 
+              ${title}. 
+              <i>${journal}</i>${volume ? ", <i>" + volume + "</i>" : ""}${issue ? "(" + issue + ")" : ""}${pages ? ", " + pages : ""}. 
+              ${url}
+          `;
+      }
+
+      // 3. Website Structure: Author. (Year, Month Day). *Title*. Site Name. URL.
+      else if (type === 'website') {
+          const siteName = document.getElementById('siteName').value.trim();
+          const fullDate = document.getElementById('fullDate').value.trim(); // e.g., May 20
+          
+          let dateString = year;
+          if (fullDate) dateString += `, ${fullDate}`;
+          
+          citationHTML = `
+              ${authors ? authors + "." : ""} 
+              (${dateString}). 
+              <i>${title}</i>. 
+              ${siteName ? siteName + "." : ""} 
+              ${url}
+          `;
+      }
+
+      // تنظيف النتيجة (إزالة المسافات الزائدة والنقاط المكررة)
+      // ملاحظة: هذا تنظيف بسيط، في الأنظمة المعقدة نستخدم Regex أدق
+      citationHTML = citationHTML.replace(/\s+/g, ' ').replace(/\.\./g, '.').trim();
+
+      // عرض النتيجة
+      const resultContainer = document.getElementById('result-container');
+      const outputBox = document.getElementById('citationOutput');
+      
+      outputBox.innerHTML = citationHTML;
+      resultContainer.style.display = 'block';
+      
+      // Scroll to result
+      resultContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function copyToClipboard() {
+      const text = document.getElementById('citationOutput').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+          const msg = document.getElementById('copyMsg');
+          msg.style.opacity = 1;
+          setTimeout(() => msg.style.opacity = 0, 2000);
+      });
+  }
+
+  function clearForm() {
+      document.querySelectorAll('input').forEach(input => input.value = '');
+      document.getElementById('result-container').style.display = 'none';
+  }
+
+  // تهيئة عند التحميل
+  window.addEventListener('DOMContentLoaded', () => {
+     updateFormFields();
+  });
+</script>
+
+</body>
+</html>
