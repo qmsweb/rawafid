@@ -84,7 +84,7 @@
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
-    /* === Header Actions === */
+    /* === Header & Actions === */
     .tool-header {
       margin-bottom: 30px;
       border-right: 4px solid var(--primary-color);
@@ -98,10 +98,7 @@
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
-    .header-actions {
-        display: flex;
-        gap: 10px;
-    }
+    .header-actions { display: flex; gap: 10px; }
 
     .action-btn {
         background: transparent;
@@ -118,12 +115,10 @@
         gap: 6px;
     }
     .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
-    
-    /* أيقونة التحميل */
     .download-btn { color: var(--primary-color); border-color: var(--primary-color); }
     .download-btn:hover { background: var(--primary-color); color: #fff; }
 
-    /* === القائمة === */
+    /* === List Styles === */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -208,7 +203,7 @@
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* === عنصر الشعار للطباعة (مخفي افتراضياً) === */
+    /* === الشعار الخاص بالطباعة === */
     .print-logo-container {
         display: none; /* مخفي في الشاشة العادية */
         text-align: center;
@@ -217,57 +212,55 @@
         border-bottom: 2px solid #000;
     }
     .print-logo-container img {
-        height: 60px; /* حجم مناسب مثل الهيدر */
-        /* تحويل الصورة البيضاء إلى سوداء */
-        /* brightness(0) يجعل الصورة سوداء بالكامل مهما كان لونها */
-        filter: brightness(0); 
+        height: 60px;
+        width: auto;
+        /* هذا الفلتر يقلب الألوان: الأبيض يصبح أسود */
+        filter: invert(1) brightness(0); 
     }
+    /* إذا كان الشعار في الوضع الليلي أو الأصلي أسود، نستخدم brightness(0) فقط */
+    /* بما أنك طلبت الشعار الأبيض (Rawafid-white.png)، فإن invert(1) سيحوله للأسود */
 
-    /* === إعدادات الطباعة (Print Styles) === */
+    /* === إعدادات الطباعة === */
     @media print {
-        /* إخفاء الهيدر والفوتر والأزرار */
-        header, footer, .header-actions, .tool-header p, .history-btn { 
-            display: none !important; 
-        }
-
-        /* إظهار الشعار المخصص للطباعة */
-        .print-logo-container {
-            display: block !important;
-        }
+        /* إخفاء العناصر غير المرغوبة */
+        header, footer, .header-actions, .tool-header p, .history-btn { display: none !important; }
 
         /* ضبط الجسم */
         body { 
             background-color: white !important; 
             color: black !important; 
-            padding-top: 0 !important;
+            padding: 0 !important; 
+            margin: 0 !important;
+            min-height: auto !important;
         }
 
-        .container { max-width: 100%; padding: 0; }
-        .tool-header { border: none; margin-bottom: 10px; }
-        
-        /* إجبار إظهار جميع الأقسام المخفية (الأرشيف) */
-        .hidden-section { display: block !important; }
-        
-        /* إزالة الظلال والحدود الزائدة */
+        .container { 
+            max-width: 100% !important; 
+            padding: 0 !important; 
+            margin: 0 !important; 
+            width: 100% !important;
+        }
+
+        /* إظهار الشعار */
+        .print-logo-container { display: block !important; }
+
+        /* التحكم في ظهور الأرشيف */
+        /* القاعدة: نخفي الأرشيف أولاً، ثم نظهره فقط إذا كان يحتوي على كلاس has-data */
+        #past-container { display: none !important; }
+        #past-container.has-data { display: block !important; }
+
         .ios-list-group { 
-            box-shadow: none; 
-            border: 1px solid #000; 
-            break-inside: avoid; /* منع قص الجدول بين الصفحات */
+            box-shadow: none !important; 
+            border: 1px solid #000 !important; 
+            break-inside: avoid; 
             margin-bottom: 20px;
         }
         
         .list-header {
             background-color: #eee !important;
             color: #000 !important;
-            border-bottom: 1px solid #000;
-        }
-
-        .event-item { border-bottom: 1px solid #ccc; }
-        
-        /* إلغاء ألوان الوضع الليلي إذا كانت مفعلة */
-        .event-item.current-week {
-            background-color: #f0f0f0 !important;
-            border-right: 4px solid #000 !important;
+            border-bottom: 1px solid #000 !important;
+            -webkit-print-color-adjust: exact; /* لطباعة الخلفية الرمادية */
         }
     }
 
@@ -280,8 +273,6 @@
         .event-item { padding: 15px 12px; }
         .event-date { margin-left: 12px; min-width: 45px; }
         .date-day { font-size: 1.4rem; }
-        .event-title { font-size: 1rem; }
-        .current-label-tag { margin-bottom: 5px; }
     }
   </style>
 </head>
@@ -333,9 +324,8 @@
 
 <script>
     const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-    let globalEvents = []; // لتخزين البيانات لاستخدامها في التحميل
+    let globalEvents = []; 
 
-    // تهيئة زر الوضع الليلي
     function initThemeToggle() {
         const toggleBtn = document.querySelector('.theme-toggle, #theme-toggle, .mode-switch, button[aria-label="Toggle theme"]');
         if (toggleBtn) {
@@ -348,31 +338,23 @@
         }
     }
 
-    // دالة إنشاء وتحميل ملف ICS
     function downloadICS() {
         if (!globalEvents || globalEvents.length === 0) {
             alert("لا توجد بيانات لتحميلها");
             return;
         }
-
         let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Rawafid//Academic Calendar//AR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
-
         globalEvents.forEach(event => {
-            // تحويل التاريخ من YYYY-MM-DD إلى YYYYMMDD
             const dateStr = event.date.replace(/-/g, '');
-            
             icsContent += "BEGIN:VEVENT\n";
             icsContent += "DTSTART;VALUE=DATE:" + dateStr + "\n";
-            // نجعل الحدث يستمر ليوم واحد
             icsContent += "DTEND;VALUE=DATE:" + dateStr + "\n"; 
             icsContent += "SUMMARY:" + event.title + "\n";
             icsContent += "DESCRIPTION:" + event.details + " - " + event.weekBadge + "\n";
             icsContent += "STATUS:CONFIRMED\n";
             icsContent += "END:VEVENT\n";
         });
-
         icsContent += "END:VCALENDAR";
-
         const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
@@ -388,13 +370,13 @@
             if (!response.ok) throw new Error('Failed to load data');
             let events = await response.json();
             
-            // ترتيب زمني وتخزين البيانات عالمياً
             events.sort((a, b) => new Date(a.date) - new Date(b.date));
             globalEvents = events; 
 
             const today = new Date();
             today.setHours(0,0,0,0);
 
+            const pastContainer = document.getElementById('past-container');
             const pastContent = document.getElementById('past-list-content');
             const semestersContainer = document.getElementById('semesters-container');
             
@@ -456,7 +438,11 @@
             });
 
             if (hasPast) {
-                document.getElementById('toggleHistoryBtn').style.display = 'flex'; // استخدام flex للأزرار
+                document.getElementById('toggleHistoryBtn').style.display = 'flex';
+                // إضافة كلاس لتمييز أن الأرشيف يحتوي على بيانات (للتحكم في الطباعة)
+                pastContainer.classList.add('has-data');
+            } else {
+                pastContainer.classList.remove('has-data');
             }
 
             if (upcomingSemesters.size === 0) {
@@ -465,17 +451,13 @@
                 upcomingSemesters.forEach((itemsArray, semesterName) => {
                     const box = document.createElement('div');
                     box.className = 'ios-list-group';
-                    
                     const header = document.createElement('div');
                     header.className = 'list-header';
                     header.innerText = semesterName;
-                    
                     const listDiv = document.createElement('div');
                     listDiv.innerHTML = itemsArray.join('');
-
                     box.appendChild(header);
                     box.appendChild(listDiv);
-                    
                     semestersContainer.appendChild(box);
                 });
             }
