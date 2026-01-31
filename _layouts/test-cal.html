@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "روافد - التقويم الجامعي" }}</title>
+  <title>{{ page.title | default: "التقويم الجامعي 2025-2026" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
   </script>
 
   <style>
-    /* === تعريف المتغيرات (نفس الملف الأصلي تماماً) === */
+    /* === تعريف المتغيرات (نفس الهوية الأصلية مع دعم الوضع الليلي) === */
     :root {
       --primary-color: #1a2ac6;
       --primary-light-bg: #eff1ff;
@@ -45,12 +45,15 @@
       --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
       --radius-md: 12px;
       
-      /* إضافات بسيطة لتصميم iOS دون التأثير على الهوية */
-      --ios-red: #FF3B30;
-      --ios-separator: #E5E5EA;
+      /* ألوان خاصة بتصميم iOS للتقويم */
+      --cal-red: #ff3b30;
+      --cal-separator: #e5e5ea;
+      --badge-bg: #e1e4f5;
+      --badge-text: #1a2ac6;
     }
 
-    [data-theme="dark"] {
+    /* === إعدادات الوضع الليلي (Dark Mode) === */
+    html[data-theme="dark"] {
       --primary-color: #7986cb;
       --primary-light-bg: #282a36;
       --bg-body: #121212;
@@ -61,8 +64,11 @@
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
       --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
-      --ios-red: #FF453A;
-      --ios-separator: #38383A;
+      
+      --cal-red: #ff453a;
+      --cal-separator: #38383a;
+      --badge-bg: #3f4252;
+      --badge-text: #9fa8da;
     }
 
     * {
@@ -85,7 +91,7 @@
       padding: 0 20px;
     }
 
-    /* === تنسيق الهيدر الخاص بالصفحة (Tool Header) === */
+    /* === رأس الصفحة === */
     .tool-header {
       margin-bottom: 30px;
       border-right: 4px solid var(--primary-color);
@@ -97,20 +103,25 @@
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
-    /* === زر التبديل (Show History) === */
+    /* زر عرض السجل */
     .history-btn {
         background: transparent;
         border: 1px solid var(--border-color);
-        color: var(--primary-color);
+        color: var(--text-muted);
         padding: 6px 15px;
         border-radius: 20px;
         cursor: pointer;
         font-size: 0.85rem;
         transition: 0.2s;
+        font-weight: 500;
     }
-    .history-btn:hover { background: var(--primary-light-bg); }
+    .history-btn:hover { 
+        background: var(--bg-code); 
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
 
-    /* === تصميم القائمة بنمط iOS === */
+    /* === حاوية القائمة (iOS Style Group) === */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -124,63 +135,99 @@
         background: var(--bg-code);
         padding: 10px 20px;
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border-color);
     }
 
+    /* === عنصر الحدث (Row) === */
     .event-item {
         display: flex;
-        padding: 15px 20px;
-        border-bottom: 1px solid var(--ios-separator);
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--cal-separator);
         position: relative;
         transition: background 0.2s;
+        align-items: center; /* محاذاة عمودية */
     }
     .event-item:last-child { border-bottom: none; }
 
-    /* التاريخ */
+    /* عمود التاريخ (يسار) */
     .event-date {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        min-width: 50px;
+        justify-content: center;
+        min-width: 55px;
         margin-left: 20px;
-        padding-top: 2px;
+        text-align: center;
     }
-    .date-month { font-size: 0.7rem; font-weight: 700; color: var(--ios-red); text-transform: uppercase; }
-    .date-day { font-size: 1.5rem; font-weight: 300; line-height: 1; color: var(--text-main); }
-
-    /* المحتوى */
-    .event-content { flex: 1; }
-    .week-badge { 
+    .date-month { 
         font-size: 0.75rem; 
-        color: var(--primary-color); 
-        font-weight: 600; 
+        font-weight: 700; 
+        color: var(--cal-red); 
+        text-transform: uppercase; 
         margin-bottom: 2px;
-        display: block;
     }
-    .event-title { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-    .event-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; }
-    .event-meta i { width: 15px; text-align: center; color: var(--primary-color); opacity: 0.7; margin-left: 5px; }
+    .date-day { 
+        font-size: 1.6rem; 
+        font-weight: 400; /* Apple Design usually uses lighter weight for big numbers */
+        line-height: 1; 
+        color: var(--text-main); 
+    }
 
-    /* === الأسبوع الحالي (تمييز) === */
+    /* عمود المحتوى (يمين) */
+    .event-content { flex: 1; }
+
+    /* خانة رقم الأسبوع (Separate Slot) */
+    .week-badge { 
+        display: inline-block;
+        background-color: var(--badge-bg);
+        color: var(--badge-text);
+        font-size: 0.8rem; 
+        font-weight: 700; /* عريض حسب الطلب */
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+
+    /* عنوان الحدث */
+    .event-title { 
+        font-size: 1.1rem; 
+        font-weight: 700; /* عريض */
+        color: var(--text-main);
+        margin-bottom: 4px;
+        line-height: 1.3;
+    }
+
+    /* التفاصيل الإضافية */
+    .event-meta { 
+        font-size: 0.9rem; 
+        color: var(--text-muted); 
+        line-height: 1.5;
+    }
+    .event-meta span { display: block; }
+
+    /* === الأسبوع الحالي (Highlight) === */
     .event-item.current-week {
         background: var(--primary-light-bg);
     }
-    .event-item.current-week .date-day { font-weight: 600; color: var(--primary-color); }
-    .event-item.current-week::after {
+    .event-item.current-week .date-day { 
+        color: var(--primary-color); 
+        font-weight: 700; 
+    }
+    .event-item.current-week::before {
         content: "";
         position: absolute;
         right: 0; top: 0; bottom: 0;
-        width: 4px;
+        width: 5px;
         background: var(--primary-color);
     }
 
-    /* === أقسام الإظهار والإخفاء === */
-    .hidden-section { display: none; animation: slideDown 0.3s ease; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    /* تأثيرات الإظهار */
+    .hidden-section { display: none; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
   </style>
 </head>
@@ -196,15 +243,14 @@
           <p>العام الأكاديمي 2025-2026</p>
       </div>
       <button class="history-btn" id="toggleHistoryBtn" onclick="toggleHistory()">
-          <i class="fas fa-history"></i> عرض السابق
+          عرض الأسابيع الماضية
       </button>
     </div>
 
     <div id="past-container" class="hidden-section">
         <div class="ios-list-group">
-            <div class="list-header">الأسابيع المنقضية</div>
-            <div id="past-list-content">
-                </div>
+            <div class="list-header">انتهت</div>
+            <div id="past-list-content"></div>
         </div>
     </div>
 
@@ -221,8 +267,7 @@
                     <span class="week-badge">أسبوع 0</span>
                     <div class="event-title">أسبوع التسجيل والتوجيه</div>
                     <div class="event-meta">
-                        <span><i class="fas fa-edit"></i> بدء التسجيل</span>
-                        <span><i class="fas fa-laptop"></i> اختبارات تحديد المستوى</span>
+                        <span>فترة التسجيل واختبارات تحديد المستوى (Math & IT)</span>
                     </div>
                 </div>
             </div>
@@ -234,10 +279,9 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">أسبوع 1</span>
-                    <div class="event-title">بدء الدراسة (خريف)</div>
+                    <div class="event-title">بدء الفصول الدراسية</div>
                     <div class="event-meta">
-                        <span><i class="fas fa-chalkboard-teacher"></i> بداية المحاضرات</span>
-                        <span><i class="fas fa-exchange-alt"></i> فترة الحذف والإضافة</span>
+                        <span>بداية المحاضرات وفترة الحذف والإضافة</span>
                     </div>
                 </div>
             </div>
@@ -250,7 +294,9 @@
                 <div class="event-content">
                     <span class="week-badge">أسبوع 6</span>
                     <div class="event-title">الاختبار الأول</div>
-                    <div class="event-meta"><span><i class="fas fa-file-alt"></i> موعد مقترح للاختبارات</span></div>
+                    <div class="event-meta">
+                        <span>تاريخ مقترح للاختبارات الدورية الأولى</span>
+                    </div>
                 </div>
             </div>
 
@@ -261,8 +307,10 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">أسبوع 9</span>
-                    <div class="event-title" style="color:var(--ios-red)">العيد الوطني</div>
-                    <div class="event-meta"><span><i class="fas fa-flag"></i> إجازة رسمية (يومين)</span></div>
+                    <div class="event-title" style="color:var(--cal-red)">العيد الوطني</div>
+                    <div class="event-meta">
+                        <span>إجازة رسمية (يومين بعد 20 نوفمبر)</span>
+                    </div>
                 </div>
             </div>
 
@@ -273,8 +321,10 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">الامتحانات النهائية (خريف)</div>
-                    <div class="event-meta"><span><i class="fas fa-pen-alt"></i> فترة أسبوعين</span></div>
+                    <div class="event-title">الامتحانات النهائية - خريف</div>
+                    <div class="event-meta">
+                        <span>فترة الاختبارات النهائية لمدة أسبوعين</span>
+                    </div>
                 </div>
             </div>
 
@@ -285,10 +335,9 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">أسبوع 0</span>
-                    <div class="event-title">التسجيل والتهيئة (ربيع)</div>
+                    <div class="event-title">التسجيل والتهيئة - ربيع</div>
                     <div class="event-meta">
-                        <span><i class="fas fa-user-plus"></i> التسجيل (1-5 فبراير)</span>
-                        <span><i class="fas fa-desktop"></i> اختبارات تحديد المستوى</span>
+                        <span>فترة التسجيل واختبارات تحديد المستوى</span>
                     </div>
                 </div>
             </div>
@@ -300,8 +349,10 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">أسبوع 1</span>
-                    <div class="event-title">بدء الدراسة (ربيع)</div>
-                    <div class="event-meta"><span><i class="fas fa-book-reader"></i> بداية المحاضرات والحذف والإضافة</span></div>
+                    <div class="event-title">بدء الدراسة - ربيع</div>
+                    <div class="event-meta">
+                        <span>بداية المحاضرات وتسجيل الحضور</span>
+                    </div>
                 </div>
             </div>
 
@@ -313,7 +364,9 @@
                 <div class="event-content">
                     <span class="week-badge">أسبوع 2</span>
                     <div class="event-title">شهر رمضان المبارك</div>
-                    <div class="event-meta"><span><i class="fas fa-moon"></i> التاريخ تقريبي (19 فبراير)</span></div>
+                    <div class="event-meta">
+                        <span>بداية الشهر الفضيل تقريباً (19 فبراير)</span>
+                    </div>
                 </div>
             </div>
 
@@ -324,8 +377,10 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">أسبوع 7</span>
-                    <div class="event-title" style="color:var(--ios-red)">إجازة عيد الفطر</div>
-                    <div class="event-meta"><span><i class="fas fa-star"></i> نهاية شهر رمضان وإجازة العيد</span></div>
+                    <div class="event-title" style="color:var(--cal-red)">إجازة عيد الفطر</div>
+                    <div class="event-meta">
+                        <span>نهاية شهر رمضان وإجازة العيد</span>
+                    </div>
                 </div>
             </div>
 
@@ -336,8 +391,10 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">الامتحانات النهائية (ربيع)</div>
-                    <div class="event-meta"><span><i class="fas fa-clock"></i> فترة أسبوعين</span></div>
+                    <div class="event-title">الامتحانات النهائية - ربيع</div>
+                    <div class="event-meta">
+                        <span>فترة الاختبارات النهائية للفصل الثاني</span>
+                    </div>
                 </div>
             </div>
 
@@ -350,8 +407,7 @@
                     <span class="week-badge">أسبوع 1</span>
                     <div class="event-title">بدء الفصل الصيفي</div>
                     <div class="event-meta">
-                        <span><i class="fas fa-check-double"></i> تسجيل وبدء دراسة</span>
-                        <span><i class="fas fa-mosque"></i> رأس السنة الهجرية</span>
+                        <span>التسجيل وبدء الدراسة وإجازة السنة الهجرية</span>
                     </div>
                 </div>
             </div>
@@ -363,18 +419,21 @@
                 </div>
                 <div class="event-content">
                     <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">النهائية (صيف)</div>
-                    <div class="event-meta"><span><i class="fas fa-stopwatch"></i> الامتحانات النهائية للصيفي</span></div>
+                    <div class="event-title">النهائية - صيفي</div>
+                    <div class="event-meta">
+                        <span>الامتحانات النهائية للفصل الصيفي</span>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    {% include footer.html %}
+  </div> {% include footer.html %}
 
-  </div> <script>
+<script>
     function initCalendar() {
+        // تحديد تاريخ اليوم (تصفير الوقت للمقارنة)
         const today = new Date();
         today.setHours(0,0,0,0);
 
@@ -386,27 +445,32 @@
         items.forEach(item => {
             const dateStr = item.getAttribute('data-date');
             const itemDate = new Date(dateStr);
-            // نفترض أن الأسبوع ينتهي بعد 7 أيام من بدايته
+            
+            // حساب نهاية الأسبوع (إضافة 7 أيام) لتحديد ما إذا كان الأسبوع قد "انقضى"
             const weekEnd = new Date(itemDate);
             weekEnd.setDate(weekEnd.getDate() + 7);
 
             if (weekEnd < today) {
-                // حدث ماضي
+                // حدث ماضي (انتهى تماماً)
                 pastContainer.appendChild(item);
                 hasPast = true;
             } else {
                 // حدث قادم أو حالي
                 upcomingContainer.appendChild(item);
                 
-                // تمييز الأسبوع الحالي
+                // تمييز الأسبوع الحالي (إذا كان اليوم يقع ضمن نطاق الـ 7 أيام)
                 if (today >= itemDate && today < weekEnd) {
                     item.classList.add('current-week');
-                    item.querySelector('.week-badge').innerText += " (الحالي)";
+                    const badge = item.querySelector('.week-badge');
+                    badge.innerText += " (الحالي)";
+                    // إضافة تلوين مميز للبادج في الأسبوع الحالي
+                    badge.style.backgroundColor = "var(--primary-color)";
+                    badge.style.color = "#fff";
                 }
             }
         });
 
-        // إخفاء زر السجل إذا لم يوجد ماضي
+        // إخفاء زر السجل إذا لم توجد أحداث ماضية
         if (!hasPast) {
             document.getElementById('toggleHistoryBtn').style.display = 'none';
         }
@@ -418,14 +482,15 @@
         
         if (section.style.display === 'block') {
             section.style.display = 'none';
-            btn.innerHTML = '<i class="fas fa-history"></i> عرض السابق';
+            btn.innerHTML = 'عرض الأسابيع الماضية';
         } else {
             section.style.display = 'block';
-            btn.innerHTML = '<i class="fas fa-times"></i> إخفاء السابق';
+            btn.innerHTML = 'إخفاء الأسابيع الماضية';
         }
     }
 
-    window.onload = initCalendar;
+    // تشغيل الكود عند اكتمال تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', initCalendar);
 </script>
 
 </body>
