@@ -1,8 +1,4 @@
----
-layout: null
-title: "مولد التوثيق (APA7)"
-permalink: /tools/apa-citation/
----
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
@@ -35,7 +31,7 @@ permalink: /tools/apa-citation/
   </script>
 
   <style>
-    /* === نفس المتغيرات والألوان من صفحة التقويم === */
+    /* === نفس المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
       --bg-body: #f4f6fb;
@@ -190,7 +186,7 @@ permalink: /tools/apa-citation/
         background-color: var(--bg-code);
         border-left: 4px solid var(--primary-color);
         border-radius: 4px;
-        font-family: 'Times New Roman', Times, serif; /* APA يفضل خطوط سيرف للطباعة */
+        font-family: 'Times New Roman', Times, serif;
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 15px;
@@ -198,7 +194,6 @@ permalink: /tools/apa-citation/
         color: var(--text-main);
     }
 
-    /* Italics for citation */
     .citation-box i { font-style: italic; }
 
     .copy-feedback {
@@ -209,7 +204,6 @@ permalink: /tools/apa-citation/
         transition: opacity 0.3s;
     }
 
-    /* Helper Text */
     .helper-text { font-size: 0.75rem; color: var(--text-muted); margin-top: -4px; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -251,19 +245,16 @@ permalink: /tools/apa-citation/
           <button class="action-btn" onclick="clearForm()">
             <i class="fas fa-eraser"></i> مسح الحقول
           </button>
-          <button class="action-btn" onclick="toggleTheme()">
-             <i class="fas fa-adjust"></i> المظهر
-          </button>
-      </div>
+          </div>
     </div>
 
     <div class="ios-list-group">
         <div class="list-header">
             <span>بيانات المرجع</span>
             <select id="sourceType" class="select-field" style="padding: 5px 10px; font-size: 0.85rem;" onchange="updateFormFields()">
-                <option value="book">كتاب (Book)</option>
-                <option value="journal">دورية علمية (Journal Article)</option>
-                <option value="website">موقع إلكتروني (Website)</option>
+                <option value="book">كتاب</option>
+                <option value="journal">دورية علمية / مقال</option>
+                <option value="website">موقع إلكتروني</option>
             </select>
         </div>
         
@@ -271,58 +262,58 @@ permalink: /tools/apa-citation/
             <div class="form-grid">
                 
                 <div class="input-group full-width">
-                    <label>المؤلف (Authors)</label>
-                    <input type="text" id="authors" class="input-field" placeholder="مثال: Al-Said, Q. أو Smith, J. A.">
-                    <span class="helper-text">الاسم العائل، الحرف الأول. (للأجنبي) / الاسم كاملاً (للعربي)</span>
+                    <label>المؤلف</label>
+                    <input type="text" id="authors" class="input-field" placeholder="مثال: أحمد محمد علي أو Smith, J.">
+                    <span class="helper-text">الاسم العائلي، الحرف الأول (للأجنبي) / الاسم كاملاً (للعربي)</span>
                 </div>
 
                 <div class="input-group">
-                    <label>سنة النشر (Year)</label>
+                    <label>سنة النشر</label>
                     <input type="number" id="year" class="input-field" placeholder="2025">
                 </div>
 
                 <div class="input-group" id="date-group" style="display:none;">
-                    <label>تاريخ النشر (Date)</label>
-                    <input type="text" id="fullDate" class="input-field" placeholder="May 20 أو 20 مايو">
+                    <label>تاريخ النشر الكامل</label>
+                    <input type="text" id="fullDate" class="input-field" placeholder="20 مايو">
                 </div>
 
                 <div class="input-group full-width">
-                    <label id="titleLabel">عنوان الكتاب (Title)</label>
+                    <label id="titleLabel">عنوان الكتاب</label>
                     <input type="text" id="title" class="input-field" placeholder="عنوان العمل...">
                 </div>
 
                 <div class="input-group" id="journal-name-group" style="display:none;">
-                    <label>اسم المجلة (Journal Name)</label>
+                    <label>اسم المجلة/الدورية</label>
                     <input type="text" id="journalName" class="input-field">
                 </div>
 
                 <div class="input-group" id="volume-group" style="display:none;">
-                    <label>المجلد (Volume)</label>
+                    <label>المجلد</label>
                     <input type="text" id="volume" class="input-field">
                 </div>
                 
                 <div class="input-group" id="issue-group" style="display:none;">
-                    <label>العدد (Issue)</label>
+                    <label>العدد</label>
                     <input type="text" id="issue" class="input-field">
                 </div>
 
                 <div class="input-group" id="pages-group" style="display:none;">
-                    <label>الصفحات (Pages)</label>
+                    <label>الصفحات</label>
                     <input type="text" id="pages" class="input-field" placeholder="10-25">
                 </div>
 
                 <div class="input-group full-width" id="publisher-group">
-                    <label>الناشر (Publisher)</label>
-                    <input type="text" id="publisher" class="input-field" placeholder="اسم دار النشر">
+                    <label>دار النشر</label>
+                    <input type="text" id="publisher" class="input-field" placeholder="اسم الناشر">
                 </div>
                 
                 <div class="input-group" id="site-name-group" style="display:none;">
-                    <label>اسم الموقع (Site Name)</label>
+                    <label>اسم الموقع</label>
                     <input type="text" id="siteName" class="input-field">
                 </div>
 
                 <div class="input-group full-width">
-                    <label>الرابط أو المعرف (URL / DOI)</label>
+                    <label>الرابط أو المعرف الرقمي (DOI/URL)</label>
                     <input type="text" id="url" class="input-field" placeholder="https://... أو https://doi.org/...">
                 </div>
 
@@ -339,7 +330,7 @@ permalink: /tools/apa-citation/
     <div id="result-container">
         <div class="ios-list-group">
             <div class="list-header">
-                النتيجة (Reference Entry)
+                النتيجة (التوثيق)
                 <span class="copy-feedback" id="copyMsg">تم النسخ!</span>
             </div>
             <div style="padding: 20px;">
@@ -358,39 +349,31 @@ permalink: /tools/apa-citation/
   {% include footer.html %}
 
 <script>
-  // === وظائف الثيم ===
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('rawafed-theme', newTheme);
-  }
-
   // === إدارة الحقول ===
   function updateFormFields() {
       const type = document.getElementById('sourceType').value;
       
-      // إخفاء الكل أولاً
+      // إخفاء الحقول غير المشتركة أولاً
       const idsToHide = ['publisher-group', 'journal-name-group', 'volume-group', 'issue-group', 'pages-group', 'site-name-group', 'date-group'];
       idsToHide.forEach(id => document.getElementById(id).style.display = 'none');
       
-      // إعادة ضبط الحقول المشتركة
+      // تغيير العنوان ديناميكياً
       const titleLabel = document.getElementById('titleLabel');
       
       if (type === 'book') {
-          titleLabel.innerText = "عنوان الكتاب (Book Title)";
-          document.getElementById('publisher-group').style.display = 'block'; // Full width needs logic handled by CSS grid, applied via class
+          titleLabel.innerText = "عنوان الكتاب";
+          document.getElementById('publisher-group').style.display = 'block'; 
           document.getElementById('publisher-group').className = "input-group full-width";
       } 
       else if (type === 'journal') {
-          titleLabel.innerText = "عنوان المقال (Article Title)";
-          document.getElementById('journal-name-group').style.display = 'flex'; // Changed to flex to match input-group default
+          titleLabel.innerText = "عنوان المقال";
+          document.getElementById('journal-name-group').style.display = 'flex';
           document.getElementById('volume-group').style.display = 'flex';
           document.getElementById('issue-group').style.display = 'flex';
           document.getElementById('pages-group').style.display = 'flex';
       } 
       else if (type === 'website') {
-          titleLabel.innerText = "عنوان الصفحة (Page Title)";
+          titleLabel.innerText = "عنوان الصفحة";
           document.getElementById('site-name-group').style.display = 'flex';
           document.getElementById('date-group').style.display = 'flex';
       }
@@ -406,13 +389,12 @@ permalink: /tools/apa-citation/
       const title = document.getElementById('title').value.trim();
       const url = document.getElementById('url').value.trim();
       
-      // تنظيف البيانات الأساسية
-      if (!year) year = "n.d."; // no date
-      const authorStr = authors ? `${authors}.` : "Title."; // إذا لم يوجد مؤلف يبدأ بالعنوان (تبسيط)
+      // التعامل مع حالة عدم وجود تاريخ
+      if (!year) year = "د.ت"; // دون تاريخ
       
       let citationHTML = "";
 
-      // 1. Book Structure: Author. (Year). *Title*. Publisher. DOI/URL.
+      // 1. هيكل الكتاب: المؤلف. (السنة). العنوان. الناشر. الرابط.
       if (type === 'book') {
           const publisher = document.getElementById('publisher').value.trim();
           
@@ -425,7 +407,7 @@ permalink: /tools/apa-citation/
           `;
       }
 
-      // 2. Journal Structure: Author. (Year). Title. *Journal*, *Vol*(Issue), Pages. DOI.
+      // 2. هيكل الدورية: المؤلف. (السنة). العنوان. اسم المجلة، المجلد(العدد)، الصفحات. الرابط.
       else if (type === 'journal') {
           const journal = document.getElementById('journalName').value.trim();
           const volume = document.getElementById('volume').value.trim();
@@ -441,13 +423,13 @@ permalink: /tools/apa-citation/
           `;
       }
 
-      // 3. Website Structure: Author. (Year, Month Day). *Title*. Site Name. URL.
+      // 3. هيكل الموقع: المؤلف. (السنة، اليوم الشهر). العنوان. اسم الموقع. الرابط.
       else if (type === 'website') {
           const siteName = document.getElementById('siteName').value.trim();
-          const fullDate = document.getElementById('fullDate').value.trim(); // e.g., May 20
+          const fullDate = document.getElementById('fullDate').value.trim(); 
           
           let dateString = year;
-          if (fullDate) dateString += `, ${fullDate}`;
+          if (fullDate) dateString += `، ${fullDate}`;
           
           citationHTML = `
               ${authors ? authors + "." : ""} 
@@ -458,8 +440,7 @@ permalink: /tools/apa-citation/
           `;
       }
 
-      // تنظيف النتيجة (إزالة المسافات الزائدة والنقاط المكررة)
-      // ملاحظة: هذا تنظيف بسيط، في الأنظمة المعقدة نستخدم Regex أدق
+      // تنظيف النتيجة
       citationHTML = citationHTML.replace(/\s+/g, ' ').replace(/\.\./g, '.').trim();
 
       // عرض النتيجة
@@ -469,7 +450,7 @@ permalink: /tools/apa-citation/
       outputBox.innerHTML = citationHTML;
       resultContainer.style.display = 'block';
       
-      // Scroll to result
+      // تمرير الشاشة للنتيجة
       resultContainer.scrollIntoView({ behavior: 'smooth' });
   }
 
