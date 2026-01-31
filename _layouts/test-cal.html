@@ -31,7 +31,7 @@
   </script>
 
   <style>
-    /* === تعريف المتغيرات (نفس الهوية الأصلية مع دعم الوضع الليلي) === */
+    /* === نفس التصميم السابق تماماً === */
     :root {
       --primary-color: #1a2ac6;
       --primary-light-bg: #eff1ff;
@@ -45,14 +45,12 @@
       --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
       --radius-md: 12px;
       
-      /* ألوان خاصة بتصميم iOS للتقويم */
       --cal-red: #ff3b30;
       --cal-separator: #e5e5ea;
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
     }
 
-    /* === إعدادات الوضع الليلي (Dark Mode) === */
     html[data-theme="dark"] {
       --primary-color: #7986cb;
       --primary-light-bg: #282a36;
@@ -71,10 +69,7 @@
       --badge-text: #9fa8da;
     }
 
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: "IBM Plex Sans Arabic", sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
 
     body {
       background-color: var(--bg-body);
@@ -85,13 +80,8 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
-    /* === رأس الصفحة === */
     .tool-header {
       margin-bottom: 30px;
       border-right: 4px solid var(--primary-color);
@@ -103,7 +93,6 @@
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
-    /* زر عرض السجل */
     .history-btn {
         background: transparent;
         border: 1px solid var(--border-color);
@@ -114,14 +103,10 @@
         font-size: 0.85rem;
         transition: 0.2s;
         font-weight: 500;
+        display: none; /* مخفي حتى يتم تحميل البيانات */
     }
-    .history-btn:hover { 
-        background: var(--bg-code); 
-        color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
+    .history-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
 
-    /* === حاوية القائمة (iOS Style Group) === */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -129,6 +114,7 @@
         overflow: hidden;
         margin-bottom: 30px;
         border: 1px solid var(--border-color);
+        display: none; /* مخفي حتى تحميل البيانات */
     }
 
     .list-header {
@@ -142,18 +128,16 @@
         border-bottom: 1px solid var(--border-color);
     }
 
-    /* === عنصر الحدث (Row) === */
     .event-item {
         display: flex;
         padding: 18px 20px;
         border-bottom: 1px solid var(--cal-separator);
         position: relative;
         transition: background 0.2s;
-        align-items: center; /* محاذاة عمودية */
+        align-items: center;
     }
     .event-item:last-child { border-bottom: none; }
 
-    /* عمود التاريخ (يسار) */
     .event-date {
         display: flex;
         flex-direction: column;
@@ -163,72 +147,34 @@
         margin-left: 20px;
         text-align: center;
     }
-    .date-month { 
-        font-size: 0.75rem; 
-        font-weight: 700; 
-        color: var(--cal-red); 
-        text-transform: uppercase; 
-        margin-bottom: 2px;
-    }
-    .date-day { 
-        font-size: 1.6rem; 
-        font-weight: 400; /* Apple Design usually uses lighter weight for big numbers */
-        line-height: 1; 
-        color: var(--text-main); 
-    }
+    .date-month { font-size: 0.75rem; font-weight: 700; color: var(--cal-red); text-transform: uppercase; margin-bottom: 2px; }
+    .date-day { font-size: 1.6rem; font-weight: 400; line-height: 1; color: var(--text-main); }
 
-    /* عمود المحتوى (يمين) */
     .event-content { flex: 1; }
 
-    /* خانة رقم الأسبوع (Separate Slot) */
     .week-badge { 
         display: inline-block;
         background-color: var(--badge-bg);
         color: var(--badge-text);
         font-size: 0.8rem; 
-        font-weight: 700; /* عريض حسب الطلب */
+        font-weight: 700;
         padding: 4px 10px;
         border-radius: 6px;
         margin-bottom: 8px;
     }
 
-    /* عنوان الحدث */
-    .event-title { 
-        font-size: 1.1rem; 
-        font-weight: 700; /* عريض */
-        color: var(--text-main);
-        margin-bottom: 4px;
-        line-height: 1.3;
-    }
-
-    /* التفاصيل الإضافية */
-    .event-meta { 
-        font-size: 0.9rem; 
-        color: var(--text-muted); 
-        line-height: 1.5;
-    }
+    .event-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
+    .event-meta { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
     .event-meta span { display: block; }
 
-    /* === الأسبوع الحالي (Highlight) === */
-    .event-item.current-week {
-        background: var(--primary-light-bg);
-    }
-    .event-item.current-week .date-day { 
-        color: var(--primary-color); 
-        font-weight: 700; 
-    }
+    .event-item.current-week { background: var(--primary-light-bg); }
+    .event-item.current-week .date-day { color: var(--primary-color); font-weight: 700; }
     .event-item.current-week::before {
-        content: "";
-        position: absolute;
-        right: 0; top: 0; bottom: 0;
-        width: 5px;
-        background: var(--primary-color);
+        content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--primary-color);
     }
 
-    /* تأثيرات الإظهار */
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
   </style>
 </head>
 <body>
@@ -248,231 +194,116 @@
     </div>
 
     <div id="past-container" class="hidden-section">
-        <div class="ios-list-group">
+        <div class="ios-list-group" id="past-group" style="display: block;">
             <div class="list-header">انتهت</div>
             <div id="past-list-content"></div>
         </div>
     </div>
 
-    <div class="ios-list-group">
+    <div class="ios-list-group" id="upcoming-group">
         <div class="list-header">القادم</div>
         <div id="upcoming-list-content">
-            
-            <div class="event-item" data-date="2025-09-14">
-                <div class="event-date">
-                    <span class="date-month">سبتمبر</span>
-                    <span class="date-day">14</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 0</span>
-                    <div class="event-title">أسبوع التسجيل والتوجيه</div>
-                    <div class="event-meta">
-                        <span>فترة التسجيل واختبارات تحديد المستوى (Math & IT)</span>
-                    </div>
-                </div>
+            <div style="padding: 20px; text-align: center; color: var(--text-muted);">
+                جاري تحميل التقويم...
             </div>
-
-            <div class="event-item" data-date="2025-09-21">
-                <div class="event-date">
-                    <span class="date-month">سبتمبر</span>
-                    <span class="date-day">21</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 1</span>
-                    <div class="event-title">بدء الفصول الدراسية</div>
-                    <div class="event-meta">
-                        <span>بداية المحاضرات وفترة الحذف والإضافة</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2025-10-26">
-                <div class="event-date">
-                    <span class="date-month">أكتوبر</span>
-                    <span class="date-day">26</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 6</span>
-                    <div class="event-title">الاختبار الأول</div>
-                    <div class="event-meta">
-                        <span>تاريخ مقترح للاختبارات الدورية الأولى</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2025-11-16">
-                <div class="event-date">
-                    <span class="date-month">نوفمبر</span>
-                    <span class="date-day">16</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 9</span>
-                    <div class="event-title" style="color:var(--cal-red)">العيد الوطني</div>
-                    <div class="event-meta">
-                        <span>إجازة رسمية (يومين بعد 20 نوفمبر)</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-01-04">
-                <div class="event-date">
-                    <span class="date-month">يناير</span>
-                    <span class="date-day">04</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">الامتحانات النهائية - خريف</div>
-                    <div class="event-meta">
-                        <span>فترة الاختبارات النهائية لمدة أسبوعين</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-02-01">
-                <div class="event-date">
-                    <span class="date-month">فبراير</span>
-                    <span class="date-day">01</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 0</span>
-                    <div class="event-title">التسجيل والتهيئة - ربيع</div>
-                    <div class="event-meta">
-                        <span>فترة التسجيل واختبارات تحديد المستوى</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-02-08">
-                <div class="event-date">
-                    <span class="date-month">فبراير</span>
-                    <span class="date-day">08</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 1</span>
-                    <div class="event-title">بدء الدراسة - ربيع</div>
-                    <div class="event-meta">
-                        <span>بداية المحاضرات وتسجيل الحضور</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-02-15">
-                <div class="event-date">
-                    <span class="date-month">فبراير</span>
-                    <span class="date-day">15</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 2</span>
-                    <div class="event-title">شهر رمضان المبارك</div>
-                    <div class="event-meta">
-                        <span>بداية الشهر الفضيل تقريباً (19 فبراير)</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-03-22">
-                <div class="event-date">
-                    <span class="date-month">مارس</span>
-                    <span class="date-day">22</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 7</span>
-                    <div class="event-title" style="color:var(--cal-red)">إجازة عيد الفطر</div>
-                    <div class="event-meta">
-                        <span>نهاية شهر رمضان وإجازة العيد</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-05-24">
-                <div class="event-date">
-                    <span class="date-month">مايو</span>
-                    <span class="date-day">24</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">الامتحانات النهائية - ربيع</div>
-                    <div class="event-meta">
-                        <span>فترة الاختبارات النهائية للفصل الثاني</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-06-14">
-                <div class="event-date">
-                    <span class="date-month">يونيو</span>
-                    <span class="date-day">14</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">أسبوع 1</span>
-                    <div class="event-title">بدء الفصل الصيفي</div>
-                    <div class="event-meta">
-                        <span>التسجيل وبدء الدراسة وإجازة السنة الهجرية</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-date="2026-08-02">
-                <div class="event-date">
-                    <span class="date-month">أغسطس</span>
-                    <span class="date-day">02</span>
-                </div>
-                <div class="event-content">
-                    <span class="week-badge">الامتحانات</span>
-                    <div class="event-title">النهائية - صيفي</div>
-                    <div class="event-meta">
-                        <span>الامتحانات النهائية للفصل الصيفي</span>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
-  </div> {% include footer.html %}
+  </div>
+
+  {% include footer.html %}
 
 <script>
-    function initCalendar() {
-        // تحديد تاريخ اليوم (تصفير الوقت للمقارنة)
-        const today = new Date();
-        today.setHours(0,0,0,0);
+    // أسماء الشهور بالعربية للعرض
+    const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-        const items = Array.from(document.querySelectorAll('.event-item'));
-        const pastContainer = document.getElementById('past-list-content');
-        const upcomingContainer = document.getElementById('upcoming-list-content');
-        let hasPast = false;
-
-        items.forEach(item => {
-            const dateStr = item.getAttribute('data-date');
-            const itemDate = new Date(dateStr);
+    async function fetchAndRenderCalendar() {
+        try {
+            // جلب ملف JSON
+            // يستخدم فلتر Jekyll لضمان صحة المسار
+            const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
+            if (!response.ok) throw new Error('Failed to load calendar data');
             
-            // حساب نهاية الأسبوع (إضافة 7 أيام) لتحديد ما إذا كان الأسبوع قد "انقضى"
-            const weekEnd = new Date(itemDate);
-            weekEnd.setDate(weekEnd.getDate() + 7);
+            const events = await response.json();
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
 
-            if (weekEnd < today) {
-                // حدث ماضي (انتهى تماماً)
-                pastContainer.appendChild(item);
-                hasPast = true;
-            } else {
-                // حدث قادم أو حالي
-                upcomingContainer.appendChild(item);
+            const pastContainer = document.getElementById('past-list-content');
+            const upcomingContainer = document.getElementById('upcoming-list-content');
+            
+            // تفريغ رسالة التحميل
+            upcomingContainer.innerHTML = '';
+            document.getElementById('upcoming-group').style.display = 'block';
+
+            let hasPast = false;
+
+            events.forEach(event => {
+                const eventDate = new Date(event.date);
                 
-                // تمييز الأسبوع الحالي (إذا كان اليوم يقع ضمن نطاق الـ 7 أيام)
-                if (today >= itemDate && today < weekEnd) {
+                // إنشاء عنصر الـ HTML
+                const item = document.createElement('div');
+                item.className = 'event-item';
+                
+                // تحديد ما إذا كان الأسبوع الحالي
+                const weekEnd = new Date(eventDate);
+                weekEnd.setDate(weekEnd.getDate() + 7);
+                const isCurrent = (today >= eventDate && today < weekEnd);
+                
+                if (isCurrent) {
                     item.classList.add('current-week');
-                    const badge = item.querySelector('.week-badge');
-                    badge.innerText += " (الحالي)";
-                    // إضافة تلوين مميز للبادج في الأسبوع الحالي
-                    badge.style.backgroundColor = "var(--primary-color)";
-                    badge.style.color = "#fff";
                 }
-            }
-        });
 
-        // إخفاء زر السجل إذا لم توجد أحداث ماضية
-        if (!hasPast) {
-            document.getElementById('toggleHistoryBtn').style.display = 'none';
+                // تنسيق التاريخ
+                const day = eventDate.getDate();
+                const month = monthNames[eventDate.getMonth()];
+                
+                // تنسيق العنوان (لون أحمر للإجازات)
+                const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
+                
+                // تنسيق شارة الأسبوع الحالي
+                let badgeText = event.weekBadge;
+                let badgeStyle = '';
+                if (isCurrent) {
+                    badgeText += " (الحالي)";
+                    badgeStyle = 'style="background-color:var(--primary-color); color:#fff;"';
+                }
+
+                item.innerHTML = `
+                    <div class="event-date">
+                        <span class="date-month">${month}</span>
+                        <span class="date-day">${day}</span>
+                    </div>
+                    <div class="event-content">
+                        <span class="week-badge" ${badgeStyle}>${badgeText}</span>
+                        <div class="event-title" ${titleStyle}>${event.title}</div>
+                        <div class="event-meta">
+                            <span>${event.details}</span>
+                        </div>
+                    </div>
+                `;
+
+                // الفرز: ماضي أم قادم
+                if (weekEnd < today) {
+                    pastContainer.appendChild(item);
+                    hasPast = true;
+                } else {
+                    upcomingContainer.appendChild(item);
+                }
+            });
+
+            // إظهار زر السجل إذا كان هناك بيانات ماضية
+            if (hasPast) {
+                document.getElementById('toggleHistoryBtn').style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('upcoming-list-content').innerHTML = `
+                <div style="padding:20px; text-align:center; color:red;">
+                    حدث خطأ في تحميل التقويم.
+                </div>
+            `;
         }
     }
 
@@ -489,8 +320,7 @@
         }
     }
 
-    // تشغيل الكود عند اكتمال تحميل الصفحة
-    window.addEventListener('DOMContentLoaded', initCalendar);
+    window.addEventListener('DOMContentLoaded', fetchAndRenderCalendar);
 </script>
 
 </body>
