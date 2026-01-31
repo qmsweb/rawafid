@@ -68,23 +68,29 @@
     body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-    /* === تصميم ودجيت الأسبوع (التصميم الجديد الهادئ) === */
+    /* === تصميم ودجيت الأسبوع (تعديلات المسافات والظلال) === */
     .week-widget {
         display: none; /* مخفي افتراضياً */
         background: var(--bg-card);
-        border: 1px solid var(--border-color); /* حدود ناعمة */
-        border-right: 4px solid var(--primary-color); /* تمييز بسيط من اليمين */
+        border: 1px solid var(--border-color);
+        border-right: 4px solid var(--primary-color);
         border-radius: var(--radius-md);
         padding: 16px 20px;
-        margin-bottom: 30px;
+        
+        /* التعديلات المطلوبة هنا */
+        margin-top: 30px;      /* مسافة علوية عن الهيدر */
+        margin-bottom: 10px;   /* مسافة سفلية صغيرة عن الأدوات */
+        box-shadow: none;      /* إلغاء الظل تماماً */
+        
         align-items: center;
         gap: 15px;
         cursor: pointer;
-        box-shadow: var(--card-shadow);
     }
+    
     .week-widget:hover {
         transform: translateY(-2px);
-        box-shadow: var(--hover-shadow);
+        /* تم إلغاء ظل التمرير أيضاً للحفاظ على التصميم المسطح */
+        background-color: var(--hover-bg); 
         border-color: var(--primary-color);
     }
     
@@ -109,7 +115,7 @@
     .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
 
     /* === شبكة الأدوات === */
-    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; } /* 3 أعمدة */
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
     .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
     .tool-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: var(--hover-shadow); }
     .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; }
@@ -149,7 +155,7 @@
     /* === Responsive === */
     @media (max-width: 768px) {
       .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .tools-grid .tool-item:last-child { grid-column: span 2; } /* توسيط الأخير */
+      .tools-grid .tool-item:last-child { grid-column: span 2; }
       .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .materials-list.grid-view .material-item { padding: 15px; text-align: center; align-items: center; }
       .materials-list.grid-view .item-icon-box { margin-bottom: 10px; width: 45px; height: 45px; font-size: 1.2rem; }
@@ -218,27 +224,22 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === 2. منطق الأسبوع الحالي (محدث لنطاق 7 أيام) === */
+  /* === 2. منطق الأسبوع الحالي (7 أيام) === */
   async function checkCurrentWeek() {
       try {
-          // إضافة timestamp لمنع الكاش
           const response = await fetch("{{ '/assets/calendar.json' | relative_url }}?v=" + new Date().getTime());
           if (!response.ok) return;
           const events = await response.json();
           
           const today = new Date();
-          today.setHours(0, 0, 0, 0); // تصفير الوقت
+          today.setHours(0, 0, 0, 0);
 
           const currentEvent = events.find(event => {
-              // قراءة التاريخ بدون تحويلات المنطقة الزمنية
               const parts = event.date.split('-');
               const weekStart = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-              
-              // تحديد نهاية الأسبوع (البداية + 7 أيام)
               const weekEnd = new Date(weekStart);
               weekEnd.setDate(weekStart.getDate() + 7);
               
-              // التحقق: اليوم أكبر من أو يساوي البداية وأصغر تماماً من النهاية
               return (today >= weekStart && today < weekEnd);
           });
 
@@ -247,9 +248,8 @@
           if (currentEvent) {
               const badge = currentEvent.weekBadge || "";
               const title = currentEvent.title || "";
-              // عرض النص: "الأسبوع 1: بداية الدراسة"
               document.getElementById('week-title-text').innerText = `${badge}: ${title}`;
-              widget.style.display = 'flex'; // إظهار العنصر فقط عند وجود أسبوع حالي
+              widget.style.display = 'flex'; 
           } else {
               widget.style.display = 'none';
           }
@@ -345,7 +345,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    checkCurrentWeek(); // تشغيل فحص الأسبوع
+    checkCurrentWeek(); 
     fetch("{{ '/assets/data/materials.json' | relative_url }}")
       .then(res => res.json())
       .then(data => { allCourses = data; createFilters(data); renderMaterialItems(data); })
