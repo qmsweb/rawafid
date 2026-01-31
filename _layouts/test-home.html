@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="light"> <head>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ page.title | default: "روافد - الرئيسية" }}</title>
@@ -20,9 +21,8 @@
   <script>
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (savedTheme === 'dark') {
-  document.documentElement.setAttribute('data-theme', 'dark');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
       }
@@ -49,6 +49,7 @@ if (savedTheme === 'dark') {
       
       --radius-lg: 20px;
       --radius-md: 12px;
+      --success-color: #34c759;
     }
 
     /* الوضع الداكن (عند تفعيله) */
@@ -76,8 +77,8 @@ if (savedTheme === 'dark') {
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Transition Smoothness: انتقال ناعم للألوان عند التبديل */
-    body, .material-item, .filter-item, .view-toggle, .sticky-filter-container, .tool-item, .section-title {
+    /* Transition Smoothness */
+    body, .material-item, .filter-item, .view-toggle, .sticky-filter-container, .tool-item, .section-title, .current-week-card {
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 
@@ -95,24 +96,64 @@ if (savedTheme === 'dark') {
       padding: 0 20px;
     }
 
+    /* === خانة الأسبوع الحالي (جديد) === */
+    .current-week-card {
+        display: none; /* مخفي افتراضياً حتى يتم التحقق من التاريخ */
+        background: var(--bg-card);
+        border: 2px solid var(--primary-color);
+        border-radius: var(--radius-md);
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        box-shadow: var(--card-shadow);
+        animation: fadeInDown 0.5s ease;
+    }
+    
+    .current-week-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .pulse-indicator {
+        width: 12px; height: 12px;
+        background-color: var(--success-color);
+        border-radius: 50%;
+        position: relative;
+        flex-shrink: 0;
+    }
+    .pulse-indicator::after {
+        content: ''; position: absolute; top:0; left:0; right:0; bottom:0;
+        border-radius: 50%; background-color: var(--success-color);
+        animation: pulse 2s infinite; z-index: -1;
+    }
+    @keyframes pulse { 0% {transform: scale(1); opacity: 0.8;} 100% {transform: scale(2.5); opacity: 0;} }
+    @keyframes fadeInDown { from {opacity:0; transform: translateY(-10px);} to {opacity:1; transform: translateY(0);} }
+
+    .week-info { flex: 1; }
+    .week-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+    .week-title { font-size: 1.1rem; font-weight: 700; color: var(--primary-color); }
+    
     /* === عنوان القسم === */
     .section-title {
       font-size: 1.3rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-top: 20px;
+      margin-top: 10px;
       margin-bottom: 15px;
       padding-right: 5px;
-      border-right: 4px solid var(--primary-color); /* زخرفة جانبية بسيطة */
+      border-right: 4px solid var(--primary-color);
       padding-right: 12px;
     }
 
     /* === أدوات روافد (Tools Grid) === */
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      /* تم التعديل إلى 3 أعمدة بدلاً من 4 */
+      grid-template-columns: repeat(3, 1fr); 
       gap: 15px;
-      margin-bottom: 25px; /* مسافة قبل شريط الفلتر */
+      margin-bottom: 25px;
     }
 
     .tool-item {
@@ -238,7 +279,7 @@ if (savedTheme === 'dark') {
 
     .filter-item.active {
       background: var(--primary-color);
-      color: #fff; /* النص يبقى أبيض دائمًا في الزر النشط */
+      color: #fff;
       border-color: var(--primary-color);
     }
 
@@ -280,7 +321,6 @@ if (savedTheme === 'dark') {
       font-size: 1.4rem;
       flex-shrink: 0;
       transition: transform 0.3s;
-      /* الخلفية تعتمد على السكربت أو الشفافية */
     }
     
     .material-item:hover .item-icon-box {
@@ -330,9 +370,14 @@ if (savedTheme === 'dark') {
 
     /* === Responsive === */
     @media (max-width: 768px) {
+      /* تعديل الشبكة في الجوال لعمودين */
       .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); 
         gap: 10px;
+      }
+      /* الأداة الأخيرة تأخذ العرض كامل ليكون الشكل متناسق (3 عناصر) */
+      .tools-grid .tool-item:last-child {
+         grid-column: span 2; 
       }
 
       .materials-list.grid-view {
@@ -369,6 +414,15 @@ if (savedTheme === 'dark') {
     
     {{ content }}
 
+    <div id="current-week-display" class="current-week-card" onclick="window.location.href='/calendar'">
+        <div class="pulse-indicator"></div>
+        <div class="week-info">
+            <div class="week-label">الأسبوع الحالي</div>
+            <div id="week-title-text" class="week-title">جاري التحميل...</div>
+        </div>
+        <div style="color: var(--text-muted);"><i class="fas fa-chevron-left"></i></div>
+    </div>
+
     <h3 class="section-title">الأدوات</h3>
 
     <div class="tools-grid">
@@ -386,13 +440,6 @@ if (savedTheme === 'dark') {
         <div class="tool-name">توثيق المراجع</div>
       </div>
 
-      <div class="tool-item" onclick="window.location.href='/dictionary'">
-        <div class="tool-icon">
-          <i class="fas fa-spell-check"></i>
-        </div>
-        <div class="tool-name">الباحث المعجمي</div>
-      </div>
-
       <div class="tool-item" onclick="window.location.href='/calendar'">
         <div class="tool-icon">
           <i class="fas fa-calendar-alt"></i>
@@ -400,6 +447,7 @@ if (savedTheme === 'dark') {
         <div class="tool-name">التقويم الأكاديمي</div>
       </div>
     </div>
+
     <div class="sticky-filter-container">
       <div class="filter-bar" id="filter-bar">
         </div>
@@ -421,7 +469,40 @@ if (savedTheme === 'dark') {
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === 2. منطق عرض المواد والفلاتر === */
+  /* === 2. منطق فحص الأسبوع الحالي (جديد) === */
+  async function checkCurrentWeek() {
+      try {
+          const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
+          if (!response.ok) return; // فشل التحميل
+          
+          const events = await response.json();
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); // تصفير الوقت للمقارنة الدقيقة
+
+          // البحث عن الحدث الذي يقع تاريخ اليوم في نطاق أسبوع منه
+          const currentEvent = events.find(event => {
+              const eventDate = new Date(event.date);
+              const weekEnd = new Date(eventDate);
+              weekEnd.setDate(weekEnd.getDate() + 7); // إضافة 7 أيام
+              
+              return (today >= eventDate && today < weekEnd);
+          });
+
+          const banner = document.getElementById('current-week-display');
+          
+          if (currentEvent) {
+              document.getElementById('week-title-text').innerText = `${currentEvent.weekBadge}: ${currentEvent.title}`;
+              banner.style.display = 'flex'; // إظهار الخانة
+          } else {
+              banner.style.display = 'none'; // إخفاء الخانة
+          }
+      } catch (error) {
+          console.error("Error loading calendar data:", error);
+          document.getElementById('current-week-display').style.display = 'none';
+      }
+  }
+
+  /* === 3. منطق عرض المواد والفلاتر === */
   const materialsList = document.getElementById('materials-list');
   const filterBar = document.getElementById('filter-bar');
   let allCourses = [];
@@ -532,6 +613,10 @@ if (savedTheme === 'dark') {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    
+    // تشغيل فحص الأسبوع الحالي
+    checkCurrentWeek();
+
     fetch("{{ '/assets/data/materials.json' | relative_url }}")
       .then(res => res.json())
       .then(data => {
