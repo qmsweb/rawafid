@@ -1,497 +1,206 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "روافد - توثيق المراجع APA7" }}</title>
+---
+layout: default
+title: "روافد - التقويم الأكاديمي 2025-2026"
+---
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
-  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
-  <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
-  <meta property="og:description" content="أداة توثيق المراجع بنظام APA7 لطلبة اللغة العربية.">
-  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
-  <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:type" content="website">
+<style>
+    /* تحسينات خاصة بصفحة التقويم */
+    .semester-section { margin-bottom: 50px; }
+    .semester-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 15px 25px;
+        border-radius: var(--radius-md);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .semester-header h2 { font-family: 'Baloo Bhaijaan 2', cursive; font-size: 1.4rem; }
 
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('rawafed-theme');
-      if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-
-  <style>
-    /* === تعريف المتغيرات (نفس التصميم الأصلي) === */
-    :root {
-      --primary-color: #1a2ac6;
-      --primary-light-bg: #eff1ff;
-      --bg-body: #f4f6fb;
-      --bg-card: #ffffff;
-      --border-color: #ccd1e0;
-      --text-main: #2d2d2d;
-      --text-muted: #666666;
-      --bg-code: #f4f6fb;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-      --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
-      --radius-md: 12px;
+    .week-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: var(--card-shadow);
+        transition: 0.3s;
+        position: relative;
+        border-right: 5px solid var(--border-color);
     }
 
-    [data-theme="dark"] {
-      --primary-color: #7986cb;
-      --primary-light-bg: #282a36;
-      --bg-body: #121212;
-      --bg-card: #1e1e1e;
-      --border-color: #333333;
-      --text-main: #e0e0e0;
-      --text-muted: #a0a0a0;
-      --bg-code: #2c2c2c;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+    /* تمييز الأسبوع الحالي */
+    .week-card.current-week {
+        border-right-color: #27ae60; /* لون أخضر للتمييز */
+        background: var(--primary-light-bg);
+        transform: scale(1.02);
+        box-shadow: var(--hover-shadow);
     }
+    .current-label {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        background: #27ae60;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+    .week-card.current-week .current-label { display: block; }
 
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: "IBM Plex Sans Arabic", sans-serif;
+    .week-info { display: flex; gap: 20px; align-items: flex-start; }
+    .week-number {
+        background: var(--bg-code);
+        padding: 10px;
+        border-radius: 8px;
+        min-width: 80px;
+        text-align: center;
     }
+    .week-number .num { display: block; font-size: 1.2rem; font-weight: 700; color: var(--primary-color); }
+    .week-number .date { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 5px; }
 
-    body {
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      min-height: 100vh;
-      padding-top: 80px;
-      padding-bottom: 40px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+    .event-content { flex-grow: 1; }
+    .event-content ul { list-style: none; }
+    .event-content li { 
+        margin-bottom: 8px; 
+        font-size: 0.95rem; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
     }
+    .event-content li i { color: var(--primary-color); width: 18px; }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .holiday { color: #e74c3c; font-weight: 600; }
+    .exam { color: #f39c12; font-weight: 600; }
+</style>
 
-    /* === تصميم الأداة (Citation Tool Styles) === */
-    .tool-header {
-      margin-bottom: 30px;
-      border-right: 4px solid var(--primary-color);
-      padding-right: 15px;
-    }
-    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
-    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+<div class="tool-header">
+    <h1>التقويم الأكاديمي لجامعة الشرقية</h1>
+    <p>العام الأكاديمي 2025-2026 م</p>
+</div>
 
-    .citation-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 30px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--card-shadow);
-      margin-bottom: 30px;
-    }
-
-    /* Tabs */
-    .type-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 15px;
-      overflow-x: auto;
-    }
-    
-    .tab-btn {
-      background: var(--bg-code);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 10px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: 0.3s;
-      white-space: nowrap;
-    }
-    
-    .tab-btn.active, .tab-btn:hover {
-      background: var(--primary-color);
-      color: #fff;
-      border-color: var(--primary-color);
-    }
-
-    /* Form Grid */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    
-    .full-width { grid-column: span 2; }
-
-    .form-group {
-      margin-bottom: 5px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      font-size: 0.9rem;
-      color: var(--text-main);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px 15px;
-      background: var(--bg-body);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px var(--primary-light-bg);
-    }
-
-    /* Actions & Result */
-    .action-row {
-      margin-top: 25px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 15px;
-    }
-
-    .btn {
-      padding: 12px 25px;
-      border-radius: 8px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: 0.3s;
-    }
-
-    .btn-primary { background: var(--primary-color); color: #fff; }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
-    
-    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
-    .btn-outline:hover { border-color: var(--primary-color); color: var(--primary-color); }
-
-    .result-section {
-      margin-top: 30px;
-      display: none; /* مخفي افتراضياً */
-      animation: fadeIn 0.5s ease;
-    }
-
-    .result-box {
-      background: var(--primary-light-bg);
-      border: 1px dashed var(--primary-color);
-      padding: 20px;
-      border-radius: var(--radius-md);
-      position: relative;
-    }
-
-    .citation-text {
-      font-family: "Times New Roman", serif; /* APA يفضل خطوط سيريف */
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #000; /* الأسود دائماً للمرجع ليكون واضحاً */
-      direction: rtl;
-    }
-    
-    /* جعل العنوان المائل يظهر بوضوح */
-    .citation-text em, .citation-text i {
-      font-style: italic;
-    }
-
-    .copy-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px; /* RTL placement */
-      background: #fff;
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .copy-btn:hover { background: var(--primary-color); color: #fff; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 768px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .full-width { grid-column: span 1; }
-    }
-  </style>
-</head>
-<body>
-
-  {% include header.html %}
-
-  <div class="container">
-    
-    <div class="tool-header">
-      <h1>مولد توثيق المراجع (APA 7)</h1>
-      <p>قم بإدخال بيانات المرجع للحصول على توثيق دقيق وفق الإصدار السابع.</p>
+<section class="semester-section">
+    <div class="semester-header">
+        <h2><i class="fas fa-leaf"></i> الفصل الأول (خريف 25)</h2>
+        <span>سبتمبر 2025 - يناير 2026</span>
     </div>
 
-    <div class="citation-card">
-      <div class="type-tabs">
-        <button class="tab-btn active" onclick="setSourceType('book')"><i class="fas fa-book"></i> كتاب</button>
-        <button class="tab-btn" onclick="setSourceType('website')"><i class="fas fa-globe"></i> موقع إلكتروني</button>
-        <button class="tab-btn" onclick="setSourceType('journal')"><i class="fas fa-scroll"></i> دورية علمية</button>
-      </div>
-
-      <form id="citationForm" onsubmit="event.preventDefault(); generateCitation();">
-        <div class="form-grid">
-          
-          <div class="form-group">
-            <label>اسم العائلة (المؤلف)</label>
-            <input type="text" id="authLast" class="form-control" placeholder="مثال: الجاحظ">
-          </div>
-          <div class="form-group">
-            <label>الاسم الأول (المؤلف)</label>
-            <input type="text" id="authFirst" class="form-control" placeholder="مثال: عمرو">
-          </div>
-          
-          <div class="form-group">
-            <label>سنة النشر</label>
-            <input type="number" id="year" class="form-control" placeholder="2023">
-          </div>
-
-          <div class="form-group source-field book-field">
-            <label>رقم الطبعة (اختياري)</label>
-            <input type="text" id="edition" class="form-control" placeholder="ط2، ط. منقحة">
-          </div>
-          <div class="form-group full-width source-field book-field">
-            <label>عنوان الكتاب</label>
-            <input type="text" id="bookTitle" class="form-control" placeholder="عنوان الكتاب كاملاً">
-          </div>
-          <div class="form-group full-width source-field book-field">
-            <label>الناشر / دار النشر</label>
-            <input type="text" id="publisher" class="form-control" placeholder="مثال: دار الشروق">
-          </div>
-
-          <div class="form-group source-field web-field" style="display:none;">
-            <label>يوم وشهر النشر (اختياري)</label>
-            <input type="text" id="webDate" class="form-control" placeholder="مثال: 15 مارس">
-          </div>
-          <div class="form-group full-width source-field web-field" style="display:none;">
-            <label>عنوان المقال / الصفحة</label>
-            <input type="text" id="webTitle" class="form-control" placeholder="عنوان المقال">
-          </div>
-          <div class="form-group full-width source-field web-field" style="display:none;">
-            <label>اسم الموقع الإلكتروني</label>
-            <input type="text" id="siteName" class="form-control" placeholder="مثال: الجزيرة نت">
-          </div>
-          <div class="form-group full-width source-field web-field" style="display:none;">
-            <label>الرابط (URL)</label>
-            <input type="url" id="webUrl" class="form-control" placeholder="https://example.com/...">
-          </div>
-
-          <div class="form-group full-width source-field journal-field" style="display:none;">
-            <label>عنوان المقال البحثي</label>
-            <input type="text" id="articleTitle" class="form-control">
-          </div>
-          <div class="form-group full-width source-field journal-field" style="display:none;">
-            <label>اسم المجلة / الدورية</label>
-            <input type="text" id="journalName" class="form-control">
-          </div>
-          <div class="form-group source-field journal-field" style="display:none;">
-            <label>المجلد (Volume)</label>
-            <input type="text" id="vol" class="form-control">
-          </div>
-          <div class="form-group source-field journal-field" style="display:none;">
-            <label>العدد (Issue)</label>
-            <input type="text" id="issue" class="form-control">
-          </div>
-          <div class="form-group source-field journal-field" style="display:none;">
-            <label>صفحات (من - إلى)</label>
-            <input type="text" id="pages" class="form-control" placeholder="10-25">
-          </div>
-          <div class="form-group source-field journal-field" style="display:none;">
-            <label>DOI أو الرابط</label>
-            <input type="text" id="doi" class="form-control">
-          </div>
-
+    <div class="week-card" data-start="2025-09-14" data-end="2025-09-20">
+        <span class="current-label">الأسبوع الحالي</span>
+        <div class="week-info">
+            <div class="week-number">
+                <span class="num">أسبوع 0</span>
+                <span class="date">14 سبتمبر</span>
+            </div>
+            <div class="event-content">
+                <ul>
+                    <li><i class="fas fa-id-card"></i> أسبوع التسجيل والإرشاد [cite: 3]</li>
+                    <li><i class="fas fa-file-alt"></i> اختبارات تحديد المستوى (Math & IT) 15-16 سبتمبر [cite: 3]</li>
+                </ul>
+            </div>
         </div>
-
-        <div class="action-row">
-            <button type="button" class="btn btn-outline" onclick="resetForm()">
-                <i class="fas fa-undo"></i> تفريغ
-            </button>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-magic"></i> إنشاء التوثيق
-            </button>
-        </div>
-      </form>
-
-      <div class="result-section" id="resultSection">
-        <div class="result-box">
-            <button class="copy-btn" onclick="copyToClipboard()" title="نسخ النص">
-                <i class="fas fa-copy" id="copyIcon"></i>
-            </button>
-            <div class="citation-text" id="citationOutput">
-                </div>
-        </div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:10px; text-align:center;">
-            * تم تطبيق التنسيق المائل (Italic) تلقائياً وفقاً لقواعد APA7.
-        </p>
-      </div>
     </div>
 
-    {% include footer.html %}
-  </div>
+    <div class="week-card" data-start="2025-09-21" data-end="2025-09-27">
+        <span class="current-label">الأسبوع الحالي</span>
+        <div class="week-info">
+            <div class="week-number">
+                <span class="num">أسبوع 1</span>
+                <span class="date">21 سبتمبر</span>
+            </div>
+            <div class="event-content">
+                <ul>
+                    <li><i class="fas fa-chalkboard-teacher"></i> بدء الدراسة للكليات [cite: 3]</li>
+                    <li><i class="fas fa-edit"></i> فترة الحذف والإضافة وتسجيل الحضور [cite: 3]</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="semester-section">
+    <div class="semester-header">
+        <h2><i class="fas fa-seedling"></i> الفصل الثاني (ربيع 26)</h2>
+        <span>فبراير 2026 - يونيو 2026</span>
+    </div>
+
+    <div class="week-card" data-start="2026-01-25" data-end="2026-02-01">
+        <span class="current-label">الأسبوع الحالي</span>
+        <div class="week-info">
+            <div class="week-number">
+                <span class="num">إجازة</span>
+                <span class="date">25 يناير</span>
+            </div>
+            <div class="event-content">
+                <ul>
+                    <li><i class="fas fa-coffee"></i> إجازة بين الفصلين للطلبة والأكاديميين </li>
+                    <li><i class="fas fa-clipboard-check"></i> إعلان النتائج والتحضير للتسجيل </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="week-card" data-start="2026-02-01" data-end="2026-02-07">
+        <span class="current-label">الأسبوع الحالي</span>
+        <div class="week-info">
+            <div class="week-number">
+                <span class="num">أسبوع 0</span>
+                <span class="date">01 فبراير</span>
+            </div>
+            <div class="event-content">
+                <ul>
+                    <li><i class="fas fa-user-plus"></i> فترة التسجيل (1 - 5 فبراير) </li>
+                    <li class="holiday"><i class="fas fa-star-and-crescent"></i> بداية شهر رمضان تقريباً (19 فبراير) </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="semester-section">
+    <div class="semester-header">
+        <h2><i class="fas fa-sun"></i> الفصل الصيفي (صيف 26)</h2>
+        <span>يونيو 2026 - أغسطس 2026</span>
+    </div>
+
+    <div class="week-card" data-start="2026-06-14" data-end="2026-06-20">
+        <span class="current-label">الأسبوع الحالي</span>
+        <div class="week-info">
+            <div class="week-number">
+                <span class="num">أسبوع 1</span>
+                <span class="date">14 يونيو</span>
+            </div>
+            <div class="event-content">
+                <ul>
+                    <li><i class="fas fa-calendar-check"></i> التسجيل (14-16 يونيو) وبدء الدراسة 17 يونيو [cite: 5]</li>
+                    <li class="holiday"><i class="fas fa-mosque"></i> رأس السنة الهجرية (16 يونيو) [cite: 5]</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 
 <script>
-  let currentType = 'book';
+    function updateCurrentWeek() {
+        const now = new Date();
+        const cards = document.querySelectorAll('.week-card');
+        
+        cards.forEach(card => {
+            const start = new Date(card.dataset.start);
+            const end = new Date(card.dataset.end);
+            
+            // إضافة يوم واحد لنهاية الأسبوع ليشمل اليوم الأخير كاملاً
+            end.setDate(end.getDate() + 1);
 
-  // تبديل نوع المصدر وإظهار الحقول المناسبة
-  function setSourceType(type) {
-    currentType = type;
-    
-    // تحديث الأزرار
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-
-    // إخفاء كل الحقول الخاصة
-    document.querySelectorAll('.source-field').forEach(el => el.style.display = 'none');
-
-    // إظهار الحقول المطلوبة فقط
-    if (type === 'book') {
-        document.querySelectorAll('.book-field').forEach(el => el.style.display = 'block');
-    } else if (type === 'website') {
-        document.querySelectorAll('.web-field').forEach(el => el.style.display = 'block');
-    } else if (type === 'journal') {
-        document.querySelectorAll('.journal-field').forEach(el => el.style.display = 'block');
-    }
-    
-    // إخفاء النتيجة عند التغيير
-    document.getElementById('resultSection').style.display = 'none';
-  }
-
-  function generateCitation() {
-    const last = document.getElementById('authLast').value.trim();
-    const first = document.getElementById('authFirst').value.trim();
-    const year = document.getElementById('year').value.trim();
-    
-    let citation = "";
-    let authorPart = "";
-
-    // معالجة اسم المؤلف
-    if (last && first) {
-        // التحقق إذا كان الاسم عربياً (تقريباً) لا نستخدم الأحرف الأولى عادة بنفس طريقة الإنجليزي، 
-        // لكن APA يطلب (اللقب، الاسم الأول).
-        // للخيار الأبسط سنضع اللقب، ثم الاسم.
-        authorPart = `${last}، ${first}`;
-    } else if (last) {
-        authorPart = last;
-    } else {
-        // حالة العنوان يحل محل المؤلف
-        authorPart = ""; 
+            if (now >= start && now < end) {
+                card.classList.add('current-week');
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
     }
 
-    if (currentType === 'book') {
-        const title = document.getElementById('bookTitle').value.trim();
-        const publisher = document.getElementById('publisher').value.trim();
-        const edition = document.getElementById('edition').value.trim();
-        
-        // Structure: Author. (Year). *Title* (Edition). Publisher.
-        if(authorPart) citation += `${authorPart}. `;
-        citation += `(${year}). `;
-        citation += `<em>${title}</em>`; 
-        if(edition) citation += ` (${edition})`;
-        citation += `. ${publisher}.`;
-
-    } else if (currentType === 'website') {
-        const title = document.getElementById('webTitle').value.trim();
-        const site = document.getElementById('siteName').value.trim();
-        const url = document.getElementById('webUrl').value.trim();
-        const date = document.getElementById('webDate').value.trim(); // يوم وشهر
-        
-        // Structure: Author. (Year, Month Day). Title. *Site Name*. URL
-        if(authorPart) citation += `${authorPart}. `;
-        
-        citation += `(${year}`;
-        if(date) citation += `، ${date}`;
-        citation += `). `;
-        
-        citation += `<em>${title}</em>. `; // في المواقع، العنوان مائل أحياناً حسب نوع الوثيقة، لكن الشائع في APA7 للويب: عنوان العمل مائل
-        if(site) citation += `${site}. `;
-        citation += `${url}`;
-
-    } else if (currentType === 'journal') {
-        const article = document.getElementById('articleTitle').value.trim();
-        const journal = document.getElementById('journalName').value.trim();
-        const vol = document.getElementById('vol').value.trim();
-        const issue = document.getElementById('issue').value.trim();
-        const pages = document.getElementById('pages').value.trim();
-        const doi = document.getElementById('doi').value.trim();
-
-        // Structure: Author. (Year). Article. *Journal, Vol*(Issue), Pages. DOI
-        if(authorPart) citation += `${authorPart}. `;
-        citation += `(${year}). `;
-        citation += `${article}. `;
-        citation += `<em>${journal}</em>`;
-        if(vol) citation += `، <em>${vol}</em>`;
-        if(issue) citation += `(${issue})`;
-        if(pages) citation += `، ${pages}`;
-        citation += `. ${doi}`;
-    }
-
-    // عرض النتيجة
-    const outputDiv = document.getElementById('citationOutput');
-    outputDiv.innerHTML = citation;
-    document.getElementById('resultSection').style.display = 'block';
-    
-    // Scroll to result
-    outputDiv.scrollIntoView({behavior: "smooth", block: "nearest"});
-  }
-
-  function resetForm() {
-    document.getElementById('citationForm').reset();
-    document.getElementById('resultSection').style.display = 'none';
-  }
-
-  function copyToClipboard() {
-    const outputDiv = document.getElementById('citationOutput');
-    // نسخ النص مع الحفاظ على التنسيق قدر الإمكان
-    // سنستخدم Clipboard API لنسخ HTML والنص العادي
-    const type = "text/html";
-    const blob = new Blob([outputDiv.innerHTML], { type });
-    const data = [new ClipboardItem({ [type]: blob })];
-
-    navigator.clipboard.write(data).then(() => {
-        const icon = document.getElementById('copyIcon');
-        icon.className = 'fas fa-check';
-        setTimeout(() => {
-            icon.className = 'fas fa-copy';
-        }, 2000);
-    }).catch(err => {
-        // Fallback for plain text
-        navigator.clipboard.writeText(outputDiv.innerText);
-    });
-  }
+    document.addEventListener('DOMContentLoaded', updateCurrentWeek);
 </script>
-
-</body>
-</html>
