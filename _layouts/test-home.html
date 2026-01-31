@@ -106,7 +106,6 @@
     }
     
     .week-content { flex: 1; }
-    .week-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
     
     .week-title { 
         font-size: 1.05rem; 
@@ -117,9 +116,18 @@
         flex-wrap: wrap;
         gap: 5px;
     }
+       .current-label-tag { 
+        font-size: 1.00rem; 
+        font-weight: 600; 
+        color: var(--text-main); 
+        display: flex; 
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
 
     /* وسم الأسبوع الحالي */
-    .current-label-tag {
+    .week-label  {
         background-color: var(--primary-color);
         color: #ffffff;
         font-size: 0.75rem;
