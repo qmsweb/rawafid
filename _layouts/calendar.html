@@ -342,166 +342,162 @@
   {% include footer.html %}
 
 <script>
-    const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-    let globalEvents = []; 
+  const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+  let globalEvents = []; 
 
-    function initThemeToggle() {
-        const toggleBtn = document.querySelector('.theme-toggle, #theme-toggle, .mode-switch, button[aria-label="Toggle theme"]');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', function() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('rawafed-theme', newTheme);
-            });
-        }
-    }
+  /* === تصحيح دالة تبديل الثيم لتطابق الموجودة في الهيدر === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
 
-    function downloadICS() {
-        if (!globalEvents || globalEvents.length === 0) {
-            alert("لا توجد بيانات لتحميلها");
-            return;
-        }
-        let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Rawafid//Academic Calendar//AR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
-        globalEvents.forEach(event => {
-            const dateStr = event.date.replace(/-/g, '');
-            icsContent += "BEGIN:VEVENT\n";
-            icsContent += "DTSTART;VALUE=DATE:" + dateStr + "\n";
-            icsContent += "DTEND;VALUE=DATE:" + dateStr + "\n"; 
-            icsContent += "SUMMARY:" + event.title + "\n";
-            icsContent += "DESCRIPTION:" + event.details + " - " + event.weekBadge + "\n";
-            icsContent += "STATUS:CONFIRMED\n";
-            icsContent += "END:VEVENT\n";
-        });
-        icsContent += "END:VCALENDAR";
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', 'Academic_Calendar.ics');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+  function downloadICS() {
+      if (!globalEvents || globalEvents.length === 0) {
+          alert("لا توجد بيانات لتحميلها");
+          return;
+      }
+      let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Rawafid//Academic Calendar//AR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
+      globalEvents.forEach(event => {
+          const dateStr = event.date.replace(/-/g, '');
+          icsContent += "BEGIN:VEVENT\n";
+          icsContent += "DTSTART;VALUE=DATE:" + dateStr + "\n";
+          icsContent += "DTEND;VALUE=DATE:" + dateStr + "\n"; 
+          icsContent += "SUMMARY:" + event.title + "\n";
+          icsContent += "DESCRIPTION:" + event.details + " - " + event.weekBadge + "\n";
+          icsContent += "STATUS:CONFIRMED\n";
+          icsContent += "END:VEVENT\n";
+      });
+      icsContent += "END:VCALENDAR";
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'Academic_Calendar.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  }
 
-    async function fetchAndRenderCalendar() {
-        try {
-            const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
-            if (!response.ok) throw new Error('Failed to load data');
-            let events = await response.json();
-            
-            events.sort((a, b) => new Date(a.date) - new Date(b.date));
-            globalEvents = events; 
+  async function fetchAndRenderCalendar() {
+      try {
+          const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
+          if (!response.ok) throw new Error('Failed to load data');
+          let events = await response.json();
+          
+          events.sort((a, b) => new Date(a.date) - new Date(b.date));
+          globalEvents = events; 
 
-            const today = new Date();
-            today.setHours(0,0,0,0);
+          const today = new Date();
+          today.setHours(0,0,0,0);
 
-            const pastContainer = document.getElementById('past-container');
-            const pastContent = document.getElementById('past-list-content');
-            const semestersContainer = document.getElementById('semesters-container');
-            
-            semestersContainer.innerHTML = ''; 
+          const pastContainer = document.getElementById('past-container');
+          const pastContent = document.getElementById('past-list-content');
+          const semestersContainer = document.getElementById('semesters-container');
+          
+          semestersContainer.innerHTML = ''; 
 
-            let hasPast = false;
-            let upcomingSemesters = new Map();
+          let hasPast = false;
+          let upcomingSemesters = new Map();
 
-            events.forEach(event => {
-                const eventDate = new Date(event.date);
-                const weekEnd = new Date(eventDate);
-                weekEnd.setDate(weekEnd.getDate() + 7);
-                
-                const isCurrent = (today >= eventDate && today < weekEnd);
-                const isPast = (weekEnd < today); 
+          events.forEach(event => {
+              const eventDate = new Date(event.date);
+              const weekEnd = new Date(eventDate);
+              weekEnd.setDate(weekEnd.getDate() + 7);
+              
+              const isCurrent = (today >= eventDate && today < weekEnd);
+              const isPast = (weekEnd < today); 
 
-                const day = eventDate.getDate();
-                const month = monthNames[eventDate.getMonth()];
-                const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
-                
-                let badgeText = event.weekBadge;
-                let itemClass = 'event-item';
-                let currentLabelHtml = '';
+              const day = eventDate.getDate();
+              const month = monthNames[eventDate.getMonth()];
+              const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
+              
+              let badgeText = event.weekBadge;
+              let itemClass = 'event-item';
+              let currentLabelHtml = '';
 
-                if (isCurrent) {
-                    itemClass += ' current-week';
-                    currentLabelHtml = `<span class="current-label-tag">الأسبوع الحالي</span>`;
-                }
+              if (isCurrent) {
+                  itemClass += ' current-week';
+                  currentLabelHtml = `<span class="current-label-tag">الأسبوع الحالي</span>`;
+              }
 
-                const html = `
-                    <div class="${itemClass}">
-                        <div class="event-date">
-                            <span class="date-month">${month}</span>
-                            <span class="date-day">${day}</span>
-                        </div>
-                        <div class="event-content">
-                            <div style="margin-bottom: 5px;">
-                                ${currentLabelHtml}
-                                <span class="week-badge">${badgeText}</span>
-                            </div>
-                            <div class="event-title" ${titleStyle}>${event.title}</div>
-                            <div class="event-meta">
-                                <span>${event.details}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+              const html = `
+                  <div class="${itemClass}">
+                      <div class="event-date">
+                          <span class="date-month">${month}</span>
+                          <span class="date-day">${day}</span>
+                      </div>
+                      <div class="event-content">
+                          <div style="margin-bottom: 5px;">
+                              ${currentLabelHtml}
+                              <span class="week-badge">${badgeText}</span>
+                          </div>
+                          <div class="event-title" ${titleStyle}>${event.title}</div>
+                          <div class="event-meta">
+                              <span>${event.details}</span>
+                          </div>
+                      </div>
+                  </div>
+              `;
 
-                if (isPast) {
-                    pastContent.insertAdjacentHTML('beforeend', html);
-                    hasPast = true;
-                } else {
-                    const semName = event.semester || "أخرى";
-                    if (!upcomingSemesters.has(semName)) {
-                        upcomingSemesters.set(semName, []);
-                    }
-                    upcomingSemesters.get(semName).push(html);
-                }
-            });
+              if (isPast) {
+                  pastContent.insertAdjacentHTML('beforeend', html);
+                  hasPast = true;
+              } else {
+                  const semName = event.semester || "أخرى";
+                  if (!upcomingSemesters.has(semName)) {
+                      upcomingSemesters.set(semName, []);
+                  }
+                  upcomingSemesters.get(semName).push(html);
+              }
+          });
 
-            if (hasPast) {
-                document.getElementById('toggleHistoryBtn').style.display = 'flex';
-                pastContainer.classList.add('has-data');
-            } else {
-                pastContainer.classList.remove('has-data');
-            }
+          if (hasPast) {
+              document.getElementById('toggleHistoryBtn').style.display = 'flex';
+              pastContainer.classList.add('has-data');
+          } else {
+              pastContainer.classList.remove('has-data');
+          }
 
-            if (upcomingSemesters.size === 0) {
-                 semestersContainer.innerHTML = '<div style="padding:20px; text-align:center;">لا توجد أحداث قادمة حالياً.</div>';
-            } else {
-                upcomingSemesters.forEach((itemsArray, semesterName) => {
-                    const box = document.createElement('div');
-                    box.className = 'ios-list-group';
-                    const header = document.createElement('div');
-                    header.className = 'list-header';
-                    header.innerText = semesterName;
-                    const listDiv = document.createElement('div');
-                    listDiv.innerHTML = itemsArray.join('');
-                    box.appendChild(header);
-                    box.appendChild(listDiv);
-                    semestersContainer.appendChild(box);
-                });
-            }
+          if (upcomingSemesters.size === 0) {
+               semestersContainer.innerHTML = '<div style="padding:20px; text-align:center;">لا توجد أحداث قادمة حالياً.</div>';
+          } else {
+              upcomingSemesters.forEach((itemsArray, semesterName) => {
+                  const box = document.createElement('div');
+                  box.className = 'ios-list-group';
+                  const header = document.createElement('div');
+                  header.className = 'list-header';
+                  header.innerText = semesterName;
+                  const listDiv = document.createElement('div');
+                  listDiv.innerHTML = itemsArray.join('');
+                  box.appendChild(header);
+                  box.appendChild(listDiv);
+                  semestersContainer.appendChild(box);
+              });
+          }
 
-        } catch (error) {
-            console.error(error);
-            document.getElementById('semesters-container').innerHTML = 'حدث خطأ في تحميل البيانات.';
-        }
-    }
+      } catch (error) {
+          console.error(error);
+          document.getElementById('semesters-container').innerHTML = 'حدث خطأ في تحميل البيانات.';
+      }
+  }
 
-    function toggleHistory() {
-        const section = document.getElementById('past-container');
-        const btn = document.getElementById('toggleHistoryBtn');
-        if (section.style.display === 'block') {
-            section.style.display = 'none';
-            btn.innerHTML = 'عرض السابق';
-        } else {
-            section.style.display = 'block';
-            btn.innerHTML = 'إخفاء السابق';
-        }
-    }
+  function toggleHistory() {
+      const section = document.getElementById('past-container');
+      const btn = document.getElementById('toggleHistoryBtn');
+      if (section.style.display === 'block') {
+          section.style.display = 'none';
+          btn.innerHTML = 'عرض السابق';
+      } else {
+          section.style.display = 'block';
+          btn.innerHTML = 'إخفاء السابق';
+      }
+  }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        initThemeToggle();
-        fetchAndRenderCalendar();
-    });
+  window.addEventListener('DOMContentLoaded', () => {
+      // تم إزالة initThemeToggle لأنه تم تعريف toggleTheme بشكل مباشر الآن
+      fetchAndRenderCalendar();
+  });
 </script>
 
 </body>
