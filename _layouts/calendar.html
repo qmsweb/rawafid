@@ -31,10 +31,10 @@
   </script>
 
   <style>
-    /* === نفس التصميم السابق تماماً === */
+    /* === المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
-      --primary-light-bg: #eff1ff;
+      --primary-light-bg: #eff1ff; /* لون خلفية الأسبوع الحالي الفاتح */
       --bg-body: #f4f6fb;
       --bg-card: #ffffff;
       --border-color: #ccd1e0;
@@ -42,13 +42,16 @@
       --text-muted: #666666;
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-      --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
       --radius-md: 12px;
       
       --cal-red: #ff3b30;
       --cal-separator: #e5e5ea;
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
+      
+      /* لون تمييز الأسبوع الحالي */
+      --current-week-bg: #e8eaf6; 
+      --current-week-border: #1a2ac6;
     }
 
     html[data-theme="dark"] {
@@ -61,12 +64,15 @@
       --text-muted: #a0a0a0;
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
       
       --cal-red: #ff453a;
       --cal-separator: #38383a;
       --badge-bg: #3f4252;
       --badge-text: #9fa8da;
+      
+      /* لون تمييز الأسبوع الحالي في الوضع الليلي */
+      --current-week-bg: #2c2c3e;
+      --current-week-border: #7986cb;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
@@ -114,7 +120,6 @@
         overflow: hidden;
         margin-bottom: 30px;
         border: 1px solid var(--border-color);
-        /* display: none; ستتم إدارتها بالجافاسكربت */
     }
 
     .list-header {
@@ -133,7 +138,7 @@
         padding: 18px 20px;
         border-bottom: 1px solid var(--cal-separator);
         position: relative;
-        transition: background 0.2s;
+        transition: all 0.3s ease;
         align-items: center;
     }
     .event-item:last-child { border-bottom: none; }
@@ -167,10 +172,26 @@
     .event-meta { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
     .event-meta span { display: block; }
 
-    .event-item.current-week { background: var(--primary-light-bg); }
-    .event-item.current-week .date-day { color: var(--primary-color); font-weight: 700; }
-    .event-item.current-week::before {
-        content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--primary-color);
+    /* === تصميم الأسبوع الحالي (Highlight Style) === */
+    .event-item.current-week {
+        background-color: var(--current-week-bg); /* لون خلفية مختلف */
+        border-right: 5px solid var(--current-week-border); /* شريط جانبي مميز */
+    }
+    
+    .event-item.current-week .date-day {
+        color: var(--primary-color);
+        font-weight: 700;
+        transform: scale(1.1); /* تكبير بسيط للتاريخ */
+    }
+
+    /* نص "الحالي" الذي يضاف بالجافاسكربت */
+    .current-badge-indicator {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-right: 5px;
+        font-size: 0.75rem;
     }
 
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
@@ -202,7 +223,7 @@
 
     <div id="semesters-container">
         <div style="padding: 20px; text-align: center; color: var(--text-muted);">
-             جاري تحميل التقويم...
+             جاري ترتيب وتحميل التقويم...
         </div>
     </div>
 
@@ -217,29 +238,36 @@
         try {
             const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
             if (!response.ok) throw new Error('Failed to load data');
-            const events = await response.json();
+            let events = await response.json();
             
+            // 1. ترتيب العناصر زمنياً بدقة (Sort by Date Ascending)
+            events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // تحديد تاريخ اليوم (بدون وقت للمقارنة)
             const today = new Date();
             today.setHours(0,0,0,0);
 
             const pastContent = document.getElementById('past-list-content');
             const semestersContainer = document.getElementById('semesters-container');
             
-            // تفريغ المحتوى
-            semestersContainer.innerHTML = '';
+            semestersContainer.innerHTML = ''; // تفريغ
 
             let hasPast = false;
             
-            // كائن لتجميع الفصول القادمة
-            let upcomingSemesters = {};
+            // استخدام Map للحفاظ على ترتيب الفصول كما تظهر زمنياً بعد الترتيب
+            let upcomingSemesters = new Map();
 
             events.forEach(event => {
                 const eventDate = new Date(event.date);
+                
+                // نفترض الأسبوع ينتهي بعد 7 أيام
                 const weekEnd = new Date(eventDate);
                 weekEnd.setDate(weekEnd.getDate() + 7);
+                
+                // هل هذا هو الأسبوع الحالي؟ (اليوم يقع بين البداية والنهاية)
                 const isCurrent = (today >= eventDate && today < weekEnd);
 
-                // بناء عنصر الـ HTML
+                // تجهيز HTML
                 const day = eventDate.getDate();
                 const month = monthNames[eventDate.getMonth()];
                 const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
@@ -248,8 +276,9 @@
                 let badgeStyle = '';
                 let itemClass = 'event-item';
                 
+                // تمييز الأسبوع الحالي
                 if (isCurrent) {
-                    itemClass += ' current-week';
+                    itemClass += ' current-week'; // إضافة كلاس للتمييز (اللون)
                     badgeText += " (الحالي)";
                     badgeStyle = 'style="background-color:var(--primary-color); color:#fff;"';
                 }
@@ -270,46 +299,49 @@
                     </div>
                 `;
 
-                // المنطق: ماضي يذهب للأرشيف، قادم يتم تجميعه حسب الفصل
+                // المنطق: إذا انتهى الأسبوع تماماً فهو ماضي، غير ذلك فهو قادم/حالي
                 if (weekEnd < today) {
                     // ماضي
                     pastContent.insertAdjacentHTML('beforeend', html);
                     hasPast = true;
                 } else {
-                    // قادم أو حالي: نضعه في المجموعة المناسبة
+                    // قادم أو حالي
                     const semName = event.semester || "أخرى";
-                    if (!upcomingSemesters[semName]) {
-                        upcomingSemesters[semName] = [];
+                    
+                    // إذا لم يكن الفصل موجوداً في الـ Map، قم بإنشائه
+                    if (!upcomingSemesters.has(semName)) {
+                        upcomingSemesters.set(semName, []);
                     }
-                    upcomingSemesters[semName].push(html);
+                    // أضف العنصر للقائمة
+                    upcomingSemesters.get(semName).push(html);
                 }
             });
 
-            // إظهار زر السجل إذا وجد
+            // إظهار زر السجل
             if (hasPast) {
                 document.getElementById('toggleHistoryBtn').style.display = 'block';
             }
 
-            // رسم الفصول القادمة في صناديق منفصلة
-            for (const [semesterName, itemsHtml] of Object.entries(upcomingSemesters)) {
-                // إنشاء صندوق (Box) لكل فصل
+            // عرض الفصول القادمة (بما أن الأحداث مرتبة، الفصول ستظهر مرتبة أيضاً)
+            upcomingSemesters.forEach((itemsArray, semesterName) => {
+                // حاوية الفصل
                 const box = document.createElement('div');
                 box.className = 'ios-list-group';
                 
-                // إضافة الهيدر
+                // العنوان
                 const header = document.createElement('div');
                 header.className = 'list-header';
                 header.innerText = semesterName;
                 
-                // إضافة القائمة
+                // القائمة
                 const listDiv = document.createElement('div');
-                listDiv.innerHTML = itemsHtml.join('');
+                listDiv.innerHTML = itemsArray.join('');
 
                 box.appendChild(header);
                 box.appendChild(listDiv);
                 
                 semestersContainer.appendChild(box);
-            }
+            });
 
         } catch (error) {
             console.error(error);
