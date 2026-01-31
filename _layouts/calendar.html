@@ -48,9 +48,9 @@
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
       
-      /* === ألوان الأسبوع الحالي === */
-      --current-week-bg: #e8eaf6; /* خلفية مميزة للأسبوع الحالي */
-      --current-week-border: #1a2ac6; /* لون الشريط الجانبي */
+      /* ألوان الأسبوع الحالي */
+      --current-week-bg: #e8eaf6;
+      --current-week-border: #1a2ac6;
     }
 
     html[data-theme="dark"] {
@@ -68,7 +68,7 @@
       --badge-bg: #3f4252;
       --badge-text: #9fa8da;
       
-      --current-week-bg: #28359333; /* خلفية داكنة مميزة للأسبوع الحالي */
+      --current-week-bg: #28359333;
       --current-week-border: #7986cb;
     }
 
@@ -85,6 +85,7 @@
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
+    /* === تنسيق الهيدر الخاص بالصفحة === */
     .tool-header {
       margin-bottom: 30px;
       border-right: 4px solid var(--primary-color);
@@ -92,6 +93,7 @@
       display: flex;
       justify-content: space-between;
       align-items: end;
+      flex-wrap: wrap; /* للسماح بالالتفاف في الشاشات الصغيرة */
     }
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
@@ -110,6 +112,7 @@
     }
     .history-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
 
+    /* === تنسيق القائمة === */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -169,19 +172,17 @@
     .event-meta { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
     .event-meta span { display: block; }
 
-    /* === تصميم الأسبوع الحالي (Highlight) === */
+    /* === تمييز الأسبوع الحالي === */
     .event-item.current-week {
-        background-color: var(--current-week-bg); /* لون خلفية مميز */
-        border-right: 6px solid var(--current-week-border); /* شريط جانبي */
+        background-color: var(--current-week-bg);
+        border-right: 6px solid var(--current-week-border);
     }
-    
     .event-item.current-week .date-day {
         color: var(--primary-color);
         font-weight: 700;
         transform: scale(1.1);
     }
 
-    /* تصميم شارة "الأسبوع الحالي" */
     .current-label-tag {
         background-color: var(--primary-color);
         color: #ffffff;
@@ -196,6 +197,46 @@
 
     .hidden-section { display: none; animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* === التجاوب مع الهاتف (Mobile Responsiveness) === */
+    @media (max-width: 600px) {
+        .tool-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .history-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .event-item {
+            padding: 15px 12px;
+        }
+
+        .event-date {
+            margin-left: 12px;
+            min-width: 45px;
+        }
+
+        .date-day {
+            font-size: 1.4rem;
+        }
+
+        .event-title {
+            font-size: 1rem;
+        }
+
+        .event-meta {
+            font-size: 0.85rem;
+        }
+
+        /* جعل الشارة تنزل لسطر جديد إذا كان النص طويلاً */
+        .current-label-tag {
+            margin-bottom: 5px;
+        }
+    }
   </style>
 </head>
 <body>
@@ -234,16 +275,32 @@
 <script>
     const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
+    // 1. وظيفة تبديل الوضع (Fix for Theme Toggle)
+    function initThemeToggle() {
+        // البحث عن زر التبديل في الهيدر (يدعم عدة مسميات شائعة)
+        const toggleBtn = document.querySelector('.theme-toggle, #theme-toggle, .mode-switch, button[aria-label="Toggle theme"]');
+        
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('rawafed-theme', newTheme);
+            });
+        }
+    }
+
+    // 2. جلب وعرض التقويم
     async function fetchAndRenderCalendar() {
         try {
             const response = await fetch("{{ '/assets/calendar.json' | relative_url }}");
             if (!response.ok) throw new Error('Failed to load data');
             let events = await response.json();
             
-            // ترتيب البيانات زمنياً
+            // ترتيب زمني
             events.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // تحديد تاريخ اليوم
             const today = new Date();
             today.setHours(0,0,0,0);
 
@@ -257,28 +314,22 @@
 
             events.forEach(event => {
                 const eventDate = new Date(event.date);
-                
-                // نفترض أن الحدث يمثل أسبوعاً كاملاً (7 أيام)
                 const weekEnd = new Date(eventDate);
                 weekEnd.setDate(weekEnd.getDate() + 7);
                 
-                // التحقق: هل اليوم يقع ضمن هذا الأسبوع؟
                 const isCurrent = (today >= eventDate && today < weekEnd);
+                const isPast = (weekEnd < today); // الأسبوع انتهى بالكامل
 
-                // تجهيز العناصر
                 const day = eventDate.getDate();
                 const month = monthNames[eventDate.getMonth()];
                 const titleStyle = event.isHoliday ? 'style="color:var(--cal-red)"' : '';
                 
                 let badgeText = event.weekBadge;
-                let badgeStyle = '';
                 let itemClass = 'event-item';
                 let currentLabelHtml = '';
 
-                // === تمييز الأسبوع الحالي ===
                 if (isCurrent) {
-                    itemClass += ' current-week'; // إضافة كلاس الخلفية والبوردر
-                    // إضافة نص "الأسبوع الحالي" كعنصر منفصل
+                    itemClass += ' current-week';
                     currentLabelHtml = `<span class="current-label-tag">الأسبوع الحالي</span>`;
                 }
 
@@ -291,7 +342,7 @@
                         <div class="event-content">
                             <div style="margin-bottom: 5px;">
                                 ${currentLabelHtml}
-                                <span class="week-badge" ${badgeStyle}>${badgeText}</span>
+                                <span class="week-badge">${badgeText}</span>
                             </div>
                             <div class="event-title" ${titleStyle}>${event.title}</div>
                             <div class="event-meta">
@@ -301,12 +352,10 @@
                     </div>
                 `;
 
-                // المنطق: إذا انتهى تاريخ الأسبوع تماماً، ينتقل للأرشيف
-                if (weekEnd < today) {
+                if (isPast) {
                     pastContent.insertAdjacentHTML('beforeend', html);
                     hasPast = true;
                 } else {
-                    // إذا كان قادماً أو هو الأسبوع الحالي، يظهر في القائمة الرئيسية
                     const semName = event.semester || "أخرى";
                     if (!upcomingSemesters.has(semName)) {
                         upcomingSemesters.set(semName, []);
@@ -315,12 +364,10 @@
                 }
             });
 
-            // إظهار زر السجل فقط إذا كان هناك ماضي
             if (hasPast) {
                 document.getElementById('toggleHistoryBtn').style.display = 'block';
             }
 
-            // عرض الفصول القادمة فقط
             if (upcomingSemesters.size === 0) {
                  semestersContainer.innerHTML = '<div style="padding:20px; text-align:center;">لا توجد أحداث قادمة حالياً.</div>';
             } else {
@@ -360,7 +407,10 @@
         }
     }
 
-    window.addEventListener('DOMContentLoaded', fetchAndRenderCalendar);
+    window.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
+        fetchAndRenderCalendar();
+    });
 </script>
 
 </body>
