@@ -2,7 +2,12 @@
   <div class="footer-container">
     
     <div class="footer-brand">
-      <img src="{{ '/images/jassim-logo.png' | relative_url }}" alt="شعار" class="footer-logo">
+      <img src="{{ '/images/jassim-logo.png' | relative_url }}" 
+           alt="شعار" 
+           class="footer-logo" 
+           loading="lazy" 
+           width="40" 
+           height="40">
       <div class="copyright-group">
         <span class="copy-year">&copy; {{ site.time | date: '%Y' }} جاسم الفارسي.</span>
         <span class="rights-text">جميع الحقوق محفوظة.</span>
@@ -28,168 +33,153 @@
 
 <style>
   :root {
-    /* الوضع الفاتح */
     --footer-bg: transparent; 
     --footer-text: #000000;
-    --footer-copy-text: #000000;
+    --footer-copy-text: #333333;
     --btn-blue: #1a2ac6;
     --btn-hover: #1522a0;
     --whatsapp-green: #25D366;
     --btn-radius: 50px;
-    
-    /* فلتر الصورة للوضع الفاتح (أسود بالكامل) */
     --logo-filter: brightness(0);
   }
 
-  /* الوضع الداكن */
   [data-theme="dark"] {
-    --footer-bg: transparent; /* أو لون داكن إذا أردت */
     --footer-text: #e0e0e0;
     --footer-copy-text: #e0e0e0;
-    --btn-blue: #2c2e3e; /* لون داكن للأزرار */
+    --btn-blue: #2c2e3e;
     --btn-hover: #3e4155;
-    
-    /* فلتر الصورة للوضع الداكن (أبيض بالكامل ليظهر على الخلفية الداكنة) */
     --logo-filter: brightness(0) invert(1);
   }
 
   .site-footer {
     background-color: var(--footer-bg);
     color: var(--footer-text);
-    padding: 2rem 1rem;
+    padding: 3rem 1rem;
     margin-top: 4rem;
     width: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 0.9rem;
+    font-family: system-ui, -apple-system, sans-serif;
     direction: rtl;
     box-sizing: border-box;
-    text-align: right;
-    border-top: none; 
-    transition: color 0.3s;
+    border-top: 1px solid rgba(0,0,0,0.05);
   }
 
   .footer-container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
-  /* 1. الشعار والنصوص */
   .footer-brand {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex: 1;
+    min-width: 250px;
   }
 
   .footer-logo {
     height: 40px;
     width: auto;
-    /* تطبيق الفلتر بناءً على المتغير */
     filter: var(--logo-filter);
-    transition: filter 0.3s;
+    /* منع الـ Layout Shift */
+    aspect-ratio: auto;
+    display: block;
   }
 
   .copyright-group {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
-  .copy-year { 
-    font-weight: bold; 
-    color: var(--footer-copy-text); 
-  }
-  
-  .rights-text { 
-    font-size: 0.8rem; 
-    opacity: 0.8; 
-    color: var(--footer-copy-text); 
-  }
+  .copy-year { font-weight: 700; font-size: 0.95rem; }
+  .rights-text { font-size: 0.8rem; opacity: 0.7; }
 
-  /* 2. الروابط - تم تحويلها لأزرار زرقاء */
+  /* تنسيق الروابط الافتراضي (شاشات الكمبيوتر) */
   .footer-links {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    flex: 2;
   }
 
   .footer-links a {
     background-color: var(--btn-blue);
     color: #ffffff !important;
-    padding: 8px 20px;
+    padding: 10px 22px;
     border-radius: var(--btn-radius);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 0.85rem;
-    transition: transform 0.2s ease, background-color 0.2s;
-    display: inline-block;
-    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-align: center;
   }
 
   .footer-links a:hover {
-    transform: translateY(-2px);
-    background-color: var(--btn-hover);
-    text-decoration: none;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(26, 42, 198, 0.2);
   }
 
-  /* في الوضع الداكن، نضيف حدوداً خفيفة للأزرار لتمييزها */
-  [data-theme="dark"] .footer-links a {
-    border: 1px solid #444;
+  .footer-social {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    min-width: 180px;
   }
 
-  /* 3. زر الواتساب - أخضر بالكامل */
   .whatsapp-btn-compact {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background-color: var(--whatsapp-green);
-    color: #ffffff;
-    border: 1px solid var(--whatsapp-green);
-    padding: 8px 16px;
+    color: #fff;
+    padding: 10px 20px;
     border-radius: var(--btn-radius);
     text-decoration: none;
-    font-size: 0.85rem;
     font-weight: bold;
     transition: all 0.3s ease;
   }
 
-  .whatsapp-btn-compact:hover {
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-    transform: translateY(-2px);
-    background-color: #1ebc57;
-    color: #ffffff;
-  }
-
-  .whatsapp-btn-compact svg {
-    animation: pulse-mini 2s infinite;
-    fill: currentColor;
-  }
-
-  @keyframes pulse-mini {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-
-  /* للجوال */
+  /* تعديلات الجوال (التجاوب الكامل) */
   @media (max-width: 768px) {
     .footer-container {
       flex-direction: column;
       text-align: center;
-      gap: 1.5rem;
-    }
-    
-    .footer-brand {
-      flex-direction: column;
+      gap: 2.5rem;
     }
 
+    .footer-brand {
+      flex-direction: column;
+      align-items: center;
+      min-width: 100%;
+    }
+
+    /* تقسيم الخيارات لظهور 2 في كل صف */
     .footer-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      width: 100%;
+      gap: 15px;
+    }
+
+    .footer-links a {
+      display: block;
+      padding: 12px 10px;
+    }
+
+    .footer-social {
       justify-content: center;
+      width: 100%;
+    }
+    
+    .whatsapp-btn-compact {
+        width: 100%;
+        justify-content: center;
     }
   }
 </style>
