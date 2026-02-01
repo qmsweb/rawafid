@@ -30,29 +30,37 @@
   </script>
 
   <style>
-    /* === المتغيرات والألوان === */
+    /* === 1. متغيرات مستنسخة من الصفحة الرئيسية لضمان التطابق === */
     :root {
       --primary-color: #1a2ac6;
+      --primary-light-bg: #eff1ff;
       --bg-body: #f4f6fb;
       --bg-card: #ffffff;
       --border-color: #ccd1e0;
       --text-main: #2d2d2d;
       --text-muted: #666666;
-      --bg-code: #f4f6fb;
+      --bg-code: #f4f6fb; /* يستخدم لخلفية الحقول في الوضع الفاتح */
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-bg: #f9f9f9;
       --radius-md: 12px;
+      
+      /* متغيرات خاصة بالنموذج */
       --input-bg: #ffffff;
     }
 
-    html[data-theme="dark"] {
+    /* === إعدادات الوضع الداكن (مطابقة للرئيسية) === */
+    [data-theme="dark"] {
       --primary-color: #7986cb;
+      --primary-light-bg: #282a36;
       --bg-body: #121212;
       --bg-card: #1e1e1e;
       --border-color: #333333;
       --text-main: #e0e0e0;
       --text-muted: #a0a0a0;
-      --bg-code: #2c2c2c;
+      --bg-code: #2c2c2c; /* يستخدم لخلفية الحقول والنتائج في الوضع الداكن */
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-bg: #2c2e3e;
+      
       --input-bg: #2c2c2c;
     }
 
@@ -80,7 +88,7 @@
       flex-wrap: wrap;
       gap: 15px;
     }
-    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
     .header-actions { display: flex; gap: 10px; }
@@ -89,19 +97,25 @@
         background: transparent;
         border: 1px solid var(--border-color);
         color: var(--text-muted);
-        padding: 6px 15px;
-        border-radius: 20px;
+        padding: 8px 18px;
+        border-radius: 50px;
         cursor: pointer;
         font-size: 0.85rem;
-        transition: 0.2s;
-        font-weight: 500;
+        transition: all 0.2s ease;
+        font-weight: 600;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
     }
-    .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    /* تأثيرات الهوفر المتوافقة مع الثيم */
+    .action-btn:hover { 
+        background: var(--hover-bg); 
+        color: var(--primary-color); 
+        border-color: var(--primary-color); 
+    }
+    
     .primary-btn { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-    .primary-btn:hover { background: #1522a0; color: #fff; border-color: #1522a0; }
+    .primary-btn:hover { background: var(--primary-color); opacity: 0.9; color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
     /* === Card & Form Styles === */
     .ios-list-group {
@@ -111,14 +125,15 @@
         overflow: hidden;
         margin-bottom: 30px;
         border: 1px solid var(--border-color);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     .list-header {
-        background: var(--bg-code);
-        padding: 15px 20px;
-        font-size: 0.9rem;
+        background: var(--bg-code); /* يتغير تلقائياً في الداكن */
+        padding: 15px 25px;
+        font-size: 0.95rem;
         font-weight: 700;
-        color: var(--text-muted);
+        color: var(--text-main);
         border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
@@ -127,7 +142,7 @@
         gap: 10px;
     }
 
-    .form-content { padding: 25px; }
+    .form-content { padding: 30px; }
 
     .form-grid {
         display: grid;
@@ -149,19 +164,26 @@
         color: var(--text-muted);
     }
 
+    /* تحسين الحقول لتناسب الوضع الداكن */
     .input-field, .select-field {
-        padding: 12px;
+        padding: 12px 15px;
         border-radius: 8px;
         border: 1px solid var(--border-color);
-        background-color: var(--input-bg);
-        color: var(--text-main);
-        font-size: 1rem;
+        background-color: var(--input-bg); /* لون خلفية متغير */
+        color: var(--text-main); /* لون نص متغير */
+        font-size: 0.95rem;
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, background-color 0.3s;
     }
     
     .input-field:focus, .select-field:focus {
         border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light-bg); /* إضافة توهج خفيف */
+    }
+    
+    .input-field::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
     }
 
     /* === Result Section === */
@@ -171,16 +193,19 @@
     }
     
     .citation-box {
-        padding: 20px;
-        background-color: var(--bg-code);
-        border-left: 4px solid var(--primary-color);
-        border-radius: 4px;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 1.1rem;
-        line-height: 1.6;
+        padding: 25px;
+        background-color: var(--bg-code); /* خلفية داكنة في الوضع الليلي */
+        border-right: 4px solid var(--primary-color); /* تغيير الجهة لليمين للعربية */
+        border-radius: 8px;
+        font-family: 'Times New Roman', Times, serif; /* APA يفضل Serif */
+        font-size: 1.15rem;
+        line-height: 1.7;
         margin-bottom: 15px;
         word-break: break-word;
         color: var(--text-main);
+        border: 1px solid var(--border-color);
+        border-right-width: 4px;
+        border-right-color: var(--primary-color);
     }
 
     .citation-box i { font-style: italic; }
@@ -214,7 +239,7 @@
          body { background-color: white !important; color: black !important; }
          .ios-list-group { border: none !important; box-shadow: none !important; }
          #result-container { display: block !important; }
-         .citation-box { border: 1px solid #000; background: none; }
+         .citation-box { border: 1px solid #000; background: none; color: black !important; }
     }
 
   </style>
@@ -245,7 +270,7 @@
     <div class="ios-list-group">
         <div class="list-header">
             <span>نوع المصدر</span>
-            <select id="sourceType" class="select-field" style="padding: 5px 10px; font-size: 0.9rem; min-width: 200px;" onchange="updateFormFields()">
+            <select id="sourceType" class="select-field" style="padding: 6px 12px; font-size: 0.9rem; min-width: 200px;" onchange="updateFormFields()">
                 <option value="book">كتاب</option>
                 <option value="journal">مقال في دورية (مجلة علمية)</option>
                 <option value="thesis_pub">رسالة ماجستير/دكتوراة (منشورة)</option>
@@ -355,7 +380,6 @@
   function updateFormFields() {
       const type = document.getElementById('sourceType').value;
       
-      // إخفاء الحقول الخاصة أولاً
       const idsToHide = [
           'date-group', 'bracket-group', 'source-name-group', 
           'volume-group', 'issue-group', 'pages-group', 
@@ -363,7 +387,6 @@
       ];
       idsToHide.forEach(id => document.getElementById(id).style.display = 'none');
       
-      // استدعاء العناصر لتغيير النصوص
       const titleLabel = document.getElementById('titleLabel');
       const pubLabel = document.getElementById('publisherLabel');
       const sourceLabel = document.getElementById('sourceNameLabel');
@@ -395,8 +418,8 @@
           sourceLabel.innerText = "اسم قاعدة البيانات/المستودع";
 
           document.getElementById('bracket-group').style.display = 'flex';
-          document.getElementById('publisher-group').style.display = 'flex'; // هنا نستخدمه للجامعة
-          document.getElementById('source-name-group').style.display = 'flex'; // هنا نستخدمه للمستودع
+          document.getElementById('publisher-group').style.display = 'flex'; 
+          document.getElementById('source-name-group').style.display = 'flex'; 
           document.getElementById('url-group').style.display = 'flex';
       }
       // 4. رسالة غير منشورة
@@ -406,8 +429,7 @@
           pubLabel.innerText = "اسم الجامعة المانحة";
           
           document.getElementById('bracket-group').style.display = 'flex';
-          document.getElementById('publisher-group').style.display = 'flex'; // هنا نستخدمه للجامعة
-          // الرسائل غير المنشورة غالباً ليس لها رابط
+          document.getElementById('publisher-group').style.display = 'flex'; 
       }
       // 5. ورقة مؤتمر
       else if (type === 'conference') {
@@ -415,7 +437,7 @@
           bracketLabel.innerText = "نوع المساحة (مثال: ورقة علمية)";
           sourceLabel.innerText = "اسم المؤتمر";
           
-          document.getElementById('date-group').style.display = 'flex'; // المؤتمر يحتاج تاريخ كامل
+          document.getElementById('date-group').style.display = 'flex'; 
           document.getElementById('bracket-group').style.display = 'flex';
           document.getElementById('source-name-group').style.display = 'flex';
           document.getElementById('location-group').style.display = 'flex';
@@ -435,7 +457,7 @@
   // === تحميل الأمثلة (بالعربية فقط) ===
   function loadExample() {
       const type = document.getElementById('sourceType').value;
-      document.querySelectorAll('input').forEach(input => input.value = ''); // تنظيف
+      document.querySelectorAll('input').forEach(input => input.value = ''); 
 
       // كتاب
       if (type === 'book') {
@@ -462,8 +484,8 @@
           document.getElementById('year').value = "2022";
           document.getElementById('title').value = "فاعلية الواقع المعزز في تدريس العلوم";
           document.getElementById('bracketInfo').value = "رسالة ماجستير";
-          document.getElementById('publisher').value = "جامعة الملك سعود"; // حقل الجامعة
-          document.getElementById('sourceName').value = "دار المنظومة"; // حقل المستودع
+          document.getElementById('publisher').value = "جامعة الملك سعود"; 
+          document.getElementById('sourceName').value = "دار المنظومة"; 
           document.getElementById('url').value = "http://search.mandumah.com/Record/123456";
       }
       // رسالة غير منشورة
@@ -472,7 +494,7 @@
           document.getElementById('year').value = "2021";
           document.getElementById('title').value = "أثر القيادة التحويلية على الأداء الوظيفي";
           document.getElementById('bracketInfo').value = "أطروحة دكتوراة غير منشورة";
-          document.getElementById('publisher').value = "جامعة القاهرة"; // حقل الجامعة
+          document.getElementById('publisher').value = "جامعة القاهرة"; 
       }
       // مؤتمر
       else if (type === 'conference') {
@@ -495,7 +517,7 @@
           document.getElementById('url').value = "https://www.okaz.com.sa/articles/1234";
       }
 
-      generateCitation(); // توليد النتيجة مباشرة
+      generateCitation(); 
   }
 
   // === منطق التوليد APA 7 ===
@@ -513,73 +535,53 @@
       let citation = "";
 
       // 1. كتاب
-      // Author. (Year). *Title*. Publisher. URL
       if (type === 'book') {
           const publisher = document.getElementById('publisher').value.trim();
           citation = `${authors}. (${year}). <i>${title}</i>. ${publisher}. ${url}`;
       }
-
       // 2. دورية
-      // Author. (Year). Title. *Journal, Vol*(Issue), Pages. URL
       else if (type === 'journal') {
           const journal = document.getElementById('sourceName').value.trim();
           const vol = document.getElementById('volume').value.trim();
           const issue = document.getElementById('issue').value.trim();
           const pages = document.getElementById('pages').value.trim();
-          
           citation = `${authors}. (${year}). ${title}. <i>${journal}</i>${vol ? ", <i>" + vol + "</i>" : ""}${issue ? "(" + issue + ")" : ""}${pages ? ", " + pages : ""}. ${url}`;
       }
-
       // 3. رسالة منشورة
-      // Author. (Year). *Title* [Degree, University]. Repository. URL
       else if (type === 'thesis_pub') {
           const degree = document.getElementById('bracketInfo').value.trim();
-          const university = document.getElementById('publisher').value.trim(); // استخدام حقل الناشر للجامعة
+          const university = document.getElementById('publisher').value.trim(); 
           const repo = document.getElementById('sourceName').value.trim();
-          
           citation = `${authors}. (${year}). <i>${title}</i> [${degree}، ${university}]. ${repo}. ${url}`;
       }
-
       // 4. رسالة غير منشورة
-      // Author. (Year). *Title* [Unpublished degree]. University.
       else if (type === 'thesis_unpub') {
           const degree = document.getElementById('bracketInfo').value.trim();
           const university = document.getElementById('publisher').value.trim();
-          
           citation = `${authors}. (${year}). <i>${title}</i> [${degree}]. ${university}.`;
       }
-
       // 5. مؤتمر
-      // Author. (Year, Month Day). *Title* [Type]. Conf Name, Location. URL
       else if (type === 'conference') {
           let dateStr = year;
           if (fullDate) dateStr += `، ${fullDate}`;
-          
           const paperType = document.getElementById('bracketInfo').value.trim();
           const confName = document.getElementById('sourceName').value.trim();
           const location = document.getElementById('location').value.trim();
-
           citation = `${authors}. (${dateStr}). <i>${title}</i> [${paperType}]. ${confName}${location ? "، " + location : ""}. ${url}`;
       }
-
       // 6. صحيفة
-      // Author. (Year, Month Day). Title. *Newspaper*. URL
       else if (type === 'newspaper') {
           let dateStr = year;
           if (fullDate) dateStr += `، ${fullDate}`;
           const newspaper = document.getElementById('sourceName').value.trim();
-
           citation = `${authors}. (${dateStr}). ${title}. <i>${newspaper}</i>. ${url}`;
       }
 
-      // تنظيف ومعالجة النصوص
       citation = citation.replace(/\.\./g, '.').replace(/،\./g, '.').replace(/\s+/g, ' ').trim();
       
-      // إذا انتهى النص بفاصلة أو نقطة زائدة، تنظيفه، لكن APA يتطلب نقطة في النهاية غالباً
       if (!citation.endsWith('.')) citation += ".";
       if (citation.endsWith('..')) citation = citation.slice(0, -1);
 
-      // عرض النتيجة
       const resultContainer = document.getElementById('result-container');
       const outputBox = document.getElementById('citationOutput');
       outputBox.innerHTML = citation;
@@ -601,7 +603,6 @@
       document.getElementById('result-container').style.display = 'none';
   }
 
-  // تهيئة أولية
   window.addEventListener('DOMContentLoaded', () => {
      updateFormFields();
   });
