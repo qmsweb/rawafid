@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-  
+   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
+   
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'حاسبة المعدل - روافد' }}">
   <meta property="og:description" content="أداة لحساب المعدل الفصلي والتراكمي بدقة وسهولة.">
@@ -41,7 +41,7 @@
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
-      
+       
       --cal-red: #ff3b30;
       --cal-green: #34c759;
     }
@@ -55,7 +55,7 @@
       --text-muted: #a0a0a0;
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      
+       
       --cal-red: #ff453a;
       --cal-green: #30d158;
     }
@@ -106,7 +106,7 @@
     .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
     .primary-btn { background: var(--primary-color) !important; color: white !important; border: none !important; }
     .primary-btn:hover { opacity: 0.9; }
-    
+     
     .danger-btn:hover { color: var(--cal-red); border-color: var(--cal-red); }
 
     /* === List Styles === */
@@ -133,7 +133,7 @@
 
     /* === Form Specific Styles (GPA) === */
     .form-content { padding: 20px; }
-    
+     
     .course-row {
         display: grid;
         grid-template-columns: 2fr 1fr 1fr auto;
@@ -210,7 +210,7 @@
         .tool-header { flex-direction: column; align-items: flex-start; }
         .header-actions { width: 100%; flex-wrap: wrap; }
         .action-btn { flex: 1; justify-content: center; }
-        
+         
         .course-row { 
             grid-template-columns: 1fr 1fr; 
             gap: 8px;
@@ -221,7 +221,7 @@
         }
         .course-row .input-field:first-child { grid-column: span 2; }
         .delete-row-btn { grid-column: span 2; width: 100%; text-align: center; color: var(--cal-red); border: 1px solid var(--border-color); border-radius: 6px; }
-        
+         
         .labels-row { display: none; }
     }
   </style>
@@ -231,13 +231,13 @@
   {% include header.html %}
 
   <div class="container">
-    
+     
     <div class="tool-header">
       <div>
           <h1>حاسبة المعدل (نظام 4.00)</h1>
           <p>احسب معدلك الفصلي (GPA) بسهولة ودقة</p>
       </div>
-      
+       
       <div class="header-actions">
           <button class="action-btn" onclick="addCourseRow()">
             <i class="fas fa-plus"></i> إضافة مادة
@@ -254,7 +254,7 @@
             <span>المواد الدراسية</span>
             <span>عدد المواد: <span id="courseCount">1</span></span>
         </div>
-        
+         
         <div class="form-content">
             <div class="labels-row">
                 <span>اسم المادة</span>
@@ -302,18 +302,25 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === منطق حاسبة المعدل (نظام 4.0 بدون A+) === */
+  /* === منطق حاسبة المعدل === */
 
-  // تعريف قيم الدرجات لنظام 4.0 فقط
+  // تعريف قيم الدرجات الجديدة
   const gradeScale = {
-      'A': 4.00, 
-      'B+': 3.50, 'B': 3.00, 
-      'C+': 2.50, 'C': 2.00, 
-      'D+': 1.50, 'D': 1.00, 
+      'A': 4.00,
+      'A-': 3.70,
+      'B+': 3.30, 
+      'B': 3.00,
+      'B-': 2.70,
+      'C+': 2.30, 
+      'C': 2.00,
+      'C-': 1.70,
+      'D+': 1.30, 
+      'D': 1.00,
       'F': 0.00
   };
 
-  const gradesOptions = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'];
+  // قائمة الخيارات للمستخدم
+  const gradesOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
 
   function createRowHTML() {
       let optionsHTML = '<option value="" disabled selected>الرمز</option>';
@@ -365,9 +372,10 @@
   function clearForm() {
       const container = document.getElementById('courses-container');
       container.innerHTML = '';
-      addCourseRow(); 
-      addCourseRow(); 
-      addCourseRow(); 
+      // إضافة 5 مواد عند التصفير
+      for(let i=0; i<5; i++) {
+        addCourseRow(); 
+      }
       document.getElementById('result-container').style.display = 'none';
   }
 
@@ -401,7 +409,7 @@
       document.getElementById('finalGPA').innerText = gpa.toFixed(2);
       document.getElementById('totalHours').innerText = totalHours;
       document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
-      
+       
       const resultContainer = document.getElementById('result-container');
       resultContainer.style.display = 'block';
       resultContainer.scrollIntoView({ behavior: 'smooth' });
@@ -414,14 +422,13 @@
       }
   }
 
-  // تهيئة الصفحة بـ 4 صفوف
+  // تهيئة الصفحة بـ 5 صفوف افتراضياً
   window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('courses-container');
       container.innerHTML = '';
-      addCourseRow();
-      addCourseRow();
-      addCourseRow();
-      addCourseRow();
+      for(let i=0; i<5; i++) {
+        addCourseRow();
+      }
   });
 </script>
 
