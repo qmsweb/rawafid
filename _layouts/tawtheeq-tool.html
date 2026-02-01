@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
@@ -242,10 +241,14 @@
       </div>
       
       <div class="header-actions">
+          <button class="action-btn" onclick="loadExample()">
+            <i class="fas fa-lightbulb"></i> تحميل مثال
+          </button>
+
           <button class="action-btn" onclick="clearForm()">
             <i class="fas fa-eraser"></i> مسح الحقول
           </button>
-          </div>
+      </div>
     </div>
 
     <div class="ios-list-group">
@@ -377,6 +380,42 @@
           document.getElementById('site-name-group').style.display = 'flex';
           document.getElementById('date-group').style.display = 'flex';
       }
+  }
+
+  // === وظيفة تحميل مثال (الجديدة) ===
+  function loadExample() {
+      const type = document.getElementById('sourceType').value;
+
+      // تفريغ الحقول أولاً لضمان نظافة البيانات
+      document.querySelectorAll('input').forEach(input => input.value = '');
+
+      // بيانات مشتركة افتراضية
+      document.getElementById('authors').value = "الغامدي، محمد بن صالح";
+      document.getElementById('year').value = "2024";
+
+      if (type === 'book') {
+          document.getElementById('title').value = "أسس البحث العلمي ومناهجه";
+          document.getElementById('publisher').value = "دار المعرفة الجامعية";
+          document.getElementById('url').value = "https://doi.org/10.1234/book.2024";
+      } 
+      else if (type === 'journal') {
+          document.getElementById('authors').value = "Smith, J. A.";
+          document.getElementById('title').value = "The Impact of AI on Modern Education";
+          document.getElementById('journalName').value = "Journal of Educational Technology";
+          document.getElementById('volume').value = "15";
+          document.getElementById('issue').value = "3";
+          document.getElementById('pages').value = "45-67";
+          document.getElementById('url').value = "https://doi.org/10.1016/j.edutech.2024.01.005";
+      } 
+      else if (type === 'website') {
+          document.getElementById('title').value = "طرق المذاكرة الفعالة للطلاب";
+          document.getElementById('siteName').value = "منصة روافد التعليمية";
+          document.getElementById('fullDate').value = "15 مارس";
+          document.getElementById('url').value = "https://rawafid.jassim.one/study-tips";
+      }
+
+      // توليد النتيجة فوراً
+      generateCitation();
   }
 
   // === منطق التوثيق APA 7 ===
