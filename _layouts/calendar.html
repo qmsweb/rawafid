@@ -205,21 +205,19 @@
 
     /* === عناصر الطباعة الخاصة (شعار + QR) === */
     .print-only-element {
-        display: none; /* مخفي افتراضياً */
+        display: none;
     }
 
-    /* الشعار العلوي */
     .print-logo-container img {
         height: 60px;
         width: auto;
-        /* تم إزالة الفلتر هنا بناءً على طلبك */
+        /* تمت إزالة الفلتر ليظهر الشعار بلونه الأصلي */
     }
 
-    /* الـ QR Code السفلي */
     .print-qr-footer {
         text-align: center;
         margin-top: 40px;
-        page-break-inside: avoid; /* منع القص */
+        page-break-inside: avoid;
     }
     .print-qr-text {
         font-family: "IBM Plex Sans Arabic", sans-serif;
@@ -229,7 +227,7 @@
         margin-bottom: 10px;
     }
     .print-qr-code {
-        width: 120px; /* حجم متوسط */
+        width: 120px;
         height: 120px;
     }
 
@@ -241,7 +239,7 @@
 
         /* إظهار العناصر المخصصة للطباعة */
         .print-only-element { display: block !important; }
-        .print-logo-container { text-align: center; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 15px;}
+        .print-logo-container { text-align: center; margin-bottom: 0px; border-bottom: 2px solid #000; padding-bottom: 15px;}
         .print-qr-footer { display: flex !important; flex-direction: column; align-items: center; }
 
         /* ضبط الجسم */
@@ -250,6 +248,7 @@
             color: black !important; 
             padding: 0 !important; 
             margin: 0 !important;
+            display: block !important;
         }
 
         .container { 
@@ -257,38 +256,54 @@
             padding: 0 !important; 
             margin: 0 !important; 
             width: 100% !important;
+            display: block !important;
         }
 
-        /* تعديل العنوان لضمان عدم انتقاله لصفحة جديدة */
+        /* تعديل العنوان */
         .tool-header {
             margin-bottom: 10px !important;
             border: none !important;
             display: block !important;
-            page-break-after: avoid;
-            break-after: avoid;
+            padding-right: 0 !important;
+            text-align: right !important;
+            /* السماح بفاصل الصفحة بعده إذا لزم الأمر، لكن عادة نريده مع الجدول */
+            page-break-after: avoid !important;
         }
         
         .tool-header h1 {
-            margin: 0 !important;
+            margin: 10px 0 !important;
             padding: 0 !important;
+            font-size: 1.8rem !important;
         }
 
         /* منطق إخفاء الأرشيف الفارغ */
         #past-container { display: none !important; }
         #past-container.has-data { display: block !important; }
 
+        /* التعديل الجوهري: السماح بكسر الجدول بين الصفحات */
         .ios-list-group { 
             box-shadow: none !important; 
             border: 1px solid #000 !important; 
-            break-inside: avoid; 
-            page-break-inside: avoid;
+            
+            /* هذا هو الحل: السماح بقطع المجموعة لتكمل في صفحة أخرى */
+            break-inside: auto !important; 
+            page-break-inside: auto !important;
+            
             margin-bottom: 20px;
+            display: block !important;
         }
         
+        /* منع قطع العنصر الواحد من المنتصف */
+        .event-item, .list-header {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+            border-bottom: 1px solid #000 !important;
+        }
+
         .list-header {
             background-color: #eee !important;
             color: #000 !important;
-            border-bottom: 1px solid #000 !important;
+            font-weight: bold !important;
             -webkit-print-color-adjust: exact;
         }
     }
@@ -510,7 +525,6 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-      // تم إزالة initThemeToggle لأنه تم تعريف toggleTheme بشكل مباشر الآن
       fetchAndRenderCalendar();
   });
 </script>
