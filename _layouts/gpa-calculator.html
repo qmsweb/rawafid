@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "حاسبة المعدل التراكمي" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <meta property="og:title" content="{{ page.title | default: 'حاسبة المعدل - روافد' }}">
+  <meta property="og:description" content="أداة لحساب المعدل الفصلي والتراكمي بدقة وسهولة.">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات والألوان (نفس الموجودة في الصفحة السابقة) === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+      
+      --cal-red: #ff3b30;
+      --cal-green: #34c759;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      
+      --cal-red: #ff453a;
+      --cal-green: #30d158;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header & Actions === */
+    .tool-header {
+      margin-bottom: 30px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    .action-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 6px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    .primary-btn { background: var(--primary-color) !important; color: white !important; border: none !important; }
+    .primary-btn:hover { opacity: 0.9; }
+    
+    .danger-btn:hover { color: var(--cal-red); border-color: var(--cal-red); }
+
+    /* === List Styles === */
+    .ios-list-group {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 30px;
+        border: 1px solid var(--border-color);
+    }
+
+    .list-header {
+        background: var(--bg-code);
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    /* === Form Specific Styles (GPA) === */
+    .form-content { padding: 20px; }
+    
+    .course-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 10px;
+        margin-bottom: 15px;
+        align-items: center;
+        animation: fadeInRow 0.3s ease;
+    }
+
+    @keyframes fadeInRow {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-field, .select-field {
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: 0.2s;
+        width: 100%;
+    }
+    .input-field:focus, .select-field:focus { 
+        border-color: var(--primary-color); 
+        outline: none; 
+    }
+
+    .delete-row-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: 0.2s;
+    }
+    .delete-row-btn:hover { color: var(--cal-red); background: var(--bg-body); }
+
+    .labels-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 10px;
+        margin-bottom: 10px;
+        padding: 0 5px;
+    }
+    .labels-row span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+
+    /* === Result Section === */
+    .gpa-result-box {
+        text-align: center;
+        padding: 20px;
+    }
+    .gpa-score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 10px 0;
+    }
+    .gpa-details {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    #result-container { display: none; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* === Mobile Responsive === */
+    @media (max-width: 600px) {
+        .tool-header { flex-direction: column; align-items: flex-start; }
+        .header-actions { width: 100%; flex-wrap: wrap; }
+        .action-btn { flex: 1; justify-content: center; }
+        
+        .course-row { 
+            grid-template-columns: 1fr 1fr; /* Stack on mobile */
+            gap: 8px;
+            padding: 10px;
+            background: var(--bg-body);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .course-row .input-field:first-child { grid-column: span 2; } /* Name takes full width */
+        .delete-row-btn { grid-column: span 2; width: 100%; text-align: center; color: var(--cal-red); border: 1px solid var(--border-color); border-radius: 6px; }
+        
+        .labels-row { display: none; } /* Hide labels on mobile to save space */
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+
+  <div class="container">
+    
+    <div class="tool-header">
+      <div>
+          <h1>حاسبة المعدل الفصلي</h1>
+          <p>احسب معدلك الفصلي (GPA) بسهولة ودقة</p>
+      </div>
+      
+      <div class="header-actions">
+          <button class="action-btn" onclick="addCourseRow()">
+            <i class="fas fa-plus"></i> إضافة مادة
+          </button>
+
+          <button class="action-btn" onclick="clearForm()">
+            <i class="fas fa-eraser"></i> تصفير الجدول
+          </button>
+      </div>
+    </div>
+
+    <div class="ios-list-group" style="margin-bottom: 20px;">
+        <div class="list-header">
+            <span>نظام الدرجات</span>
+            <select id="gradingSystem" class="select-field" style="padding: 6px 12px; font-size: 0.9rem; min-width: 150px; width: auto;" onchange="recalculateIfVisible()">
+                <option value="5.0">من 5.00 (KSA Common)</option>
+                <option value="4.0">من 4.00 (Standard)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="ios-list-group">
+        <div class="list-header">
+            <span>المواد الدراسية</span>
+            <span>عدد المواد: <span id="courseCount">1</span></span>
+        </div>
+        
+        <div class="form-content">
+            <div class="labels-row">
+                <span>اسم المادة</span>
+                <span>الساعات</span>
+                <span>الدرجة</span>
+                <span></span>
+            </div>
+
+            <div id="courses-container">
+                </div>
+
+            <div style="margin-top: 25px;">
+                <button class="action-btn primary-btn" onclick="calculateGPA()" style="width: 100%; justify-content: center; padding: 12px;">
+                    <i class="fas fa-calculator"></i> احسب النتيجة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-container">
+        <div class="ios-list-group">
+            <div class="list-header">
+                <span>النتيجة النهائية</span>
+            </div>
+            <div class="gpa-result-box">
+                <div class="gpa-score" id="finalGPA">0.00</div>
+                <div class="gpa-details">
+                    <span>إجمالي الساعات: <strong id="totalHours">0</strong></span>
+                    <span>إجمالي النقاط: <strong id="totalPoints">0</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+  {% include footer.html %}
+
+<script>
+  /* === دالة تبديل الثيم === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  /* === منطق حاسبة المعدل === */
+
+  // تعريف قيم الدرجات للنظامين
+  const gradeScales = {
+      '5.0': {
+          'A+': 5.00, 'A': 4.75, 
+          'B+': 4.50, 'B': 4.00, 
+          'C+': 3.50, 'C': 3.00, 
+          'D+': 2.50, 'D': 2.00, 
+          'F': 1.00
+      },
+      '4.0': {
+          'A+': 4.00, 'A': 3.75, 
+          'B+': 3.50, 'B': 3.00, 
+          'C+': 2.50, 'C': 2.00, 
+          'D+': 1.50, 'D': 1.00, 
+          'F': 0.00
+      }
+  };
+
+  const gradesOptions = ['A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'];
+
+  function createRowHTML() {
+      let optionsHTML = '<option value="" disabled selected>الرمز</option>';
+      gradesOptions.forEach(g => {
+          optionsHTML += `<option value="${g}">${g}</option>`;
+      });
+
+      return `
+        <div class="course-row">
+            <input type="text" class="input-field course-name" placeholder="اسم المادة (اختياري)">
+            <input type="number" class="input-field course-hours" placeholder="ساعات" min="1" max="12">
+            <select class="select-field course-grade">
+                ${optionsHTML}
+            </select>
+            <button class="delete-row-btn" onclick="removeRow(this)">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+      `;
+  }
+
+  function addCourseRow() {
+      const container = document.getElementById('courses-container');
+      const div = document.createElement('div');
+      div.innerHTML = createRowHTML(); // Temporary container
+      container.appendChild(div.firstElementChild);
+      updateCount();
+  }
+
+  function removeRow(btn) {
+      const container = document.getElementById('courses-container');
+      if (container.children.length > 1) {
+          btn.closest('.course-row').remove();
+          updateCount();
+          recalculateIfVisible();
+      } else {
+          // If only one row, just clear values
+          const row = btn.closest('.course-row');
+          row.querySelector('.course-name').value = '';
+          row.querySelector('.course-hours').value = '';
+          row.querySelector('.course-grade').selectedIndex = 0;
+      }
+  }
+
+  function updateCount() {
+      const count = document.getElementById('courses-container').children.length;
+      document.getElementById('courseCount').innerText = count;
+  }
+
+  function clearForm() {
+      const container = document.getElementById('courses-container');
+      container.innerHTML = '';
+      addCourseRow(); // Add one clean row
+      addCourseRow(); // Add second clean row for convenience
+      addCourseRow(); 
+      document.getElementById('result-container').style.display = 'none';
+  }
+
+  function calculateGPA() {
+      const rows = document.querySelectorAll('.course-row');
+      const system = document.getElementById('gradingSystem').value;
+      const scale = gradeScales[system];
+
+      let totalPoints = 0;
+      let totalHours = 0;
+      let validRows = 0;
+
+      rows.forEach(row => {
+          const hours = parseFloat(row.querySelector('.course-hours').value);
+          const gradeSymbol = row.querySelector('.course-grade').value;
+
+          if (hours && gradeSymbol && scale[gradeSymbol] !== undefined) {
+              const points = scale[gradeSymbol];
+              totalPoints += (points * hours);
+              totalHours += hours;
+              validRows++;
+          }
+      });
+
+      if (totalHours === 0) {
+          alert("الرجاء إدخال الساعات والدرجة لمادة واحدة على الأقل.");
+          return;
+      }
+
+      const gpa = totalPoints / totalHours;
+
+      // Display Result
+      document.getElementById('finalGPA').innerText = gpa.toFixed(2);
+      document.getElementById('totalHours').innerText = totalHours;
+      document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
+      
+      const resultContainer = document.getElementById('result-container');
+      resultContainer.style.display = 'block';
+      resultContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function recalculateIfVisible() {
+      const resultContainer = document.getElementById('result-container');
+      if (resultContainer.style.display === 'block') {
+          calculateGPA();
+      }
+  }
+
+  // Initialize with 4 rows
+  window.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('courses-container');
+      container.innerHTML = '';
+      addCourseRow();
+      addCourseRow();
+      addCourseRow();
+      addCourseRow();
+  });
+</script>
+
+</body>
+</html>
