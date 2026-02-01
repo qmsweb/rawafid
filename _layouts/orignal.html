@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "صفحة جديدة" }}</title>
+  <title>{{ page.title | default: "روافد" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,8 +12,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
-  <meta property="og:description" content="{{ page.description | default: 'وصف الصفحة' }}">
+  <meta property="og:description" content="{{ page.description | default: 'منصة روافد' }}">
   <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
@@ -42,7 +43,7 @@
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
       
-      /* ألوان خاصة بالتقويم والعناصر */
+      /* ألوان إضافية قد تحتاجها الأدوات */
       --cal-red: #ff3b30;
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
@@ -64,14 +65,14 @@
       --badge-text: #9fa8da;
     }
 
-    /* === 3. التنسيقات العامة (Reset & Typography) === */
+    /* === 3. التنسيقات العامة === */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
 
     body {
       background-color: var(--bg-body);
       color: var(--text-main);
       min-height: 100vh;
-      padding-top: 80px; /* مسافة للهيدر الثابت */
+      padding-top: 80px;
       padding-bottom: 40px;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
@@ -80,13 +81,9 @@
       max-width: 900px; 
       margin: 0 auto; 
       padding: 0 20px; 
-      /* يمكن إضافة min-height هنا إذا رغبت */
     }
 
-    /* === 4. تنسيقات مساعدة (Utility Classes) === */
-    /* تم الاحتفاظ بها لكي تستخدمها إذا أضفت محتوى لاحقاً */
-    
-    /* الأزرار */
+    /* === 4. كلاسات مساعدة للأدوات (اختياري، يمكنك تركها لاستخدامها لاحقاً) === */
     .action-btn {
         background: transparent;
         border: 1px solid var(--border-color);
@@ -104,7 +101,6 @@
     .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
     .primary-btn { background: var(--primary-color) !important; color: white !important; border: none !important; }
 
-    /* البطاقات */
     .ios-list-group {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -114,7 +110,6 @@
         border: 1px solid var(--border-color);
     }
     
-    /* استجابة الجوال */
     @media (max-width: 600px) {
        .container { padding: 0 15px; }
     }
@@ -126,12 +121,13 @@
 
   <div class="container">
       
-      </div>
+      {{ content }}
+
+  </div>
 
   {% include footer.html %}
 
   <script>
-    /* دالة تبديل الثيم التي يستدعيها زر الهيدر */
     function toggleTheme() {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
