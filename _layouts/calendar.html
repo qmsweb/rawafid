@@ -212,7 +212,7 @@
     .print-logo-container img {
         height: 60px;
         width: auto;
-        filter: invert(1); /* لتحويل الأبيض إلى أسود */
+        /* تم إزالة الفلتر هنا بناءً على طلبك */
     }
 
     /* الـ QR Code السفلي */
@@ -241,7 +241,7 @@
 
         /* إظهار العناصر المخصصة للطباعة */
         .print-only-element { display: block !important; }
-        .print-logo-container { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 20px;}
+        .print-logo-container { text-align: center; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 15px;}
         .print-qr-footer { display: flex !important; flex-direction: column; align-items: center; }
 
         /* ضبط الجسم */
@@ -259,6 +259,20 @@
             width: 100% !important;
         }
 
+        /* تعديل العنوان لضمان عدم انتقاله لصفحة جديدة */
+        .tool-header {
+            margin-bottom: 10px !important;
+            border: none !important;
+            display: block !important;
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+        
+        .tool-header h1 {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
         /* منطق إخفاء الأرشيف الفارغ */
         #past-container { display: none !important; }
         #past-container.has-data { display: block !important; }
@@ -267,6 +281,7 @@
             box-shadow: none !important; 
             border: 1px solid #000 !important; 
             break-inside: avoid; 
+            page-break-inside: avoid;
             margin-bottom: 20px;
         }
         
