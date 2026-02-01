@@ -1,9 +1,15 @@
 <style>
   :root {
-    --primary-color: #1a2ac6;
+    --primary-color: #1a2ac6; /* اللون الأزرق الافتراضي */
     --nav-height: 70px;
     --icon-size: 24px;
     --btn-size: 42px;
+  }
+
+  /* === إعدادات الوضع الداكن (التعديل الجديد) === */
+  /* عند تفعيل الوضع الداكن، يتغير اللون الأساسي إلى سماوي مريح */
+  [data-theme="dark"] {
+    --primary-color: #008b99; 
   }
 
   body {
@@ -28,6 +34,7 @@
     box-sizing: border-box;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease; /* إضافة نعومة عند تغيير اللون */
   }
 
   /* === الشعار === */
@@ -43,7 +50,7 @@
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  
+   
   .logo img.loaded { opacity: 1; }
 
   /* === الروابط === */
@@ -118,20 +125,20 @@
   /* عندما يكون الثيم داكن (يتم تفعيله عبر html[data-theme="dark"]) */
   [data-theme="dark"] .theme-toggle-btn .sun-icon { display: block; }
   [data-theme="dark"] .theme-toggle-btn .moon-icon { display: none; }
-  
+   
   [data-theme="dark"] .theme-toggle-btn:hover svg {
-     color: #ffcc00;
-     transform: rotate(20deg);
+      color: #ffcc00;
+      transform: rotate(20deg);
   }
 
   /* --- زر القائمة (Menu Toggle) --- */
   .menu-toggle-btn { display: none; } /* مخفي في سطح المكتب */
-  
+   
   .menu-toggle-btn .close-icon { 
     display: none; 
     position: absolute;
   }
-  
+   
   /* عندما تكون القائمة مفتوحة (نضيف كلاس open للزر) */
   .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
   .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
@@ -148,7 +155,7 @@
       width: 75%;
       max-width: 300px;
       height: calc(100vh - var(--nav-height));
-      background-color: var(--primary-color); /* يمكن تغييره للون أغمق قليلاً */
+      background-color: var(--primary-color); /* سيأخذ اللون الجديد تلقائياً في الوضع الداكن */
       
       flex-direction: column;
       align-items: flex-start;
@@ -260,7 +267,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     
-    /* === 1. كاش اللوجو (لم يتم تغييره لأنه يعمل جيداً) === */
+    /* === 1. كاش اللوجو === */
     const logoImg = document.getElementById('cached-logo');
     const targetUrl = logoImg.getAttribute('data-url');
     const CACHE_KEY_DATA = 'rawafid_logo_data';
@@ -298,31 +305,35 @@
     const overlay = document.getElementById('nav-overlay');
 
     function toggleMenu() {
-      // تبديل حالة الكلاسات
       const isOpened = navLinks.classList.toggle('active');
       menuToggle.classList.toggle('open');
       overlay.classList.toggle('active');
       
-      // منع التمرير في الصفحة الخلفية عند فتح القائمة
       document.body.style.overflow = isOpened ? 'hidden' : '';
     }
 
     if (menuToggle) {
       menuToggle.addEventListener('click', toggleMenu);
-      // إغلاق القائمة عند النقر على الخلفية المعتمة
       overlay.addEventListener('click', toggleMenu);
     }
 
     /* === 3. منطق زر تغيير الوضع === */
     const themeBtn = document.getElementById('theme-toggle-btn');
     
-    // الوظيفة الآن تعتمد فقط على استدعاء الدالة الخارجية
     themeBtn.addEventListener('click', function() {
+      /* ملاحظة: يفترض هذا الكود وجود دالة toggleTheme() في ملف خارجي
+       تقوم بوضع السمة data-theme="dark" على عنصر html
+      */
       if (typeof toggleTheme === 'function') {
         toggleTheme();
-        // الأيقونات تتغير تلقائياً عبر CSS بناءً على data-theme
       } else {
-        console.warn('دالة toggleTheme غير موجودة.');
+        // كود احتياطي بسيط للتجربة إذا لم تكن الدالة موجودة
+        const html = document.documentElement;
+        if (html.getAttribute('data-theme') === 'dark') {
+            html.removeAttribute('data-theme');
+        } else {
+            html.setAttribute('data-theme', 'dark');
+        }
       }
     });
   });
