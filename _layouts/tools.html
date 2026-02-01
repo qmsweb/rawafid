@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "روافد - الرئيسية" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+  <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
+  <meta property="og:description" content="{{ page.description | default: 'منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.' }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.1);
+      --radius-md: 12px;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* === نظام التحميل === */
+    #main-content-area {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #main-content-area.loaded {
+      opacity: 1;
+    }
+
+    /* === تنسيقات الأدوات === */
+    .section-title { 
+        font-size: 1.3rem; 
+        font-weight: 700; 
+        color: var(--text-main); 
+        margin-bottom: 15px; 
+        margin-top: 30px; /* إضافة مسافة علوية بدلاً من مسافة الويدجت المحذوف */
+        border-right: 4px solid var(--primary-color); 
+        padding-right: 12px; 
+    }
+
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+    .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+    .tool-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: var(--hover-shadow); }
+    .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; }
+    .tool-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+
+    @media (max-width: 768px) {
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      .tools-grid .tool-item:last-child { grid-column: span 2; }
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+
+  <div class="container">
+    
+    {{ content }}
+
+    <div id="main-content-area">
+        
+        <h3 class="section-title">الأدوات</h3>
+        <div class="tools-grid">
+            <div class="tool-item" onclick="window.location.href='/gpa-calculator'">
+                <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                <div class="tool-name">حاسبة المعدل</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/tawtheeq-tool'">
+                <div class="tool-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="tool-name">توثيق المراجع</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/calendar'">
+                <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="tool-name">التقويم الأكاديمي</div>
+            </div>
+        </div>
+
+    </div> 
+    
+    {% include footer.html %}
+  </div>
+
+<script>
+  /* === 1. إعدادات الثيم === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  /* === 2. إظهار المحتوى === */
+  document.addEventListener('DOMContentLoaded', () => {
+    // إظهار المحتوى مباشرة حيث لم نعد بحاجة لانتظار تحميل البيانات
+    const mainArea = document.getElementById('main-content-area');
+    setTimeout(() => {
+        mainArea.classList.add('loaded');
+    }, 100);
+  });
+</script>
+
+</body>
+</html>
