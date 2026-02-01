@@ -30,7 +30,7 @@
   </script>
 
   <style>
-    /* === المتغيرات والألوان (نفس الموجودة في الصفحة السابقة) === */
+    /* === المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
       --bg-body: #f4f6fb;
@@ -212,17 +212,17 @@
         .action-btn { flex: 1; justify-content: center; }
         
         .course-row { 
-            grid-template-columns: 1fr 1fr; /* Stack on mobile */
+            grid-template-columns: 1fr 1fr; 
             gap: 8px;
             padding: 10px;
             background: var(--bg-body);
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
-        .course-row .input-field:first-child { grid-column: span 2; } /* Name takes full width */
+        .course-row .input-field:first-child { grid-column: span 2; }
         .delete-row-btn { grid-column: span 2; width: 100%; text-align: center; color: var(--cal-red); border: 1px solid var(--border-color); border-radius: 6px; }
         
-        .labels-row { display: none; } /* Hide labels on mobile to save space */
+        .labels-row { display: none; }
     }
   </style>
 </head>
@@ -234,7 +234,7 @@
     
     <div class="tool-header">
       <div>
-          <h1>حاسبة المعدل الفصلي</h1>
+          <h1>حاسبة المعدل (نظام 4.00)</h1>
           <p>احسب معدلك الفصلي (GPA) بسهولة ودقة</p>
       </div>
       
@@ -247,16 +247,6 @@
             <i class="fas fa-eraser"></i> تصفير الجدول
           </button>
       </div>
-    </div>
-
-    <div class="ios-list-group" style="margin-bottom: 20px;">
-        <div class="list-header">
-            <span>نظام الدرجات</span>
-            <select id="gradingSystem" class="select-field" style="padding: 6px 12px; font-size: 0.9rem; min-width: 150px; width: auto;" onchange="recalculateIfVisible()">
-                <option value="5.0">من 5.00 (KSA Common)</option>
-                <option value="4.0">من 4.00 (Standard)</option>
-            </select>
-        </div>
     </div>
 
     <div class="ios-list-group">
@@ -312,27 +302,18 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === منطق حاسبة المعدل === */
+  /* === منطق حاسبة المعدل (نظام 4.0 بدون A+) === */
 
-  // تعريف قيم الدرجات للنظامين
-  const gradeScales = {
-      '5.0': {
-          'A+': 5.00, 'A': 4.75, 
-          'B+': 4.50, 'B': 4.00, 
-          'C+': 3.50, 'C': 3.00, 
-          'D+': 2.50, 'D': 2.00, 
-          'F': 1.00
-      },
-      '4.0': {
-          'A+': 4.00, 'A': 3.75, 
-          'B+': 3.50, 'B': 3.00, 
-          'C+': 2.50, 'C': 2.00, 
-          'D+': 1.50, 'D': 1.00, 
-          'F': 0.00
-      }
+  // تعريف قيم الدرجات لنظام 4.0 فقط
+  const gradeScale = {
+      'A': 4.00, 
+      'B+': 3.50, 'B': 3.00, 
+      'C+': 2.50, 'C': 2.00, 
+      'D+': 1.50, 'D': 1.00, 
+      'F': 0.00
   };
 
-  const gradesOptions = ['A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'];
+  const gradesOptions = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F'];
 
   function createRowHTML() {
       let optionsHTML = '<option value="" disabled selected>الرمز</option>';
@@ -357,7 +338,7 @@
   function addCourseRow() {
       const container = document.getElementById('courses-container');
       const div = document.createElement('div');
-      div.innerHTML = createRowHTML(); // Temporary container
+      div.innerHTML = createRowHTML(); 
       container.appendChild(div.firstElementChild);
       updateCount();
   }
@@ -369,7 +350,6 @@
           updateCount();
           recalculateIfVisible();
       } else {
-          // If only one row, just clear values
           const row = btn.closest('.course-row');
           row.querySelector('.course-name').value = '';
           row.querySelector('.course-hours').value = '';
@@ -385,16 +365,14 @@
   function clearForm() {
       const container = document.getElementById('courses-container');
       container.innerHTML = '';
-      addCourseRow(); // Add one clean row
-      addCourseRow(); // Add second clean row for convenience
+      addCourseRow(); 
+      addCourseRow(); 
       addCourseRow(); 
       document.getElementById('result-container').style.display = 'none';
   }
 
   function calculateGPA() {
       const rows = document.querySelectorAll('.course-row');
-      const system = document.getElementById('gradingSystem').value;
-      const scale = gradeScales[system];
 
       let totalPoints = 0;
       let totalHours = 0;
@@ -404,8 +382,8 @@
           const hours = parseFloat(row.querySelector('.course-hours').value);
           const gradeSymbol = row.querySelector('.course-grade').value;
 
-          if (hours && gradeSymbol && scale[gradeSymbol] !== undefined) {
-              const points = scale[gradeSymbol];
+          if (hours && gradeSymbol && gradeScale[gradeSymbol] !== undefined) {
+              const points = gradeScale[gradeSymbol];
               totalPoints += (points * hours);
               totalHours += hours;
               validRows++;
@@ -419,7 +397,7 @@
 
       const gpa = totalPoints / totalHours;
 
-      // Display Result
+      // عرض النتيجة
       document.getElementById('finalGPA').innerText = gpa.toFixed(2);
       document.getElementById('totalHours').innerText = totalHours;
       document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
@@ -436,7 +414,7 @@
       }
   }
 
-  // Initialize with 4 rows
+  // تهيئة الصفحة بـ 4 صفوف
   window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('courses-container');
       container.innerHTML = '';
