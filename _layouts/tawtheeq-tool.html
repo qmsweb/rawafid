@@ -30,7 +30,7 @@
   </script>
 
   <style>
-    /* === نفس المتغيرات والألوان === */
+    /* === المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
       --bg-body: #f4f6fb;
@@ -41,11 +41,6 @@
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
-      
-      --cal-red: #ff3b30;
-      --cal-separator: #e5e5ea;
-      --badge-bg: #e1e4f5;
-      --badge-text: #1a2ac6;
       --input-bg: #ffffff;
     }
 
@@ -59,11 +54,6 @@
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
       --input-bg: #2c2c2c;
-      
-      --cal-red: #ff453a;
-      --cal-separator: #38383a;
-      --badge-bg: #3f4252;
-      --badge-text: #9fa8da;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
@@ -133,11 +123,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-    .form-content {
-        padding: 25px;
-    }
+    .form-content { padding: 25px; }
 
     .form-grid {
         display: grid;
@@ -176,7 +166,7 @@
 
     /* === Result Section === */
     #result-container {
-        display: none; /* مخفي افتراضياً */
+        display: none;
         animation: fadeIn 0.4s ease;
     }
     
@@ -214,6 +204,7 @@
         .action-btn { flex: 1; justify-content: center; }
         .form-grid { grid-template-columns: 1fr; }
         .full-width { grid-column: span 1; }
+        .list-header { flex-direction: column; align-items: stretch; }
     }
     
     /* === Print === */
@@ -253,11 +244,14 @@
 
     <div class="ios-list-group">
         <div class="list-header">
-            <span>بيانات المرجع</span>
-            <select id="sourceType" class="select-field" style="padding: 5px 10px; font-size: 0.85rem;" onchange="updateFormFields()">
+            <span>نوع المصدر</span>
+            <select id="sourceType" class="select-field" style="padding: 5px 10px; font-size: 0.9rem; min-width: 200px;" onchange="updateFormFields()">
                 <option value="book">كتاب</option>
-                <option value="journal">دورية علمية / مقال</option>
-                <option value="website">موقع إلكتروني</option>
+                <option value="journal">مقال في دورية (مجلة علمية)</option>
+                <option value="thesis_pub">رسالة ماجستير/دكتوراة (منشورة)</option>
+                <option value="thesis_unpub">رسالة ماجستير/دكتوراة (غير منشورة)</option>
+                <option value="conference">ورقة علمية في مؤتمر</option>
+                <option value="newspaper">مقال في صحيفة (إلكترونية)</option>
             </select>
         </div>
         
@@ -265,29 +259,34 @@
             <div class="form-grid">
                 
                 <div class="input-group full-width">
-                    <label>المؤلف</label>
-                    <input type="text" id="authors" class="input-field" placeholder="مثال: أحمد محمد علي أو Smith, J.">
-                    <span class="helper-text">الاسم العائلي، الحرف الأول (للأجنبي) / الاسم كاملاً (للعربي)</span>
+                    <label>المؤلف (المؤلفون)</label>
+                    <input type="text" id="authors" class="input-field" placeholder="الاسم العائلي، الاسم الأول">
+                    <span class="helper-text">مثال: الغامدي، أحمد أو Smith, J.</span>
                 </div>
 
                 <div class="input-group">
                     <label>سنة النشر</label>
-                    <input type="number" id="year" class="input-field" placeholder="2025">
+                    <input type="number" id="year" class="input-field" placeholder="2024">
                 </div>
 
                 <div class="input-group" id="date-group" style="display:none;">
-                    <label>تاريخ النشر الكامل</label>
-                    <input type="text" id="fullDate" class="input-field" placeholder="20 مايو">
+                    <label>تاريخ النشر (الشهر واليوم)</label>
+                    <input type="text" id="fullDate" class="input-field" placeholder="مثال: 15 مارس أو 15-17 مايو">
                 </div>
 
                 <div class="input-group full-width">
-                    <label id="titleLabel">عنوان الكتاب</label>
-                    <input type="text" id="title" class="input-field" placeholder="عنوان العمل...">
+                    <label id="titleLabel">عنوان العمل</label>
+                    <input type="text" id="title" class="input-field" placeholder="العنوان...">
                 </div>
 
-                <div class="input-group" id="journal-name-group" style="display:none;">
-                    <label>اسم المجلة/الدورية</label>
-                    <input type="text" id="journalName" class="input-field">
+                <div class="input-group full-width" id="bracket-group" style="display:none;">
+                    <label id="bracketLabel">النوع / الدرجة العلمية</label>
+                    <input type="text" id="bracketInfo" class="input-field" placeholder="مثال: رسالة ماجستير، أطروحة دكتوراة">
+                </div>
+
+                <div class="input-group full-width" id="source-name-group" style="display:none;">
+                    <label id="sourceNameLabel">اسم المصدر</label>
+                    <input type="text" id="sourceName" class="input-field">
                 </div>
 
                 <div class="input-group" id="volume-group" style="display:none;">
@@ -302,20 +301,20 @@
 
                 <div class="input-group" id="pages-group" style="display:none;">
                     <label>الصفحات</label>
-                    <input type="text" id="pages" class="input-field" placeholder="10-25">
+                    <input type="text" id="pages" class="input-field" placeholder="مثال: 10-25">
                 </div>
 
                 <div class="input-group full-width" id="publisher-group">
-                    <label>دار النشر</label>
+                    <label id="publisherLabel">دار النشر</label>
                     <input type="text" id="publisher" class="input-field" placeholder="اسم الناشر">
                 </div>
                 
-                <div class="input-group" id="site-name-group" style="display:none;">
-                    <label>اسم الموقع</label>
-                    <input type="text" id="siteName" class="input-field">
+                <div class="input-group" id="location-group" style="display:none;">
+                    <label>مكان الانعقاد (المدينة، الدولة)</label>
+                    <input type="text" id="location" class="input-field" placeholder="الرياض، السعودية">
                 </div>
 
-                <div class="input-group full-width">
+                <div class="input-group full-width" id="url-group">
                     <label>الرابط أو المعرف الرقمي (DOI/URL)</label>
                     <input type="text" id="url" class="input-field" placeholder="https://... أو https://doi.org/...">
                 </div>
@@ -352,144 +351,239 @@
   {% include footer.html %}
 
 <script>
-  // === إدارة الحقول ===
+  // === إدارة الحقول (تحديث الواجهة) ===
   function updateFormFields() {
       const type = document.getElementById('sourceType').value;
       
-      // إخفاء الحقول غير المشتركة أولاً
-      const idsToHide = ['publisher-group', 'journal-name-group', 'volume-group', 'issue-group', 'pages-group', 'site-name-group', 'date-group'];
+      // إخفاء الحقول الخاصة أولاً
+      const idsToHide = [
+          'date-group', 'bracket-group', 'source-name-group', 
+          'volume-group', 'issue-group', 'pages-group', 
+          'publisher-group', 'location-group', 'url-group'
+      ];
       idsToHide.forEach(id => document.getElementById(id).style.display = 'none');
       
-      // تغيير العنوان ديناميكياً
+      // استدعاء العناصر لتغيير النصوص
       const titleLabel = document.getElementById('titleLabel');
-      
+      const pubLabel = document.getElementById('publisherLabel');
+      const sourceLabel = document.getElementById('sourceNameLabel');
+      const bracketLabel = document.getElementById('bracketLabel');
+
+      // 1. كتاب
       if (type === 'book') {
           titleLabel.innerText = "عنوان الكتاب";
-          document.getElementById('publisher-group').style.display = 'block'; 
-          document.getElementById('publisher-group').className = "input-group full-width";
-      } 
+          pubLabel.innerText = "دار النشر";
+          document.getElementById('publisher-group').style.display = 'flex';
+          document.getElementById('url-group').style.display = 'flex';
+      }
+      // 2. مقال دورية
       else if (type === 'journal') {
           titleLabel.innerText = "عنوان المقال";
-          document.getElementById('journal-name-group').style.display = 'flex';
+          sourceLabel.innerText = "اسم الدورية/المجلة";
+          
+          document.getElementById('source-name-group').style.display = 'flex';
           document.getElementById('volume-group').style.display = 'flex';
           document.getElementById('issue-group').style.display = 'flex';
           document.getElementById('pages-group').style.display = 'flex';
-      } 
-      else if (type === 'website') {
-          titleLabel.innerText = "عنوان الصفحة";
-          document.getElementById('site-name-group').style.display = 'flex';
+          document.getElementById('url-group').style.display = 'flex';
+      }
+      // 3. رسالة منشورة
+      else if (type === 'thesis_pub') {
+          titleLabel.innerText = "عنوان الرسالة";
+          bracketLabel.innerText = "الدرجة العلمية (مثال: رسالة ماجستير)";
+          pubLabel.innerText = "اسم الجامعة المانحة";
+          sourceLabel.innerText = "اسم قاعدة البيانات/المستودع";
+
+          document.getElementById('bracket-group').style.display = 'flex';
+          document.getElementById('publisher-group').style.display = 'flex'; // هنا نستخدمه للجامعة
+          document.getElementById('source-name-group').style.display = 'flex'; // هنا نستخدمه للمستودع
+          document.getElementById('url-group').style.display = 'flex';
+      }
+      // 4. رسالة غير منشورة
+      else if (type === 'thesis_unpub') {
+          titleLabel.innerText = "عنوان الرسالة";
+          bracketLabel.innerText = "الدرجة العلمية (مثال: رسالة ماجستير غير منشورة)";
+          pubLabel.innerText = "اسم الجامعة المانحة";
+          
+          document.getElementById('bracket-group').style.display = 'flex';
+          document.getElementById('publisher-group').style.display = 'flex'; // هنا نستخدمه للجامعة
+          // الرسائل غير المنشورة غالباً ليس لها رابط
+      }
+      // 5. ورقة مؤتمر
+      else if (type === 'conference') {
+          titleLabel.innerText = "عنوان الورقة العلمية";
+          bracketLabel.innerText = "نوع المساحة (مثال: ورقة علمية)";
+          sourceLabel.innerText = "اسم المؤتمر";
+          
+          document.getElementById('date-group').style.display = 'flex'; // المؤتمر يحتاج تاريخ كامل
+          document.getElementById('bracket-group').style.display = 'flex';
+          document.getElementById('source-name-group').style.display = 'flex';
+          document.getElementById('location-group').style.display = 'flex';
+          document.getElementById('url-group').style.display = 'flex';
+      }
+      // 6. مقال صحيفة
+      else if (type === 'newspaper') {
+          titleLabel.innerText = "عنوان المقال";
+          sourceLabel.innerText = "اسم الصحيفة";
+          
           document.getElementById('date-group').style.display = 'flex';
+          document.getElementById('source-name-group').style.display = 'flex';
+          document.getElementById('url-group').style.display = 'flex';
       }
   }
 
-  // === وظيفة تحميل مثال (الجديدة) ===
+  // === تحميل الأمثلة (بالعربية فقط) ===
   function loadExample() {
       const type = document.getElementById('sourceType').value;
+      document.querySelectorAll('input').forEach(input => input.value = ''); // تنظيف
 
-      // تفريغ الحقول أولاً لضمان نظافة البيانات
-      document.querySelectorAll('input').forEach(input => input.value = '');
-
-      // بيانات مشتركة افتراضية
-      document.getElementById('authors').value = "الغامدي، محمد بن صالح";
-      document.getElementById('year').value = "2024";
-
+      // كتاب
       if (type === 'book') {
-          document.getElementById('title').value = "أسس البحث العلمي ومناهجه";
-          document.getElementById('publisher').value = "دار المعرفة الجامعية";
-          document.getElementById('url').value = "https://doi.org/10.1234/book.2024";
-      } 
+          document.getElementById('authors').value = "العمري، خالد بن محمد";
+          document.getElementById('year').value = "2023";
+          document.getElementById('title').value = "مناهج البحث العلمي وتطبيقاته التربوية";
+          document.getElementById('publisher').value = "دار المسيرة للنشر والتوزيع";
+          document.getElementById('url').value = "https://doi.org/10.xxxx/book.2023";
+      }
+      // مقال دورية
       else if (type === 'journal') {
-          document.getElementById('authors').value = "Smith, J. A.";
-          document.getElementById('title').value = "The Impact of AI on Modern Education";
-          document.getElementById('journalName').value = "Journal of Educational Technology";
-          document.getElementById('volume').value = "15";
-          document.getElementById('issue').value = "3";
+          document.getElementById('authors').value = "الشهري، ناصر";
+          document.getElementById('year').value = "2024";
+          document.getElementById('title').value = "دور الذكاء الاصطناعي في تحسين البيئة التعليمية";
+          document.getElementById('sourceName').value = "المجلة السعودية للتقنيات التربوية";
+          document.getElementById('volume').value = "12";
+          document.getElementById('issue').value = "2";
           document.getElementById('pages').value = "45-67";
-          document.getElementById('url').value = "https://doi.org/10.1016/j.edutech.2024.01.005";
-      } 
-      else if (type === 'website') {
-          document.getElementById('title').value = "طرق المذاكرة الفعالة للطلاب";
-          document.getElementById('siteName').value = "منصة روافد التعليمية";
-          document.getElementById('fullDate').value = "15 مارس";
-          document.getElementById('url').value = "https://rawafid.jassim.one/study-tips";
+          document.getElementById('url').value = "https://doi.org/10.1016/j.xxxx";
+      }
+      // رسالة منشورة
+      else if (type === 'thesis_pub') {
+          document.getElementById('authors').value = "القحطاني، سعيد";
+          document.getElementById('year').value = "2022";
+          document.getElementById('title').value = "فاعلية الواقع المعزز في تدريس العلوم";
+          document.getElementById('bracketInfo').value = "رسالة ماجستير";
+          document.getElementById('publisher').value = "جامعة الملك سعود"; // حقل الجامعة
+          document.getElementById('sourceName').value = "دار المنظومة"; // حقل المستودع
+          document.getElementById('url').value = "http://search.mandumah.com/Record/123456";
+      }
+      // رسالة غير منشورة
+      else if (type === 'thesis_unpub') {
+          document.getElementById('authors').value = "المصري، محمود";
+          document.getElementById('year').value = "2021";
+          document.getElementById('title').value = "أثر القيادة التحويلية على الأداء الوظيفي";
+          document.getElementById('bracketInfo').value = "أطروحة دكتوراة غير منشورة";
+          document.getElementById('publisher').value = "جامعة القاهرة"; // حقل الجامعة
+      }
+      // مؤتمر
+      else if (type === 'conference') {
+          document.getElementById('authors').value = "السالم، منى";
+          document.getElementById('year').value = "2023";
+          document.getElementById('fullDate').value = "15-17 أكتوبر";
+          document.getElementById('title').value = "تحديات التعليم عن بعد في ظل الأزمات";
+          document.getElementById('bracketInfo').value = "ورقة علمية";
+          document.getElementById('sourceName').value = "المؤتمر الدولي لتقنيات التعليم";
+          document.getElementById('location').value = "الرياض، السعودية";
+          document.getElementById('url').value = "https://conf.edu.sa/papers/2023";
+      }
+      // صحيفة
+      else if (type === 'newspaper') {
+          document.getElementById('authors').value = "الخالدي، فهد";
+          document.getElementById('year').value = "2024";
+          document.getElementById('fullDate').value = "20 يناير";
+          document.getElementById('title').value = "مستقبل الطاقة المتجددة في المملكة";
+          document.getElementById('sourceName').value = "صحيفة عكاظ";
+          document.getElementById('url').value = "https://www.okaz.com.sa/articles/1234";
       }
 
-      // توليد النتيجة فوراً
-      generateCitation();
+      generateCitation(); // توليد النتيجة مباشرة
   }
 
-  // === منطق التوثيق APA 7 ===
+  // === منطق التوليد APA 7 ===
   function generateCitation() {
       const type = document.getElementById('sourceType').value;
       
-      // جلب البيانات
       const authors = document.getElementById('authors').value.trim();
       let year = document.getElementById('year').value.trim();
+      if (!year) year = "د.ت";
+      
       const title = document.getElementById('title').value.trim();
+      const fullDate = document.getElementById('fullDate').value.trim();
       const url = document.getElementById('url').value.trim();
       
-      // التعامل مع حالة عدم وجود تاريخ
-      if (!year) year = "د.ت"; // دون تاريخ
-      
-      let citationHTML = "";
+      let citation = "";
 
-      // 1. هيكل الكتاب: المؤلف. (السنة). العنوان. الناشر. الرابط.
+      // 1. كتاب
+      // Author. (Year). *Title*. Publisher. URL
       if (type === 'book') {
           const publisher = document.getElementById('publisher').value.trim();
-          
-          citationHTML = `
-              ${authors ? authors + "." : ""} 
-              (${year}). 
-              <i>${title}</i>. 
-              ${publisher ? publisher + "." : ""} 
-              ${url}
-          `;
+          citation = `${authors}. (${year}). <i>${title}</i>. ${publisher}. ${url}`;
       }
 
-      // 2. هيكل الدورية: المؤلف. (السنة). العنوان. اسم المجلة، المجلد(العدد)، الصفحات. الرابط.
+      // 2. دورية
+      // Author. (Year). Title. *Journal, Vol*(Issue), Pages. URL
       else if (type === 'journal') {
-          const journal = document.getElementById('journalName').value.trim();
-          const volume = document.getElementById('volume').value.trim();
+          const journal = document.getElementById('sourceName').value.trim();
+          const vol = document.getElementById('volume').value.trim();
           const issue = document.getElementById('issue').value.trim();
           const pages = document.getElementById('pages').value.trim();
-
-          citationHTML = `
-              ${authors ? authors + "." : ""} 
-              (${year}). 
-              ${title}. 
-              <i>${journal}</i>${volume ? ", <i>" + volume + "</i>" : ""}${issue ? "(" + issue + ")" : ""}${pages ? ", " + pages : ""}. 
-              ${url}
-          `;
+          
+          citation = `${authors}. (${year}). ${title}. <i>${journal}</i>${vol ? ", <i>" + vol + "</i>" : ""}${issue ? "(" + issue + ")" : ""}${pages ? ", " + pages : ""}. ${url}`;
       }
 
-      // 3. هيكل الموقع: المؤلف. (السنة، اليوم الشهر). العنوان. اسم الموقع. الرابط.
-      else if (type === 'website') {
-          const siteName = document.getElementById('siteName').value.trim();
-          const fullDate = document.getElementById('fullDate').value.trim(); 
+      // 3. رسالة منشورة
+      // Author. (Year). *Title* [Degree, University]. Repository. URL
+      else if (type === 'thesis_pub') {
+          const degree = document.getElementById('bracketInfo').value.trim();
+          const university = document.getElementById('publisher').value.trim(); // استخدام حقل الناشر للجامعة
+          const repo = document.getElementById('sourceName').value.trim();
           
-          let dateString = year;
-          if (fullDate) dateString += `، ${fullDate}`;
-          
-          citationHTML = `
-              ${authors ? authors + "." : ""} 
-              (${dateString}). 
-              <i>${title}</i>. 
-              ${siteName ? siteName + "." : ""} 
-              ${url}
-          `;
+          citation = `${authors}. (${year}). <i>${title}</i> [${degree}، ${university}]. ${repo}. ${url}`;
       }
 
-      // تنظيف النتيجة
-      citationHTML = citationHTML.replace(/\s+/g, ' ').replace(/\.\./g, '.').trim();
+      // 4. رسالة غير منشورة
+      // Author. (Year). *Title* [Unpublished degree]. University.
+      else if (type === 'thesis_unpub') {
+          const degree = document.getElementById('bracketInfo').value.trim();
+          const university = document.getElementById('publisher').value.trim();
+          
+          citation = `${authors}. (${year}). <i>${title}</i> [${degree}]. ${university}.`;
+      }
+
+      // 5. مؤتمر
+      // Author. (Year, Month Day). *Title* [Type]. Conf Name, Location. URL
+      else if (type === 'conference') {
+          let dateStr = year;
+          if (fullDate) dateStr += `، ${fullDate}`;
+          
+          const paperType = document.getElementById('bracketInfo').value.trim();
+          const confName = document.getElementById('sourceName').value.trim();
+          const location = document.getElementById('location').value.trim();
+
+          citation = `${authors}. (${dateStr}). <i>${title}</i> [${paperType}]. ${confName}${location ? "، " + location : ""}. ${url}`;
+      }
+
+      // 6. صحيفة
+      // Author. (Year, Month Day). Title. *Newspaper*. URL
+      else if (type === 'newspaper') {
+          let dateStr = year;
+          if (fullDate) dateStr += `، ${fullDate}`;
+          const newspaper = document.getElementById('sourceName').value.trim();
+
+          citation = `${authors}. (${dateStr}). ${title}. <i>${newspaper}</i>. ${url}`;
+      }
+
+      // تنظيف ومعالجة النصوص
+      citation = citation.replace(/\.\./g, '.').replace(/،\./g, '.').replace(/\s+/g, ' ').trim();
+      
+      // إذا انتهى النص بفاصلة أو نقطة زائدة، تنظيفه، لكن APA يتطلب نقطة في النهاية غالباً
+      if (!citation.endsWith('.')) citation += ".";
+      if (citation.endsWith('..')) citation = citation.slice(0, -1);
 
       // عرض النتيجة
       const resultContainer = document.getElementById('result-container');
       const outputBox = document.getElementById('citationOutput');
-      
-      outputBox.innerHTML = citationHTML;
+      outputBox.innerHTML = citation;
       resultContainer.style.display = 'block';
-      
-      // تمرير الشاشة للنتيجة
       resultContainer.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -507,7 +601,7 @@
       document.getElementById('result-container').style.display = 'none';
   }
 
-  // تهيئة عند التحميل
+  // تهيئة أولية
   window.addEventListener('DOMContentLoaded', () => {
      updateFormFields();
   });
