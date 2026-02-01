@@ -474,65 +474,30 @@
         /* === إعدادات الطباعة === */
         @media print {
             :root, [data-theme="dark"] {
-                --primary-color: #1a2ac6 !important;
+                /* استخدام اللون الأسود والأبيض لضمان الوضوح وتوفير الحبر */
+                --primary-color: #000000 !important;
                 --bg-body: #ffffff !important;
                 --bg-card: #ffffff !important;
-                --bg-secondary: #f8f9fa !important;
+                --bg-secondary: #ffffff !important;
                 --text-main: #000000 !important;
                 --text-muted: #333333 !important;
-                --border-color: #e7e7e7 !important;
-                --hover-bg: #e0e7ff !important;
-                --correct-bg: #4CAF50 !important;
-                --wrong-bg: #F44336 !important;
-                --btn-essay-bg: #ffffff !important;
-                --btn-essay-border: #ccd1e0 !important;
+                --border-color: #000000 !important;
+                --hover-bg: #ffffff !important;
             }
 
-            /* إخفاء الهيدر والفوتر والأزرار */
+            /* إخفاء العناصر غير المرغوبة */
             header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
                 display: none !important;
             }
 
-            /* إظهار الشعار فقط في الطباعة */
-            #print-only-logo {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            /* إظهار جدول التقييم في الطباعة فقط */
-            #print-eval-table {
-                display: table !important;
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 40px;
-                text-align: center;
-            }
-            #print-eval-table th, #print-eval-table td {
-                border: 1px solid #000;
-                padding: 15px;
-            }
-            #print-eval-table th {
-                background-color: #f0f0f0 !important;
-                color: #000;
-                font-weight: bold;
-            }
-
-            /* تنسيق الصفحة الأولى كغلاف */
-            .quiz-front-page {
-                display: block;
-                width: 100%;
-                /* هذه الخاصية هي السر: تجبر الطابعة على عمل فاصل صفحات بعد هذا العنصر */
-                break-after: page; 
-                page-break-after: always;
-                min-height: 90vh; /* اختياري: لضمان شكل الغلاف */
-            }
-
+            /* إعادة ضبط جسم الصفحة */
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
+
             .container {
                 max-width: 100% !important;
                 width: 100% !important;
@@ -542,28 +507,75 @@
                 border: none !important;
             }
 
-            .question-item {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                border: 1px solid #ddd;
-                box-shadow: none;
-                background-color: #fff !important;
-                margin-bottom: 15px;
+            /* --- توحيد تصميم الجداول (المعلومات والتقييم) --- */
+            table, .quiz-info-table, #print-eval-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-bottom: 25px !important;
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
             }
 
+            th, td {
+                border: 1px solid #000 !important;
+                padding: 10px !important;
+                color: #000 !important;
+                text-align: center !important;
+                background-color: transparent !important;
+            }
+
+            th {
+                background-color: #f0f0f0 !important; /* خلفية رمادية خفيفة للعناوين */
+                font-weight: bold !important;
+            }
+
+            /* إظهار العناصر المخفية في الشاشة */
+            #print-only-logo {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            #print-eval-table {
+                display: table !important;
+            }
+
+            /* --- توحيد تصميم بطاقات الأسئلة لتشبه الجداول --- */
+            .question-item, .instructions-question {
+                border: 1px solid #000 !important; /* نفس حدود الجداول */
+                border-radius: 0 !important; /* زوايا حادة مثل الجداول */
+                box-shadow: none !important;
+                background-color: #fff !important;
+                margin-bottom: 15px !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                padding: 15px !important;
+            }
+
+            /* إلغاء تنسيقات الخيارات لتظهر كنص عادي أو قائمة */
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
-                padding: 5px 0;
+                padding: 5px 0 !important;
+                color: #000 !important;
             }
             .choice-radio {
-                border: 1px solid #000;
+                border: 1px solid #000 !important;
             }
 
-            .essay-answer {
-                display: none !important;
+            /* تنسيق واجهة الاختبار (الغلاف) */
+            .quiz-front-page {
+                display: block;
+                width: 100%;
+                break-after: page; 
+                page-break-after: always;
+                min-height: 90vh;
             }
 
+            .essay-answer { display: none !important; }
+
+            /* نموذج الإجابة في النهاية */
             #printable-answer-key {
                 display: block !important;
                 break-before: page;
@@ -620,7 +632,7 @@
             <table id="print-eval-table">
                 <thead>
                     <tr>
-                        <th colspan="4" style="font-size: 18px; padding: 10px;">جدول التقييم الذاتي للطالب</th>
+                        <th colspan="4" style="font-size: 18px;">جدول التقييم الذاتي للطالب</th>
                     </tr>
                     <tr>
                         <th style="width: 40%;">معيار التقييم</th>
@@ -664,7 +676,7 @@
     {% include footer.html %}
 
     <script>
-        // دالة تغيير الوضع (ضرورية لتعمل مع زر الهيدر المضمن)
+        // دالة تغيير الوضع
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -697,21 +709,17 @@
 
         // === دالة طباعة الاختبار PDF ===
         function printQuizPDF() {
-            // التحقق من وجود بيانات
             if (!quizData[currentQuiz] || !quizData[currentQuiz].questions) {
                 alert('لا توجد أسئلة للطباعة');
                 return;
             }
 
-            // إزالة أي نموذج إجابة قديم
             const oldKey = document.getElementById('printable-answer-key');
             if (oldKey) oldKey.remove();
 
-            // إنشاء حاوية لنموذج الإجابة الخلفي
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
-            // رأس نموذج الإجابة
             let keyHTML = `
                 <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 15px;">
                     <h2 style="margin:0; font-size: 24px;">نموذج الإجابة</h2>
@@ -730,10 +738,7 @@
             let qCount = 1;
             quizData[currentQuiz].questions.forEach(q => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-
-                // تحويل فواصل الأسطر إلى <br> لطباعة نظيفة في الجدول إذا لزم الأمر
                 const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '';
-
                 keyHTML += `
                     <tr>
                         <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${qCount}</td>
@@ -743,15 +748,9 @@
                 qCount++;
             });
 
-            keyHTML += `
-                    </tbody>
-                </table>
-            `;
-
+            keyHTML += `</tbody></table>`;
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
-
-            // استدعاء نافذة الطباعة
             window.print();
         }
 
@@ -769,7 +768,6 @@
             }
 
             try {
-                // تعديل المسار ليتناسب مع موقع ملفات الـ yaml في Jekyll
                 const res = await fetch(`{{ '/assets/online/' | relative_url }}${examCode}.yaml`);
                 if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
                 const yamlText = await res.text();
@@ -793,7 +791,6 @@
                     });
                     subjectTotalScoreElement.textContent = totalPoints;
                 }
-
                 renderAllQuestions();
             } catch (err) {
                 questionsContainer.innerHTML = `<p>❌ ${err.message}</p>`;
@@ -824,30 +821,25 @@
                 if (q.type === 'instructions') {
                     const instructionsDiv = document.createElement('div');
                     instructionsDiv.className = 'instructions-question';
-                    
                     if (q.mainTitle) {
                         const mainTitle = document.createElement('div');
                         mainTitle.className = 'instructions-header';
                         mainTitle.textContent = q.mainTitle;
                         instructionsDiv.appendChild(mainTitle);
                     }
-                    
                     if (q.description) {
                         const description = document.createElement('p');
                         description.className = 'instructions-description';
                         description.textContent = q.description;
                         instructionsDiv.appendChild(description);
                     }
-                    
                     questionsContainer.appendChild(instructionsDiv);
                     return; 
                 }
                 
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
-                if (q.type === 'info') {
-                    questionDiv.classList.add('info-question');
-                }
+                if (q.type === 'info') questionDiv.classList.add('info-question');
                 questionDiv.dataset.questionIndex = qIndex;
 
                 if (q.type === 'info') {
@@ -867,14 +859,12 @@
 
                 const questionText = document.createElement('p');
                 questionText.className = 'question-text';
-
                 if (q.type !== 'info') {
                     const pointsBadge = document.createElement('span');
                     pointsBadge.className = 'points-badge';
                     pointsBadge.textContent = q.points || 1;
                     questionText.appendChild(pointsBadge);
                 }
-                
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
                 questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
@@ -882,12 +872,10 @@
                 if (q.image) {
                     const imageContainer = document.createElement('div');
                     imageContainer.className = 'image-question-container';
-                    
                     const questionImage = document.createElement('img');
                     questionImage.src = q.image;
                     questionImage.alt = 'صورة السؤال';
                     questionImage.className = 'question-image';
-                    
                     imageContainer.appendChild(questionImage);
                     questionDiv.appendChild(imageContainer);
                 }
@@ -902,50 +890,39 @@
                 if (q.type === 'essay' || q.type === 'essay-image') {
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
-
                     const showAnswerBtn = document.createElement('button');
                     showAnswerBtn.className = 'essay-btn show-answer-btn';
                     showAnswerBtn.textContent = 'أعرف الإجابة';
                     showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
-
                     const dontKnowBtn = document.createElement('button');
                     dontKnowBtn.className = 'essay-btn dont-know-btn';
                     dontKnowBtn.textContent = 'لا أعرف';
                     dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
-
                     buttonsDiv.appendChild(showAnswerBtn);
                     buttonsDiv.appendChild(dontKnowBtn);
                     questionDiv.appendChild(buttonsDiv);
-
                     const answerDiv = document.createElement('div');
                     answerDiv.className = 'essay-answer';
-                    // تم الاعتماد على CSS white-space لعرض الأسطر
                     answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
                     questionDiv.appendChild(answerDiv);
                 } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
-
                     q.choices.forEach((choice, cIndex) => {
                         const label = document.createElement('label');
                         label.className = 'choice-label';
-
                         const radio = document.createElement('input');
                         radio.type = 'radio';
                         radio.name = `question-${qIndex}`;
                         radio.value = cIndex;
                         radio.className = 'choice-radio';
-                        
                         radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
-                        
                         label.appendChild(radio);
                         label.appendChild(document.createTextNode(choice));
                         choicesDiv.appendChild(label);
                     });
-
                     questionDiv.appendChild(choicesDiv);
                 }
-
                 questionsContainer.appendChild(questionDiv);
                 questionNumber++;
             });
@@ -954,13 +931,10 @@
         function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
             if (reviewMode) return;
             userAnswers[qIndex] = choice;
-            
             const questionDiv = selectedBtn.closest('.question-item');
             const allBtns = questionDiv.querySelectorAll('.essay-btn');
             allBtns.forEach(btn => btn.classList.remove('selected-essay'));
-
             selectedBtn.classList.add('selected-essay');
-            
             if (choice === 1) {
                 const answerDiv = questionDiv.querySelector('.essay-answer');
                 answerDiv.style.display = 'block';
@@ -981,9 +955,7 @@
             let allAnswered = true;
             quiz.questions.forEach((q, qIndex) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-                if (userAnswers[qIndex] === undefined) {
-                    allAnswered = false;
-                }
+                if (userAnswers[qIndex] === undefined) allAnswered = false;
             });
 
             if (!allAnswered) {
@@ -997,7 +969,6 @@
 
             quiz.questions.forEach((q, qIndex) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-
                 const questionPoints = q.points || 1;
                 totalPoints += questionPoints;
 
@@ -1032,41 +1003,30 @@
             submitButton.style.display = 'none';
             reviewButton.style.display = 'block';
             showResult(earnedPoints, totalPoints);
-
             window.scrollTo(0, 0);
         }
 
         function showResult(earnedPoints, totalPoints) {
             resultElement.style.display = 'block';
-
             let resultHTML = '';
             const percentage = Math.round((earnedPoints * 100) / totalPoints);
-
-            resultHTML = `
-                <p class='score'>درجتك:
-                    ${percentage}%
-                    (${earnedPoints} من ${totalPoints} درجة)
-                </p>
-            `;
+            resultHTML = `<p class='score'>درجتك: ${percentage}% (${earnedPoints} من ${totalPoints} درجة)</p>`;
 
             if (wrongAnswers.length > 0) {
                 resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
                 wrongAnswers.forEach(ans => {
                     const formattedQuestion = ans.question.replace(/\n/g, '<br>');
-                    resultHTML += `
-                        <li>
+                    resultHTML += `<li>
                             <p>السؤال: ${formattedQuestion}</p>
                             <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
                             <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
                             <p>الدرجات المفقودة: ${ans.points}</p>
-                        </li>
-                    `;
+                        </li>`;
                 });
                 resultHTML += '</ul>';
             } else if (totalPoints > 0) {
                 resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
             }
-
             resultElement.innerHTML = resultHTML;
         }
 
@@ -1080,9 +1040,7 @@
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-
                 const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-
                 if (q.type === 'essay' || q.type === 'essay-image') {
                     const answerDiv = questionDiv.querySelector('.essay-answer');
                     answerDiv.style.display = 'block';
@@ -1092,7 +1050,6 @@
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
                     const choiceLabels = questionDiv.querySelectorAll('.choice-label');
-
                     choiceLabels.forEach((label, btnIndex) => {
                         const radio = label.querySelector('input[type="radio"]');
                         if (btnIndex === correctAnswerIndex) {
