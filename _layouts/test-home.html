@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
+   
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
   <meta property="og:description" content="{{ page.description | default: 'منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.' }}">
   <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
@@ -62,7 +62,7 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
-    
+   
     body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
@@ -78,7 +78,7 @@
     /* === تصميم ودجيت الأسبوع الجديد === */
     .week-widget {
         display: none; 
-        background: #e8eaf6; /* اللون المطلوب */
+        background: #e8eaf6;
         border: 1px solid var(--border-color);
         border-right: 4px solid var(--primary-color);
         border-radius: var(--radius-md);
@@ -91,11 +91,11 @@
         cursor: pointer;
         transition: transform 0.2s ease;
     }
-    
-    [data-theme="dark"] .week-widget { background: #1a1c2c; } /* خلفية مناسبة للوضع الداكن */
+   
+    [data-theme="dark"] .week-widget { background: #1a1c2c; }
 
     .week-widget:hover { transform: translateY(-2px); background-color: #dfe1f0; }
-    
+   
     .week-icon {
         width: 42px; height: 42px;
         background: var(--primary-color);
@@ -104,9 +104,17 @@
         display: flex; align-items: center; justify-content: center;
         font-size: 1.2rem; flex-shrink: 0;
     }
+   
+    .week-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     
-    .week-content { flex: 1; }
-    
+    /* تنسيق الصف العلوي الجديد */
+    .week-header-row {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* مسافة بين النص والشعار */
+        margin-bottom: 4px;
+    }
+
     .week-title { 
         font-size: 1.05rem; 
         font-weight: 700; 
@@ -117,13 +125,10 @@
         gap: 5px;
     }
        .current-label-tag { 
-        font-size: 1.00rem; 
+        font-size: 0.95rem; /* حجم مناسب بجانب النص */
         font-weight: 600; 
         color: var(--text-main); 
-        display: flex; 
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 5px;
+        display: inline-block;
     }
 
     /* وسم الأسبوع الحالي */
@@ -137,7 +142,7 @@
         font-weight: 500;
         display: inline-block;
     }
-    
+   
     .week-arrow { color: var(--text-muted); font-size: 0.9rem; }
 
     /* === بقية التنسيقات (الأدوات، الفلاتر، المواد) === */
@@ -151,11 +156,11 @@
 
     .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 25px; padding: 10px 0; background: var(--bg-sticky); border-bottom: 1px solid var(--border-color); margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; backdrop-filter: blur(5px); }
     .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-    
+   
     .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
     .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; }
     .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
-    
+   
     .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; }
     .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
 
@@ -181,17 +186,19 @@
   {% include header.html %}
 
   <div class="container">
-    
+   
     {{ content }}
 
     <div id="main-content-area">
-        
+       
         <div id="current-week-widget" class="week-widget" onclick="window.location.href='/calendar'">
             <div class="week-icon">
                 <i class="fas fa-calendar-day"></i>
             </div>
             <div class="week-content">
-                <div class="week-label">الأسبوع الجامعي الحالي</div>
+                <div class="week-header-row">
+                    <div class="week-label">الأسبوع الجامعي الحالي</div>
+                    <div id="week-badge-insert"></div> </div>
                 <div id="week-title-text" class="week-title">جاري التحميل...</div>
             </div>
             <div class="week-arrow">
@@ -235,7 +242,7 @@
     localStorage.setItem('rawafed-theme', newTheme);
   }
 
-  /* === 2. منطق الأسبوع الحالي (معدل ليعيد الوعد) === */
+  /* === 2. منطق الأسبوع الحالي (معدل) === */
   async function checkCurrentWeek() {
       try {
           const response = await fetch("{{ '/assets/calendar.json' | relative_url }}?v=" + new Date().getTime());
@@ -257,10 +264,17 @@
           if (currentEvent) {
               const badge = currentEvent.weekBadge || "أسبوع";
               const title = currentEvent.title || "";
+              
+              // تم التعديل: وضع الشعار في المكان الجديد بجانب العنوان الثابت
+              document.getElementById('week-badge-insert').innerHTML = `
+                <span class="current-label-tag" style="opacity: 0.9;">${badge}</span>
+              `;
+              
+              // وضع عنوان الأسبوع فقط في السطر السفلي
               document.getElementById('week-title-text').innerHTML = `
-                <span class="current-label-tag">${badge}</span>
                 <span>${title}</span>
               `;
+              
               widget.style.display = 'flex'; 
           } else {
               widget.style.display = 'none';
