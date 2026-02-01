@@ -50,13 +50,13 @@
             --text-muted: #666666;
             --border-color: #e7e7e7;
             --hover-bg: #e0e7ff;
-           
+            
             /* ألوان الحالة */
             --correct-bg: #4CAF50;
             --correct-text: #ffffff;
             --wrong-bg: #F44336;
             --wrong-text: #ffffff;
-           
+            
             /* أزرار المقال */
             --btn-essay-bg: #ffffff;
             --btn-essay-border: #ccd1e0;
@@ -110,11 +110,9 @@
             transition: background-color 0.3s;
         }
 
-        /* إخفاء الشعار في العرض العادي */
-        #print-only-logo {
+        /* إخفاء الشعار وجدول التقييم في العرض العادي */
+        #print-only-logo, #print-eval-table {
             display: none;
-            text-align: center;
-            margin-bottom: 15px;
         }
 
         .quiz-header {
@@ -498,6 +496,36 @@
             /* إظهار الشعار فقط في الطباعة */
             #print-only-logo {
                 display: block !important;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* إظهار جدول التقييم في الطباعة فقط */
+            #print-eval-table {
+                display: table !important;
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 40px;
+                text-align: center;
+            }
+            #print-eval-table th, #print-eval-table td {
+                border: 1px solid #000;
+                padding: 15px;
+            }
+            #print-eval-table th {
+                background-color: #f0f0f0 !important;
+                color: #000;
+                font-weight: bold;
+            }
+
+            /* تنسيق الصفحة الأولى كغلاف */
+            .quiz-front-page {
+                display: block;
+                width: 100%;
+                /* هذه الخاصية هي السر: تجبر الطابعة على عمل فاصل صفحات بعد هذا العنصر */
+                break-after: page; 
+                page-break-after: always;
+                min-height: 90vh; /* اختياري: لضمان شكل الغلاف */
             }
 
             body {
@@ -556,37 +584,77 @@
     {% include header.html %}
 
     <div class="container">
-       
+        
         {{ content }}
 
-        <div id="print-only-logo">
-            <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="روافد" style="max-width: 150px; height: auto;">
-        </div>
-        <div class="quiz-header">
-            <button id="print-btn" onclick="printQuizPDF()">
-                <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
-            </button>
-            <h1 id="quiz-title">الاختبار</h1>
-            <img src="{{ '/images/favicon.png' | relative_url }}" alt="Quiz Icon">
-        </div>
+        <div class="quiz-front-page">
+            <div id="print-only-logo">
+                <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="روافد" style="max-width: 150px; height: auto;">
+            </div>
+            
+            <div class="quiz-header">
+                <button id="print-btn" onclick="printQuizPDF()">
+                    <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
+                </button>
+                <h1 id="quiz-title">الاختبار</h1>
+                <img src="{{ '/images/favicon.png' | relative_url }}" alt="Quiz Icon">
+            </div>
 
-        <table class="quiz-info-table" id="quiz-info-table">
-            <thead>
-                <tr>
-                    <th>اسم المقرر</th>
-                    <th>رمز المقرر</th>
-                    <th>الدرجة الكلية</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="subject-name"></td>
-                    <td id="subject-code"></td>
-                    <td id="subject-total-score"></td>
-                </tr>
-            </tbody>
-        </table>
+            <table class="quiz-info-table" id="quiz-info-table">
+                <thead>
+                    <tr>
+                        <th>اسم المقرر</th>
+                        <th>رمز المقرر</th>
+                        <th>الدرجة الكلية</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="subject-name"></td>
+                        <td id="subject-code"></td>
+                        <td id="subject-total-score"></td>
+                    </tr>
+                </tbody>
+            </table>
 
+            <table id="print-eval-table">
+                <thead>
+                    <tr>
+                        <th colspan="4" style="font-size: 18px; padding: 10px;">جدول التقييم الذاتي للطالب</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 40%;">معيار التقييم</th>
+                        <th style="width: 20%;">ممتاز</th>
+                        <th style="width: 20%;">جيد جداً</th>
+                        <th style="width: 20%;">بحاجة للمراجعة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: right;">فهم الأسئلة واستيعاب المطلوب</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">دقة الإجابات وصحتها العلمية</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">إدارة الوقت أثناء الحل</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;"><strong>التقدير العام للمستوى</strong></td>
+                        <td colspan="3"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div id="questions-container"></div>
         <button id="submit-btn">تأكيد الإجابات</button>
         <button id="review-btn">مراجعة الإجابات</button>
@@ -712,7 +780,7 @@
                         quizTitleElement.textContent = quizData[currentQuiz].title;
                         document.title = quizData[currentQuiz].title + ' | روافد';
                     }
-                   
+                    
                     subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
                     subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
 
@@ -752,29 +820,29 @@
                     questionsContainer.appendChild(dividerDiv);
                     return;
                 }
-               
+                
                 if (q.type === 'instructions') {
                     const instructionsDiv = document.createElement('div');
                     instructionsDiv.className = 'instructions-question';
-                   
+                    
                     if (q.mainTitle) {
                         const mainTitle = document.createElement('div');
                         mainTitle.className = 'instructions-header';
                         mainTitle.textContent = q.mainTitle;
                         instructionsDiv.appendChild(mainTitle);
                     }
-                   
+                    
                     if (q.description) {
                         const description = document.createElement('p');
                         description.className = 'instructions-description';
                         description.textContent = q.description;
                         instructionsDiv.appendChild(description);
                     }
-                   
+                    
                     questionsContainer.appendChild(instructionsDiv);
                     return; 
                 }
-               
+                
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 if (q.type === 'info') {
@@ -806,7 +874,7 @@
                     pointsBadge.textContent = q.points || 1;
                     questionText.appendChild(pointsBadge);
                 }
-               
+                
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
                 questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
                 questionDiv.appendChild(questionText);
@@ -814,12 +882,12 @@
                 if (q.image) {
                     const imageContainer = document.createElement('div');
                     imageContainer.className = 'image-question-container';
-                   
+                    
                     const questionImage = document.createElement('img');
                     questionImage.src = q.image;
                     questionImage.alt = 'صورة السؤال';
                     questionImage.className = 'question-image';
-                   
+                    
                     imageContainer.appendChild(questionImage);
                     questionDiv.appendChild(imageContainer);
                 }
@@ -867,9 +935,9 @@
                         radio.name = `question-${qIndex}`;
                         radio.value = cIndex;
                         radio.className = 'choice-radio';
-                       
+                        
                         radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
-                       
+                        
                         label.appendChild(radio);
                         label.appendChild(document.createTextNode(choice));
                         choicesDiv.appendChild(label);
@@ -886,13 +954,13 @@
         function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
             if (reviewMode) return;
             userAnswers[qIndex] = choice;
-           
+            
             const questionDiv = selectedBtn.closest('.question-item');
             const allBtns = questionDiv.querySelectorAll('.essay-btn');
             allBtns.forEach(btn => btn.classList.remove('selected-essay'));
 
             selectedBtn.classList.add('selected-essay');
-           
+            
             if (choice === 1) {
                 const answerDiv = questionDiv.querySelector('.essay-answer');
                 answerDiv.style.display = 'block';
