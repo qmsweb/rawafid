@@ -97,7 +97,7 @@
             line-height: 1.6;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s, color 0.3s;
+            direction: rtl; /* تأكيد الاتجاه */
         }
 
         .container {
@@ -107,7 +107,6 @@
             background: var(--bg-card);
             flex: 1;
             width: 100%;
-            transition: background-color 0.3s;
         }
 
         /* إخفاء الشعار وجدول التقييم في العرض العادي */
@@ -129,7 +128,6 @@
             width: 35px;
             height: 35px;
             margin-left: 10px;
-            margin-right: 0;
         }
 
         h1 {
@@ -137,7 +135,6 @@
             font-size: 25px;
             color: var(--primary-color);
             font-weight: 600;
-            margin: 0;
         }
 
         #print-btn {
@@ -149,10 +146,6 @@
             cursor: pointer;
             font-size: 14px;
             font-family: inherit;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
             margin-right: auto;
         }
         #print-btn:hover {
@@ -185,10 +178,6 @@
             line-height: 1.7;
         }
 
-        .info-question .points-badge {
-            display: none;
-        }
-
         .question-item {
             margin-bottom: 30px;
             padding: 20px;
@@ -196,19 +185,24 @@
             border-radius: 12px;
             background: var(--bg-card);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: background-color 0.3s, border-color 0.3s;
         }
 
+        /* تعديل جوهري لتوزيع السؤال والدرجة */
         .question-text {
+            display: flex;
+            justify-content: space-between; /* السؤال يمين والدرجة يسار */
+            align-items: flex-start;
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
-            text-align: right;
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            gap: 10px;
             color: var(--text-main);
+            width: 100%;
+        }
+
+        .question-content-span {
+            flex: 1; /* يأخذ المساحة المتاحة */
+            text-align: right;
+            padding-left: 15px; /* مسافة بين السؤال والدرجة */
         }
 
         .question-subtext {
@@ -221,15 +215,14 @@
         }
 
         .points-badge {
+            flex-shrink: 0; /* منع الانكماش */
             display: inline-block;
             background-color: var(--primary-color);
             color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 14px;
-            margin-left: 0;
-            margin-right: 5px;
-            order: 1;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: nowrap; /* منع نزول الكلمة لسطر جديد */
         }
 
         .choices-container {
@@ -247,7 +240,6 @@
             background-color: var(--bg-secondary);
             color: var(--text-main);
             cursor: pointer;
-            transition: 0.3s;
             text-align: right;
             justify-content: flex-start;
         }
@@ -288,7 +280,6 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -297,7 +288,6 @@
             border: 2px solid var(--primary-color);
             background-color: var(--hover-bg);
             color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(26, 42, 198, 0.3);
         }
 
         .essay-btn.selected-essay::after {
@@ -343,22 +333,12 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
             font-family: "IBM Plex Sans Arabic", sans-serif;
-        }
-
-        #submit-btn {
             background-color: var(--primary-color);
         }
 
-        #submit-btn:hover, #review-btn:hover {
-            opacity: 0.9;
-        }
-
-        #review-btn {
-            background-color: #FF9800;
-            display: none;
-        }
+        #submit-btn:hover, #review-btn:hover { opacity: 0.9; }
+        #review-btn { background-color: #FF9800; display: none; }
 
         #result {
             margin-top: 30px;
@@ -378,17 +358,8 @@
             color: var(--primary-color);
         }
 
-        #result h3 {
-            margin-top: 20px;
-            font-size: 18px;
-            color: var(--text-main);
-        }
-
-        #result ul {
-            list-style: none;
-            padding: 0;
-        }
-
+        #result h3 { margin-top: 20px; font-size: 18px; color: var(--text-main); }
+        #result ul { list-style: none; padding: 0; }
         #result li {
             margin-bottom: 15px;
             padding: 15px;
@@ -397,13 +368,8 @@
             background: var(--bg-card);
         }
 
-        .wrong {
-            color: var(--wrong-bg);
-        }
-
-        .correct {
-            color: var(--correct-bg);
-        }
+        .wrong { color: var(--wrong-bg); }
+        .correct { color: var(--correct-bg); }
 
         .quiz-info-table {
             width: 100%;
@@ -423,15 +389,8 @@
             color: var(--text-main);
         }
 
-        .quiz-info-table th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-
-        .quiz-info-table tbody td {
-            background-color: var(--bg-secondary);
-        }
+        .quiz-info-table th { background-color: var(--primary-color); color: white; font-weight: 600; }
+        .quiz-info-table tbody td { background-color: var(--bg-secondary); }
 
         .question-image {
             width: 100%;
@@ -442,10 +401,7 @@
             display: block;
         }
 
-        .image-question-container {
-            text-align: center;
-            margin: 15px 0;
-        }
+        .image-question-container { text-align: center; margin: 15px 0; }
 
         .instructions-question {
             margin-bottom: 30px;
@@ -474,7 +430,6 @@
         /* === إعدادات الطباعة === */
         @media print {
             :root, [data-theme="dark"] {
-                /* استخدام اللون الأسود والأبيض لضمان الوضوح وتوفير الحبر */
                 --primary-color: #000000 !important;
                 --bg-body: #ffffff !important;
                 --bg-card: #ffffff !important;
@@ -485,17 +440,16 @@
                 --hover-bg: #ffffff !important;
             }
 
-            /* إخفاء العناصر غير المرغوبة */
             header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
                 display: none !important;
             }
 
-            /* إعادة ضبط جسم الصفحة */
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                direction: rtl !important;
             }
 
             .container {
@@ -507,7 +461,7 @@
                 border: none !important;
             }
 
-            /* --- توحيد تصميم الجداول (المعلومات والتقييم) --- */
+            /* توحيد تصميم الجداول */
             table, .quiz-info-table, #print-eval-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
@@ -526,25 +480,17 @@
             }
 
             th {
-                background-color: #f0f0f0 !important; /* خلفية رمادية خفيفة للعناوين */
+                background-color: #f0f0f0 !important;
                 font-weight: bold !important;
             }
 
-            /* إظهار العناصر المخفية في الشاشة */
-            #print-only-logo {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 20px;
-            }
+            #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
+            #print-eval-table { display: table !important; }
 
-            #print-eval-table {
-                display: table !important;
-            }
-
-            /* --- توحيد تصميم بطاقات الأسئلة لتشبه الجداول --- */
+            /* توحيد تصميم البطاقات */
             .question-item, .instructions-question {
-                border: 1px solid #000 !important; /* نفس حدود الجداول */
-                border-radius: 0 !important; /* زوايا حادة مثل الجداول */
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
                 box-shadow: none !important;
                 background-color: #fff !important;
                 margin-bottom: 15px !important;
@@ -553,18 +499,21 @@
                 padding: 15px !important;
             }
 
-            /* إلغاء تنسيقات الخيارات لتظهر كنص عادي أو قائمة */
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
                 padding: 5px 0 !important;
                 color: #000 !important;
             }
-            .choice-radio {
+            .choice-radio { border: 1px solid #000 !important; }
+
+            .points-badge {
+                background-color: transparent !important;
+                color: #000 !important;
                 border: 1px solid #000 !important;
+                padding: 2px 8px !important;
             }
 
-            /* تنسيق واجهة الاختبار (الغلاف) */
             .quiz-front-page {
                 display: block;
                 width: 100%;
@@ -575,7 +524,6 @@
 
             .essay-answer { display: none !important; }
 
-            /* نموذج الإجابة في النهاية */
             #printable-answer-key {
                 display: block !important;
                 break-before: page;
@@ -586,9 +534,7 @@
             }
         }
 
-        #printable-answer-key {
-            display: none;
-        }
+        #printable-answer-key { display: none; }
     </style>
 </head>
 <body>
@@ -667,6 +613,7 @@
                 </tbody>
             </table>
         </div>
+
         <div id="questions-container"></div>
         <button id="submit-btn">تأكيد الإجابات</button>
         <button id="review-btn">مراجعة الإجابات</button>
@@ -676,7 +623,6 @@
     {% include footer.html %}
 
     <script>
-        // دالة تغيير الوضع
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -707,7 +653,6 @@
             }
         });
 
-        // === دالة طباعة الاختبار PDF ===
         function printQuizPDF() {
             if (!quizData[currentQuiz] || !quizData[currentQuiz].questions) {
                 alert('لا توجد أسئلة للطباعة');
@@ -857,17 +802,35 @@
                     }
                 }
 
-                const questionText = document.createElement('p');
-                questionText.className = 'question-text';
+                // الحاوية الأساسية لنص السؤال والدرجة
+                const questionTextDiv = document.createElement('div');
+                questionTextDiv.className = 'question-text';
+
+                // 1. عنصر نص السؤال (اليمين)
+                const textSpan = document.createElement('span');
+                textSpan.className = 'question-content-span';
+                const formattedQuestion = q.question.replace(/\n/g, '<br>');
+                textSpan.innerHTML = `${questionNumber}. ${formattedQuestion}`;
+                questionTextDiv.appendChild(textSpan);
+
+                // 2. عنصر الدرجة (اليسار)
                 if (q.type !== 'info') {
                     const pointsBadge = document.createElement('span');
                     pointsBadge.className = 'points-badge';
-                    pointsBadge.textContent = q.points || 1;
-                    questionText.appendChild(pointsBadge);
+                    const p = q.points || 1;
+                    
+                    // منطق كتابة "درجة" أو "درجات"
+                    let pText = 'درجات';
+                    if (p === 1) pText = 'درجة';
+                    else if (p === 2) pText = 'درجتان';
+                    else if (p >= 3 && p <= 10) pText = 'درجات';
+                    else pText = 'درجة';
+                    
+                    pointsBadge.textContent = `${p} ${pText}`;
+                    questionTextDiv.appendChild(pointsBadge);
                 }
-                const formattedQuestion = q.question.replace(/\n/g, '<br>');
-                questionText.innerHTML += `${questionNumber}. ${formattedQuestion}`;
-                questionDiv.appendChild(questionText);
+
+                questionDiv.appendChild(questionTextDiv);
 
                 if (q.image) {
                     const imageContainer = document.createElement('div');
