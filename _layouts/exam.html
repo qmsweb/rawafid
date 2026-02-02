@@ -97,7 +97,7 @@
             line-height: 1.6;
             display: flex;
             flex-direction: column;
-            direction: rtl; /* تأكيد الاتجاه */
+            direction: rtl;
         }
 
         .container {
@@ -109,8 +109,8 @@
             width: 100%;
         }
 
-        /* إخفاء الشعار وجدول التقييم في العرض العادي */
-        #print-only-logo, #print-eval-table {
+        /* إخفاء الشعار وجدول التقييم والأسطر في العرض العادي */
+        #print-only-logo, #print-eval-table, .print-essay-lines {
             display: none;
         }
 
@@ -187,10 +187,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        /* تعديل جوهري لتوزيع السؤال والدرجة */
         .question-text {
             display: flex;
-            justify-content: space-between; /* السؤال يمين والدرجة يسار */
+            justify-content: space-between;
             align-items: flex-start;
             font-size: 18px;
             font-weight: bold;
@@ -200,9 +199,9 @@
         }
 
         .question-content-span {
-            flex: 1; /* يأخذ المساحة المتاحة */
+            flex: 1;
             text-align: right;
-            padding-left: 15px; /* مسافة بين السؤال والدرجة */
+            padding-left: 15px;
         }
 
         .question-subtext {
@@ -215,14 +214,14 @@
         }
 
         .points-badge {
-            flex-shrink: 0; /* منع الانكماش */
+            flex-shrink: 0;
             display: inline-block;
             background-color: var(--primary-color);
             color: white;
             padding: 4px 10px;
             border-radius: 8px;
             font-size: 13px;
-            white-space: nowrap; /* منع نزول الكلمة لسطر جديد */
+            white-space: nowrap;
         }
 
         .choices-container {
@@ -461,7 +460,6 @@
                 border: none !important;
             }
 
-            /* توحيد تصميم الجداول */
             table, .quiz-info-table, #print-eval-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
@@ -487,7 +485,6 @@
             #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
             #print-eval-table { display: table !important; }
 
-            /* توحيد تصميم البطاقات */
             .question-item, .instructions-question {
                 border: 1px solid #000 !important;
                 border-radius: 0 !important;
@@ -523,6 +520,33 @@
             }
 
             .essay-answer { display: none !important; }
+
+            /* تنسيق الأسطر المنقطة للطباعة */
+            .print-essay-lines {
+                display: block !important;
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .writing-line {
+                border-bottom: 2px dotted #999;
+                height: 40px; /* ارتفاع مريح للكتابة */
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            /* السؤال ذو الـ 10 درجات يأخذ صفحة كاملة */
+            .full-page-question {
+                break-before: page;
+                page-break-before: always;
+                min-height: 95vh;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .full-page-question .print-essay-lines {
+                flex-grow: 1; /* تعبئة باقي الصفحة */
+            }
 
             #printable-answer-key {
                 display: block !important;
@@ -802,24 +826,20 @@
                     }
                 }
 
-                // الحاوية الأساسية لنص السؤال والدرجة
                 const questionTextDiv = document.createElement('div');
                 questionTextDiv.className = 'question-text';
 
-                // 1. عنصر نص السؤال (اليمين)
                 const textSpan = document.createElement('span');
                 textSpan.className = 'question-content-span';
                 const formattedQuestion = q.question.replace(/\n/g, '<br>');
                 textSpan.innerHTML = `${questionNumber}. ${formattedQuestion}`;
                 questionTextDiv.appendChild(textSpan);
 
-                // 2. عنصر الدرجة (اليسار)
                 if (q.type !== 'info') {
                     const pointsBadge = document.createElement('span');
                     pointsBadge.className = 'points-badge';
                     const p = q.points || 1;
                     
-                    // منطق كتابة "درجة" أو "درجات"
                     let pText = 'درجات';
                     if (p === 1) pText = 'درجة';
                     else if (p === 2) pText = 'درجتان';
@@ -850,7 +870,10 @@
                     questionDiv.appendChild(subtextParagraph);
                 }
 
+                // === منطق الأسئلة المقالية وإضافة الأسطر ===
                 if (q.type === 'essay' || q.type === 'essay-image') {
+                    
+                    // 1. إضافة الأزرار ومكان الإجابة (للشاشة)
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
                     const showAnswerBtn = document.createElement('button');
@@ -864,10 +887,35 @@
                     buttonsDiv.appendChild(showAnswerBtn);
                     buttonsDiv.appendChild(dontKnowBtn);
                     questionDiv.appendChild(buttonsDiv);
+                    
                     const answerDiv = document.createElement('div');
                     answerDiv.className = 'essay-answer';
                     answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
                     questionDiv.appendChild(answerDiv);
+
+                    // 2. إضافة الأسطر المنقطة (للطباعة)
+                    const linesContainer = document.createElement('div');
+                    linesContainer.className = 'print-essay-lines';
+                    
+                    let points = q.points || 1;
+                    let lineCount = 3; // الحد الأدنى
+
+                    if (points >= 10) {
+                        // حالة الـ 10 درجات: صفحة كاملة
+                        lineCount = 23; 
+                        questionDiv.classList.add('full-page-question');
+                    } else if (points > 2) {
+                        // تزايد تدريجي للدرجات المتوسطة
+                        lineCount = Math.floor(points * 2.5);
+                    }
+
+                    for(let i=0; i<lineCount; i++) {
+                        const line = document.createElement('div');
+                        line.className = 'writing-line';
+                        linesContainer.appendChild(line);
+                    }
+                    questionDiv.appendChild(linesContainer);
+
                 } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
