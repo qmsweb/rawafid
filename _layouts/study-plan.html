@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "الخطة الدراسية" }}</title>
+  <title>{{ page.title | default: "دليل المقررات الدراسية" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,14 +32,40 @@
       --radius-md: 12px;
         
       /* ألوان التصنيف */
-      --tag-spec-bg: #fff8e1; /* تخصصي */
+      --tag-spec-bg: #fff8e1; /* تخصصي (أصفر) */
       --tag-spec-text: #f57f17;
       
-      --tag-edu-bg: #e8f5e9; /* تربوي */
+      --tag-edu-bg: #e8f5e9; /* تربوي (أخضر) */
       --tag-edu-text: #2e7d32;
       
-      --tag-uni-bg: #e3f2fd; /* جامعي */
+      --tag-uni-bg: #e3f2fd; /* جامعي (أزرق) */
       --tag-uni-text: #1565c0;
+
+      --tag-found-bg: #f3e5f5; /* تأسيسي (بنفسجي) */
+      --tag-found-text: #7b1fa2;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      
+      --tag-spec-bg: #4a3b0a;
+      --tag-spec-text: #ffd54f;
+      
+      --tag-edu-bg: #1b5e20;
+      --tag-edu-text: #a5d6a7;
+      
+      --tag-uni-bg: #0d47a1;
+      --tag-uni-text: #90caf9;
+
+      --tag-found-bg: #4a148c;
+      --tag-found-text: #e1bee7;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
@@ -191,6 +217,7 @@
     .tag-spec { background: var(--tag-spec-bg); color: var(--tag-spec-text); }
     .tag-edu { background: var(--tag-edu-bg); color: var(--tag-edu-text); }
     .tag-uni { background: var(--tag-uni-bg); color: var(--tag-uni-text); }
+    .tag-found { background: var(--tag-found-bg); color: var(--tag-found-text); }
 
     .info-grid {
         display: grid;
@@ -235,13 +262,13 @@
     <div class="tool-header">
       <div>
           <h1>دليل المقررات الدراسية</h1>
-          <p>استعرض الخطة الدراسية والمتطلبات</p>
+          <p>استعرض الخطط الدراسية والمتطلبات</p>
       </div>
 
       <div class="plan-controls">
           <select id="planSelector" class="header-select">
-              <option value="edu">خطة التربية في اللغة العربية</option>
-              <option value="arts">خطة آداب اللغة العربية</option>
+              <option value="edu">كلية التربية - لغة عربية</option>
+              <option value="arts">كلية الآداب (قريباً)</option>
           </select>
           <button id="loadBtn" class="action-btn" onclick="fetchPlanData()">
              <i class="fas fa-spinner loader" id="btnLoader"></i>
@@ -391,7 +418,13 @@
 
       document.getElementById('cCode').innerText = course.id;
       document.getElementById('cName').innerText = course.name;
-      document.getElementById('cHours').innerText = course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
+      
+      // معالجة الساعات (خاصة إذا كانت 0 ساعات للمواد التأسيسية)
+      if (course.hours === 0) {
+        document.getElementById('cHours').innerText = '0 ساعات معتمدة';
+      } else {
+        document.getElementById('cHours').innerText = course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
+      }
       
       // المتطلب السابق
       const prereqEl = document.getElementById('cPrereq');
@@ -416,6 +449,7 @@
       let catText = '';
       let icon = '';
 
+      // المنطق المحدث للتصنيفات
       if (course.cat === 'spec') {
           tagClass = 'tag-spec';
           catText = 'متطلب تخصص';
@@ -424,6 +458,10 @@
           tagClass = 'tag-edu';
           catText = 'متطلب تربوي';
           icon = 'fa-chalkboard-teacher';
+      } else if (course.cat === 'found') { // <-- البرنامج التأسيسي
+          tagClass = 'tag-found';
+          catText = 'متطلب برنامج تأسيسي';
+          icon = 'fa-layer-group';
       } else {
           tagClass = 'tag-uni';
           catText = 'متطلب جامعي';
