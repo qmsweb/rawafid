@@ -21,12 +21,12 @@
   { "id": "EDUC410", "name": "مناهج البحث في التربية", "hours": 3, "cat": "edu", "prereq": "EDUC101" },
 
   { "id": "ARAB224", "name": "النحو 4", "hours": 3, "cat": "spec", "prereq": "ARAB213" },
-  { "id": "ARAB229", "name": "علم الصوتيات", "hours": 4, "cat": "spec", "prereq": "ARAB215" },
+  { "id": "ARAB229", "name": "الصوتيات", "hours": 4, "cat": "spec", "prereq": "ARAB215" },
   { "id": "EDUC317", "name": "الإدارة الصفية والمدرسية", "hours": 3, "cat": "edu", "prereq": "EDUC101" },
   { "id": "EDUC310", "name": "نظام التعليم في عمان", "hours": 3, "cat": "edu", "prereq": "EDUC101" },
   { "id": "EDUC121", "name": "علم النفس التربوي", "hours": 3, "cat": "edu", "prereq": "EDUC101" },
 
-  { "id": "ARAB311", "name": "علم اللسانيات", "hours": 4, "cat": "spec", "prereq": "ARAB229" },
+  { "id": "ARAB311", "name": "اللسانيات", "hours": 4, "cat": "spec", "prereq": "ARAB229" },
   { "id": "ARAB312", "name": "النثر الحديث", "hours": 3, "cat": "spec", "prereq": "ARAB125" },
   { "id": "ARAB313", "name": "الشعر الحديث", "hours": 3, "cat": "spec", "prereq": "ARAB212" },
   { "id": "ARAB315", "name": "علم الدلالة", "hours": 3, "cat": "spec", "prereq": "ARAB215" },
