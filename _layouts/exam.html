@@ -601,7 +601,7 @@
     </style>
 </head>
 <body>
-   
+    
     {% include header.html %}
 
     <div class="container">
@@ -981,7 +981,7 @@
                     }
                     questionDiv.appendChild(linesContainer);
 
-                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
                     q.choices.forEach((choice, cIndex) => {
@@ -1059,7 +1059,7 @@
                             points: questionPoints
                         });
                     }
-                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
                     if (userAnswerIndex === correctAnswerIndex) {
@@ -1122,7 +1122,7 @@
                     answerDiv.style.display = 'block';
                     const essayButtons = questionDiv.querySelector('.essay-buttons');
                     essayButtons.style.display = 'none';
-                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
                     const userAnswerIndex = userAnswers[qIndex];
                     const correctAnswerIndex = q.choices.indexOf(q.answer);
                     const choiceLabels = questionDiv.querySelectorAll('.choice-label');
