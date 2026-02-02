@@ -32,16 +32,16 @@
       --radius-md: 12px;
         
       /* ألوان التصنيف */
-      --tag-spec-bg: #fff8e1; /* تخصصي (أصفر) */
+      --tag-spec-bg: #fff8e1;
       --tag-spec-text: #f57f17;
       
-      --tag-edu-bg: #e8f5e9; /* تربوي (أخضر) */
+      --tag-edu-bg: #e8f5e9;
       --tag-edu-text: #2e7d32;
       
-      --tag-uni-bg: #e3f2fd; /* جامعي (أزرق) */
+      --tag-uni-bg: #e3f2fd;
       --tag-uni-text: #1565c0;
 
-      --tag-found-bg: #f3e5f5; /* تأسيسي (بنفسجي) */
+      --tag-found-bg: #f3e5f5;
       --tag-found-text: #7b1fa2;
     }
 
@@ -292,7 +292,7 @@
 
     <div class="search-box-container">
         <div style="margin-bottom:10px; font-weight:600; font-size:0.9rem;">اختر المقرر لعرض تفاصيله:</div>
-        <select id="courseSelect" class="select-field" onchange="displayCourse(this.value)">
+        <select id="courseSelect" class="select-field" onchange="displayCourse(this.value, true)">
             <option value="" disabled selected>-- يرجى تحميل الخطة أولاً --</option>
         </select>
     </div>
@@ -346,9 +346,23 @@
   // متغير عام لتخزين البيانات
   let currentCoursesDB = [];
 
-  // عند تحميل الصفحة، قم بتحميل خطة التربية افتراضياً
+  // 1. عند تحميل الصفحة
   window.addEventListener('DOMContentLoaded', () => {
       fetchPlanData();
+      
+      // التعامل مع زر الرجوع في المتصفح
+      window.addEventListener('popstate', (event) => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const courseId = urlParams.get('id');
+          if (courseId) {
+              displayCourse(courseId, false); // false = لا تضف للتاريخ لأننا نعود للخلف
+          } else {
+              // العودة للقائمة الرئيسية
+              document.getElementById('courseCard').style.display = 'none';
+              document.getElementById('emptyState').style.display = 'block';
+              document.getElementById('courseSelect').value = "";
+          }
+      });
   });
 
   async function fetchPlanData() {
@@ -373,6 +387,17 @@
           
           populateSelectMenu();
           
+          // === الجديد: التحقق من الرابط عند التحميل ===
+          const urlParams = new URLSearchParams(window.location.search);
+          const initialCourseId = urlParams.get('id');
+          if (initialCourseId) {
+              // تحقق من وجود المادة في الخطة المحملة
+              const exists = currentCoursesDB.find(c => c.id === initialCourseId);
+              if(exists) {
+                  displayCourse(initialCourseId, false); // لا تضف للتاريخ عند التحميل الأول
+              }
+          }
+
           btnText.innerText = "تم التحميل";
           setTimeout(() => { btnText.innerText = "تحميل الخطة"; }, 2000);
 
@@ -399,14 +424,11 @@
           option.text = `${course.id} - ${course.name}`;
           select.appendChild(option);
       });
-      
-      document.getElementById('courseCard').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'block';
   }
 
-  /* === دالة العرض === */
-  function displayCourse(courseId) {
-      // تحديث القائمة المنسدلة في حال تم الاستدعاء من رابط داخلي
+  /* === دالة العرض مع تحديث الرابط === */
+  function displayCourse(courseId, updateHistory = true) {
+      // تحديث القائمة المنسدلة
       const select = document.getElementById('courseSelect');
       select.value = courseId;
 
@@ -415,6 +437,12 @@
       const courseCard = document.getElementById('courseCard');
 
       if (!course) return;
+
+      // === الجديد: تحديث الرابط في المتصفح ===
+      if (updateHistory) {
+          const newUrl = `${window.location.pathname}?id=${courseId}`;
+          window.history.pushState({ path: newUrl }, '', newUrl);
+      }
 
       emptyState.style.display = 'none';
       courseCard.style.display = 'none'; 
@@ -430,12 +458,12 @@
         document.getElementById('cHours').innerText = course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
       }
       
-      // المتطلب السابق (اللينك)
+      // المتطلب السابق (رابط داخلي)
       const prereqEl = document.getElementById('cPrereq');
       if (course.prereq) {
           const prereqName = currentCoursesDB.find(c => c.id === course.prereq)?.name || course.prereq;
-          // جعل المتطلب السابق رابطاً أيضاً
-          prereqEl.innerHTML = `<a class="internal-link" onclick="displayCourse('${course.prereq}')">
+          // تم إضافة true للـ click لكي يتم تحديث التاريخ
+          prereqEl.innerHTML = `<a class="internal-link" onclick="displayCourse('${course.prereq}', true)">
                                   <i class="fas fa-arrow-left"></i> ${course.prereq} (${prereqName})
                                 </a>`;
       } else {
@@ -450,23 +478,24 @@
           coreqEl.innerText = "لا يوجد";
       }
 
-      // === منطق المتطلب اللاحق (يفتح ماذا؟) ===
+      // === المتطلب اللاحق ===
       const nextCourses = currentCoursesDB.filter(c => c.prereq === course.id);
       const postreqContainer = document.getElementById('cPostreqContainer');
       const postreqVal = document.getElementById('cPostreq');
 
       if (nextCourses.length > 0) {
-          postreqContainer.style.display = 'flex'; // إظهار الخانة
+          postreqContainer.style.display = 'flex'; 
+          // تم إضافة true للـ click لكي يتم تحديث التاريخ
           postreqVal.innerHTML = nextCourses.map(c => 
-              `<a class="internal-link" onclick="displayCourse('${c.id}')">
+              `<a class="internal-link" onclick="displayCourse('${c.id}', true)">
                  <i class="fas fa-arrow-left"></i> ${c.name} (${c.id})
                </a>`
           ).join('');
       } else {
-          postreqContainer.style.display = 'none'; // إخفاء الخانة إذا لم تفتح مواد
+          postreqContainer.style.display = 'none'; 
       }
 
-      // التصنيف (التاق فقط)
+      // التصنيف
       const tagsContainer = document.getElementById('cTags');
       let tagClass = '', catText = '', icon = '';
 
