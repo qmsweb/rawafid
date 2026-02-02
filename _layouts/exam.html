@@ -557,37 +557,42 @@
                 color: #000 !important;
             }
 
-            /* === تنسيق قسم QR Code المميز === */
+            /* === تنسيق قسم QR Code المعدل === */
             #printable-qr-section {
                 display: flex !important;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                break-before: page;
-                page-break-before: always;
-                min-height: 50vh; /* ليأخذ حيزاً جيداً في الصفحة الأخيرة */
+                /* إزالة فاصل الصفحات لضمان ظهوره في المساحة المتبقية */
+                break-before: auto;
+                page-break-inside: avoid;
                 text-align: center;
-                margin-top: 50px;
-                padding: 40px;
-                /* استخدام لون الموقع الأزرق كخلفية خفيفة */
+                
+                margin-top: 30px;
+                padding: 20px;
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                
+                /* تنسيق البطاقة الزرقاء */
                 background-color: #e0e7ff !important; 
-                border: 4px solid #1a2ac6 !important;
-                border-radius: 20px;
+                border: 2px solid #1a2ac6 !important;
+                border-radius: 15px;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
             #printable-qr-section h3 {
                 color: #1a2ac6 !important;
-                font-size: 24px;
-                margin-top: 20px;
+                font-size: 18px; /* تصغير الخط */
+                margin-top: 10px;
                 font-weight: bold;
             }
             
             #qrcode-container {
-                padding: 15px;
+                padding: 10px;
                 background: white;
-                border-radius: 10px;
+                border-radius: 8px;
                 border: 1px solid #1a2ac6;
             }
         }
@@ -717,7 +722,6 @@
                 return;
             }
 
-            // إزالة العناصر القديمة
             const oldKey = document.getElementById('printable-answer-key');
             if (oldKey) oldKey.remove();
             
@@ -760,33 +764,30 @@
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
 
-            // 2. إنشاء قسم QR Code
+            // 2. إنشاء قسم QR Code (بحجم أصغر)
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
-            // حاوية للـ QR
             const qrContainer = document.createElement('div');
             qrContainer.id = 'qrcode-container';
             qrDiv.appendChild(qrContainer);
 
-            // النص
             const qrText = document.createElement('h3');
-            qrText.textContent = "امسح للوصول إلى النسخة التفاعلية من الاختبار";
+            qrText.textContent = "امسح للوصول إلى النسخة التفاعلية";
             qrDiv.appendChild(qrText);
 
             document.querySelector('.container').appendChild(qrDiv);
 
-            // توليد الـ QR باستخدام المكتبة
+            // توليد الـ QR بحجم أصغر (128x128 بدلاً من 200x200)
             new QRCode(qrContainer, {
                 text: window.location.href,
-                width: 200,
-                height: 200,
-                colorDark : "#1a2ac6", // نفس لون الموقع
+                width: 128, 
+                height: 128,
+                colorDark : "#1a2ac6", 
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            // استدعاء الطباعة (بتأخير بسيط لضمان رسم الـ QR)
             setTimeout(() => {
                 window.print();
             }, 500);
