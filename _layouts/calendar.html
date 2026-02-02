@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-  
+   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
+   
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
   <meta property="og:description" content="التقويم الأكاديمي لجامعة الشرقية 2025-2026.">
@@ -42,12 +42,12 @@
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
-      
+       
       --cal-red: #ff3b30;
       --cal-separator: #e5e5ea;
       --badge-bg: #e1e4f5;
       --badge-text: #1a2ac6;
-      
+       
       --current-week-bg: #e8eaf6;
       --current-week-border: #1a2ac6;
     }
@@ -61,12 +61,12 @@
       --text-muted: #a0a0a0;
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      
+       
       --cal-red: #ff453a;
       --cal-separator: #38383a;
       --badge-bg: #3f4252;
       --badge-text: #9fa8da;
-      
+       
       --current-week-bg: #28359333;
       --current-week-border: #7986cb;
     }
@@ -270,7 +270,7 @@
             /* السماح بفاصل الصفحة بعده إذا لزم الأمر، لكن عادة نريده مع الجدول */
             page-break-after: avoid !important;
         }
-        
+         
         .tool-header h1 {
             margin: 10px 0 !important;
             padding: 0 !important;
@@ -285,15 +285,15 @@
         .ios-list-group { 
             box-shadow: none !important; 
             border: 1px solid #000 !important; 
-            
+             
             /* هذا هو الحل: السماح بقطع المجموعة لتكمل في صفحة أخرى */
             break-inside: auto !important; 
             page-break-inside: auto !important;
-            
+             
             margin-bottom: 20px;
             display: block !important;
         }
-        
+         
         /* منع قطع العنصر الواحد من المنتصف */
         .event-item, .list-header {
             break-inside: avoid !important;
@@ -314,7 +314,7 @@
         .tool-header { flex-direction: column; align-items: flex-start; }
         .header-actions { width: 100%; flex-wrap: wrap; }
         .action-btn { flex: 1; justify-content: center; }
-        
+         
         .event-item { padding: 15px 12px; }
         .event-date { margin-left: 12px; min-width: 45px; }
         .date-day { font-size: 1.4rem; }
@@ -326,7 +326,7 @@
   {% include header.html %}
 
   <div class="container">
-    
+     
     <div class="print-only-element print-logo-container">
         <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="شعار روافد">
     </div>
@@ -336,7 +336,7 @@
           <h1>التقويم الأكاديمي</h1>
           <p>العام الأكاديمي 2025-2026</p>
       </div>
-      
+       
       <div class="header-actions">
           <button class="action-btn download-btn" onclick="downloadICS()">
             <i class="fas fa-calendar-plus"></i> إضافة للتقويم
@@ -420,6 +420,7 @@
           globalEvents = events; 
 
           const today = new Date();
+          // تصفير الوقت للتأكد من المقارنة مع بداية اليوم
           today.setHours(0,0,0,0);
 
           const pastContainer = document.getElementById('past-container');
@@ -432,10 +433,19 @@
           let upcomingSemesters = new Map();
 
           events.forEach(event => {
-              const eventDate = new Date(event.date);
+              /* =========================================================
+                 التصحيح هنا:
+                 نقوم بتحليل التاريخ يدوياً لضمان إنشائه بالتوقيت المحلي
+                 مما يحل مشكلة تأخر ظهور الأسبوع الحالي بيوم واحد.
+              ========================================================= */
+              const dateParts = event.date.split('-'); // يفترض الصيغة YYYY-MM-DD
+              // new Date(Year, MonthIndex, Day) تنشئ التاريخ في 00:00 بالتوقيت المحلي
+              const eventDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
               const weekEnd = new Date(eventDate);
               weekEnd.setDate(weekEnd.getDate() + 7);
               
+              // الآن المقارنة دقيقة لأن كلاهما في 00:00 بالتوقيت المحلي
               const isCurrent = (today >= eventDate && today < weekEnd);
               const isPast = (weekEnd < today); 
 
