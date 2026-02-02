@@ -42,7 +42,7 @@
   { "id": "ARAB419", "name": "أدب الطفل", "hours": 3, "cat": "spec", "prereq": "ARAB313" },
   { "id": "ARAB418", "name": "موسيقى الشعر", "hours": 3, "cat": "spec", "prereq": "ARAB323" },
   { "id": "ARAB417", "name": "نقد حديث", "hours": 3, "cat": "spec", "prereq": "ARAB327" },
-  { "id": "EDUC432", "name": "طرق تدريس اللغة العربية", "hours": 3, "cat": "edu", "prereq": "EDUC431" },
+  { "id": "EDUC432", "name": "طرق تدريس اللغة العربية", "hours": 3, "cat": "edu", "prereq": "EDUC431", "coreq": "EDUC419" },
   { "id": "EDUC419", "name": "تطبيقات عملية", "hours": 2, "cat": "edu", "prereq": null, "coreq": "EDUC432" },
   { "id": "EDUC499", "name": "التربية العملية", "hours": 9, "cat": "edu", "prereq": "EDUC419" },
 
