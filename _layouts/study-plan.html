@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "دليل المقررات الدراسية" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <meta property="og:title" content="{{ page.title | default: 'دليل المقررات - روافد' }}">
+  <meta property="og:description" content="دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة.">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات والألوان === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+        
+      /* ألوان التصنيف */
+      --tag-spec-bg: #fff8e1; /* تخصصي - أصفر فاتح */
+      --tag-spec-text: #f57f17;
+      
+      --tag-edu-bg: #e8f5e9; /* تربوي - أخضر فاتح */
+      --tag-edu-text: #2e7d32;
+      
+      --tag-uni-bg: #e3f2fd; /* جامعي - أزرق فاتح */
+      --tag-uni-text: #1565c0;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      
+      --tag-spec-bg: #4a3b0a;
+      --tag-spec-text: #ffd54f;
+      
+      --tag-edu-bg: #1b5e20;
+      --tag-edu-text: #a5d6a7;
+      
+      --tag-uni-bg: #0d47a1;
+      --tag-uni-text: #90caf9;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header & Actions === */
+    .tool-header {
+      margin-bottom: 30px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    /* === Input Section === */
+    .search-box-container {
+        background: var(--bg-card);
+        padding: 20px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+    }
+
+    .select-field {
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+    }
+    .select-field:focus { border-color: var(--primary-color); }
+
+    /* === Result Card Styles === */
+    .course-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        display: none; /* Hidden by default */
+        animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+        background: var(--bg-code);
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .course-code { font-weight: 700; color: var(--primary-color); font-size: 1.1rem; }
+    .course-hours-badge { 
+        background: var(--bg-body); 
+        padding: 5px 12px; 
+        border-radius: 20px; 
+        font-size: 0.85rem; 
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .card-body { padding: 25px; }
+    
+    .course-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .tags-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .tag-spec { background: var(--tag-spec-bg); color: var(--tag-spec-text); }
+    .tag-edu { background: var(--tag-edu-bg); color: var(--tag-edu-text); }
+    .tag-uni { background: var(--tag-uni-bg); color: var(--tag-uni-text); }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .info-label { font-size: 0.85rem; color: var(--text-muted); }
+    .info-value { font-size: 1.1rem; font-weight: 500; }
+    
+    .prereq-link {
+        color: var(--primary-color);
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    /* === Empty State === */
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-muted);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+
+  <div class="container">
+      
+    <div class="tool-header">
+      <div>
+          <h1>دليل المقررات الدراسية</h1>
+          <p>تخصص اللغة العربية - خطة 128 ساعة</p>
+      </div>
+      <button class="action-btn" onclick="toggleTheme()" style="background:transparent; border:1px solid var(--border-color); padding:8px 15px; border-radius:20px; cursor:pointer; color:var(--text-muted);">
+         <i class="fas fa-adjust"></i> المظهر
+      </button>
+    </div>
+
+    <div class="search-box-container">
+        <div style="margin-bottom:10px; font-weight:600; font-size:0.9rem;">اختر المقرر لعرض تفاصيله:</div>
+        <select id="courseSelect" class="select-field" onchange="displayCourse()">
+            <option value="" disabled selected>-- ابحث عن المقرر أو الرمز --</option>
+            </select>
+    </div>
+
+    <div id="resultContainer">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-book-open empty-icon"></i>
+            <p>الرجاء اختيار مقرر من القائمة أعلاه لعرض المتطلبات والساعات وتفاصيل المادة.</p>
+        </div>
+
+        <div class="course-card" id="courseCard">
+            <div class="card-header">
+                <span class="course-code" id="cCode">CODE101</span>
+                <div class="course-hours-badge">
+                    <i class="far fa-clock"></i>
+                    <span id="cHours">3 ساعات</span>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <h2 class="course-title" id="cName">اسم المقرر</h2>
+                
+                <div class="tags-container" id="cTags">
+                    </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-link"></i> المتطلب السابق</span>
+                        <div class="info-value" id="cPrereq">-</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-exchange-alt"></i> المتطلب المتزامن (مرافق)</span>
+                        <div class="info-value" id="cCoreq">لا يوجد</div>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-layer-group"></i> التصنيف</span>
+                        <div class="info-value" id="cCategoryText">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+  {% include footer.html %}
+
+<script>
+  /* === قاعدة بيانات المقررات (مستخرجة من الخطة) === */
+  const coursesDB = [
+    // --- السنة الأولى ---
+    { id: 'ARAB101', name: 'اللغة العربية', hours: 3, cat: 'uni', prereq: null },
+    { id: 'ENGL101A', name: 'مهارات الاتصال 1 (إنجليزي)', hours: 3, cat: 'uni', prereq: null },
+    { id: 'ARAB111', name: 'الشعر الجاهلي', hours: 3, cat: 'spec', prereq: null },
+    { id: 'ARAB112', name: 'النحو 1', hours: 3, cat: 'spec', prereq: null },
+    { id: 'EDUC101', name: 'أصول التربية', hours: 3, cat: 'edu', prereq: null },
+    
+    { id: 'ENGL102A', name: 'مهارات الاتصال 2', hours: 3, cat: 'uni', prereq: 'ENGL101A' },
+    { id: 'ARAB122', name: 'الشعر الإسلامي والأموي', hours: 3, cat: 'spec', prereq: 'ARAB111' },
+    { id: 'ARAB124', name: 'النحو 2', hours: 3, cat: 'spec', prereq: 'ARAB112' },
+    { id: 'ARAB125', name: 'النثر القديم', hours: 3, cat: 'spec', prereq: null },
+
+    // --- السنة الثانية ---
+    { id: 'PHL101A', name: 'الفلسفة', hours: 3, cat: 'uni', prereq: null },
+    { id: 'ARAB212', name: 'الشعر العباسي', hours: 3, cat: 'spec', prereq: 'ARAB122' },
+    { id: 'ARAB213', name: 'النحو 3', hours: 3, cat: 'spec', prereq: 'ARAB124' },
+    { id: 'ARAB215', name: 'الصرف', hours: 3, cat: 'spec', prereq: 'ARAB112' },
+    { id: 'EDUC410', name: 'مناهج البحث في التربية', hours: 3, cat: 'edu', prereq: 'EDUC101' },
+
+    { id: 'ARAB224', name: 'النحو 4', hours: 3, cat: 'spec', prereq: 'ARAB213' },
+    { id: 'ARAB229', name: 'علم الصوتيات', hours: 4, cat: 'spec', prereq: 'ARAB215' },
+    { id: 'EDUC317', name: 'الإدارة الصفية والمدرسية', hours: 3, cat: 'edu', prereq: 'EDUC101' },
+    { id: 'EDUC310', name: 'نظام التعليم في عمان', hours: 3, cat: 'edu', prereq: 'EDUC101' },
+    { id: 'EDUC121', name: 'علم النفس التربوي', hours: 3, cat: 'edu', prereq: 'EDUC101' },
+
+    // --- السنة الثالثة ---
+    { id: 'ARAB311', name: 'علم اللسانيات', hours: 4, cat: 'spec', prereq: 'ARAB229' },
+    { id: 'ARAB312', name: 'النثر الحديث', hours: 3, cat: 'spec', prereq: 'ARAB125' },
+    { id: 'ARAB313', name: 'الشعر الحديث', hours: 3, cat: 'spec', prereq: 'ARAB212' },
+    { id: 'ARAB315', name: 'علم الدلالة', hours: 3, cat: 'spec', prereq: 'ARAB215' },
+    { id: 'EDUC431', name: 'مناهج اللغة العربية', hours: 3, cat: 'edu', prereq: 'EDUC121' },
+
+    { id: 'ARAB321', name: 'فقه اللغة', hours: 3, cat: 'spec', prereq: 'ARAB315' },
+    { id: 'ARAB323', name: 'الأدب العماني', hours: 3, cat: 'spec', prereq: 'ARAB313' },
+    { id: 'ARAB327', name: 'نقد قديم', hours: 3, cat: 'spec', prereq: 'ARAB212' },
+    { id: 'ARAB322', name: 'البلاغة العربية', hours: 3, cat: 'spec', prereq: 'ARAB313' },
+    { id: 'EDUC214', name: 'القياس والتقويم', hours: 3, cat: 'edu', prereq: 'EDUC431' },
+    { id: 'EDUC221', name: 'تكنولوجيا التعليم', hours: 3, cat: 'edu', prereq: 'EDUC121' },
+
+    // --- السنة الرابعة ---
+    { id: 'ARAB419', name: 'أدب الطفل', hours: 3, cat: 'spec', prereq: 'ARAB313' },
+    { id: 'ARAB418', name: 'موسيقى الشعر', hours: 3, cat: 'spec', prereq: 'ARAB323' },
+    { id: 'ARAB417', name: 'نقد حديث', hours: 3, cat: 'spec', prereq: 'ARAB327' },
+    { id: 'EDUC432', name: 'طرق تدريس اللغة العربية', hours: 3, cat: 'edu', prereq: 'EDUC431' },
+    { id: 'EDUC419', name: 'تطبيقات عملية', hours: 2, cat: 'edu', prereq: null, coreq: 'EDUC432' }, // حالة خاصة
+
+    { id: 'EDUC499', name: 'التربية العملية', hours: 9, cat: 'edu', prereq: 'EDUC419' },
+
+    // مقررات عامة أخرى واختيارية
+    { id: 'ISLM101', name: 'الحضارة الإسلامية', hours: 3, cat: 'uni', prereq: null },
+    { id: 'SOCI101A', name: 'علم الاجتماع', hours: 3, cat: 'uni', prereq: null },
+    { id: 'MNGT313A', name: 'ريادة الأعمال', hours: 3, cat: 'uni', prereq: null },
+    { id: 'IT1', name: 'تقنية معلومات 1', hours: 0, cat: 'uni', prereq: null },
+    { id: 'MATH1', name: 'رياضيات تطبيقية/أساسية', hours: 0, cat: 'uni', prereq: null },
+    { id: 'ELECTIVE_1', name: 'مقرر اختياري (تخصص)', hours: 2, cat: 'spec', prereq: 'انظر القائمة' },
+  ];
+
+  /* === تهيئة الصفحة === */
+  window.addEventListener('DOMContentLoaded', () => {
+      const select = document.getElementById('courseSelect');
+      
+      // ترتيب المواد أبجدياً أو حسب الرمز لسهولة البحث
+      coursesDB.sort((a, b) => a.id.localeCompare(b.id));
+
+      coursesDB.forEach(course => {
+          const option = document.createElement('option');
+          option.value = course.id;
+          option.text = `${course.id} - ${course.name}`;
+          select.appendChild(option);
+      });
+  });
+
+  /* === دالة العرض === */
+  function displayCourse() {
+      const select = document.getElementById('courseSelect');
+      const courseId = select.value;
+      const course = coursesDB.find(c => c.id === courseId);
+      
+      const emptyState = document.getElementById('emptyState');
+      const courseCard = document.getElementById('courseCard');
+
+      if (!course) return;
+
+      // إخفاء الحالة الفارغة وإظهار الكارد
+      emptyState.style.display = 'none';
+      courseCard.style.display = 'none'; // reset for animation
+      setTimeout(() => courseCard.style.display = 'block', 10);
+
+      // تعبئة البيانات
+      document.getElementById('cCode').innerText = course.id;
+      document.getElementById('cName').innerText = course.name;
+      document.getElementById('cHours').innerText = course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
+      
+      // التعامل مع المتطلب السابق
+      const prereqEl = document.getElementById('cPrereq');
+      if (course.prereq) {
+          // التحقق مما إذا كان المتطلب موجود في قاعدتنا لجعله رابطاً (اختياري)
+          const prereqName = coursesDB.find(c => c.id === course.prereq)?.name || course.prereq;
+          prereqEl.innerHTML = `<span style="color:var(--cal-red); font-weight:bold;">${course.prereq}</span> <br> <small class="text-muted">(${prereqName})</small>`;
+      } else {
+          prereqEl.innerHTML = '<span style="color:var(--text-muted)">لا يوجد متطلب سابق</span>';
+      }
+
+      // التعامل مع المتطلب المرافق
+      const coreqEl = document.getElementById('cCoreq');
+      if (course.coreq) {
+          coreqEl.innerHTML = `<strong>${course.coreq}</strong>`;
+      } else {
+          coreqEl.innerText = "لا يوجد";
+      }
+
+      // التصنيف والتاقات
+      const tagsContainer = document.getElementById('cTags');
+      tagsContainer.innerHTML = '';
+      
+      let tagClass = '';
+      let catText = '';
+      let icon = '';
+
+      if (course.cat === 'spec') {
+          tagClass = 'tag-spec';
+          catText = 'متطلب تخصص (اللغة العربية)';
+          icon = 'fa-book';
+      } else if (course.cat === 'edu') {
+          tagClass = 'tag-edu';
+          catText = 'متطلب تربوي (إعداد معلم)';
+          icon = 'fa-chalkboard-teacher';
+      } else {
+          tagClass = 'tag-uni';
+          catText = 'متطلب جامعي عام';
+          icon = 'fa-university';
+      }
+
+      // إنشاء التاق
+      tagsContainer.innerHTML = `
+        <div class="tag ${tagClass}">
+            <i class="fas ${icon}"></i> ${catText}
+        </div>
+      `;
+      
+      document.getElementById('cCategoryText').innerText = catText;
+  }
+
+  /* === تبديل الثيم === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+</script>
+
+</body>
+</html>
