@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="{{ '/topbar.css' | relative_url }}" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <meta property="og:title" content="{{ page.title }} - روافد" id="og-title">
     <meta property="og:description" content="{{ page.description | default: 'تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.' }}" id="og-description">
     <meta property="og:image" content="{{ page.image | default: '/images/cover3.png' | relative_url }}" id="og-image">
@@ -109,8 +111,8 @@
             width: 100%;
         }
 
-        /* إخفاء الشعار وجدول التقييم والأسطر في العرض العادي */
-        #print-only-logo, #print-eval-table, .print-essay-lines {
+        /* إخفاء العناصر الخاصة بالطباعة في العرض العادي */
+        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section {
             display: none;
         }
 
@@ -521,7 +523,6 @@
 
             .essay-answer { display: none !important; }
 
-            /* تنسيق الأسطر المنقطة للطباعة */
             .print-essay-lines {
                 display: block !important;
                 margin-top: 20px;
@@ -530,12 +531,11 @@
 
             .writing-line {
                 border-bottom: 2px dotted #999;
-                height: 40px; /* ارتفاع مريح للكتابة */
+                height: 40px;
                 width: 100%;
                 margin-bottom: 10px;
             }
             
-            /* السؤال ذو الـ 10 درجات يأخذ صفحة كاملة */
             .full-page-question {
                 break-before: page;
                 page-break-before: always;
@@ -545,7 +545,7 @@
             }
             
             .full-page-question .print-essay-lines {
-                flex-grow: 1; /* تعبئة باقي الصفحة */
+                flex-grow: 1;
             }
 
             #printable-answer-key {
@@ -555,6 +555,40 @@
                 direction: rtl;
                 padding-top: 50px;
                 color: #000 !important;
+            }
+
+            /* === تنسيق قسم QR Code المميز === */
+            #printable-qr-section {
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                break-before: page;
+                page-break-before: always;
+                min-height: 50vh; /* ليأخذ حيزاً جيداً في الصفحة الأخيرة */
+                text-align: center;
+                margin-top: 50px;
+                padding: 40px;
+                /* استخدام لون الموقع الأزرق كخلفية خفيفة */
+                background-color: #e0e7ff !important; 
+                border: 4px solid #1a2ac6 !important;
+                border-radius: 20px;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #printable-qr-section h3 {
+                color: #1a2ac6 !important;
+                font-size: 24px;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+            
+            #qrcode-container {
+                padding: 15px;
+                background: white;
+                border-radius: 10px;
+                border: 1px solid #1a2ac6;
             }
         }
 
@@ -683,9 +717,14 @@
                 return;
             }
 
+            // إزالة العناصر القديمة
             const oldKey = document.getElementById('printable-answer-key');
             if (oldKey) oldKey.remove();
+            
+            const oldQr = document.getElementById('printable-qr-section');
+            if (oldQr) oldQr.remove();
 
+            // 1. إنشاء نموذج الإجابة
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
@@ -720,7 +759,37 @@
             keyHTML += `</tbody></table>`;
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
-            window.print();
+
+            // 2. إنشاء قسم QR Code
+            const qrDiv = document.createElement('div');
+            qrDiv.id = 'printable-qr-section';
+            
+            // حاوية للـ QR
+            const qrContainer = document.createElement('div');
+            qrContainer.id = 'qrcode-container';
+            qrDiv.appendChild(qrContainer);
+
+            // النص
+            const qrText = document.createElement('h3');
+            qrText.textContent = "امسح للوصول إلى النسخة التفاعلية من الاختبار";
+            qrDiv.appendChild(qrText);
+
+            document.querySelector('.container').appendChild(qrDiv);
+
+            // توليد الـ QR باستخدام المكتبة
+            new QRCode(qrContainer, {
+                text: window.location.href,
+                width: 200,
+                height: 200,
+                colorDark : "#1a2ac6", // نفس لون الموقع
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // استدعاء الطباعة (بتأخير بسيط لضمان رسم الـ QR)
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
 
         function getExamCode() {
@@ -870,10 +939,8 @@
                     questionDiv.appendChild(subtextParagraph);
                 }
 
-                // === منطق الأسئلة المقالية وإضافة الأسطر ===
                 if (q.type === 'essay' || q.type === 'essay-image') {
                     
-                    // 1. إضافة الأزرار ومكان الإجابة (للشاشة)
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
                     const showAnswerBtn = document.createElement('button');
@@ -893,19 +960,16 @@
                     answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
                     questionDiv.appendChild(answerDiv);
 
-                    // 2. إضافة الأسطر المنقطة (للطباعة)
                     const linesContainer = document.createElement('div');
                     linesContainer.className = 'print-essay-lines';
                     
                     let points = q.points || 1;
-                    let lineCount = 3; // الحد الأدنى
+                    let lineCount = 3;
 
                     if (points >= 10) {
-                        // حالة الـ 10 درجات: صفحة كاملة
                         lineCount = 23; 
                         questionDiv.classList.add('full-page-question');
                     } else if (points > 2) {
-                        // تزايد تدريجي للدرجات المتوسطة
                         lineCount = Math.floor(points * 2.5);
                     }
 
