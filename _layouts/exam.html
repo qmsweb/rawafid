@@ -112,7 +112,7 @@
         }
 
         /* إخفاء العناصر الخاصة بالطباعة في العرض العادي */
-        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container {
+        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container, .print-letter {
             display: none;
         }
 
@@ -453,7 +453,6 @@
             margin-bottom: 12px;
             direction: rtl; 
             gap: 15px;
-            /* التعديل: عكس الاتجاه لوضع المربع في اليسار مع الحفاظ على النص في اليمين */
             flex-direction: row-reverse;
             text-align: right;
         }
@@ -488,7 +487,10 @@
                 display: none !important;
             }
 
-            /* إخفاء العناصر المخصصة للشاشة فقط */
+            #questions-container {
+                display: block !important;
+            }
+
             .screen-only-item {
                 display: none !important;
             }
@@ -568,7 +570,14 @@
                 padding: 5px 0 !important;
                 color: #000 !important;
             }
-            .choice-radio { border: 1px solid #000 !important; }
+            
+            /* إخفاء الراديو وإظهار الحروف في الطباعة */
+            .choice-radio { display: none !important; }
+            .print-letter { 
+                display: inline-block !important; 
+                margin-left: 8px; 
+                font-weight: bold;
+            }
 
             .points-badge {
                 background-color: transparent !important;
@@ -762,6 +771,9 @@
         const subjectNameElement = document.getElementById('subject-name');
         const subjectCodeElement = document.getElementById('subject-code');
         const subjectTotalScoreElement = document.getElementById('subject-total-score');
+        
+        // مصفوفة الحروف للطباعة
+        const arabicLetters = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي'];
 
         let quizData = [];
         let currentQuiz = 0;
@@ -848,8 +860,25 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
+            // 3. إعداد الصفحة للطباعة (إخفاء التحديدات)
+            const allRadios = document.querySelectorAll('input[type="radio"]');
+            const checkedStates = new Map();
+            allRadios.forEach((radio, index) => {
+                if(radio.checked) {
+                    checkedStates.set(index, true);
+                    radio.checked = false; // إلغاء التحديد للطباعة
+                }
+            });
+
             setTimeout(() => {
                 window.print();
+                
+                // 4. استعادة التحديدات
+                allRadios.forEach((radio, index) => {
+                    if(checkedStates.has(index)) {
+                        radio.checked = true;
+                    }
+                });
             }, 500);
         }
 
@@ -858,7 +887,6 @@
             return params.get('i');
         }
 
-        // دالة جديدة لتنسيق الدرجات حسب الطلب
         function formatPoints(p) {
             if (p === 1) return 'درجة واحدة';
             if (p === 2) return 'درجتان';
@@ -978,7 +1006,6 @@
                     
                     const pts = q.points || 1;
                     currentTfScore += pts;
-                    // تحديث المجموع باستخدام دالة التنسيق الجديدة
                     currentTfScoreSpan.textContent = `المجموع: ${formatPoints(currentTfScore)}`;
                     
                     const tfRow = document.createElement('div');
@@ -1036,10 +1063,7 @@
                     const pointsBadge = document.createElement('span');
                     pointsBadge.className = 'points-badge';
                     const p = q.points || 1;
-                    
-                    // استخدام دالة التنسيق الجديدة
                     pointsBadge.textContent = formatPoints(p);
-                    
                     questionTextDiv.appendChild(pointsBadge);
                 }
 
@@ -1110,6 +1134,15 @@
                     q.choices.forEach((choice, cIndex) => {
                         const label = document.createElement('label');
                         label.className = 'choice-label';
+                        
+                        // إضافة عنصر الـ span للحرف (يظهر في الطباعة فقط)
+                        const printLetterSpan = document.createElement('span');
+                        printLetterSpan.className = 'print-letter';
+                        // نستخدم المصفوفة، وإذا زادت الخيارات عن المصفوفة نستخدم الرقم
+                        const letter = arabicLetters[cIndex] || (cIndex + 1);
+                        printLetterSpan.textContent = letter + '- ';
+                        label.appendChild(printLetterSpan);
+
                         const radio = document.createElement('input');
                         radio.type = 'radio';
                         radio.name = `question-${qIndex}`;
@@ -1117,6 +1150,7 @@
                         radio.className = 'choice-radio';
                         radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
                         label.appendChild(radio);
+                        
                         label.appendChild(document.createTextNode(choice));
                         choicesDiv.appendChild(label);
                     });
