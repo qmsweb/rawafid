@@ -452,8 +452,11 @@
             display: flex;
             align-items: flex-start;
             margin-bottom: 12px;
-            direction: rtl; /* ضمان اتجاه اليمين لليسار */
+            direction: rtl; 
             gap: 15px;
+            /* التعديل: عكس الاتجاه لوضع المربع في اليسار مع الحفاظ على النص في اليمين */
+            flex-direction: row-reverse;
+            text-align: right;
         }
 
         .tf-box {
@@ -461,7 +464,6 @@
             height: 25px;
             border: 1px solid #000;
             flex-shrink: 0;
-            /* المربع على اليمين لأنه أول عنصر في RTL */
         }
 
         .tf-text {
@@ -858,6 +860,14 @@
             return params.get('i');
         }
 
+        // دالة جديدة لتنسيق الدرجات حسب الطلب
+        function formatPoints(p) {
+            if (p === 1) return 'درجة واحدة';
+            if (p === 2) return 'درجتان';
+            if (p >= 3 && p <= 10) return `${p} درجات`;
+            return `${p} درجة`;
+        }
+
         async function loadQuizData() {
             const examCode = getExamCode();
             if (!examCode) {
@@ -908,13 +918,11 @@
             questionsContainer.innerHTML = '';
             let questionNumber = 1;
 
-            // متغيرات للتعامل مع تجميع أسئلة الصح والخطأ في الطباعة
             let currentTfContainer = null;
             let currentTfScoreSpan = null;
             let currentTfScore = 0;
 
             quiz.questions.forEach((q, qIndex) => {
-                // إذا وجدنا فاصل أو تغير نوع السؤال عن tf، نقوم بإغلاق حاوية التجميع (منطقياً)
                 if (q.divider || q.type !== 'tf') {
                     currentTfContainer = null;
                     currentTfScore = 0;
@@ -950,7 +958,6 @@
                 // === منطق تجميع أسئلة TF للطباعة ===
                 if (q.type === 'tf') {
                     if (!currentTfContainer) {
-                        // إنشاء حاوية التجميع لأول مرة في هذه السلسلة
                         currentTfContainer = document.createElement('div');
                         currentTfContainer.className = 'tf-print-container';
                         
@@ -958,10 +965,10 @@
                         headerDiv.className = 'tf-print-header';
                         
                         const titleSpan = document.createElement('span');
-                        titleSpan.textContent = "ضع علامة في المربع للإجابة:";
+                        titleSpan.textContent = "ضع علامة صح أو خطأ في المربع للإجابة:";
                         
                         currentTfScoreSpan = document.createElement('span');
-                        currentTfScoreSpan.textContent = "0 درجات";
+                        currentTfScoreSpan.textContent = "";
                         
                         headerDiv.appendChild(titleSpan);
                         headerDiv.appendChild(currentTfScoreSpan);
@@ -971,12 +978,11 @@
                         currentTfScore = 0;
                     }
                     
-                    // تحديث مجموع الدرجات
                     const pts = q.points || 1;
                     currentTfScore += pts;
-                    currentTfScoreSpan.textContent = `المجموع: ${currentTfScore} درجات`;
+                    // تحديث المجموع باستخدام دالة التنسيق الجديدة
+                    currentTfScoreSpan.textContent = `المجموع: ${formatPoints(currentTfScore)}`;
                     
-                    // إضافة صف السؤال داخل الحاوية (مربع + نص)
                     const tfRow = document.createElement('div');
                     tfRow.className = 'tf-print-row';
                     
@@ -987,19 +993,17 @@
                     text.className = 'tf-text';
                     text.innerHTML = `${questionNumber}. ${q.question.replace(/\n/g, '<br>')}`;
                     
-                    // الترتيب: المربع على اليمين (لأن الاتجاه RTL) ثم النص
                     tfRow.appendChild(box);
                     tfRow.appendChild(text);
                     
                     currentTfContainer.appendChild(tfRow);
                 }
 
-                // === العرض العادي للسؤال (للشاشة والأنواع الأخرى) ===
+                // === العرض العادي ===
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 if (q.type === 'info') questionDiv.classList.add('info-question');
                 
-                // إذا كان السؤال tf، نضيف له كلاس ليختفي عند الطباعة لأننا عرضناه في الحاوية المجمعة أعلاه
                 if (q.type === 'tf') {
                     questionDiv.classList.add('screen-only-item');
                 }
@@ -1035,13 +1039,9 @@
                     pointsBadge.className = 'points-badge';
                     const p = q.points || 1;
                     
-                    let pText = 'درجات';
-                    if (p === 1) pText = 'درجة';
-                    else if (p === 2) pText = 'درجتان';
-                    else if (p >= 3 && p <= 10) pText = 'درجات';
-                    else pText = 'درجة';
+                    // استخدام دالة التنسيق الجديدة
+                    pointsBadge.textContent = formatPoints(p);
                     
-                    pointsBadge.textContent = `${p} ${pText}`;
                     questionTextDiv.appendChild(pointsBadge);
                 }
 
