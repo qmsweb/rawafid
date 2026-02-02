@@ -148,7 +148,9 @@
     /* === بقية التنسيقات (الأدوات، الفلاتر، المواد) === */
     .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
 
-    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+    /* تم التعديل: 4 أعمدة بدلاً من 3 */
+    .tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+    
     .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
     .tool-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: var(--hover-shadow); }
     .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; }
@@ -173,9 +175,14 @@
 
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
+    @media (max-width: 992px) {
+      /* تم التعديل: لجعل الأدوات 2 في الصف للشاشات المتوسطة */
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 768px) {
       .tools-grid { grid-template-columns: repeat(2, 1fr); }
-      .tools-grid .tool-item:last-child { grid-column: span 2; }
+      /* تم حذف span 2 للعنصر الأخير لأن العدد أصبح زوجياً (4) */
       .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .materials-list.grid-view .material-item { padding: 15px; text-align: center; flex-direction: column; }
     }
@@ -219,6 +226,10 @@
             <div class="tool-item" onclick="window.location.href='/calendar'">
                 <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
                 <div class="tool-name">التقويم الأكاديمي</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/study-plan'">
+                <div class="tool-icon"><i class="fas fa-book-open"></i></div>
+                <div class="tool-name">الخطة الدراسية</div>
             </div>
         </div>
 
@@ -265,12 +276,10 @@
               const badge = currentEvent.weekBadge || "أسبوع";
               const title = currentEvent.title || "";
               
-              // تم التعديل: وضع الشعار في المكان الجديد بجانب العنوان الثابت
               document.getElementById('week-badge-insert').innerHTML = `
                 <span class="current-label-tag" style="opacity: 0.9;">${badge}</span>
               `;
               
-              // وضع عنوان الأسبوع فقط في السطر السفلي
               document.getElementById('week-title-text').innerHTML = `
                 <span>${title}</span>
               `;
