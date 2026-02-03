@@ -640,9 +640,10 @@
                 page-break-inside: avoid;
                 text-align: center;
                 
-                margin-top: 30px;
+                /* تم تعديل الهوامش ليظهر بشكل مناسب داخل الصفحة الأولى */
+                margin-top: 20px;
                 padding: 20px;
-                width: 80%;
+                width: 60%; /* تم تصغير العرض قليلاً ليتناسب مع الجدول */
                 margin-left: auto;
                 margin-right: auto;
                 
@@ -745,7 +746,7 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+            </div>
 
         <div id="questions-container"></div>
         <button id="submit-btn">تأكيد الإجابات</button>
@@ -835,9 +836,10 @@
 
             keyHTML += `</tbody></table>`;
             keyDiv.innerHTML = keyHTML;
+            // إضافة نموذج الإجابة في نهاية الصفحة
             document.querySelector('.container').appendChild(keyDiv);
 
-            // 2. إنشاء قسم QR Code
+            // 2. إنشاء قسم QR Code (تم التعديل لإضافته في صفحة الواجهة)
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
@@ -849,7 +851,9 @@
             qrText.textContent = "امسح للوصول إلى النسخة التفاعلية";
             qrDiv.appendChild(qrText);
 
-            document.querySelector('.container').appendChild(qrDiv);
+            // === التعديل هنا: إضافة QR Code إلى داخل div الواجهة بدلاً من نهاية المستند ===
+            const frontPageContainer = document.querySelector('.quiz-front-page');
+            frontPageContainer.appendChild(qrDiv);
 
             new QRCode(qrContainer, {
                 text: window.location.href,
