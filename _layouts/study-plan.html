@@ -18,6 +18,18 @@
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
+  <script>
+    (function() {
+        const savedTheme = localStorage.getItem('rawafed-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+  </script>
+
   <style>
     /* === المتغيرات والألوان === */
     :root {
@@ -30,6 +42,7 @@
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
+      --hover-bg: #e0e7ff; /* لون إضافي للزر */
         
       /* ألوان التصنيف */
       --tag-spec-bg: #fff8e1;
@@ -54,6 +67,7 @@
       --text-muted: #a0a0a0;
       --bg-code: #2c2c2c;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-bg: #2c2e3e; /* لون إضافي للزر */
       
       --tag-spec-bg: #4a3b0a;
       --tag-spec-text: #ffd54f;
@@ -115,6 +129,26 @@
         min-width: 200px;
     }
     .header-select:focus { border-color: var(--primary-color); }
+
+    /* تنسيق زر الوضع الليلي الجديد */
+    .theme-toggle-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+    .theme-toggle-btn:hover {
+        background-color: var(--hover-bg);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
 
     /* === Input Section === */
     .search-box-container {
@@ -257,6 +291,10 @@
       </div>
 
       <div class="plan-controls">
+          <button class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+             <i class="fas fa-adjust"></i>
+          </button>
+
           <select id="planSelector" class="header-select" onchange="fetchPlanData()">
               <option value="edu" selected>تخصص التربية في اللغة العربية</option>
               <option value="arts">تخصص آداب اللغة العربية (قريبًا)</option>
@@ -317,6 +355,14 @@
   {% include footer.html %}
 
 <script>
+  // 3. دالة تبديل الوضع (تمت إضافتها)
+  function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+  }
+
   let currentCoursesDB = [];
 
   // 1. عند تحميل الصفحة
