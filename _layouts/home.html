@@ -1,89 +1,395 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>روافد - انتظرونا قريبًا</title>
+  <title>{{ page.title | default: "روافد - الرئيسية" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+   
+  <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
+  <meta property="og:description" content="{{ page.description | default: 'منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.' }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
   <style>
+    /* === المتغيرات === */
     :root {
       --primary-color: #1a2ac6;
+      --primary-light-bg: #eff1ff;
       --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-sticky: rgba(244, 246, 251, 0.95);
+      --border-color: #ccd1e0;
       --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.1);
+      --hover-bg: #f9f9f9;
+      --radius-md: 12px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "IBM Plex Sans Arabic", sans-serif;
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-sticky: rgba(18, 18, 18, 0.95);
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+      --hover-bg: #2c2e3e;
     }
 
-    body {
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+   
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* === نظام التحميل الموحد === */
+    #main-content-area {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #main-content-area.loaded {
+      opacity: 1;
     }
 
-    .maintenance-container {
-      padding: 20px;
+    /* === تصميم ودجيت الأسبوع الجديد === */
+    .week-widget {
+        display: none; 
+        background: #e8eaf6;
+        border: 1px solid var(--border-color);
+        border-right: 4px solid var(--primary-color);
+        border-radius: var(--radius-md);
+        padding: 16px 20px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        box-shadow: none;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+   
+    [data-theme="dark"] .week-widget { background: #1a1c2c; }
+
+    .week-widget:hover { transform: translateY(-2px); background-color: #dfe1f0; }
+   
+    .week-icon {
+        width: 42px; height: 42px;
+        background: var(--primary-color);
+        color: #ffffff;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; flex-shrink: 0;
+    }
+   
+    .week-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    
+    /* تنسيق الصف العلوي الجديد */
+    .week-header-row {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* مسافة بين النص والشعار */
+        margin-bottom: 4px;
     }
 
-    .logo {
-      max-width: 180px; /* يمكنك تعديل الحجم حسب شعارك */
-      height: auto;
-      margin-bottom: 30px;
-      /* تأثير نبض خفيف لإعطاء حيوية للصفحة */
-      animation: pulse 2s infinite ease-in-out;
+    .week-title { 
+        font-size: 1.05rem; 
+        font-weight: 700; 
+        color: var(--text-main); 
+        display: flex; 
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+       .current-label-tag { 
+        font-size: 0.95rem; /* حجم مناسب بجانب النص */
+        font-weight: 600; 
+        color: var(--text-main); 
+        display: inline-block;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      margin-bottom: 15px;
-      font-weight: 700;
+    /* وسم الأسبوع الحالي */
+    .week-label  {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        border-radius: 4px;
+        vertical-align: middle;
+        font-weight: 500;
+        display: inline-block;
+    }
+   
+    .week-arrow { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* === بقية التنسيقات (الأدوات، الفلاتر، المواد) === */
+    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
+
+    /* تم التعديل: 4 أعمدة بدلاً من 3 */
+    .tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+    
+    .tool-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+    .tool-item:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: var(--hover-shadow); }
+    .tool-icon { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s ease; }
+    .tool-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+
+    .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 25px; padding: 10px 0; background: var(--bg-sticky); border-bottom: 1px solid var(--border-color); margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; backdrop-filter: blur(5px); }
+    .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+   
+    .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
+    .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; }
+    .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
+   
+    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; }
+    .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+    .materials-list { display: flex; flex-direction: column; gap: 16px; }
+    .material-item { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; transition: all 0.3s; cursor: pointer; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color); }
+    .material-item:hover { box-shadow: var(--hover-shadow); border-color: var(--primary-color); }
+    .item-icon-box { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .item-title h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
+    .item-code { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; }
+
+    .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+    @media (max-width: 992px) {
+      /* تم التعديل: لجعل الأدوات 2 في الصف للشاشات المتوسطة */
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    p {
-      font-size: 1.2rem;
-      color: #666;
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .blue-line {
-      width: 60px;
-      height: 4px;
-      background-color: var(--primary-color);
-      margin: 20px auto;
-      border-radius: 2px;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.9; }
+    @media (max-width: 768px) {
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      /* تم حذف span 2 للعنصر الأخير لأن العدد أصبح زوجياً (4) */
+      .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .materials-list.grid-view .material-item { padding: 15px; text-align: center; flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-  <div class="maintenance-container">
-    <img src="{{ '/images/favicon.png' | relative_url }}" alt="روافد" class="logo">
-    
-    <h1>انتظرونا قريبًا</h1>
-    <div class="blue-line"></div>
-    <p>نعمل حاليًا على تطوير منصة <strong>روافد</strong> لنقدم لكم تجربة مميزة، سنكون معكم في أقرب وقت ممكن إن شاء اللَّه!</p>
+  {% include header.html %}
+
+  <div class="container">
+   
+    {{ content }}
+
+    <div id="main-content-area">
+       
+        <div id="current-week-widget" class="week-widget" onclick="window.location.href='/calendar'">
+            <div class="week-icon">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="week-content">
+                <div class="week-header-row">
+                    <div class="week-label">الأسبوع الجامعي الحالي</div>
+                    <div id="week-badge-insert"></div> </div>
+                <div id="week-title-text" class="week-title">جاري التحميل...</div>
+            </div>
+            <div class="week-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </div>
+
+        <h3 class="section-title">الأدوات</h3>
+        <div class="tools-grid">
+            <div class="tool-item" onclick="window.location.href='/gpa-calculator'">
+                <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                <div class="tool-name">حاسبة المعدل</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/tawtheeq-tool'">
+                <div class="tool-icon"><i class="fas fa-quote-right"></i></div>
+                <div class="tool-name">توثيق المراجع</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/calendar'">
+                <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="tool-name">التقويم الأكاديمي</div>
+            </div>
+            <div class="tool-item" onclick="window.location.href='/study-plan'">
+                <div class="tool-icon"><i class="fas fa-book-open"></i></div>
+                <div class="tool-name">الخطة الدراسية</div>
+            </div>
+        </div>
+
+        <div class="sticky-filter-container">
+            <div class="filter-bar" id="filter-bar"></div>
+        </div>
+
+        <div class="materials-list" id="materials-list">
+            <div style="padding: 20px; text-align: center; color: var(--text-muted);">جاري تحميل المقررات...</div>
+        </div>
+
+    </div> {% include footer.html %}
   </div>
+
+<script>
+  /* === 1. إعدادات الثيم === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  /* === 2. منطق الأسبوع الحالي (معدل) === */
+  async function checkCurrentWeek() {
+      try {
+          const response = await fetch("{{ '/assets/calendar.json' | relative_url }}?v=" + new Date().getTime());
+          if (!response.ok) return;
+          const events = await response.json();
+          
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const currentEvent = events.find(event => {
+              const parts = event.date.split('-');
+              const weekStart = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+              const weekEnd = new Date(weekStart);
+              weekEnd.setDate(weekStart.getDate() + 7);
+              return (today >= weekStart && today < weekEnd);
+          });
+
+          const widget = document.getElementById('current-week-widget');
+          if (currentEvent) {
+              const badge = currentEvent.weekBadge || "أسبوع";
+              const title = currentEvent.title || "";
+              
+              document.getElementById('week-badge-insert').innerHTML = `
+                <span class="current-label-tag" style="opacity: 0.9;">${badge}</span>
+              `;
+              
+              document.getElementById('week-title-text').innerHTML = `
+                <span>${title}</span>
+              `;
+              
+              widget.style.display = 'flex'; 
+          } else {
+              widget.style.display = 'none';
+          }
+      } catch (error) {
+          console.error("Error loading calendar:", error);
+          document.getElementById('current-week-widget').style.display = 'none';
+      }
+  }
+
+  /* === 3. منطق المواد والفلاتر === */
+  const materialsList = document.getElementById('materials-list');
+  const filterBar = document.getElementById('filter-bar');
+  let allCourses = [];
+
+  function renderMaterialItems(items) {
+    materialsList.innerHTML = '';
+    if (!items || items.length === 0) {
+        materialsList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px; width:100%;">لا توجد مقررات في هذا التصنيف.</p>';
+        return;
+    }
+    items.forEach((item) => {
+      const el = document.createElement('div');
+      el.className = 'material-item';
+      const iconColor = item.color || '#1a2ac6';
+      const iconClass = item.icon || 'fa-book';
+      const iconBg = iconColor + '15'; 
+
+      el.addEventListener('click', () => { window.location.href = `{{ '/course' | relative_url }}?i=${item.code}`; });
+
+      el.innerHTML = `
+        <div class="item-icon-box" style="color: ${iconColor}; background-color: ${iconBg};">
+          <i class="fas ${iconClass}"></i>
+        </div>
+        <div class="item-content">
+            <div class="item-title"><h3>${item.name}</h3></div>
+            ${item.hideCode ? '' : `<div class="item-code">${item.code}</div>`}
+        </div>
+      `;
+      materialsList.appendChild(el);
+    });
+  }
+
+  function createFilters(courses) {
+    if(!filterBar) return;
+    filterBar.innerHTML = '';
+    const viewToggle = document.createElement('div');
+    viewToggle.className = 'view-toggle';
+    viewToggle.innerHTML = `<i class="fas fa-list" id="list-view"></i><i class="fas fa-th-large" id="grid-view"></i>`;
+    filterBar.appendChild(viewToggle);
+
+    const divider = document.createElement('div');
+    divider.className = 'filter-divider' ; divider.style = "width:1px; height:20px; background:#ccc; margin:0 10px;";
+    filterBar.appendChild(divider);
+
+    const types = [...new Set(courses.map(c => c.type))];
+    types.unshift('all');
+    types.forEach(type => {
+      const filterBtn = document.createElement('div');
+      filterBtn.className = 'filter-item';
+      filterBtn.textContent = type === 'all' ? 'الكل' : type;
+      if (type === 'all') filterBtn.classList.add('active');
+      filterBtn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+        filterBtn.classList.add('active');
+        const filtered = type === 'all' ? allCourses : allCourses.filter(c => c.type === type);
+        renderMaterialItems(filtered);
+      });
+      filterBar.appendChild(filterBtn);
+    });
+
+    const gridBtn = viewToggle.querySelector('#grid-view');
+    const listBtn = viewToggle.querySelector('#list-view');
+    function setView(mode, save = true) {
+      if (mode === 'grid') { materialsList.classList.add('grid-view'); gridBtn.classList.add('active'); listBtn.classList.remove('active'); } 
+      else { materialsList.classList.remove('grid-view'); listBtn.classList.add('active'); gridBtn.classList.remove('active'); }
+      if (save) localStorage.setItem('viewMode', mode);
+    }
+    gridBtn.addEventListener('click', () => setView('grid'));
+    listBtn.addEventListener('click', () => setView('list'));
+    const savedMode = localStorage.getItem('viewMode');
+    setView(savedMode || (window.innerWidth < 768 ? 'list' : 'grid'), false);
+  }
+
+  /* === 4. تنفيذ التحميل المتزامن === */
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainArea = document.getElementById('main-content-area');
+
+    Promise.all([
+        checkCurrentWeek(),
+        fetch("{{ '/assets/data/materials.json' | relative_url }}").then(res => res.json())
+    ])
+    .then(([weekData, materialsData]) => {
+        allCourses = materialsData;
+        createFilters(materialsData);
+        renderMaterialItems(materialsData);
+        
+        // إظهار كل شيء دفعة واحدة
+        mainArea.classList.add('loaded');
+    })
+    .catch(err => {
+        console.error("Critical Load Error:", err);
+        mainArea.classList.add('loaded');
+    });
+  });
+</script>
 
 </body>
 </html>
