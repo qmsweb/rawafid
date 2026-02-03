@@ -440,6 +440,7 @@
         .tf-print-header {
             display: flex;
             justify-content: space-between;
+            align-items: center; /* تم التعديل هنا: لضمان توسط الدرجة عمودياً */
             font-weight: bold;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
@@ -998,6 +999,7 @@
                         titleSpan.textContent = "ضع علامة صح أو خطأ في المربع للإجابة:";
                         
                         currentTfScoreSpan = document.createElement('span');
+                        currentTfScoreSpan.className = 'points-badge'; // === تم إضافة الكلاس هنا ===
                         currentTfScoreSpan.textContent = "";
                         
                         headerDiv.appendChild(titleSpan);
