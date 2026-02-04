@@ -4,6 +4,14 @@
     "url": "https://rawafid.jassim.one/c/EDUC431",
     "items": [
         {
+            "id": 100,
+            "title": "بطاقات مراجعة المقرر",
+            "description": "بطاقات تفاعلية لاستذكار أهم المفاهيم",
+            "type": "cards",
+            "preview_url": "https://rawafid.jassim.one/cards?i=EDUC431",
+            "time-ms": "1767124209999"
+        },
+        {
             "id": 1,
             "title": "مقارنة بين التدريس والتعليم والتقويم",
             "description": "",
