@@ -23,8 +23,8 @@
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
       const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (savedTheme === 'dark') {
-  document.documentElement.setAttribute('data-theme', 'dark');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
       }
@@ -56,7 +56,7 @@ if (savedTheme === 'dark') {
       --icon-res-bg: #fffbeb; --icon-res-cl: #f59e0b;
       --icon-quiz-bg: #f5f3ff; --icon-quiz-cl: #8b5cf6;
       --icon-link-bg: #ecfdf5; --icon-link-cl: #10b981;
-      --icon-card-bg: #e0f7fa; --icon-card-cl: #00bcd4; /* لون البطاقات الجديد */
+      --icon-card-bg: #e0f7fa; --icon-card-cl: #00bcd4;
       --icon-def-bg: #f3f4f6; --icon-def-cl: #6b7280;
     }
 
@@ -81,7 +81,7 @@ if (savedTheme === 'dark') {
       --icon-res-bg: rgba(245, 158, 11, 0.15); --icon-res-cl: #fbbf24;
       --icon-quiz-bg: rgba(139, 92, 246, 0.15); --icon-quiz-cl: #a78bfa;
       --icon-link-bg: rgba(16, 185, 129, 0.15); --icon-link-cl: #34d399;
-      --icon-card-bg: rgba(0, 188, 212, 0.15); --icon-card-cl: #26c6da; /* لون البطاقات داكن */
+      --icon-card-bg: rgba(0, 188, 212, 0.15); --icon-card-cl: #26c6da;
       --icon-def-bg: rgba(107, 114, 128, 0.15); --icon-def-cl: #9ca3af;
     }
 
@@ -227,6 +227,38 @@ if (savedTheme === 'dark') {
     .material-item:hover {
       box-shadow: var(--hover-shadow); border-color: var(--primary-color);
     }
+
+    /* ========================================= */
+    /* === تصميم البطاقات المميز (التدرج اللوني) === */
+    /* ========================================= */
+    .material-item.special-card-style {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        border: none;
+        box-shadow: 0 5px 15px rgba(15, 32, 39, 0.4);
+    }
+    
+    .material-item.special-card-style:hover {
+        box-shadow: 0 10px 25px rgba(15, 32, 39, 0.6);
+        transform: translateY(-2px);
+    }
+
+    /* تعديل لون النصوص داخل البطاقات المميزة لتكون بيضاء */
+    .material-item.special-card-style .item-title-text h3 {
+        color: #ffffff !important;
+    }
+    
+    .material-item.special-card-style .item-description-preview {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    /* تعديل الأيقونة داخل البطاقات المميزة */
+    .material-item.special-card-style .item-icon {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #80deea !important; /* لون سماوي فاتح */
+        backdrop-filter: blur(4px);
+    }
+
+    /* ========================================= */
 
     .item-header {
       display: flex; align-items: center; gap: 15px; margin-bottom: 10px;
@@ -378,7 +410,7 @@ function getIconClass(type) {
     case 'resources': return 'fas fa-lightbulb';
     case 'quizzes': return 'fas fa-clipboard-question';
     case 'links': return 'fas fa-link';
-    case 'cards': return 'fas fa-clone'; // أيقونة البطاقات الجديدة
+    case 'cards': return 'fas fa-clone'; 
     default: return 'fas fa-layer-group';
   }
 }
@@ -390,7 +422,7 @@ function getIconStyles(type) {
     case 'resources': return 'background: var(--icon-res-bg); color: var(--icon-res-cl);';
     case 'quizzes': return 'background: var(--icon-quiz-bg); color: var(--icon-quiz-cl);';
     case 'links': return 'background: var(--icon-link-bg); color: var(--icon-link-cl);';
-    case 'cards': return 'background: var(--icon-card-bg); color: var(--icon-card-cl);'; // ستايل البطاقات الجديد
+    case 'cards': return 'background: var(--icon-card-bg); color: var(--icon-card-cl);'; 
     default: return 'background: var(--icon-def-bg); color: var(--icon-def-cl);';
   }
 }
@@ -430,10 +462,14 @@ function renderMaterials(filter = 'all') {
     const el = document.createElement('div');
     el.className = 'material-item';
     
+    // إضافة كلاس خاص للبطاقات لتطبيق التدرج اللوني
+    if (item.type === 'cards') {
+        el.classList.add('special-card-style');
+    }
+
     // حدث النقر
     el.onclick = function() {
         const targetUrl = item.preview_url || item.url;
-        // تم إضافة شرط البطاقات (cards) ليتم الفتح في نفس الصفحة مباشرة
         if ((item.type === 'quizzes' || item.type === 'cards') && targetUrl) {
             window.location.href = targetUrl;
         } else {
@@ -509,7 +545,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // === تصحيح مسار الجلب ===
-  // نستخدم Liquid لتحديد المجلد الأساسي، ثم نضيف اسم الملف في JS
   const dataBasePath = "{{ '/assets/data/' | relative_url }}";
   const fetchUrl = dataBasePath + courseCode + ".json";
 
