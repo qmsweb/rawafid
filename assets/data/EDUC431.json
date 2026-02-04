@@ -5,10 +5,10 @@
     "items": [
         {
             "id": 100,
-            "title": "بطاقات مراجعة المقرر",
-            "description": "بطاقات تفاعلية لاستذكار أهم المفاهيم",
+            "title": "بطاقات في أنشطة التعلم والتقويم (الفصل الخامس)",
+            "description": "بطاقات تفاعلية لاستذكار أهم معلومات الفصل الخامس",
             "type": "cards",
-            "preview_url": "https://rawafid.jassim.one/cards?i=EDUC431",
+            "preview_url": "https://rawafid.jassim.one/card?i=EDUC431-5",
             "time-ms": "1767124209999"
         },
         {
