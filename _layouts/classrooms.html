@@ -3,15 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>دليل القاعات الدراسية</title>
+  <title>{{ page.title | default: "البحث عن القاعات" }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <meta property="og:title" content="{{ page.title | default: 'دليل القاعات - روافد' }}">
+  <meta property="og:description" content="دليل تفاعلي للبحث عن أماكن القاعات الدراسية.">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+        const savedTheme = localStorage.getItem('rawafed-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+  </script>
 
   <style>
-    /* === نفس المتغيرات والألوان للحفاظ على الهوية === */
+    /* === المتغيرات والألوان (نفس الصفحة الأصلية) === */
     :root {
       --primary-color: #1a2ac6;
       --bg-body: #f4f6fb;
@@ -50,7 +70,7 @@
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
-    /* === Header === */
+    /* === Header & Actions === */
     .tool-header {
       margin-bottom: 30px;
       margin-top: 20px;
@@ -60,7 +80,7 @@
     .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
     .tool-header p { color: var(--text-muted); margin-top: 5px; }
 
-    /* === Search Box & Autocomplete Styling === */
+    /* === Search Box Styles (معدل للبحث اليدوي) === */
     .search-box-container {
         background: var(--bg-card);
         padding: 20px;
@@ -68,36 +88,33 @@
         box-shadow: var(--card-shadow);
         border: 1px solid var(--border-color);
         margin-bottom: 30px;
-        position: relative; /* Important for suggestion list positioning */
+        position: relative; /* ضروري للقائمة المنسدلة */
     }
 
-    .input-wrapper {
-        position: relative;
-    }
+    .input-wrapper { position: relative; }
 
-    .search-field {
+    .search-input {
         background: var(--bg-body);
         border: 1px solid var(--border-color);
         color: var(--text-main);
-        padding: 12px 15px;
-        padding-left: 40px; /* Space for icon */
+        padding: 12px 40px 12px 15px; /* مساحة للأيقونة */
         border-radius: 8px;
         font-size: 1rem;
         width: 100%;
         outline: none;
         transition: 0.3s;
     }
-    .search-field:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(26, 42, 198, 0.1); }
-    
+    .search-input:focus { border-color: var(--primary-color); }
+
     .search-icon {
         position: absolute;
-        left: 15px;
+        right: 15px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--text-muted);
     }
 
-    /* قائمة التخمينات (Autocomplete) */
+    /* === AutoComplete List (قائمة التخمين) === */
     .suggestions-list {
         position: absolute;
         top: 100%;
@@ -111,24 +128,24 @@
         overflow-y: auto;
         z-index: 1000;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none; /* Hidden by default */
+        display: none;
     }
 
     .suggestion-item {
         padding: 12px 15px;
         cursor: pointer;
-        border-bottom: 1px solid var(--bg-body);
-        transition: background 0.2s;
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
+        transition: background 0.2s;
     }
     .suggestion-item:last-child { border-bottom: none; }
     .suggestion-item:hover { background: var(--hover-bg); }
     
-    .s-name { font-weight: 600; font-size: 0.95rem; }
-    .s-meta { font-size: 0.8rem; color: var(--text-muted); }
+    .s-name { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
+    .s-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* === Result Card === */
+    /* === Result Card Styles === */
     .course-card {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -154,21 +171,23 @@
     }
     
     .location-badge {
-        background: var(--primary-color);
-        color: #fff;
-        padding: 4px 12px;
+        background: var(--bg-body);
+        padding: 5px 12px;
         border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
+        font-size: 0.85rem;
+        border: 1px solid var(--border-color);
+        color: var(--primary-color);
+        font-weight: 600;
     }
 
     .card-body { padding: 30px 25px; text-align: center; }
     
+    /* تنسيق الكلية والقاعة كما طلبت */
     .college-name {
         font-size: 1.6rem;
         font-weight: 700;
         color: var(--primary-color);
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
 
     .room-name {
@@ -179,10 +198,11 @@
         padding-bottom: 15px;
         border-bottom: 1px solid var(--border-color);
         display: inline-block;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
+    /* شبكة التفاصيل */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -203,58 +223,65 @@
     .info-value { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
 
     /* Empty State */
-    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-muted);
+    }
     .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
 
   </style>
 </head>
 <body>
 
+  {% include header.html %}
+
   <div class="container">
       
     <div class="tool-header">
       <div>
-          <h1>دليل القاعات الدراسية</h1>
-          <p>ابحث عن موقع القاعة وتفاصيلها بسهولة</p>
+          <h1>البحث عن القاعات</h1>
+          <p>أدخل اسم القاعة أو رقمها لمعرفة موقعها التفصيلي</p>
       </div>
     </div>
 
     <div class="search-box-container">
-        <label style="display:block; margin-bottom:10px; font-weight:600;">أدخل اسم القاعة أو رقمها:</label>
+        <label style="display:block; margin-bottom:10px; font-weight:600; font-size:0.9rem;">بحث سريع:</label>
         <div class="input-wrapper">
-            <input type="text" id="searchInput" class="search-field" placeholder="مثال: القاعة الكبرى، 101، مختبر الحاسوب..." autocomplete="off">
             <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="مثال: القاعة الهاشمية، 101، مختبر الفيزياء..." autocomplete="off">
             
             <div id="suggestionsList" class="suggestions-list"></div>
         </div>
     </div>
 
     <div id="resultContainer">
+        
         <div class="empty-state" id="emptyState">
-            <i class="fas fa-map-marker-alt empty-icon"></i>
-            <p>ابدأ بالكتابة في خانة البحث أعلاه للعثور على القاعة</p>
+            <i class="fas fa-map-marked-alt empty-icon"></i>
+            <p>الرجاء البحث عن قاعة لعرض التفاصيل</p>
         </div>
 
         <div class="course-card" id="roomCard">
             <div class="card-header">
-                <span style="font-weight:600; color:var(--text-muted);">تفاصيل الموقع</span>
+                <span style="font-weight:600; color:var(--text-muted);">تفاصيل المكان</span>
                 <span class="location-badge" id="rType">قاعة دراسية</span>
             </div>
             
             <div class="card-body">
-                <h2 class="college-name" id="rCollege">كلية العلوم التربوية</h2>
+                <h2 class="college-name" id="rCollege">اسم الكلية هنا</h2>
                 
-                <div class="room-name" id="rName">القاعة الهاشمية</div>
+                <div class="room-name" id="rName">اسم القاعة</div>
 
                 <div class="info-grid">
                     <div class="info-box">
                         <span class="info-label"><i class="fas fa-layer-group"></i> الطابق</span>
-                        <span class="info-value" id="rFloor">الثاني</span>
+                        <span class="info-value" id="rFloor">-</span>
                     </div>
                     
                     <div class="info-box">
                         <span class="info-label"><i class="fas fa-door-open"></i> رقم القاعة</span>
-                        <span class="info-value" id="rNumber">205</span>
+                        <span class="info-value" id="rNumber">-</span>
                     </div>
                 </div>
             </div>
@@ -263,36 +290,58 @@
 
   </div>
 
-  <script>
-  // بيانات تجريبية (يتم استبدالها بـ fetch من ملف JSON)
-  let hallsDB = [
-      { id: "1", name: "القاعة الهاشمية", college: "كلية الآداب", floor: "الأرضي", number: "101", type: "مسرح" },
-      { id: "2", name: "قاعة الخوارزمي", college: "كلية العلوم", floor: "الثالث", number: "305", type: "مختبر" },
-      { id: "3", name: "القاعة 202", college: "كلية التربية", floor: "الثاني", number: "202", type: "قاعة دراسية" },
-      { id: "4", name: "مختبر الحاسوب 1", college: "كلية تكنولوجيا المعلومات", floor: "الأول", number: "110", type: "مختبر" },
-      { id: "5", name: "قاعة المتنبي", college: "كلية الآداب", floor: "الثاني", number: "215", type: "قاعة دراسية" },
-      { id: "6", name: "القاعة التدريسية 4", college: "كلية الشريعة", floor: "الأرضي", number: "004", type: "قاعة دراسية" }
-  ];
+  {% include footer.html %}
 
-  /* === ملاحظة هامة ===
-     لتحميل البيانات من ملف JSON حقيقي بدلاً من البيانات أعلاه،
-     استخدم الكود التالي داخل window.addEventListener('DOMContentLoaded'):
-     
-     async function loadHalls() {
-         try {
-             const res = await fetch('assets/data/halls.json');
-             hallsDB = await res.json();
-         } catch (e) { console.error("Error loading halls", e); }
-     }
-     loadHalls();
-  */
+<script>
+  // لتشغيل الثيم (الوضع الليلي/النهاري)
+  function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+  }
 
+  // متغير لتخزين البيانات
+  let hallsDB = [];
+
+  // العناصر
   const searchInput = document.getElementById('searchInput');
   const suggestionsList = document.getElementById('suggestionsList');
   const emptyState = document.getElementById('emptyState');
   const roomCard = document.getElementById('roomCard');
 
-  // الاستماع للكتابة في خانة البحث
+  // عند تحميل الصفحة
+  window.addEventListener('DOMContentLoaded', () => {
+      fetchHallsData();
+  });
+
+  // دالة جلب البيانات من ملف JSON
+  async function fetchHallsData() {
+      try {
+          // قم بتغيير المسار هنا إلى المسار الصحيح لملف القاعات
+          // const response = await fetch('{{ "/assets/data/halls.json" | relative_url }}');
+          
+          // *ملاحظة:* للكود التجريبي سأستخدم بيانات وهمية، قم بإلغاء التعليق عن السطرين أعلاه وحذف المصفوفة أدناه عند الاستخدام الفعلي
+          
+          // محاكاة بيانات (احذف هذا الجزء عند ربط ملف JSON الحقيقي)
+          hallsDB = [
+              { id: "1", name: "القاعة الهاشمية", college: "كلية الآداب", floor: "الأرضي", number: "101", type: "مسرح" },
+              { id: "2", name: "قاعة الخوارزمي", college: "كلية العلوم", floor: "الثالث", number: "305", type: "مختبر حاسوب" },
+              { id: "3", name: "القاعة 205", college: "كلية التربية", floor: "الثاني", number: "205", type: "قاعة تدريس" },
+              { id: "4", name: "مدرج الشريعة", college: "كلية الشريعة", floor: "الأول", number: "110", type: "مدرج" },
+              { id: "5", name: "مختبر الكيمياء العضوية", college: "كلية العلوم", floor: "التسوية", number: "002", type: "مختبر" }
+          ];
+
+          // إذا كنت تستخدم ملف JSON حقيقي:
+          // const data = await response.json();
+          // hallsDB = data;
+
+      } catch (error) {
+          console.error("خطأ في تحميل بيانات القاعات:", error);
+      }
+  }
+
+  // منطق البحث (Autocomplete)
   searchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase().trim();
       suggestionsList.innerHTML = '';
@@ -302,7 +351,7 @@
           return;
       }
 
-      // فلترة النتائج (تخمين القاعات)
+      // البحث في الاسم، الرقم، أو الكلية
       const matches = hallsDB.filter(hall => 
           hall.name.toLowerCase().includes(query) || 
           hall.number.includes(query) ||
@@ -315,14 +364,13 @@
               item.className = 'suggestion-item';
               item.innerHTML = `
                   <span class="s-name">${hall.name}</span>
-                  <span class="s-meta">${hall.college} - رقم ${hall.number}</span>
+                  <span class="s-meta">${hall.college}</span>
               `;
               
-              // عند النقر على الاقتراح
               item.addEventListener('click', () => {
                   displayRoom(hall);
                   suggestionsList.style.display = 'none';
-                  searchInput.value = hall.name; // تعبئة الخانة بالاسم المختار
+                  searchInput.value = hall.name; // وضع الاسم المختار في الخانة
               });
               
               suggestionsList.appendChild(item);
@@ -340,32 +388,22 @@
       }
   });
 
-  // دالة عرض تفاصيل القاعة
+  // دالة عرض التفاصيل
   function displayRoom(hall) {
+      // إخفاء الحالة الفارغة
       emptyState.style.display = 'none';
+      
+      // إعادة تشغيل الأنيميشن للكارد
       roomCard.style.display = 'none';
+      setTimeout(() => roomCard.style.display = 'block', 10);
       
       // تعبئة البيانات
       document.getElementById('rCollege').innerText = hall.college;
       document.getElementById('rName').innerText = hall.name;
       document.getElementById('rFloor').innerText = hall.floor;
       document.getElementById('rNumber').innerText = hall.number;
-      document.getElementById('rType').innerText = hall.type || "قاعة";
-
-      // إعادة تفعيل الأنيميشن
-      setTimeout(() => {
-          roomCard.style.display = 'block';
-      }, 50);
+      document.getElementById('rType').innerText = hall.type || "قاعة دراسية";
   }
-
-  // ثيم الألوان (نفس الكود السابق)
-  (function() {
-        const savedTheme = localStorage.getItem('rawafed-theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        }
-  })();
 </script>
 
 </body>
