@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دليل القاعات الدراسية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    /* === نفس المتغيرات والألوان للحفاظ على الهوية === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+      --hover-bg: #e0e7ff;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-bg: #2c2e3e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header === */
+    .tool-header {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    /* === Search Box & Autocomplete Styling === */
+    .search-box-container {
+        background: var(--bg-card);
+        padding: 20px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+        position: relative; /* Important for suggestion list positioning */
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .search-field {
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 12px 15px;
+        padding-left: 40px; /* Space for icon */
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%;
+        outline: none;
+        transition: 0.3s;
+    }
+    .search-field:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(26, 42, 198, 0.1); }
+    
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
+
+    /* قائمة التخمينات (Autocomplete) */
+    .suggestions-list {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none; /* Hidden by default */
+    }
+
+    .suggestion-item {
+        padding: 12px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--bg-body);
+        transition: background 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background: var(--hover-bg); }
+    
+    .s-name { font-weight: 600; font-size: 0.95rem; }
+    .s-meta { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* === Result Card === */
+    .course-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        display: none; 
+        animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+        background: var(--bg-code);
+        padding: 15px 25px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .location-badge {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .card-body { padding: 30px 25px; text-align: center; }
+    
+    .college-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
+
+    .room-name {
+        font-size: 1.2rem;
+        color: var(--text-main);
+        font-weight: 500;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        display: inline-block;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .info-box {
+        background: var(--bg-body);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        text-align: center;
+    }
+    
+    .info-label { font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    .info-value { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+    .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+      
+    <div class="tool-header">
+      <div>
+          <h1>دليل القاعات الدراسية</h1>
+          <p>ابحث عن موقع القاعة وتفاصيلها بسهولة</p>
+      </div>
+    </div>
+
+    <div class="search-box-container">
+        <label style="display:block; margin-bottom:10px; font-weight:600;">أدخل اسم القاعة أو رقمها:</label>
+        <div class="input-wrapper">
+            <input type="text" id="searchInput" class="search-field" placeholder="مثال: القاعة الكبرى، 101، مختبر الحاسوب..." autocomplete="off">
+            <i class="fas fa-search search-icon"></i>
+            
+            <div id="suggestionsList" class="suggestions-list"></div>
+        </div>
+    </div>
+
+    <div id="resultContainer">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-map-marker-alt empty-icon"></i>
+            <p>ابدأ بالكتابة في خانة البحث أعلاه للعثور على القاعة</p>
+        </div>
+
+        <div class="course-card" id="roomCard">
+            <div class="card-header">
+                <span style="font-weight:600; color:var(--text-muted);">تفاصيل الموقع</span>
+                <span class="location-badge" id="rType">قاعة دراسية</span>
+            </div>
+            
+            <div class="card-body">
+                <h2 class="college-name" id="rCollege">كلية العلوم التربوية</h2>
+                
+                <div class="room-name" id="rName">القاعة الهاشمية</div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <span class="info-label"><i class="fas fa-layer-group"></i> الطابق</span>
+                        <span class="info-value" id="rFloor">الثاني</span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <span class="info-label"><i class="fas fa-door-open"></i> رقم القاعة</span>
+                        <span class="info-value" id="rNumber">205</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+  <script>
+  // بيانات تجريبية (يتم استبدالها بـ fetch من ملف JSON)
+  let hallsDB = [
+      { id: "1", name: "القاعة الهاشمية", college: "كلية الآداب", floor: "الأرضي", number: "101", type: "مسرح" },
+      { id: "2", name: "قاعة الخوارزمي", college: "كلية العلوم", floor: "الثالث", number: "305", type: "مختبر" },
+      { id: "3", name: "القاعة 202", college: "كلية التربية", floor: "الثاني", number: "202", type: "قاعة دراسية" },
+      { id: "4", name: "مختبر الحاسوب 1", college: "كلية تكنولوجيا المعلومات", floor: "الأول", number: "110", type: "مختبر" },
+      { id: "5", name: "قاعة المتنبي", college: "كلية الآداب", floor: "الثاني", number: "215", type: "قاعة دراسية" },
+      { id: "6", name: "القاعة التدريسية 4", college: "كلية الشريعة", floor: "الأرضي", number: "004", type: "قاعة دراسية" }
+  ];
+
+  /* === ملاحظة هامة ===
+     لتحميل البيانات من ملف JSON حقيقي بدلاً من البيانات أعلاه،
+     استخدم الكود التالي داخل window.addEventListener('DOMContentLoaded'):
+     
+     async function loadHalls() {
+         try {
+             const res = await fetch('assets/data/halls.json');
+             hallsDB = await res.json();
+         } catch (e) { console.error("Error loading halls", e); }
+     }
+     loadHalls();
+  */
+
+  const searchInput = document.getElementById('searchInput');
+  const suggestionsList = document.getElementById('suggestionsList');
+  const emptyState = document.getElementById('emptyState');
+  const roomCard = document.getElementById('roomCard');
+
+  // الاستماع للكتابة في خانة البحث
+  searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      suggestionsList.innerHTML = '';
+      
+      if (query.length === 0) {
+          suggestionsList.style.display = 'none';
+          return;
+      }
+
+      // فلترة النتائج (تخمين القاعات)
+      const matches = hallsDB.filter(hall => 
+          hall.name.toLowerCase().includes(query) || 
+          hall.number.includes(query) ||
+          hall.college.toLowerCase().includes(query)
+      );
+
+      if (matches.length > 0) {
+          matches.forEach(hall => {
+              const item = document.createElement('div');
+              item.className = 'suggestion-item';
+              item.innerHTML = `
+                  <span class="s-name">${hall.name}</span>
+                  <span class="s-meta">${hall.college} - رقم ${hall.number}</span>
+              `;
+              
+              // عند النقر على الاقتراح
+              item.addEventListener('click', () => {
+                  displayRoom(hall);
+                  suggestionsList.style.display = 'none';
+                  searchInput.value = hall.name; // تعبئة الخانة بالاسم المختار
+              });
+              
+              suggestionsList.appendChild(item);
+          });
+          suggestionsList.style.display = 'block';
+      } else {
+          suggestionsList.style.display = 'none';
+      }
+  });
+
+  // إخفاء القائمة عند النقر خارجها
+  document.addEventListener('click', function(e) {
+      if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+          suggestionsList.style.display = 'none';
+      }
+  });
+
+  // دالة عرض تفاصيل القاعة
+  function displayRoom(hall) {
+      emptyState.style.display = 'none';
+      roomCard.style.display = 'none';
+      
+      // تعبئة البيانات
+      document.getElementById('rCollege').innerText = hall.college;
+      document.getElementById('rName').innerText = hall.name;
+      document.getElementById('rFloor').innerText = hall.floor;
+      document.getElementById('rNumber').innerText = hall.number;
+      document.getElementById('rType').innerText = hall.type || "قاعة";
+
+      // إعادة تفعيل الأنيميشن
+      setTimeout(() => {
+          roomCard.style.display = 'block';
+      }, 50);
+  }
+
+  // ثيم الألوان (نفس الكود السابق)
+  (function() {
+        const savedTheme = localStorage.getItem('rawafed-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+  })();
+</script>
+
+</body>
+</html>
