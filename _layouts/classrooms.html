@@ -182,7 +182,6 @@
 
     .card-body { padding: 30px 25px; text-align: center; }
     
-    /* اسم الكلية */
     .college-name {
         font-size: 1.6rem;
         font-weight: 700;
@@ -190,15 +189,13 @@
         margin-bottom: 10px;
     }
 
-    /* اسم القاعة */
     .room-name {
         font-size: 1.2rem;
         color: var(--text-main);
         font-weight: 500;
-        margin-bottom: 10px; /* تقليل الهامش السفلي ليقترب الوصف */
+        margin-bottom: 10px;
     }
 
-    /* === تنسيق الوصف الجديد === */
     .room-description {
         font-size: 1rem;
         color: var(--text-muted);
@@ -209,10 +206,9 @@
         max-width: 600px;
         margin-left: auto;
         margin-right: auto;
-        direction: rtl; /* تأكيد اتجاه النص */
+        direction: rtl;
     }
 
-    /* شبكة التفاصيل */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -232,7 +228,6 @@
     .info-label { font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
     .info-value { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
 
-    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 40px;
@@ -251,15 +246,15 @@
     <div class="tool-header">
       <div>
           <h1>البحث عن القاعات</h1>
-          <p>أدخل اسم القاعة أو رقمها لمعرفة موقعها التفصيلي</p>
+          <p>أدخل اسم القاعة أو رقمها أو أي وصف للبحث</p>
       </div>
     </div>
 
     <div class="search-box-container">
-        <label style="display:block; margin-bottom:10px; font-weight:600; font-size:0.9rem;">بحث سريع:</label>
+        <label style="display:block; margin-bottom:10px; font-weight:600; font-size:0.9rem;">بحث شامل (الاسم، الرقم، الوصف):</label>
         <div class="input-wrapper">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="مثال: قاعة المسرح، 102، مختبر الحاسوب" autocomplete="off">
+            <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن: مسرح، مختبر، يمين، COBA..." autocomplete="off">
             
             <div id="suggestionsList" class="suggestions-list"></div>
         </div>
@@ -269,7 +264,7 @@
         
         <div class="empty-state" id="emptyState">
             <i class="fas fa-map-marked-alt empty-icon"></i>
-            <p>الرجاء البحث عن قاعة لعرض التفاصيل</p>
+            <p>ابدأ بالكتابة للبحث في القاعات</p>
         </div>
 
         <div class="course-card" id="roomCard">
@@ -280,9 +275,7 @@
             
             <div class="card-body">
                 <h2 class="college-name" id="rCollege">-</h2>
-                
                 <div class="room-name" id="rName">-</div>
-
                 <div class="room-description" id="rDesc" style="display: none;"></div>
 
                 <div class="info-grid">
@@ -307,21 +300,17 @@
 <script>
   let hallsDB = [];
 
-  // العناصر
   const searchInput = document.getElementById('searchInput');
   const suggestionsList = document.getElementById('suggestionsList');
   const emptyState = document.getElementById('emptyState');
   const roomCard = document.getElementById('roomCard');
 
-  // عند تحميل الصفحة
   window.addEventListener('DOMContentLoaded', () => {
       fetchHallsData();
   });
 
-  // دالة جلب البيانات من ملف JSON
   async function fetchHallsData() {
       try {
-          // استخدام liquid لضمان صحة المسار
           const jsonPath = "{{ '/assets/plans/rooms.json' | relative_url }}";
           
           const response = await fetch(jsonPath);
@@ -334,11 +323,10 @@
 
       } catch (error) {
           console.error("خطأ في تحميل ملف rooms.json:", error);
-          // يمكن إضافة رسالة تنبيه للمستخدم هنا إذا أردت
       }
   }
 
-  // منطق البحث (Autocomplete)
+  // === هنا تم التعديل ليشمل البحث الوصف والنوع ===
   searchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase().trim();
       suggestionsList.innerHTML = '';
@@ -348,20 +336,24 @@
           return;
       }
 
-      // البحث في الاسم، الرقم، الكلية
+      // شروط البحث الموسعة
       const matches = hallsDB.filter(hall => 
           (hall.name && hall.name.toLowerCase().includes(query)) || 
           (hall.number && hall.number.toString().includes(query)) ||
-          (hall.college && hall.college.toLowerCase().includes(query))
+          (hall.college && hall.college.toLowerCase().includes(query)) ||
+          (hall.type && hall.type.toLowerCase().includes(query)) ||        // البحث في النوع (مثل: مسرح)
+          (hall.description && hall.description.toLowerCase().includes(query)) // البحث في الوصف (مثل: يمين، يسار)
       );
 
       if (matches.length > 0) {
           matches.forEach(hall => {
               const item = document.createElement('div');
               item.className = 'suggestion-item';
+              
+              // تحسين طريقة عرض النتيجة في القائمة لتشمل نوع القاعة
               item.innerHTML = `
                   <span class="s-name">${hall.name}</span>
-                  <span class="s-meta">${hall.college}</span>
+                  <span class="s-meta">${hall.college} - ${hall.type || 'قاعة'}</span>
               `;
               
               item.addEventListener('click', () => {
@@ -378,29 +370,24 @@
       }
   });
 
-  // إخفاء القائمة عند النقر خارجها
   document.addEventListener('click', function(e) {
       if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
           suggestionsList.style.display = 'none';
       }
   });
 
-  // دالة عرض التفاصيل
   function displayRoom(hall) {
       emptyState.style.display = 'none';
       
-      // إعادة تشغيل الأنيميشن للكارد
       roomCard.style.display = 'none';
       setTimeout(() => roomCard.style.display = 'block', 10);
       
-      // تعبئة البيانات الأساسية
       document.getElementById('rCollege').innerText = hall.college || "غير محدد";
       document.getElementById('rName').innerText = hall.name;
       document.getElementById('rFloor').innerText = hall.floor || "-";
       document.getElementById('rNumber').innerText = hall.number || "-";
       document.getElementById('rType').innerText = hall.type || "قاعة دراسية";
 
-      // تعبئة الوصف (جديد)
       const descElement = document.getElementById('rDesc');
       if (hall.description && hall.description.trim() !== "") {
           descElement.innerText = hall.description;
