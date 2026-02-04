@@ -8,12 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
-  <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
-  
+
   <script>
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
@@ -26,7 +24,7 @@
   </script>
 
   <style>
-    /* === المتغيرات والألوان (نفس التصميم الأصلي) === */
+    /* === المتغيرات والألوان === */
     :root {
       --primary-color: #1a2ac6;
       --bg-body: #f4f6fb;
@@ -37,9 +35,9 @@
       --bg-code: #f4f6fb;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --radius-md: 12px;
-        
       --cal-red: #ff3b30;
       --cal-separator: #e5e5ea;
+      --header-bg: #eef0f7;
     }
 
     html[data-theme="dark"] {
@@ -53,6 +51,7 @@
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
       --cal-red: #ff453a;
       --cal-separator: #38383a;
+      --header-bg: #2c2c2c;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
@@ -63,7 +62,6 @@
       min-height: 100vh;
       padding-top: 80px;
       padding-bottom: 40px;
-      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
@@ -101,18 +99,14 @@
     }
     .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
     
-    /* زر الطباعة المميز */
     .print-main-btn {
         background-color: var(--primary-color);
         color: #fff;
         border-color: var(--primary-color);
     }
-    .print-main-btn:hover {
-        background-color: transparent;
-        color: var(--primary-color);
-    }
+    .print-main-btn:hover { background-color: transparent; color: var(--primary-color); }
 
-    /* === Form Styles (New) === */
+    /* === Form Styles === */
     .input-card {
         background: var(--bg-card);
         border-radius: var(--radius-md);
@@ -122,19 +116,8 @@
         border: 1px solid var(--border-color);
     }
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-    
-    .form-row-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
+    .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
 
     .input-group { display: flex; flex-direction: column; gap: 5px; }
     .input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
@@ -151,13 +134,7 @@
     }
     input:focus { border-color: var(--primary-color); }
 
-    .days-selection {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-    }
-    
+    .days-selection { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
     .day-checkbox { display: none; }
     .day-label {
         padding: 8px 16px;
@@ -176,45 +153,49 @@
     }
 
     .add-btn {
-        width: 100%;
-        padding: 12px;
-        background: var(--text-main);
-        color: var(--bg-card);
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: 0.2s;
+        width: 100%; padding: 12px; background: var(--text-main); color: var(--bg-card);
+        border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
     }
     .add-btn:hover { opacity: 0.9; }
 
-    /* === Table Styles === */
-    .schedule-table-wrapper {
+    /* === Schedule Table Styles === */
+    .day-block {
+        margin-bottom: 20px;
         background: var(--bg-card);
         border-radius: var(--radius-md);
-        box-shadow: var(--card-shadow);
         border: 1px solid var(--border-color);
         overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+
+    .day-header {
+        background-color: var(--header-bg);
+        padding: 10px 15px;
+        font-weight: 700;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--border-color);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     
     table { width: 100%; border-collapse: collapse; }
-    
-    thead { background: var(--bg-code); border-bottom: 1px solid var(--border-color); }
-    th { padding: 15px; text-align: right; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; }
-    
-    td { padding: 15px; border-bottom: 1px solid var(--cal-separator); font-size: 0.95rem; }
+    th { padding: 10px 15px; text-align: right; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; background: var(--bg-code); border-bottom: 1px solid --border-color;}
+    td { padding: 12px 15px; border-bottom: 1px solid var(--cal-separator); font-size: 0.9rem; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
 
-    .course-time { font-family: monospace; direction: ltr; display: inline-block; }
-    .course-days { font-size: 0.85rem; font-weight: 600; color: var(--primary-color); }
+    .course-time { 
+        font-family: "IBM Plex Sans Arabic", sans-serif; 
+        font-weight: 600;
+        color: var(--text-main);
+        direction: ltr; /* للأرقام */
+        display: inline-block;
+    }
     
     .delete-btn {
-        color: var(--cal-red);
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1rem;
-        padding: 5px;
+        color: var(--cal-red); background: none; border: none; cursor: pointer;
+        font-size: 0.9rem; padding: 5px;
     }
     .delete-btn:hover { opacity: 0.7; }
 
@@ -222,33 +203,82 @@
     @media (max-width: 600px) {
         .form-grid, .form-row-2 { grid-template-columns: 1fr; }
         .tool-header { flex-direction: column; align-items: flex-start; }
-        th, td { padding: 10px; font-size: 0.85rem; }
-        .hide-mobile { display: none; }
+        .day-header { font-size: 0.9rem; }
+        td { font-size: 0.85rem; padding: 10px; }
     }
 
     /* === Print Styles === */
     .print-only-element { display: none; }
-    .print-logo-container img { height: 60px; width: auto; }
-    .print-qr-footer { text-align: center; margin-top: 40px; }
-    .print-qr-code { width: 120px; height: 120px; }
-
+    
     @media print {
-        header, footer, .header-actions, .input-card, .delete-column, .delete-btn { display: none !important; }
+        /* إخفاء عناصر واجهة المستخدم */
+        header, footer, .header-actions, .input-card, .delete-column, .delete-btn, .tool-header p { display: none !important; }
         
         .print-only-element { display: block !important; }
-        .print-logo-container { text-align: center; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 15px;}
-        
+
         body { background-color: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
-        .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
+        .container { max-width: 100% !important; padding: 10px !important; margin: 0 !important; width: 100% !important; }
         
-        .tool-header { border: none !important; margin-bottom: 10px !important; display: block !important; text-align: right !important; }
-        .tool-header h1 { font-size: 1.8rem !important; margin: 0 !important; }
+        .tool-header { 
+            border: none !important; 
+            margin-bottom: 15px !important; 
+            display: block !important; 
+            text-align: center !important; 
+            padding-right: 0 !important;
+        }
+        .tool-header h1 { font-size: 1.6rem !important; margin: 0 !important; color: #000 !important; }
         
-        .schedule-table-wrapper { box-shadow: none !important; border: 1px solid #000 !important; border-radius: 0 !important; }
-        thead { background-color: #eee !important; color: #000 !important; -webkit-print-color-adjust: exact; }
-        th, td { border: 1px solid #000 !important; color: #000 !important; }
+        /* تنسيق كتل الأيام */
+        .day-block {
+            box-shadow: none !important;
+            border: 1px solid #000 !important;
+            margin-bottom: 15px !important;
+            border-radius: 4px !important;
+            break-inside: avoid; /* منع قص اليوم في صفحتين */
+        }
         
-        .course-days { color: #000 !important; }
+        .day-header {
+            background-color: #eee !important;
+            color: #000 !important;
+            border-bottom: 1px solid #000 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        th, td { border: 1px solid #ddd !important; color: #000 !important; }
+        td { border-bottom: 1px solid #000 !important; }
+        tr:last-child td { border-bottom: none !important; }
+
+        /* الشعار */
+        .print-logo-container { 
+            text-align: center; 
+            margin-bottom: 5px; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px; 
+        }
+        .print-logo-container img { height: 50px; width: auto; }
+
+        /* QR في الأسفل اليسار */
+        .print-qr-footer { 
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            display: flex !important;
+            flex-direction: column;
+            align-items: flex-start;
+            z-index: 9999;
+        }
+        
+        .print-qr-text { 
+            font-size: 0.6rem; 
+            color: #000; 
+            margin-bottom: 2px;
+            margin-left: 5px;
+        }
+        
+        .print-qr-code { 
+            width: 70px; /* تصغير الحجم */
+            height: 70px; 
+        }
     }
   </style>
 </head>
@@ -265,7 +295,7 @@
     <div class="tool-header">
       <div>
           <h1>الجدول الدراسي</h1>
-          <p>قم بإضافة مقرراتك ثم اضغط طباعة</p>
+          <p>أضف المقررات، وسيقوم النظام بترتيبها وطباعتها.</p>
       </div>
         
       <div class="header-actions">
@@ -328,29 +358,15 @@
         <button class="add-btn" onclick="addCourse()">+ إضافة للمقرر</button>
     </div>
 
-    <div id="schedule-container" class="schedule-table-wrapper" style="display:none;">
-        <table>
-            <thead>
-                <tr>
-                    <th>المقرر</th>
-                    <th>الشعبة</th>
-                    <th>الأيام</th>
-                    <th>التوقيت</th>
-                    <th>القاعة</th>
-                    <th class="delete-column"></th>
-                </tr>
-            </thead>
-            <tbody id="course-list-body">
-                </tbody>
-        </table>
-    </div>
+    <div id="schedule-container">
+        </div>
     
     <div id="empty-msg" style="text-align:center; color:var(--text-muted); padding:20px;">
         لا توجد مقررات مضافة بعد.
     </div>
 
     <div class="print-only-element print-qr-footer">
-        <p class="print-qr-text">تم إنشاء الجدول عبر منصة روافد</p>
+        <p class="print-qr-text">أنشئ بواسطة روافد</p>
         <img class="print-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://rawafid.jassim.one" alt="QR Code">
     </div>
 
@@ -361,44 +377,129 @@
 <script>
   let myCourses = JSON.parse(localStorage.getItem('rawafed-courses')) || [];
 
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('rawafed-theme', newTheme);
+  // ترتيب أيام الأسبوع للعرض
+  const weekDaysOrder = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"];
+
+  // دالة تحويل الوقت من 24 إلى 12 بدون لاحقة
+  // مثال: 13:30 -> 01:30
+  // مثال: 09:00 -> 09:00
+  function formatTimeNoSuffix(timeStr) {
+      if (!timeStr) return "";
+      let [hours, minutes] = timeStr.split(':');
+      hours = parseInt(hours);
+      
+      let formattedHours = hours % 12;
+      if (formattedHours === 0) formattedHours = 12; // الساعة 0 أو 12 تكون 12
+      
+      // إضافة صفر في البداية إذا كان الرقم فردياً
+      const hStr = formattedHours < 10 ? '0' + formattedHours : formattedHours;
+      return `${hStr}:${minutes}`;
+  }
+
+  // تحويل الوقت إلى دقائق للمقارنة (للتحقق من التعارض)
+  function timeToMinutes(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+  }
+
+  // التحقق من وجود تعارض
+  function checkConflict(newStart, newEnd, selectedDays) {
+      const newStartMin = timeToMinutes(newStart);
+      const newEndMin = timeToMinutes(newEnd);
+
+      for (let course of myCourses) {
+          // هل هناك يوم مشترك؟
+          const commonDays = course.days.filter(day => selectedDays.includes(day));
+          
+          if (commonDays.length > 0) {
+              const existStartMin = timeToMinutes(course.timeStart);
+              const existEndMin = timeToMinutes(course.timeEnd);
+
+              // شرط التقاطع في الوقت
+              // (StartA < EndB) and (EndA > StartB)
+              if (newStartMin < existEndMin && newEndMin > existStartMin) {
+                  return {
+                      conflict: true,
+                      courseName: course.name,
+                      day: commonDays[0] // إرجاع أول يوم وجد فيه تعارض
+                  };
+              }
+          }
+      }
+      return { conflict: false };
   }
 
   function renderCourses() {
-      const tbody = document.getElementById('course-list-body');
       const container = document.getElementById('schedule-container');
       const emptyMsg = document.getElementById('empty-msg');
       
-      tbody.innerHTML = '';
+      container.innerHTML = '';
 
       if (myCourses.length === 0) {
-          container.style.display = 'none';
           emptyMsg.style.display = 'block';
           return;
       }
 
-      container.style.display = 'block';
       emptyMsg.style.display = 'none';
 
-      myCourses.forEach((course, index) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-              <td><strong>${course.name}</strong></td>
-              <td>${course.section}</td>
-              <td class="course-days">${course.days.join('، ')}</td>
-              <td><span class="course-time">${course.timeStart} - ${course.timeEnd}</span></td>
-              <td>${course.hall}</td>
-              <td class="delete-column">
-                  <button class="delete-btn" onclick="deleteCourse(${index})">
-                      <i class="fas fa-trash"></i>
-                  </button>
-              </td>
-          `;
-          tbody.appendChild(row);
+      // التكرار عبر الأيام بالترتيب وإنشاء جدول لكل يوم يحتوي مقررات
+      weekDaysOrder.forEach(day => {
+          // تصفية المقررات لهذا اليوم
+          const dayCourses = myCourses.filter(c => c.days.includes(day));
+          
+          if (dayCourses.length > 0) {
+              // ترتيب المقررات حسب وقت البدء
+              dayCourses.sort((a, b) => timeToMinutes(a.timeStart) - timeToMinutes(b.timeStart));
+
+              // إنشاء هيكل الجدول لهذا اليوم
+              const block = document.createElement('div');
+              block.className = 'day-block';
+
+              let rowsHtml = '';
+              dayCourses.forEach(course => {
+                  // العثور على المؤشر الأصلي للحذف
+                  const originalIndex = myCourses.indexOf(course);
+                  
+                  // تنسيق الوقت
+                  const tStart = formatTimeNoSuffix(course.timeStart);
+                  const tEnd = formatTimeNoSuffix(course.timeEnd);
+
+                  rowsHtml += `
+                      <tr>
+                          <td><strong>${course.name}</strong></td>
+                          <td>${course.section}</td>
+                          <td><span class="course-time">${tStart} - ${tEnd}</span></td>
+                          <td>${course.hall}</td>
+                          <td class="delete-column" style="width: 40px; text-align: center;">
+                              <button class="delete-btn" onclick="deleteCourse(${originalIndex})">
+                                  <i class="fas fa-trash"></i>
+                              </button>
+                          </td>
+                      </tr>
+                  `;
+              });
+
+              block.innerHTML = `
+                  <div class="day-header">
+                      <i class="far fa-calendar-alt"></i> ${day}
+                  </div>
+                  <table>
+                      <thead>
+                          <tr>
+                              <th width="35%">المقرر</th>
+                              <th width="15%">الشعبة</th>
+                              <th width="25%">التوقيت</th>
+                              <th width="20%">القاعة</th>
+                              <th class="delete-column"></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          ${rowsHtml}
+                      </tbody>
+                  </table>
+              `;
+              container.appendChild(block);
+          }
       });
   }
 
@@ -409,12 +510,24 @@
       const timeStart = document.getElementById('cTimeStart').value;
       const timeEnd = document.getElementById('cTimeEnd').value;
       
-      // جلب الأيام المختارة
       const checkboxes = document.querySelectorAll('.day-checkbox:checked');
       const days = Array.from(checkboxes).map(cb => cb.value);
 
-      if (!name || days.length === 0) {
-          alert('يرجى إدخال اسم المقرر واختيار يوم واحد على الأقل.');
+      // التحقق من صحة الإدخال
+      if (!name || !timeStart || !timeEnd || days.length === 0) {
+          alert('يرجى تعبئة الحقول الأساسية (الاسم، التوقيت، الأيام).');
+          return;
+      }
+
+      if (timeStart >= timeEnd) {
+          alert('وقت البدء يجب أن يكون قبل وقت الانتهاء.');
+          return;
+      }
+
+      // التحقق من التعارض
+      const conflictCheck = checkConflict(timeStart, timeEnd, days);
+      if (conflictCheck.conflict) {
+          alert(`لا يمكن الإضافة! يوجد تعارض مع مقرر "${conflictCheck.courseName}" في يوم ${conflictCheck.day}.`);
           return;
       }
 
@@ -455,9 +568,7 @@
       document.getElementById('cName').value = '';
       document.getElementById('cSection').value = '';
       document.getElementById('cHall').value = '';
-      // لا نمسح الوقت لأنه غالباً يتكرر
-      const checkboxes = document.querySelectorAll('.day-checkbox');
-      checkboxes.forEach(cb => cb.checked = false);
+      // ملاحظة: لا نمسح الوقت والأيام لتسهيل إضافة مقرر آخر بنفس التوقيت في أيام أخرى
       document.getElementById('cName').focus();
   }
 
