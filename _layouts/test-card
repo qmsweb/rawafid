@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: 'ar' }}" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>{{ page.title | default: "بطاقات الأسئلة" }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* --- لوحة الألوان الجديدة (Modern Minimalist) --- */
+            
+            /* الوضع الداكن (الافتراضي) */
+            --bg-color: #0f172a; /* كحلي داكن جداً */
+            --grid-color: rgba(255, 255, 255, 0.05); /* لون الشبكة */
+            
+            --card-front-bg: #1e293b;
+            --card-back-bg: #334155;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            --accent-color: #818cf8; /* أرجواني فاتح */
+            --accent-glow: rgba(129, 140, 248, 0.3);
+            
+            --control-dock-bg: rgba(15, 23, 42, 0.85);
+            --control-border: rgba(255, 255, 255, 0.1);
+            
+            /* شعار أبيض */
+            --logo-filter: brightness(0) invert(1);
+        }
+
+        /* الوضع الفاتح */
+        [data-theme="light"] {
+            --bg-color: #f8fafc; /* رمادي ثلجي */
+            --grid-color: rgba(0, 0, 0, 0.05);
+            
+            --card-front-bg: #ffffff;
+            --card-back-bg: #f1f5f9;
+            
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            
+            --accent-color: #4f46e5; /* أرجواني غامق */
+            --accent-glow: rgba(79, 70, 229, 0.2);
+            
+            --control-dock-bg: rgba(255, 255, 255, 0.85);
+            --control-border: rgba(0, 0, 0, 0.08);
+
+            /* شعار داكن */
+            --logo-filter: none;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "IBM Plex Sans Arabic", sans-serif;
+            background-color: var(--bg-color);
+            /* رسم شبكة هندسية في الخلفية */
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            
+            height: 100dvh; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.4s ease;
+        }
+
+        /* --- الأزرار العلوية (الثيم والشعار) --- */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none; /* للسماح بالنقر خلال المساحات الفارغة */
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--control-border);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .theme-toggle-btn:hover {
+            color: var(--accent-color);
+            background: var(--control-border);
+        }
+
+        .app-logo {
+            width: 100px;
+            height: 60px;
+            /* استخدام filter لتلوين الصورة مباشرة بدلاً من mask */
+            background-image: url('{{ site.baseurl }}/images/cards-logo2.PNG');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right center;
+            filter: var(--logo-filter);
+            transition: filter 0.3s ease;
+        }
+
+        /* --- منطقة البطاقة --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            perspective: 1500px; /* منظور أعمق */
+            padding-bottom: 80px; /* مساحة لشريط التحكم السفلي */
+        }
+
+        .card-scene {
+            width: 85%;
+            max-width: 380px;
+            aspect-ratio: 3/4; /* نسبة أبعاد مثل الورق */
+            max-height: 500px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* تأثير التكدس (Stack) خلف البطاقة */
+        .card-scene::before,
+        .card-scene::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            background: var(--card-front-bg);
+            opacity: 0.4;
+            z-index: -1;
+            transition: all 0.4s ease;
+            border: 1px solid var(--control-border);
+        }
+
+        .card-scene::before {
+            transform: translateY(10px) scale(0.95);
+        }
+        .card-scene::after {
+            transform: translateY(20px) scale(0.9);
+            opacity: 0.2;
+        }
+
+        /* عند التحويم، تتحرك البطاقات الخلفية */
+        .card-scene:hover::before {
+            transform: translateY(15px) scale(0.95) rotate(2deg);
+        }
+        .card-scene:hover::after {
+            transform: translateY(30px) scale(0.9) rotate(-2deg);
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); /* حركة نابضة */
+            transform-style: preserve-3d;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;      
+            text-align: center;
+            padding: 30px;
+            border: 1px solid var(--control-border);
+            overflow: hidden;
+        }
+
+        /* الوجه الأمامي */
+        .card-front {
+            background: var(--card-front-bg);
+            color: var(--text-primary);
+        }
+
+        /* زخرفة صغيرة في زاوية البطاقة */
+        .card-front::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* الوجه الخلفي */
+        .card-back {
+            transform: rotateY(180deg);
+            background: var(--card-back-bg);
+            color: var(--text-primary);
+            align-items: flex-start;
+            text-align: right;
+            /* خط جانبي جمالي */
+            border-right: 6px solid var(--accent-color); 
+        }
+
+        .content-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.5;
+            width: 100%;
+            z-index: 2;
+        }
+        
+        /* تصغير النص إذا كان طويلاً جداً في الإجابة */
+        .card-back .content-text {
+            font-size: 1.3rem;
+            font-weight: 400;
+            overflow-y: auto;
+            max-height: 90%;
+        }
+        
+        /* تخصيص شريط التمرير للإجابات الطويلة */
+        .card-back .content-text::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card-back .content-text::-webkit-scrollbar-thumb {
+            background-color: var(--text-secondary);
+            border-radius: 4px;
+        }
+
+        .hint {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hint i { color: var(--accent-color); }
+
+        /* --- لوحة التحكم العائمة (Dock) --- */
+        .controls-dock {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: var(--control-dock-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--control-border);
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 50;
+        }
+
+        button.control-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button.control-btn:hover:not(:disabled) {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        button.control-btn:active:not(:disabled) {
+            transform: scale(0.9);
+        }
+
+        button.control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .counter-badge {
+            background: var(--bg-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            border: 1px solid var(--control-border);
+            min-width: 80px;
+            text-align: center;
+            font-feature-settings: "tnum"; /* أرقام ثابتة العرض */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="تبديل الوضع">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+        <div class="app-logo" aria-label="شعار روافد"></div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="card-scene" onclick="toggleCard()">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front">
+                    <div class="content-text" id="question-text"></div>
+                    <div class="hint">
+                        <i class="fas fa-hand-pointer"></i> 
+                        اضغط للإجابة
+                    </div>
+                </div>
+
+                <div class="card-face card-back">
+                    <div class="content-text" id="answer-text"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls-dock">
+        <button class="control-btn" id="prevBtn" onclick="prevQuestion()" aria-label="السابق">
+                <i class="fas fa-arrow-right"></i>
+        </button>
+        
+        <div class="counter-badge" id="counter">1 / 5</div>
+
+        <button class="control-btn" id="nextBtn" onclick="nextQuestion()" aria-label="التالي">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    </div>
+
+    <div style="display:none">{{ content }}</div>
+
+   <script>
+    // --- نفس منطق الجافاسكريبت الأصلي دون تغيير ---
+    
+    const pageDeckId = "{{ page.card_file }}";
+    const urlDeckId = new URLSearchParams(window.location.search).get('i');
+    
+    const deckId = (pageDeckId && pageDeckId !== "") ? pageDeckId : urlDeckId;
+    const baseUrl = "{{ site.baseurl }}";
+
+    let questions = [];
+    let currentIndex = 0;
+
+    const cardElement = document.getElementById('flashcard');
+    const questionText = document.getElementById('question-text');
+    const answerText = document.getElementById('answer-text');
+    const counterElement = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // منطق الثيم
+    const savedTheme = localStorage.getItem('theme');
+    // ملاحظة: في التصميم الجديد، الوضع الداكن هو الافتراضي (بدون كلاس)، والفاتح هو data-theme="light"
+    // لذا نعكس المنطق قليلاً ليتوافق مع الأيقونات
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fas fa-moon'; 
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeIcon.className = 'fas fa-sun'; 
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+            themeIcon.className = 'fas fa-sun';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.className = 'fas fa-moon';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+    }, { passive: false });
+
+    function toggleCard() {
+        if (questions.length === 0) return;
+        cardElement.classList.toggle('is-flipped');
+    }
+
+    function updateUI() {
+        cardElement.classList.remove('is-flipped');
+        
+        if (questions.length === 0) return;
+
+        setTimeout(() => {
+            questionText.textContent = questions[currentIndex].q;
+            answerText.textContent = questions[currentIndex].a;
+            
+            counterElement.textContent = `${currentIndex + 1} / ${questions.length}`;
+
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === questions.length - 1);
+        }, 300); // زيادة التوقيت قليلاً ليتناسب مع الحركة الجديدة
+    }
+
+    function nextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            updateUI();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateUI();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!deckId) {
+            questionText.textContent = "تنبيه";
+            answerText.textContent = "لم يتم تحديد ملف البطاقات.";
+            counterElement.textContent = "- / -";
+            return;
+        }
+
+        questionText.textContent = "جاري التحميل...";
+        answerText.textContent = "...";
+
+        fetch(`${baseUrl}/assets/cards/${deckId}.json`)
+            .then(response => {
+                if (!response.ok) throw new Error("الملف غير موجود");
+                return response.json();
+            })
+            .then(data => {
+                questions = data.cards || []; 
+
+                if (!document.title || document.title === "بطاقات الأسئلة") {
+                     if (data.title) document.title = data.title;
+                }
+
+                if (questions.length > 0) {
+                    updateUI(); 
+                } else {
+                    questionText.textContent = "عذراً";
+                    answerText.textContent = "هذا الملف فارغ.";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                questionText.textContent = "خطأ";
+                answerText.textContent = "تعذر تحميل البيانات. تأكد من اسم الملف.";
+            });
+    });
+    
+    // دعم لوحة المفاتيح للتنقل والقلب
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'Enter') {
+            toggleCard();
+        } else if (e.code === 'ArrowLeft') {
+            nextQuestion();
+        } else if (e.code === 'ArrowRight') {
+            prevQuestion();
+        }
+    });
+</script>
+</body>
+</html>
