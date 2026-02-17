@@ -1,0 +1,15 @@
+{
+    "name": "مقرر الأدب العماني"
+    "description": "",
+    "url": "https://rawafid.jassim.one/c/ARAB111",
+    "items": [
+        {
+            "id": 1,
+            "title": "اختبار الشعر الجاهلي - المنتصف 2020",
+            "description": "",
+            "type": "exam",
+            "download_url": "https://m.jassim.one/ARAB111/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B4%D8%B9%D8%B1%20%D8%A7%D9%84%D8%AC%D8%A7%D9%87%D9%84%D9%8A%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%B5%D9%81%202020.pdf",
+            "preview_url": "https://drive.google.com/file/d/1H-k_F4klEpwd0I0NYMrujqE7-9Q6J5Zl/view?usp=drive_link"
+        }
+    ]
+}
