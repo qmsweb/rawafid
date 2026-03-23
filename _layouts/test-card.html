@@ -143,6 +143,11 @@
         font-weight: 500;
         display: inline-block;
     }
+    /* لون خاص لأيقونة صوامت */
+    .tool-icon.sawamet-bg {
+      background-color: #7F288F !important;
+      border-color: #7F288F !important;
+    }
     
     .week-arrow { color: var(--text-muted); font-size: 0.9rem; }
 
@@ -220,7 +225,7 @@
         <h3 class="section-title">الأدوات</h3>
         <div class="tools-grid">
             <div class="tool-item" onclick="window.location.href='https://sawamet.jassim.one'">
-                <div class="tool-icon">
+                <div class="tool-icon  sawamet-bg">
                     <img src="{{ 'https://sawamet.jassim.one/images/sawamet-logo.png' | relative_url }}" alt="صوامت">
                 </div>
                 <div class="tool-name">صوامت</div>
