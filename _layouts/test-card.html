@@ -76,7 +76,13 @@
       opacity: 1;
     }
 
-    /* === تصميم ودجيت الأسبوع الجديد (مدمج وصغير جداً) === */
+    /* === تخطيط القسم العلوي (الشاشات الكبيرة والجوال) === */
+    .top-section-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === تصميم ودجيت الأسبوع الجديد === */
     .week-widget {
       display: none;
       background: var(--bg-card);
@@ -166,7 +172,7 @@
       flex-shrink: 0;
     }
 
-    /* === بقية التنسيقات (الأدوات، الفلاتر، المواد) === */
+    /* === الأدوات والفلاتر === */
     .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
 
     .tools-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 25px; }
@@ -176,13 +182,11 @@
     .tool-icon { width: 55px; height: 55px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .tool-item:hover .tool-icon { background: var(--primary-color); color: #ffffff; border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
     
-    /* لون خاص لأيقونة صوامت - تم تصحيحه وإعادته */
+    /* لون خاص لأيقونة صوامت */
     .tool-icon.sawamet-bg {
       background-color: #7F288F !important;
       border-color: #7F288F !important;
     }
-    
-    /* تنسيق خاص بصورة صوامت لضمان ظهورها بشكل ممتاز */
     .tool-icon img { width: 28px; height: 28px; object-fit: contain; transition: 0.3s ease; }
     
     .tool-name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
@@ -206,6 +210,7 @@
 
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
+    /* === الشاشات المتوسطة والكبيرة === */
     @media (min-width: 768px) {
       .compact-label { display: inline; }
       .week-widget { padding: 10px 20px; }
@@ -213,6 +218,27 @@
       #week-title-text { font-size: 0.95rem; }
     }
 
+    /* === الشاشات الكبيرة (اللاب توب - تخطيط التقويم بجانب الأدوات) === */
+    @media (min-width: 992px) {
+      .top-section-wrapper {
+        flex-direction: row;
+        gap: 40px;
+        align-items: flex-start;
+        margin-top: 15px;
+      }
+      .calendar-section { width: 35%; }
+      .tools-section { width: 65%; }
+      
+      .calendar-section .week-widget {
+        margin-top: 0; /* التخلص من الهامش العلوي لمحاذاته مع الأدوات */
+        padding: 12px 20px; 
+      }
+      .tools-section .section-title {
+        margin-top: 0; /* محاذاة العنوان بدقة مع مربع التقويم */
+      }
+    }
+
+    /* === شاشات الجوال === */
     @media (max-width: 768px) {
       .tools-grid { gap: 5px; }
       .tool-icon { width: 45px; height: 45px; font-size: 1.1rem; }
@@ -234,48 +260,54 @@
 
     <div id="main-content-area">
         
-        <div id="current-week-widget" class="week-widget" onclick="window.location.href='/calendar'">
-            <div class="widget-main-info">
-                <div class="compact-icon">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="compact-text">
-                    <span class="compact-label">الأسبوع الحالي:</span>
-                    <div id="week-badge-insert"></div>
-                    <div id="week-title-text">جاري التحميل...</div>
-                </div>
-            </div>
-            <i class="fas fa-chevron-left compact-arrow"></i>
-        </div>
-
-        <h3 class="section-title">الأدوات</h3>
-        <div class="tools-grid">
-            <div class="tool-item" onclick="window.location.href='https://sawamet.jassim.one'">
-                <div class="tool-icon  sawamet-bg">
-                    <img src="{{ 'https://sawamet.jassim.one/images/sawamet-logo.png' | relative_url }}" alt="صوامت">
-                </div>
-                <div class="tool-name">صوامت</div>
-            </div>
+        <div class="top-section-wrapper">
             
-            <div class="tool-item" onclick="window.location.href='/tawtheeq-tool'">
-                <div class="tool-icon"><i class="fas fa-quote-right"></i></div>
-                <div class="tool-name">توثيق المراجع</div>
+            <div class="calendar-section">
+                <div id="current-week-widget" class="week-widget" onclick="window.location.href='/calendar'">
+                    <div class="widget-main-info">
+                        <div class="compact-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="compact-text">
+                            <span class="compact-label">الأسبوع الحالي:</span>
+                            <div id="week-badge-insert"></div>
+                            <div id="week-title-text">جاري التحميل...</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-left compact-arrow"></i>
+                </div>
             </div>
-            <div class="tool-item" onclick="window.location.href='/calendar'">
-                <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="tool-name">التقويم الأكاديمي</div>
-            </div>
-            <div class="tool-item" onclick="window.location.href='/study-plan'">
-                <div class="tool-icon"><i class="fas fa-book-open"></i></div>
-                <div class="tool-name">الخطة الدراسية</div>
-            </div>
-            <div class="tool-item" onclick="window.location.href='/tools'">
-                <div class="tool-icon"><i class="fas fa-ellipsis-h"></i></div>
-                <div class="tool-name">المزيد</div>
-            </div>
-        </div>
 
-        <div class="sticky-filter-container">
+            <div class="tools-section">
+                <h3 class="section-title">الأدوات</h3>
+                <div class="tools-grid">
+                    <div class="tool-item" onclick="window.location.href='https://sawamet.jassim.one'">
+                        <div class="tool-icon sawamet-bg">
+                            <img src="{{ 'https://sawamet.jassim.one/images/sawamet-logo.png' | relative_url }}" alt="صوامت">
+                        </div>
+                        <div class="tool-name">صوامت</div>
+                    </div>
+                    
+                    <div class="tool-item" onclick="window.location.href='/tawtheeq-tool'">
+                        <div class="tool-icon"><i class="fas fa-quote-right"></i></div>
+                        <div class="tool-name">توثيق المراجع</div>
+                    </div>
+                    <div class="tool-item" onclick="window.location.href='/calendar'">
+                        <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="tool-name">التقويم الأكاديمي</div>
+                    </div>
+                    <div class="tool-item" onclick="window.location.href='/study-plan'">
+                        <div class="tool-icon"><i class="fas fa-book-open"></i></div>
+                        <div class="tool-name">الخطة الدراسية</div>
+                    </div>
+                    <div class="tool-item" onclick="window.location.href='/tools'">
+                        <div class="tool-icon"><i class="fas fa-ellipsis-h"></i></div>
+                        <div class="tool-name">المزيد</div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <div class="sticky-filter-container">
             <div class="filter-bar" id="filter-bar"></div>
         </div>
 
