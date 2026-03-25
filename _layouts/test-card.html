@@ -76,12 +76,12 @@
       opacity: 1;
     }
 
-    /* === تصميم ودجيت الأسبوع الجديد (مدمج وصغير) === */
+    /* === تصميم ودجيت الأسبوع الجديد (مدمج وصغير جداً) === */
     .week-widget {
       display: none;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 50px; /* شكل بيضاوي مدمج */
+      border-radius: 50px;
       padding: 8px 15px;
       margin-top: 25px;
       margin-bottom: 15px;
@@ -136,10 +136,9 @@
       font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 600;
-      display: none; /* إخفاء النص الطويل في الجوال لتوفير المساحة */
+      display: none;
     }
 
-    /* تنسيق الوسم المضاف عبر الجافاسكربت ليتناسب مع التصميم الجديد */
     #week-badge-insert .current-label-tag {
       background-color: var(--primary-light-bg);
       color: var(--primary-color);
@@ -176,6 +175,13 @@
     .tool-item:hover { transform: translateY(-4px); }
     .tool-icon { width: 55px; height: 55px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .tool-item:hover .tool-icon { background: var(--primary-color); color: #ffffff; border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    
+    /* لون خاص لأيقونة صوامت - تم تصحيحه وإعادته */
+    .tool-icon.sawamet-bg {
+      background-color: #7F288F !important;
+      border-color: #7F288F !important;
+    }
+    
     /* تنسيق خاص بصورة صوامت لضمان ظهورها بشكل ممتاز */
     .tool-icon img { width: 28px; height: 28px; object-fit: contain; transition: 0.3s ease; }
     
@@ -201,7 +207,6 @@
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
     @media (min-width: 768px) {
-      /* إظهار العناصر المخفية في الشاشات الأكبر */
       .compact-label { display: inline; }
       .week-widget { padding: 10px 20px; }
       .compact-icon { width: 35px; height: 35px; font-size: 1rem; }
