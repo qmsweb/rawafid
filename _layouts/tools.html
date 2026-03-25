@@ -40,7 +40,7 @@
       --text-muted: #666666;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.15);
-      --radius-md: 16px; /* زيادة الانحناء قليلاً لتناسب شكل التطبيقات */
+      --radius-md: 16px;
     }
 
     [data-theme="dark"] {
@@ -92,7 +92,9 @@
       width: 80px;
       height: 80px;
       border-radius: 12px;
-      object-fit: cover;
+      object-fit: contain; /* لضمان ظهور الشعار بالكامل */
+      background-color: #7F288F; /* لون خلفية الأيقونة المطلوب */
+      padding: 10px; /* مسافة داخلية لترتيب الشعار */
       box-shadow: var(--card-shadow);
     }
     .banner-info {
@@ -109,7 +111,7 @@
       color: var(--text-main);
     }
     .banner-icon {
-      color: #ffc107; /* لون أيقونة الإعلان */
+      color: #7F288F; /* لون متناسق مع الشعار */
       font-size: 1.2rem;
     }
     .banner-desc {
@@ -118,7 +120,7 @@
       line-height: 1.5;
     }
     .banner-btn {
-      background: var(--primary-color);
+      background: #7F288F; /* لون الزر ليتماشى مع المنصة */
       color: #fff;
       border: none;
       padding: 10px 24px;
@@ -153,7 +155,6 @@
     }
     
     .tool-item { 
-        /* تم حذف الإطار والخلفية المستطيلة */
         background: transparent; 
         border: none; 
         padding: 10px; 
@@ -171,16 +172,16 @@
     }
     
     .tool-icon { 
-        width: 70px; /* تكبير الأيقونة قليلاً لتشبه التطبيقات */
+        width: 70px; 
         height: 70px; 
         border-radius: 50%; 
-        background: var(--bg-card); /* إعطاء لون خلفية للدائرة نفسها */
+        background: var(--bg-card); 
         color: var(--primary-color); 
         display: flex; 
         align-items: center; 
         justify-content: center; 
         font-size: 1.6rem; 
-        box-shadow: var(--card-shadow); /* نقل الظل إلى الدائرة */
+        box-shadow: var(--card-shadow);
         border: 1px solid var(--border-color);
         transition: 0.3s ease; 
     }
@@ -229,16 +230,16 @@
         
         <div class="app-banner">
             <div class="banner-content">
-                <img src="https://via.placeholder.com/150/1a2ac6/ffffff?text=App" alt="إعلان التطبيق" class="banner-img">
+                <img src="https://sawamet.jassim.one/images/sawamet-logo.png" alt="شعار منصة صوامت" class="banner-img">
                 <div class="banner-info">
                     <div class="banner-title">
-                        <i class="fas fa-star banner-icon"></i>
-                        <span>تطبيق روافد بلس</span>
+                        <i class="fas fa-external-link-alt banner-icon"></i>
+                        <span>منصة صوامت</span>
                     </div>
-                    <p class="banner-desc">اكتشف الآن أداتنا الجديدة التي تساعدك في تنظيم دراستك ومتابعة محاضراتك بكل سهولة ويسر. متاح الآن مجاناً!</p>
+                    <p class="banner-desc">اكتشف منصة صوامت، وجهتك التعليمية المتكاملة لتعزيز مهاراتك وقدراتك. تصفح الآن واستفد من المحتوى المتميز والمصمم خصيصاً لك.</p>
                 </div>
             </div>
-            <button class="banner-btn" onclick="window.open('#', '_blank')">تحميل الآن</button>
+            <button class="banner-btn" onclick="window.open('https://sawamet.jassim.one/', '_blank')">فتح الرابط</button>
         </div>
 
         <h3 class="section-title">الأدوات</h3>
