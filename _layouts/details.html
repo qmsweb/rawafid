@@ -43,7 +43,7 @@
 
     /* الوضع الداكن */
     [data-theme="dark"] {
-      --primary-color: #7986cb; /* أزرق أفتح لتباين أفضل */
+      --primary-color: #7986cb; 
       --primary-dark: #5c6bc0;
       --text-color: #e0e0e0;
       --text-muted: #a0a0a0;
@@ -70,11 +70,10 @@
       margin-top: 30px; 
       padding: 0 20px;
       margin-bottom: 15px;
-      display: flex; align-items: center; gap: 10px; /* مسافة بين الأزرار */
+      display: flex; align-items: center; gap: 10px; 
       max-width: 900px; margin-left: auto; margin-right: auto;
     }
 
-    /* توحيد تنسيق أزرار التنقل العلوية */
     .back-btn, .share-btn-top {
       text-decoration: none; color: var(--primary-color); 
       font-weight: 700; font-size: 0.9rem;
@@ -122,6 +121,16 @@
       margin-bottom: 20px; 
       white-space: pre-wrap; 
       opacity: 0.9;
+    }
+
+    /* تنسيق النص العريض والأسود المضاف حديثاً */
+    .bold-black-text {
+      font-weight: 900;
+      color: #000000;
+    }
+    /* جعل النص أبيض في الوضع الداكن ليظل مقروءاً (يمكنك حذف هذا الجزء إن أردته أسود دائماً) */
+    [data-theme="dark"] .bold-black-text {
+      color: #ffffff;
     }
 
     .image-wrapper { 
@@ -325,10 +334,17 @@
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
 
+        // معالجة النص: تحويل *النص* أو **النص** إلى نص عريض وأسود
+        let formattedDescription = item.description || '';
+        // استبدال النجمتين (إن وجدت)
+        formattedDescription = formattedDescription.replace(/\*\*(.*?)\*\*/g, '<span class="bold-black-text">$1</span>');
+        // استبدال النجمة الواحدة (كما في المثال)
+        formattedDescription = formattedDescription.replace(/\*(.*?)\*/g, '<span class="bold-black-text">$1</span>');
+
         contentDiv.innerHTML = `
             <div class="item-meta"><i class="${getIconClass(item.type)}"></i> <span>${data.name}</span></div>
             <h1 class="item-title">${item.title}</h1>
-            <div class="item-description">${item.description || ''}</div>
+            <div class="item-description">${formattedDescription}</div>
             ${mediaHTML}
             <div style="height: 10px;"></div>`;
 
@@ -344,12 +360,10 @@
              buttonsHTML += `<a href="${item.preview_url}" class="action-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> فتح</a>`;
         }
       
-        // إظهار الشريط السفلي فقط في حال وجود أزرار
         if (buttonsHTML.trim() !== '') {
             footerBtns.innerHTML = buttonsHTML;
             footerDiv.classList.remove('hidden');
         } else {
-            // إخفاء الشريط وتقليل الفراغ السفلي للصفحة لعدم وجود الشريط
             footerDiv.classList.add('hidden');
             document.body.style.paddingBottom = '30px';
         }
