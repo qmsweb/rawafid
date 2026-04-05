@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>{{ page.title | default: "عرض المقال" }}</title>
+  <title id="page-title">عرض المقال</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,26 +150,17 @@
   <div class="article-container">
     
     <div class="article-header">
-      {% if page.cover_image %}
-        <img src="{{ page.cover_image | relative_url }}" class="cover-image" alt="{{ page.title }}">
-      {% endif %}
+      <img id="post-cover" src="" class="cover-image" alt="" style="display: none;">
       
-      <div class="article-meta">
-        {% if page.date %}
-          <span><i class="far fa-calendar"></i> {{ page.date | date: "%Y-%m-%d" }}</span>
-        {% endif %}
-        {% if page.author %}
-          <span><i class="far fa-user"></i> {{ page.author }}</span>
-        {% endif %}
-      </div>
+      <div id="post-meta" class="article-meta">
+        </div>
 
-      <h1 class="article-title">{{ page.title }}</h1>
+      <h1 id="post-title" class="article-title">جاري تحميل المقال...</h1>
       <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
     </div>
 
-    <div class="article-content">
-      {{ content }}
-    </div>
+    <div id="post-content" class="article-content">
+      </div>
 
   </div>
 
@@ -181,6 +172,62 @@
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('rawafed-theme', newTheme);
     }
+
+    // جلب بيانات المقال ديناميكياً
+    document.addEventListener("DOMContentLoaded", function() {
+      // استخراج ID المقال من الرابط
+      const urlParams = new URLSearchParams(window.location.search);
+      const postId = urlParams.get('i');
+
+      if (postId) {
+        // إرسال الطلب للمسار المطلوب
+        fetch(`/assets/post?i=${postId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error("حدث خطأ في جلب البيانات");
+            }
+            return response.json();
+          })
+          .then(data => {
+            // تحديث عنوان الصفحة (Title)
+            document.getElementById('page-title').textContent = data.title || "عرض المقال";
+            
+            // تحديث عنوان المقال (H1)
+            document.getElementById('post-title').textContent = data.title;
+
+            // تحديث الصورة البارزة
+            const coverImg = document.getElementById('post-cover');
+            if (data.cover_image) {
+              coverImg.src = data.cover_image;
+              coverImg.alt = data.title;
+              coverImg.style.display = 'block';
+            }
+
+            // تحديث الميتا (التاريخ والكاتب)
+            const metaContainer = document.getElementById('post-meta');
+            let metaHtml = '';
+            if (data.date) {
+              metaHtml += `<span><i class="far fa-calendar"></i> ${data.date}</span>`;
+            }
+            if (data.author) {
+              metaHtml += `<span><i class="far fa-user"></i> ${data.author}</span>`;
+            }
+            metaContainer.innerHTML = metaHtml;
+
+            // تحديث محتوى المقال
+            document.getElementById('post-content').innerHTML = data.content;
+          })
+          .catch(error => {
+            console.error('Error fetching post:', error);
+            document.getElementById('post-title').textContent = "عذراً";
+            document.getElementById('post-content').innerHTML = "<p>لم نتمكن من تحميل المقال. قد يكون المعرف غير صحيح أو تم حذفه.</p>";
+          });
+      } else {
+        // في حال عدم وجود معلمة ID في الرابط
+        document.getElementById('post-title').textContent = "لم يتم تحديد مقال";
+        document.getElementById('post-content').innerHTML = "<p>الرجاء التأكد من الرابط والمحاولة مرة أخرى.</p>";
+      }
+    });
   </script>
 
 </body>
