@@ -305,8 +305,20 @@ if (savedTheme === 'dark') {
     fetch(`${BASE_URL}/assets/data/${courseCode}.json?v=${timestamp}`, { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
-        const item = data.items.find(x => x.id == itemId);
-        if (!item) return;
+        
+        // --- التعديل الأول هنا: البحث باستخدام id أو time-ms ---
+        const item = data.items.find(x => x.id == itemId || x['time-ms'] == itemId);
+        
+        // --- التعديل الثاني هنا: إظهار رسالة خطأ إذا لم يتم العثور على العنصر ---
+        if (!item) {
+            contentDiv.innerHTML = `
+            <div style="text-align:center; padding:80px 20px; color:var(--text-muted);">
+                <i class="fas fa-exclamation-triangle fa-3x" style="color:var(--primary-color); margin-bottom:15px;"></i>
+                <h3 style="color:var(--text-color); margin-bottom:10px;">عذراً، المحتوى غير متوفر</h3>
+                <p>لم نتمكن من العثور على هذا العنصر، ربما تم حذفه أو أن الرابط غير صحيح.</p>
+            </div>`;
+            return;
+        }
 
         document.title = item.title;
         let mediaHTML = '';
