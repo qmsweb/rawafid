@@ -1,10 +1,6 @@
 - title: "محاكاة لاختبار المنتصف"
   subject-name: الأدب العماني
   subject-code: ARAB323
-  questions:
-    - type: instructions
-      mainTitle: "سؤال مفتوح"
-      description: "أجب عن السؤال التالي بدقة وتفصيل."
 
     - type: essay
       question: "تحدث عن الأدب العماني القديم مبينا حالته وأذكر العوامل الجغرافية والتاريخية التي أثرت فيه مع التمثيل."
