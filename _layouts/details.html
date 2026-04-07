@@ -256,7 +256,7 @@
       <i class="fas fa-arrow-right"></i> عودة للمقرر
     </a>
     <div class="action-buttons-top">
-      <button onclick="printContent()" class="print-btn-top">
+      <button id="print-btn" onclick="printContent()" class="print-btn-top">
         <i class="fas fa-print"></i> طباعة
       </button>
       <button onclick="sharePage()" class="share-btn-top">
@@ -330,6 +330,7 @@
     const footerBtns = document.getElementById('footer-buttons');
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
+    const printBtn = document.getElementById('print-btn'); // تعريف زر الطباعة
 
     backLink.addEventListener('click', (e) => {
         if (courseCode && courseCode !== 'null') {
@@ -371,6 +372,15 @@
         let finalViewerSrc = '';
 
         const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
+
+        // إخفاء زر الطباعة إذا كان الملف PDF
+        if (printBtn) {
+            if (isPdf) {
+                printBtn.style.display = 'none';
+            } else {
+                printBtn.style.display = 'inline-flex';
+            }
+        }
 
         if (isPdf && item.download_url) {
             const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
