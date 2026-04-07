@@ -1,95 +1,95 @@
-- title: "اختبار الفهم والتحليل في الأدب العماني القديم - الدرس الثاني"
-  subject-name: "الأدب العماني"
-  subject-code: "ARAB323"
-  questions:
-    - type: "instructions"
-      mainTitle: "أولًا الأسئلة الموضوعية (اختيار من متعدد)"
-      description: "تخير الإجابة الصحيحة من بين البدائل المعطاة"
-    - type: "mcq"
-      question: >
-        [cite_start]يربط ابن سلام الجمحي قلة الشعر في عمان بعامل منهجي يتمثل في:[span_0](end_span)
-      points: 1
-      choices:
+- title" "اختبار الفهم والتحليل في الأدب العماني القديم - الدرس الثاني"
+  subject-name" "الأدب العماني"
+  subject-code" "ARAB323"
+  questions"
+    - type" "instructions"
+      mainTitle" "أولًا الأسئلة الموضوعية (اختيار من متعدد)"
+      description" "تخير الإجابة الصحيحة من بين البدائل المعطاة"
+    - type" "mcq"
+      question" >
+        يربط ابن سلام الجمحي قلة الشعر في عمان بعامل منهجي يتمثل في"[span_0](end_span)
+      points" 1
+      choices"
         - [span_1](start_span)"خلو البيئة من الصراعات والحروب القبلية المحفزة للشعر[span_1](end_span)"
         - [span_2](start_span)"انعزال المجتمع العماني لغوياً عن مراكز الفصاحة[span_2](end_span)"
         - [span_3](start_span)"تركيز أهل عمان على الخطابة والنثر فقط[span_3](end_span)"
         - [span_4](start_span)"تأثير الموقع الجغرافي على ضعف السليقة اللغوية[span_4](end_span)"
-      [span_5](start_span)answer: "خلو البيئة من الصراعات والحروب القبلية المحفزة للشعر[span_5](end_span)"
-    - type: "mcq"
-      question: >
-        [span_6](start_span)دخول عمان في سياق رحلة الأعشى (للمال) وبيت جرير عن (الأكلة والشربة) يثبت أنها كانت:[span_6](end_span)
-      points: 1
-      choices:
+      [span_5](start_span)answer" "خلو البيئة من الصراعات والحروب القبلية المحفزة للشعر[span_5](end_span)"
+    - type" "mcq"
+      question" >
+        [span_6](start_span)دخول عمان في سياق رحلة الأعشى (للمال) وبيت جرير عن (الأكلة والشربة) يثبت أنها كانت"[span_6](end_span)
+      points" 1
+      choices"
         - [span_7](start_span)"منطقة معزولة تجارياً عن بقية أطراف الجزيرة[span_7](end_span)"
         - [span_8](start_span)"وجهة مقصودة لطلب الرزق والميرة لتوفر الوفرة والاستقرار بها[span_8](end_span)"
         - [span_9](start_span)"ساحة للنزاعات السياسية التي تجذب الشعراء[span_9](end_span)"
         - [span_10](start_span)"مكاناً يقصده العرب للتنزه فقط دون أهداف مادية[span_10](end_span)"
-      [span_11](start_span)answer: "وجهة مقصودة لطلب الرزق والميرة لتوفر الوفرة والاستقرار بها[span_11](end_span)"
-    - type: "mcq"
-      question: >
-        [span_12](start_span)تحول قبيلة عبد القيس إلى "خطباء العرب" بعد استقرارهم في عمان يثبت وفق رؤية الجاحظ:[span_12](end_span)
-      points: 1
-      choices:
+      [span_11](start_span)answer" "وجهة مقصودة لطلب الرزق والميرة لتوفر الوفرة والاستقرار بها[span_11](end_span)"
+    - type" "mcq"
+      question" >
+        [span_12](start_span)تحول قبيلة عبد القيس إلى "خطباء العرب" بعد استقرارهم في عمان يثبت وفق رؤية الجاحظ"[span_12](end_span)
+      points" 1
+      choices"
         - [span_13](start_span)"أن الفصاحة فطرية ولا تتأثر بتغير المكان[span_13](end_span)"
         - [span_14](start_span)"تراجع المستوى الأدبي للقبيلة عما كانت عليه في البادية[span_14](end_span)"
         - [span_15](start_span)"قدرة البيئة والظروف الجديدة على إعادة تشكيل الملكات الأدبية[span_15](end_span)"
         - [span_16](start_span)"أن عمان كانت تفتقر تماماً للخطابة قبل وصولهم[span_16](end_span)"
-      [span_17](start_span)answer: "قدرة البيئة والظروف الجديدة على إعادة تشكيل الملكات الأدبية[span_17](end_span)"
-    - type: "mcq"
-      question: >
-        [span_18](start_span)دهشة الخليفة عمر بن عبد العزيز من جودة شعر كعب الأشقري تعطي مؤشراً على:[span_18](end_span)
-      points: 1
-      choices:
+      [span_17](start_span)answer" "قدرة البيئة والظروف الجديدة على إعادة تشكيل الملكات الأدبية[span_17](end_span)"
+    - type" "mcq"
+      question" >
+        [span_18](start_span)دهشة الخليفة عمر بن عبد العزيز من جودة شعر كعب الأشقري تعطي مؤشراً على"[span_18](end_span)
+      points" 1
+      choices"
         - [span_19](start_span)"عدم معرفة مركز الخلافة بحقيقة التطور الأدبي في عمان[span_19](end_span)"
         - [span_20](start_span)"كراهية الخليفة للشعر السياسي العماني[span_20](end_span)"
         - [span_21](start_span)"ندرة الشعراء في قبائل الأزد قديماً[span_21](end_span)"
         - [span_22](start_span)"انقطاع العلاقات التجارية بين عمان ودمشق[span_22](end_span)"
-      [span_23](start_span)answer: "عدم معرفة مركز الخلافة بحقيقة التطور الأدبي في عمان[span_23](end_span)"
-    - type: "instructions"
-      mainTitle: "ثانيًا الأسئلة الموضوعية (صواب أو خطأ)"
-      description: "حدد ما إذا كانت العبارة صحيحة أم خاطئة."
-    - type: "tf"
-      question: >
+      [span_23](start_span)answer" "عدم معرفة مركز الخلافة بحقيقة التطور الأدبي في عمان[span_23](end_span)"
+    - type" "instructions"
+      mainTitle" "ثانيًا الأسئلة الموضوعية (صواب أو خطأ)"
+      description" "حدد ما إذا كانت العبارة صحيحة أم خاطئة."
+    - type" "tf"
+      question" >
         [span_24](start_span)يُفهم من نص ابن سلام أن "الطرفية" المكانية كانت سبباً في قلة الحروب وبالتالي قلة الشعر في عمان.[span_24](end_span)
-      points: 1
-      choices:
+      points" 1
+      choices"
         - "صح"
         - "خطأ"
-      answer: "صح"
-    - type: "tf"
-      question: >
+      answer" "صح"
+    - type" "tf"
+      question" >
         [span_25](start_span)يرى الجاحظ أن قبيلة عبد القيس أصبحت أكثر خطابة حين استقرت في عمان عما كانت عليه في "سرة البادية".[span_25](end_span)
-      points: 1
-      choices:
+      points" 1
+      choices"
         - "صح"
         - "خطأ"
-      answer: "صح"
-    - type: "tf"
-      question: >
+      answer" "صح"
+    - type" "tf"
+      question" >
         [span_26](start_span)يعزي الشيخ السالمي ضياع أخبار الأئمة إلى انشغال أهل عمان بالحروب الخارجية فقط.[span_26](end_span)
-      points: 1
-      choices:
+      points" 1
+      choices"
         - "صح"
         - "خطأ"
-      answer: "خطأ"
-    - type: "instructions"
-      mainTitle: "ثالثًا الأسئلة المقالية (التحليل والاستنتاج)"
-      description: "أجب عن الأسئلة التالية بناءً على فهمك للنصوص المرفقة"
-    - type: "essay"
-      question: >
+      answer" "خطأ"
+    - type" "instructions"
+      mainTitle" "ثالثًا الأسئلة المقالية (التحليل والاستنتاج)"
+      description" "أجب عن الأسئلة التالية بناءً على فهمك للنصوص المرفقة"
+    - type" "essay"
+      question" >
         [span_27](start_span)كيف يمكن لبيت جرير (لو يسمعون بأكلة أو شربة بعمان) أن يدعم فكرة عمان كمقصد للرزق في العصر القديم؟[span_27](end_span)
-      points: 3
-      answer: >
+      points" 3
+      answer" >
         [span_28](start_span)يشير البيت إلى أن صيت عمان بالوفرة والرزق كان ذائعاً بين العرب، مما جعلها وجهة مرغوبة حتى للقبائل البعيدة، وهو ما يؤكد استقرارها المادي وجاذبيتها الاقتصادية في تلك العصور.[span_28](end_span)
-    - type: "essay"
-      question: >
+    - type" "essay"
+      question" >
         [span_29](start_span)[span_30](start_span)حلل العلاقة بين "الطرفية الجغرافية" وبين نوعية المنتج الأدبي (شعر/خطابة) في عمان بناءً على نصوص الدرس.[span_29](end_span)[span_30](end_span)
-      points: 3
-      answer: >
+      points" 3
+      answer" >
         [span_31](start_span)[span_32](start_span)أدت الطرفية والبعد عن مراكز النزاع إلى قلة شعر الحروب (حسب ابن سلام)، ولكنها وفرت بيئة استقرار حضري ساعدت على ازدهار فن الخطابة (كما لاحظ الجاحظ)، مما جعل الأدب العماني يتسم بالرصانة والنضج بدلاً من الانفعال القبلي.[span_31](end_span)[span_32](end_span)
-    - type: "essay"
-      question: >
+    - type" "essay"
+      question" >
         [span_33](start_span)ما التحدي المنهجي الذي يفرضه نص الشيخ السالمي (وأهل عمان لا يعتنون بالتاريخ) على الباحثين اليوم؟[span_33](end_span)
-      points: 2
-      answer: >
+      points" 2
+      answer" >
         التحدي هو "الفقد التدويني"؛ [span_34](start_span)حيث يضطر الباحث للاعتماد على المصادر الخارجية أو الاستنباط من شذرات الكتب لترميم السياق التاريخي للأدب العماني بسبب غياب التوثيق التاريخي المحلي المنظم قديماً.[span_34](end_span)
