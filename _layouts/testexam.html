@@ -45,7 +45,7 @@
         :root {
             /* الوضع الفاتح */
             --primary-color: #1a2ac6;
-            --bg-body: #f4f6fb;
+            --bg-body: #ffffff;
             --bg-card: #ffffff;
             --bg-secondary: #f8f9fa;
             --text-main: #2d2d2d;
@@ -67,7 +67,7 @@
         /* الوضع الداكن */
         [data-theme="dark"] {
             --primary-color: #7986cb;
-            --bg-body: #121212;
+            --bg-body: #1e1e1e;
             --bg-card: #1e1e1e;
             --bg-secondary: #2c2c2c;
             --text-main: #e0e0e0;
@@ -112,7 +112,7 @@
         }
 
         /* إخفاء العناصر الخاصة بالطباعة في العرض العادي */
-        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, #printable-qr-section-end, .tf-print-container, .print-letter {
+        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container, .print-letter {
             display: none;
         }
 
@@ -124,12 +124,6 @@
             flex-direction: row-reverse;
             flex-wrap: wrap; 
             gap: 10px;
-        }
-
-        .quiz-header img {
-            width: 35px;
-            height: 35px;
-            margin-left: 10px;
         }
 
         h1 {
@@ -428,7 +422,6 @@
             line-height: 1.7;
         }
 
-        /* تنسيقات خاصة بمجموعة الصح والخطأ في الطباعة */
         .tf-print-container {
             border: 1px solid var(--text-main);
             padding: 15px;
@@ -440,7 +433,7 @@
         .tf-print-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center; 
             font-weight: bold;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
@@ -471,7 +464,7 @@
             line-height: 1.5;
         }
 
-        /* === إعدادات الطباعة === */
+        /* === إعدادات الطباعة المُعدلة والمضغوطة === */
         @media print {
             :root, [data-theme="dark"] {
                 --primary-color: #000000 !important;
@@ -482,18 +475,6 @@
                 --text-muted: #333333 !important;
                 --border-color: #000000 !important;
                 --hover-bg: #ffffff !important;
-            }
-
-            html, body {
-                height: auto !important;
-                min-height: auto !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background-color: #ffffff !important;
-                color: #000000 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                direction: rtl !important;
             }
 
             header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
@@ -513,10 +494,28 @@
                 border: 1px solid #000 !important;
                 box-shadow: none !important;
                 background-color: transparent !important;
+                padding: 10px !important;
+                margin-bottom: 10px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
             }
 
-            .tf-print-header { border-bottom: 1px solid #000 !important; }
-            .tf-box { border: 1px solid #000 !important; }
+            .tf-print-header {
+                border-bottom: 1px solid #000 !important;
+            }
+
+            .tf-box {
+                border: 1px solid #000 !important;
+            }
+
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                direction: rtl !important;
+                font-size: 14px !important;
+            }
 
             .container {
                 max-width: 100% !important;
@@ -525,7 +524,6 @@
                 padding: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
-                min-height: auto !important;
             }
 
             table, .quiz-info-table, #print-eval-table {
@@ -553,28 +551,44 @@
             #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
             #print-eval-table { display: table !important; }
 
+            /* ضغط الأسئلة ومنع انقسامها بين الصفحات */
             .question-item, .instructions-question {
                 border: 1px solid #000 !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 background-color: #fff !important;
-                margin-bottom: 15px !important;
-                break-inside: avoid;
-                page-break-inside: avoid;
-                padding: 15px !important;
+                margin-bottom: 10px !important;
+                padding: 10px 15px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .question-text {
+                margin-bottom: 8px !important;
+            }
+
+            /* تحويل الاختيارات لصف أفقي */
+            .choices-container {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 15px !important;
+                justify-content: flex-start !important;
             }
 
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
-                padding: 5px 0 !important;
+                padding: 0 !important;
                 color: #000 !important;
+                flex: 0 1 auto !important;
             }
             
             .choice-radio { display: none !important; }
+            
             .print-letter { 
                 display: inline-block !important; 
-                margin-left: 8px; 
+                margin-left: 5px; 
                 font-weight: bold;
             }
 
@@ -582,30 +596,32 @@
                 background-color: transparent !important;
                 color: #000 !important;
                 border: 1px solid #000 !important;
-                padding: 2px 8px !important;
+                padding: 2px 6px !important;
             }
 
+            /* الحفاظ على ورقة الغلاف كما هي */
             .quiz-front-page {
                 display: block;
                 width: 100%;
                 break-after: page; 
                 page-break-after: always;
-                min-height: auto;
+                min-height: 90vh;
             }
 
             .essay-answer { display: none !important; }
 
             .print-essay-lines {
                 display: block !important;
-                margin-top: 20px;
+                margin-top: 10px;
                 width: 100%;
             }
 
+            /* ضغط الأسطر المقالية لتوفير المساحة */
             .writing-line {
-                border-bottom: 2px dotted #999;
-                height: 40px;
+                border-bottom: 1px dotted #888;
+                height: 28px !important;
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 5px !important;
             }
             
             .full-page-question {
@@ -625,11 +641,38 @@
                 break-before: page;
                 page-break-before: always;
                 direction: rtl;
-                padding-top: 20px;
+                padding-top: 30px;
                 color: #000 !important;
             }
 
-            /* === تنسيق قسم QR Code الأول (تصغير الحجم) === */
+            /* تنسيق جدول الإجابة في الطباعة */
+            .answer-key-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 15px !important;
+            }
+            .answer-key-table th {
+                background-color: #e0e7ff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                border: 2px solid #1a2ac6 !important;
+                padding: 10px !important;
+                color: #000 !important;
+            }
+            .answer-key-table td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+            }
+            .answer-key-table tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .answer-key-table tbody tr:nth-child(even) {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             #printable-qr-section {
                 display: flex !important;
                 flex-direction: column;
@@ -638,60 +681,29 @@
                 break-before: auto;
                 page-break-inside: avoid;
                 text-align: center;
-                
-                margin-top: 15px;
-                padding: 10px;
-                width: 35%; /* تصغير العرض */
+                margin-top: 20px;
+                padding: 20px;
+                width: 60%; 
                 margin-left: auto;
                 margin-right: auto;
-                
                 background-color: #e0e7ff !important; 
                 border: 2px solid #1a2ac6 !important;
-                border-radius: 8px;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
             #printable-qr-section h3 {
                 color: #1a2ac6 !important;
-                font-size: 14px; /* تصغير الخط */
-                margin-top: 5px;
+                font-size: 18px; 
+                margin-top: 10px;
                 font-weight: bold;
             }
             
             #qrcode-container {
-                padding: 5px;
+                padding: 10px;
                 background: white;
-                border-radius: 6px;
-                border: 1px solid #1a2ac6;
-            }
-
-            /* === تنسيق قسم QR Code الأخير (نموذج الإجابة) === */
-            #printable-qr-section-end {
-                display: flex !important;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                margin-top: 30px;
-                padding: 8px 15px;
-                border: 1px solid #1a2ac6 !important;
-                background-color: #e0e7ff !important;
-                width: fit-content;
-                margin-left: auto;
-                margin-right: auto;
                 border-radius: 8px;
-                break-inside: avoid;
-                page-break-inside: avoid;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            #printable-qr-section-end h3 {
-                color: #1a2ac6 !important;
-                font-size: 12px;
-                margin: 0;
-                font-weight: bold;
+                border: 1px solid #1a2ac6;
             }
         }
 
@@ -716,7 +728,7 @@
                     <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
                 </button>
                 <h1 id="quiz-title">الاختبار</h1>
-                <img src="{{ '/images/favicon.png' | relative_url }}" alt="Quiz Icon">
+
             </div>
 
             <table class="quiz-info-table" id="quiz-info-table">
@@ -828,20 +840,20 @@
             const oldQr = document.getElementById('printable-qr-section');
             if (oldQr) oldQr.remove();
 
-            // 1. إنشاء نموذج الإجابة
+            // 1. تحسين بناء جدول نموذج الإجابة
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
             let keyHTML = `
-                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 15px;">
-                    <h2 style="margin:0; font-size: 24px;">نموذج الإجابة</h2>
-                    <p style="margin:5px 0; font-size: 16px;">${quizTitleElement.textContent}</p>
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px double #1a2ac6; padding-bottom: 15px;">
+                    <h2 style="margin:0; font-size: 24px; color: #1a2ac6;">نموذج الإجابة</h2>
+                    <p style="margin:5px 0; font-size: 16px; font-weight: bold;">${quizTitleElement.textContent}</p>
                 </div>
-                <table style="width: 100%; border-collapse: collapse; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                <table class="answer-key-table">
                     <thead>
-                        <tr style="background-color: #f0f0f0; break-inside: avoid; page-break-inside: avoid;">
-                            <th style="border: 1px solid #000; padding: 10px; width: 15%;">رقم السؤال</th>
-                            <th style="border: 1px solid #000; padding: 10px;">الإجابة الصحيحة</th>
+                        <tr>
+                            <th style="width: 15%;">رقم السؤال</th>
+                            <th>الإجابة الصحيحة</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -850,32 +862,21 @@
             let qCount = 1;
             quizData[currentQuiz].questions.forEach(q => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-                const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '';
-                
-                // منع انقسام صفوف الإجابات على صفحتين
+                const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '—';
                 keyHTML += `
-                    <tr style="break-inside: avoid; page-break-inside: avoid;">
-                        <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${qCount}</td>
-                        <td style="border: 1px solid #000; padding: 10px; text-align: right;">${cleanAnswer}</td>
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">${qCount}</td>
+                        <td style="text-align: right; line-height: 1.6;">${cleanAnswer}</td>
                     </tr>
                 `;
                 qCount++;
             });
 
             keyHTML += `</tbody></table>`;
-            
-            // إضافة قسم QR المصغر لنهاية نموذج الإجابة
-            keyHTML += `
-                <div id="printable-qr-section-end">
-                    <div id="qrcode-container-end" style="background: white; padding: 4px; border-radius: 4px; border: 1px solid #1a2ac6;"></div>
-                    <h3>امسح للوصول إلى النسخة التفاعلية</h3>
-                </div>
-            `;
-
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
 
-            // 2. إنشاء قسم QR Code للواجهة (بحجم أصغر)
+            // 2. إنشاء قسم QR Code 
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
@@ -890,27 +891,15 @@
             const frontPageContainer = document.querySelector('.quiz-front-page');
             frontPageContainer.appendChild(qrDiv);
 
-            // توليد الـ QR للصفحة الأولى بأبعاد أصغر
             new QRCode(qrContainer, {
                 text: window.location.href,
-                width: 90, 
-                height: 90,
+                width: 128, 
+                height: 128,
                 colorDark : "#1a2ac6", 
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            // توليد الـ QR لنهاية نموذج الإجابة (مصغر جداً)
-            new QRCode(document.getElementById('qrcode-container-end'), {
-                text: window.location.href,
-                width: 50, 
-                height: 50,
-                colorDark : "#1a2ac6", 
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            // 3. إعداد الصفحة للطباعة (إخفاء التحديدات)
             const allRadios = document.querySelectorAll('input[type="radio"]');
             const checkedStates = new Map();
             allRadios.forEach((radio, index) => {
@@ -922,8 +911,6 @@
 
             setTimeout(() => {
                 window.print();
-                
-                // 4. استعادة التحديدات
                 allRadios.forEach((radio, index) => {
                     if(checkedStates.has(index)) {
                         radio.checked = true;
