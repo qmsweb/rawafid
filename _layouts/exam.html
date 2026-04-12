@@ -126,8 +126,6 @@
             gap: 10px;
         }
 
-        
-
         h1 {
             text-align: center;
             font-size: 25px;
@@ -424,7 +422,6 @@
             line-height: 1.7;
         }
 
-        /* تنسيقات خاصة بمجموعة الصح والخطأ في الطباعة */
         .tf-print-container {
             border: 1px solid var(--text-main);
             padding: 15px;
@@ -436,7 +433,7 @@
         .tf-print-header {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* تم التعديل هنا: لضمان توسط الدرجة عمودياً */
+            align-items: center; 
             font-weight: bold;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
@@ -467,7 +464,7 @@
             line-height: 1.5;
         }
 
-        /* === إعدادات الطباعة === */
+        /* === إعدادات الطباعة المُعدلة والمضغوطة === */
         @media print {
             :root, [data-theme="dark"] {
                 --primary-color: #000000 !important;
@@ -492,12 +489,15 @@
                 display: none !important;
             }
 
-            /* إظهار حاوية الصح والخطأ في الطباعة */
             .tf-print-container {
                 display: block !important;
                 border: 1px solid #000 !important;
                 box-shadow: none !important;
                 background-color: transparent !important;
+                padding: 10px !important;
+                margin-bottom: 10px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
             }
 
             .tf-print-header {
@@ -514,6 +514,7 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
                 direction: rtl !important;
+                font-size: 14px !important;
             }
 
             .container {
@@ -550,29 +551,44 @@
             #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
             #print-eval-table { display: table !important; }
 
+            /* ضغط الأسئلة ومنع انقسامها بين الصفحات */
             .question-item, .instructions-question {
                 border: 1px solid #000 !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 background-color: #fff !important;
-                margin-bottom: 15px !important;
-                break-inside: avoid;
-                page-break-inside: avoid;
-                padding: 15px !important;
+                margin-bottom: 10px !important;
+                padding: 10px 15px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .question-text {
+                margin-bottom: 8px !important;
+            }
+
+            /* تحويل الاختيارات لصف أفقي */
+            .choices-container {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 15px !important;
+                justify-content: flex-start !important;
             }
 
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
-                padding: 5px 0 !important;
+                padding: 0 !important;
                 color: #000 !important;
+                flex: 0 1 auto !important;
             }
             
-            /* إخفاء الراديو وإظهار الحروف في الطباعة */
             .choice-radio { display: none !important; }
+            
             .print-letter { 
                 display: inline-block !important; 
-                margin-left: 8px; 
+                margin-left: 5px; 
                 font-weight: bold;
             }
 
@@ -580,9 +596,10 @@
                 background-color: transparent !important;
                 color: #000 !important;
                 border: 1px solid #000 !important;
-                padding: 2px 8px !important;
+                padding: 2px 6px !important;
             }
 
+            /* الحفاظ على ورقة الغلاف كما هي */
             .quiz-front-page {
                 display: block;
                 width: 100%;
@@ -595,15 +612,16 @@
 
             .print-essay-lines {
                 display: block !important;
-                margin-top: 20px;
+                margin-top: 10px;
                 width: 100%;
             }
 
+            /* ضغط الأسطر المقالية لتوفير المساحة */
             .writing-line {
-                border-bottom: 2px dotted #999;
-                height: 40px;
+                border-bottom: 1px dotted #888;
+                height: 28px !important;
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 5px !important;
             }
             
             .full-page-question {
@@ -623,11 +641,38 @@
                 break-before: page;
                 page-break-before: always;
                 direction: rtl;
-                padding-top: 50px;
+                padding-top: 30px;
                 color: #000 !important;
             }
 
-            /* === تنسيق قسم QR Code المعدل === */
+            /* تنسيق جدول الإجابة في الطباعة */
+            .answer-key-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 15px !important;
+            }
+            .answer-key-table th {
+                background-color: #e0e7ff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                border: 2px solid #1a2ac6 !important;
+                padding: 10px !important;
+                color: #000 !important;
+            }
+            .answer-key-table td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+            }
+            .answer-key-table tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .answer-key-table tbody tr:nth-child(even) {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             #printable-qr-section {
                 display: flex !important;
                 flex-direction: column;
@@ -636,14 +681,11 @@
                 break-before: auto;
                 page-break-inside: avoid;
                 text-align: center;
-                
-                /* تم تعديل الهوامش ليظهر بشكل مناسب داخل الصفحة الأولى */
                 margin-top: 20px;
                 padding: 20px;
-                width: 60%; /* تم تصغير العرض قليلاً ليتناسب مع الجدول */
+                width: 60%; 
                 margin-left: auto;
                 margin-right: auto;
-                
                 background-color: #e0e7ff !important; 
                 border: 2px solid #1a2ac6 !important;
                 -webkit-print-color-adjust: exact !important;
@@ -770,7 +812,6 @@
         const subjectCodeElement = document.getElementById('subject-code');
         const subjectTotalScoreElement = document.getElementById('subject-total-score');
         
-        // مصفوفة الحروف للطباعة
         const arabicLetters = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي'];
 
         let quizData = [];
@@ -799,20 +840,20 @@
             const oldQr = document.getElementById('printable-qr-section');
             if (oldQr) oldQr.remove();
 
-            // 1. إنشاء نموذج الإجابة
+            // 1. تحسين بناء جدول نموذج الإجابة
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
             let keyHTML = `
-                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 15px;">
-                    <h2 style="margin:0; font-size: 24px;">نموذج الإجابة</h2>
-                    <p style="margin:5px 0; font-size: 16px;">${quizTitleElement.textContent}</p>
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px double #1a2ac6; padding-bottom: 15px;">
+                    <h2 style="margin:0; font-size: 24px; color: #1a2ac6;">نموذج الإجابة</h2>
+                    <p style="margin:5px 0; font-size: 16px; font-weight: bold;">${quizTitleElement.textContent}</p>
                 </div>
-                <table style="width: 100%; border-collapse: collapse; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                <table class="answer-key-table">
                     <thead>
-                        <tr style="background-color: #f0f0f0;">
-                            <th style="border: 1px solid #000; padding: 10px; width: 15%;">رقم السؤال</th>
-                            <th style="border: 1px solid #000; padding: 10px;">الإجابة الصحيحة</th>
+                        <tr>
+                            <th style="width: 15%;">رقم السؤال</th>
+                            <th>الإجابة الصحيحة</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -821,11 +862,11 @@
             let qCount = 1;
             quizData[currentQuiz].questions.forEach(q => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-                const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '';
+                const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '—';
                 keyHTML += `
                     <tr>
-                        <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${qCount}</td>
-                        <td style="border: 1px solid #000; padding: 10px; text-align: right;">${cleanAnswer}</td>
+                        <td style="text-align: center; font-weight: bold;">${qCount}</td>
+                        <td style="text-align: right; line-height: 1.6;">${cleanAnswer}</td>
                     </tr>
                 `;
                 qCount++;
@@ -833,10 +874,9 @@
 
             keyHTML += `</tbody></table>`;
             keyDiv.innerHTML = keyHTML;
-            // إضافة نموذج الإجابة في نهاية الصفحة
             document.querySelector('.container').appendChild(keyDiv);
 
-            // 2. إنشاء قسم QR Code (تم التعديل لإضافته في صفحة الواجهة)
+            // 2. إنشاء قسم QR Code 
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
@@ -848,7 +888,6 @@
             qrText.textContent = "امسح للوصول إلى النسخة التفاعلية";
             qrDiv.appendChild(qrText);
 
-            // === التعديل هنا: إضافة QR Code إلى داخل div الواجهة بدلاً من نهاية المستند ===
             const frontPageContainer = document.querySelector('.quiz-front-page');
             frontPageContainer.appendChild(qrDiv);
 
@@ -861,20 +900,17 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            // 3. إعداد الصفحة للطباعة (إخفاء التحديدات)
             const allRadios = document.querySelectorAll('input[type="radio"]');
             const checkedStates = new Map();
             allRadios.forEach((radio, index) => {
                 if(radio.checked) {
                     checkedStates.set(index, true);
-                    radio.checked = false; // إلغاء التحديد للطباعة
+                    radio.checked = false; 
                 }
             });
 
             setTimeout(() => {
                 window.print();
-                
-                // 4. استعادة التحديدات
                 allRadios.forEach((radio, index) => {
                     if(checkedStates.has(index)) {
                         radio.checked = true;
@@ -982,7 +1018,6 @@
                     return; 
                 }
                 
-                // === منطق تجميع أسئلة TF للطباعة ===
                 if (q.type === 'tf') {
                     if (!currentTfContainer) {
                         currentTfContainer = document.createElement('div');
@@ -995,7 +1030,7 @@
                         titleSpan.textContent = "ضع علامة صح أو خطأ في المربع للإجابة:";
                         
                         currentTfScoreSpan = document.createElement('span');
-                        currentTfScoreSpan.className = 'points-badge'; // === تم إضافة الكلاس هنا ===
+                        currentTfScoreSpan.className = 'points-badge'; 
                         currentTfScoreSpan.textContent = "";
                         
                         headerDiv.appendChild(titleSpan);
@@ -1026,7 +1061,6 @@
                     currentTfContainer.appendChild(tfRow);
                 }
 
-                // === العرض العادي ===
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 if (q.type === 'info') questionDiv.classList.add('info-question');
@@ -1137,10 +1171,8 @@
                         const label = document.createElement('label');
                         label.className = 'choice-label';
                         
-                        // إضافة عنصر الـ span للحرف (يظهر في الطباعة فقط)
                         const printLetterSpan = document.createElement('span');
                         printLetterSpan.className = 'print-letter';
-                        // نستخدم المصفوفة، وإذا زادت الخيارات عن المصفوفة نستخدم الرقم
                         const letter = arabicLetters[cIndex] || (cIndex + 1);
                         printLetterSpan.textContent = letter + '- ';
                         label.appendChild(printLetterSpan);
