@@ -12,6 +12,7 @@
     { "name": "القياس والتقويم", "type": "التربوية", "code": "EDUC214", "color": "#59c9f1" },
   { "name": "الصوتيات - علم الأصوات", "type": "التخصصية", "code": "ARAB229", "color": "#4b31de" },
   { "name": "اللسانيات", "type": "التخصصية", "code": "ARAB311", "color": "#4b31de" },
+  { "name": "فقه اللغة", "type": "التخصصية", "code": "ARAB321", "color": "#4b31de" },
   { "name": "علم الدلالة", "type": "التخصصية", "code": "ARAB315", "color": "#4b31de" },
   { "name": "الشعر الجاهلي", "type": "التخصصية", "code": "ARAB111", "color": "#bdba12" },
   { "name": "الشعر الإسلامي والأموي", "type": "التخصصية", "code": "ARAB122", "color": "#bdba12" },
