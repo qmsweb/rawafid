@@ -16,6 +16,13 @@
             "description": "",
             "type": "quizzes",
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC221-2"
+        },
+        {
+            "id": 3,
+            "title": "اختبار تفاعلي في المشاع الإبداعي",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC221-3"
         }
     ]
 }
