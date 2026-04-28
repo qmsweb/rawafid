@@ -6,9 +6,6 @@
   <meta name="description" content="منصة روافد موجهة لطلبة اللغة العربية بجامعة الشرقية.">
   <title>{{ page.title | default: "منصة روافد - الرئيسية" }}</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
    
@@ -30,12 +27,39 @@
   </script>
 
   <style>
+    /* === الخطوط المحلية === */
+    @font-face {
+      font-family: 'Rawafid Display';
+      src: url('{{ "/fonts/rawafid-display.otf" | relative_url }}') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Rawafid Text Bold';
+      src: url('{{ "/fonts/rawafid-text-Bold.otf" | relative_url }}') format('opentype');
+      font-weight: bold;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Rawafid Text Medium';
+      src: url('{{ "/fonts/rawafid-text-Medium.otf" | relative_url }}') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Rawafid Text Light';
+      src: url('{{ "/fonts/rawafid-text-Light.otf" | relative_url }}') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+    }
+
     /* === المتغيرات === */
     :root {
       --primary-color: #1a2ac6;
       --primary-light-bg: #eff1ff;
       --bg-body: #f4f6fb;
       --bg-card: #ffffff;
+      --bg-topbar: #ffffff;
       --bg-sticky: rgba(244, 246, 251, 0.95);
       --border-color: #ccd1e0;
       --text-main: #2d2d2d;
@@ -45,6 +69,12 @@
       --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.1);
       --hover-bg: #f9f9f9;
       --radius-md: 12px;
+
+      /* متغيرات الخطوط */
+      --font-display: 'Rawafid Display', sans-serif;
+      --font-subhead: 'Rawafid Text Bold', sans-serif;
+      --font-body: 'Rawafid Text Medium', sans-serif;
+      --font-light: 'Rawafid Text Light', sans-serif;
     }
 
     [data-theme="dark"] {
@@ -52,6 +82,7 @@
       --primary-light-bg: #282a36;
       --bg-body: #121212;
       --bg-card: #1e1e1e;
+      --bg-topbar: #1e1e1e;
       --bg-sticky: rgba(18, 18, 18, 0.95);
       --border-color: #333333;
       --text-main: #e0e0e0;
@@ -62,25 +93,102 @@
       --hover-bg: #2c2e3e;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
+    body { 
+        background-color: var(--bg-body); 
+        color: var(--text-main); 
+        min-height: 100vh; 
+        padding-top: 100px; /* مساحة التوبار الجديد */
+        padding-bottom: 40px; 
+        font-family: var(--font-body); /* الخط الافتراضي للنصوص */
+    }
+
+    /* تطبيق الخطوط على العناصر */
+    h1, h2, .section-title { font-family: var(--font-display); }
+    h3, h4, .tool-name, .item-title h3, .sidebar-menu a { font-family: var(--font-subhead); }
+    p, span, div { font-family: var(--font-body); }
+    .compact-label, .item-code { font-family: var(--font-light); }
+
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
+    /* === التوبار (الشريط العلوي) === */
+    .topbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 70px;
+        background-color: var(--bg-topbar);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 15px; }
+    .menu-btn { background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
+    .topbar-logo { display: flex; align-items: center; }
+    .topbar-logo img { height: 40px; object-fit: contain; }
+    .theme-toggle-btn { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; }
+
+    /* === القائمة الجانبية === */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px; /* مخفية لليمين في اللغة العربية */
+        width: 280px;
+        height: 100vh;
+        background-color: var(--bg-card);
+        z-index: 1002;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    .sidebar.active { right: 0; }
+    
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+    .sidebar-logo img { height: 35px; }
+    .close-sidebar { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+    
+    .sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .sidebar-menu li a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: var(--text-main);
+        padding: 12px 15px;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+    }
+    .sidebar-menu li a:hover { background-color: var(--primary-light-bg); color: var(--primary-color); }
+    .sidebar-menu li a i { font-size: 1.2rem; width: 25px; text-align: center; }
+
     /* === نظام التحميل الموحد === */
-    #main-content-area {
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-    #main-content-area.loaded {
-      opacity: 1;
-    }
+    #main-content-area { opacity: 0; transition: opacity 0.5s ease-in-out; }
+    #main-content-area.loaded { opacity: 1; }
 
     /* === تخطيط القسم العلوي (الشاشات الكبيرة والجوال) === */
-    .top-section-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
+    .top-section-wrapper { display: flex; flex-direction: column; }
 
     /* === تصميم ودجيت الأسبوع الجديد === */
     .week-widget {
@@ -98,115 +206,42 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
-
     [data-theme="dark"] .week-widget { background: #1a1c2c; }
-
-    .week-widget:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-      border-color: var(--primary-color);
-    }
-
-    .widget-main-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .compact-icon {
-      width: 30px;
-      height: 30px;
-      background: var(--primary-color);
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
-    .compact-text {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .compact-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      display: none;
-    }
-
-    #week-badge-insert .current-label-tag {
-      background-color: var(--primary-light-bg);
-      color: var(--primary-color);
-      font-size: 0.7rem;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 700;
-    }
-
-    [data-theme="dark"] #week-badge-insert .current-label-tag {
-      background-color: rgba(121, 134, 203, 0.2);
-    }
-
-    #week-title-text {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-main);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .compact-arrow {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      flex-shrink: 0;
-    }
+    .week-widget:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); border-color: var(--primary-color); }
+    .widget-main-info { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
+    .compact-icon { width: 30px; height: 30px; background: var(--primary-color); color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+    .compact-text { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .compact-label { font-size: 0.75rem; color: var(--text-muted); display: none; }
+    #week-badge-insert .current-label-tag { background-color: var(--primary-light-bg); color: var(--primary-color); font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
+    [data-theme="dark"] #week-badge-insert .current-label-tag { background-color: rgba(121, 134, 203, 0.2); }
+    #week-title-text { font-size: 0.85rem; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; font-family: var(--font-subhead); }
+    .compact-arrow { color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; }
 
     /* === الأدوات والفلاتر === */
-    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; }
-
+    .section-title { font-size: 1.3rem; margin-bottom: 15px; border-right: 4px solid var(--primary-color); padding-right: 12px; color: var(--text-main); }
     .tools-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 25px; }
-    
     .tool-item { background: transparent; border: none; padding: 5px 0; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
     .tool-item:hover { transform: translateY(-4px); }
     .tool-icon { width: 55px; height: 55px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .tool-item:hover .tool-icon { background: var(--primary-color); color: #ffffff; border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
-    
-    /* لون خاص لأيقونة صوامت */
-    .tool-icon.sawamet-bg {
-      background-color: #7F288F !important;
-      border-color: #7F288F !important;
-    }
+    .tool-icon.sawamet-bg { background-color: #7F288F !important; border-color: #7F288F !important; }
     .tool-icon img { width: 28px; height: 28px; object-fit: contain; transition: 0.3s ease; }
-    
-    .tool-name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+    .tool-name { font-size: 0.85rem; color: var(--text-main); }
 
     .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 25px; padding: 10px 0; border-bottom: 1px solid var(--border-color); margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; backdrop-filter: blur(5px); }
     .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-    
     .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
     .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; }
     .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
-    
-    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; }
+    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-family: var(--font-subhead); font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; }
     .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
 
     .materials-list { display: flex; flex-direction: column; gap: 16px; }
     .material-item { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; transition: all 0.3s; cursor: pointer; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color); }
     .material-item:hover { box-shadow: var(--hover-shadow); border-color: var(--primary-color); }
     .item-icon-box { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
-    .item-title h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
-    .item-code { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; }
+    .item-title h3 { font-size: 1.1rem; color: var(--text-main); }
+    .item-code { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; margin-top: 5px; }
 
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
@@ -218,33 +253,19 @@
       #week-title-text { font-size: 0.95rem; }
     }
 
-    /* === الشاشات الكبيرة (اللاب توب - تخطيط التقويم بجانب الأدوات) === */
     @media (min-width: 992px) {
-      .top-section-wrapper {
-        flex-direction: row;
-        gap: 40px;
-        align-items: flex-start;
-        margin-top: 15px;
-      }
+      .top-section-wrapper { flex-direction: row; gap: 40px; align-items: flex-start; margin-top: 15px; }
       .calendar-section { width: 35%; }
       .tools-section { width: 65%; }
-      
-      .calendar-section .week-widget {
-        margin-top: 0; /* التخلص من الهامش العلوي لمحاذاته مع الأدوات */
-        padding: 12px 20px; 
-      }
-      .tools-section .section-title {
-        margin-top: 0; /* محاذاة العنوان بدقة مع مربع التقويم */
-      }
+      .calendar-section .week-widget { margin-top: 0; padding: 12px 20px; }
+      .tools-section .section-title { margin-top: 0; }
     }
 
-    /* === شاشات الجوال === */
     @media (max-width: 768px) {
       .tools-grid { gap: 5px; }
       .tool-icon { width: 45px; height: 45px; font-size: 1.1rem; }
       .tool-icon img { width: 22px; height: 22px; }
       .tool-name { font-size: 0.75rem; }
-      
       .materials-list.grid-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .materials-list.grid-view .material-item { padding: 15px; text-align: center; flex-direction: column; }
     }
@@ -252,7 +273,34 @@
 </head>
 <body>
 
-  {% include header.html %}
+  <header class="topbar">
+      <div class="topbar-right">
+          <button class="menu-btn" id="open-sidebar-btn"><i class="fas fa-bars"></i></button>
+          <a href="{{ '/' | relative_url }}" class="topbar-logo">
+              <img src="{{ '/images/testlogo.png' | relative_url }}" alt="روافد">
+          </a>
+      </div>
+      <div class="topbar-left">
+          <button class="theme-toggle-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+      </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+          <a href="{{ '/' | relative_url }}" class="sidebar-logo">
+              <img src="{{ '/images/testlogo.png' | relative_url }}" alt="روافد">
+          </a>
+          <button class="close-sidebar" id="close-sidebar-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <ul class="sidebar-menu">
+          <li><a href="{{ '/' | relative_url }}"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="{{ '/calendar' | relative_url }}"><i class="fas fa-calendar-alt"></i> التقويم الأكاديمي</a></li>
+          <li><a href="{{ '/study-plan' | relative_url }}"><i class="fas fa-book-open"></i> الخطة الدراسية</a></li>
+          <li><a href="{{ '/tawtheeq-tool' | relative_url }}"><i class="fas fa-quote-right"></i> توثيق المراجع</a></li>
+          <li><a href="{{ '/tools' | relative_url }}"><i class="fas fa-toolbox"></i> المزيد من الأدوات</a></li>
+      </ul>
+  </aside>
 
   <div class="container">
     
@@ -307,7 +355,9 @@
                 </div>
             </div>
 
-        </div> <div class="sticky-filter-container">
+        </div> 
+        
+        <div class="sticky-filter-container">
             <div class="filter-bar" id="filter-bar"></div>
         </div>
 
@@ -315,7 +365,7 @@
             <div style="padding: 20px; text-align: center; color: var(--text-muted);">جاري تحميل المقررات...</div>
         </div>
 
-    </div> {% include footer.html %}
+    </div>
   </div>
 
 <script>
@@ -325,9 +375,44 @@
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('rawafed-theme', newTheme);
+    
+    // تغيير أيقونة الثيم في التوبار
+    const themeBtnIcon = document.querySelector('.theme-toggle-btn i');
+    if (themeBtnIcon) {
+        themeBtnIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
   }
 
-  /* === 2. منطق الأسبوع الحالي === */
+  // ضبط أيقونة الثيم عند التحميل
+  document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('rawafed-theme') || 'light';
+      const themeBtnIcon = document.querySelector('.theme-toggle-btn i');
+      if (themeBtnIcon) {
+          themeBtnIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+  });
+
+  /* === 2. التحكم بالقائمة الجانبية (Sidebar) === */
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  const openSidebarBtn = document.getElementById('open-sidebar-btn');
+  const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+  function openSidebar() {
+      sidebar.classList.add('active');
+      sidebarOverlay.classList.add('active');
+  }
+
+  function closeSidebar() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+  }
+
+  openSidebarBtn.addEventListener('click', openSidebar);
+  closeSidebarBtn.addEventListener('click', closeSidebar);
+  sidebarOverlay.addEventListener('click', closeSidebar);
+
+  /* === 3. منطق الأسبوع الحالي === */
   async function checkCurrentWeek() {
       try {
           const response = await fetch("{{ '/assets/calendar.json' | relative_url }}?v=" + new Date().getTime());
@@ -368,7 +453,7 @@
       }
   }
 
-  /* === 3. منطق المواد والفلاتر === */
+  /* === 4. منطق المواد والفلاتر === */
   const materialsList = document.getElementById('materials-list');
   const filterBar = document.getElementById('filter-bar');
   let allCourses = [];
@@ -442,7 +527,7 @@
     setView(savedMode || (window.innerWidth < 768 ? 'list' : 'grid'), false);
   }
 
-  /* === 4. تنفيذ التحميل المتزامن === */
+  /* === 5. تنفيذ التحميل المتزامن === */
   document.addEventListener('DOMContentLoaded', () => {
     const mainArea = document.getElementById('main-content-area');
 
