@@ -18,6 +18,13 @@
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC221-2"
         },
         {
+            "id": 4,
+            "title": "اختبار تفاعلي في الوحدة الثالثة",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC221-ch3"
+        },  
+        {
             "id": 3,
             "title": "اختبار تفاعلي في المشاع الإبداعي",
             "description": "",
