@@ -4,9 +4,10 @@
     "items": [
         {
             "id": 1,
-            "title": "الصفحة في وضع الاختبار",
-            "description": "صفحة مقرر البلاغة العربية لا تزال في وضع الاختبار، ستضاف العناصر الجديدة قريبًا.",
-            "type": "resources",
+            "title": "تدريبات على المجاز المرسل",
+            "description": "",
+            "type": "link",
+            "preview_url": "https://groups.google.com/g/loughatouna/c/HKdlUz3Y6XY",
             "time-ms": "1760477083319"
         }
     ]
