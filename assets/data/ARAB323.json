@@ -4,6 +4,13 @@
   "url": "https://rawafid.jassim.one/c/ARAB323",
   "items": [
     {
+      "title": "الدروس المحذوفة من الاختبار النهائي ربيع 2026",
+      "description": "الدرس الأول\nالدرس الثاني",
+      "type": "resources",
+      "id": "7",
+      "time-ms": "1775365086471"
+    },
+    {
       "title": "اختبار تفاعلي في الدرس الأول (مخطط عام في الأدب العماني)",
       "description": "",
       "id": "1",
@@ -43,7 +50,7 @@
       "time-ms": "1775365086471"
     },
     {
-      "title": "ملخص الأدب العماني", 
+      "title": "ملخص الأدب العماني",
       "description": "إعداد: ريام السالمي",
       "type": "documents",
       "download_url": "https://m.jassim.one/ARAB323/%E2%80%8E%E2%81%A8%D9%85%D9%84%D8%AE%D8%B5%20%D8%A7%D9%84%D8%A7%D9%94%D8%AF%D8%A8%20%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D9%86%D9%8A%E2%81%A9.pdf",
