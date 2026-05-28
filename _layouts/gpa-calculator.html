@@ -240,11 +240,11 @@
       </div>
        
       <div class="header-actions">
-          <button class="action-btn" onclick="addCourseRow()">
+          <button type="button" class="action-btn" onclick="addCourseRow()">
             <i class="fas fa-plus"></i> إضافة مادة
           </button>
 
-          <button class="action-btn" onclick="clearForm()">
+          <button type="button" class="action-btn" onclick="clearForm()">
             <i class="fas fa-eraser"></i> مسح الحقول
           </button>
       </div>
@@ -253,7 +253,7 @@
     <div class="ios-list-group">
         <div class="list-header">
             <span>المواد الدراسية</span>
-            <span>عدد المواد: <span id="courseCount">1</span></span>
+            <span>عدد المواد: <span id="courseCount">0</span></span>
         </div>
          
         <div class="form-content">
@@ -268,13 +268,13 @@
                 </div>
 
             <div style="margin-top: 15px; display: flex; justify-content: center;">
-                <button class="action-btn" onclick="addCourseRow()" style="width: 100%; justify-content: center; border-style: dashed; padding: 10px;">
+                <button type="button" class="action-btn" onclick="addCourseRow()" style="width: 100%; justify-content: center; border-style: dashed; padding: 10px;">
                     <i class="fas fa-plus"></i> إضافة مادة جديدة
                 </button>
             </div>
 
             <div style="margin-top: 15px;">
-                <button class="action-btn primary-btn" onclick="calculateGPA()" style="width: 100%; justify-content: center; padding: 12px;">
+                <button type="button" class="action-btn primary-btn" onclick="calculateGPA()" style="width: 100%; justify-content: center; padding: 12px;">
                     <i class="fas fa-calculator"></i> احسب النتيجة
                 </button>
             </div>
@@ -311,7 +311,7 @@
 
   /* === منطق حاسبة المعدل === */
 
-  // تعريف قيم الدرجات الجديدة
+  // تعريف قيم الدرجات
   const gradeScale = {
       'A': 4.00,
       'A-': 3.70,
@@ -335,6 +335,7 @@
           optionsHTML += `<option value="${g}">${g}</option>`;
       });
 
+      // تم إضافة type="button" لزر الحذف لمنع إرسال النموذج بالخطأ
       return `
         <div class="course-row">
             <input type="text" class="input-field course-name" placeholder="اسم المادة (اختياري)">
@@ -342,7 +343,7 @@
             <select class="select-field course-grade">
                 ${optionsHTML}
             </select>
-            <button class="delete-row-btn" onclick="removeRow(this)">
+            <button type="button" class="delete-row-btn" onclick="removeRow(this)">
                 <i class="fas fa-trash-alt"></i>
             </button>
         </div>
@@ -351,9 +352,8 @@
 
   function addCourseRow() {
       const container = document.getElementById('courses-container');
-      const div = document.createElement('div');
-      div.innerHTML = createRowHTML(); 
-      container.appendChild(div.firstElementChild);
+      // استخدام insertAdjacentHTML أكثر استقراراً لدمج العناصر
+      container.insertAdjacentHTML('beforeend', createRowHTML());
       updateCount();
   }
 
@@ -364,13 +364,78 @@
           updateCount();
           recalculateIfVisible();
       } else {
+          // تفريغ محتوى الصف الأول بدلاً من حذفه إذا كان هو الأخير
           const row = btn.closest('.course-row');
           row.querySelector('.course-name').value = '';
-          row.querySelector('.course-hours').value = '3'; // إعادة تعيين لـ 3 بدلاً من مسحها تماماً
+          row.querySelector('.course-hours').value = '3';
           row.querySelector('.course-grade').selectedIndex = 0;
       }
   }
 
   function updateCount() {
       const count = document.getElementById('courses-container').children.length;
-      document.getElementById('courseCount
+      document.getElementById('courseCount').innerText = count;
+  }
+
+  function clearForm() {
+      const container = document.getElementById('courses-container');
+      container.innerHTML = '';
+      addCourseRow(); 
+      document.getElementById('result-container').style.display = 'none';
+  }
+
+  function calculateGPA() {
+      const rows = document.querySelectorAll('.course-row');
+
+      let totalPoints = 0;
+      let totalHours = 0;
+      let validRows = 0;
+
+      rows.forEach(row => {
+          const hours = parseFloat(row.querySelector('.course-hours').value);
+          const gradeSymbol = row.querySelector('.course-grade').value;
+
+          if (hours && gradeSymbol && gradeScale[gradeSymbol] !== undefined) {
+              const points = gradeScale[gradeSymbol];
+              totalPoints += (points * hours);
+              totalHours += hours;
+              validRows++;
+          }
+      });
+
+      if (totalHours === 0) {
+          alert("الرجاء إدخال الساعات والدرجة لمادة واحدة على الأقل.");
+          return;
+      }
+
+      const gpa = totalPoints / totalHours;
+
+      // عرض النتيجة
+      document.getElementById('finalGPA').innerText = gpa.toFixed(2);
+      document.getElementById('totalHours').innerText = totalHours;
+      document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
+       
+      const resultContainer = document.getElementById('result-container');
+      resultContainer.style.display = 'block';
+      resultContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function recalculateIfVisible() {
+      const resultContainer = document.getElementById('result-container');
+      if (resultContainer.style.display === 'block') {
+          calculateGPA();
+      }
+  }
+
+  // استخدام استدعاء مباشر لضمان تشغيل الكود بمجرد قراءة المتصفح له
+  (function init() {
+      const container = document.getElementById('courses-container');
+      if(container && container.children.length === 0) {
+          addCourseRow();
+      }
+  })();
+
+</script>
+
+</body>
+</html>
