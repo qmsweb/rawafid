@@ -267,7 +267,13 @@
             <div id="courses-container">
                 </div>
 
-            <div style="margin-top: 25px;">
+            <div style="margin-top: 15px; display: flex; justify-content: center;">
+                <button class="action-btn" onclick="addCourseRow()" style="width: 100%; justify-content: center; border-style: dashed; padding: 10px;">
+                    <i class="fas fa-plus"></i> إضافة مادة جديدة
+                </button>
+            </div>
+
+            <div style="margin-top: 15px;">
                 <button class="action-btn primary-btn" onclick="calculateGPA()" style="width: 100%; justify-content: center; padding: 12px;">
                     <i class="fas fa-calculator"></i> احسب النتيجة
                 </button>
@@ -332,7 +338,7 @@
       return `
         <div class="course-row">
             <input type="text" class="input-field course-name" placeholder="اسم المادة (اختياري)">
-            <input type="number" class="input-field course-hours" placeholder="الساعات" min="1" max="12">
+            <input type="number" class="input-field course-hours" placeholder="الساعات" min="1" max="12" value="3">
             <select class="select-field course-grade">
                 ${optionsHTML}
             </select>
@@ -360,78 +366,11 @@
       } else {
           const row = btn.closest('.course-row');
           row.querySelector('.course-name').value = '';
-          row.querySelector('.course-hours').value = '';
+          row.querySelector('.course-hours').value = '3'; // إعادة تعيين لـ 3 بدلاً من مسحها تماماً
           row.querySelector('.course-grade').selectedIndex = 0;
       }
   }
 
   function updateCount() {
       const count = document.getElementById('courses-container').children.length;
-      document.getElementById('courseCount').innerText = count;
-  }
-
-  function clearForm() {
-      const container = document.getElementById('courses-container');
-      container.innerHTML = '';
-      // إضافة 5 مواد عند التصفير
-      for(let i=0; i<5; i++) {
-        addCourseRow(); 
-      }
-      document.getElementById('result-container').style.display = 'none';
-  }
-
-  function calculateGPA() {
-      const rows = document.querySelectorAll('.course-row');
-
-      let totalPoints = 0;
-      let totalHours = 0;
-      let validRows = 0;
-
-      rows.forEach(row => {
-          const hours = parseFloat(row.querySelector('.course-hours').value);
-          const gradeSymbol = row.querySelector('.course-grade').value;
-
-          if (hours && gradeSymbol && gradeScale[gradeSymbol] !== undefined) {
-              const points = gradeScale[gradeSymbol];
-              totalPoints += (points * hours);
-              totalHours += hours;
-              validRows++;
-          }
-      });
-
-      if (totalHours === 0) {
-          alert("الرجاء إدخال الساعات والدرجة لمادة واحدة على الأقل.");
-          return;
-      }
-
-      const gpa = totalPoints / totalHours;
-
-      // عرض النتيجة
-      document.getElementById('finalGPA').innerText = gpa.toFixed(2);
-      document.getElementById('totalHours').innerText = totalHours;
-      document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
-       
-      const resultContainer = document.getElementById('result-container');
-      resultContainer.style.display = 'block';
-      resultContainer.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function recalculateIfVisible() {
-      const resultContainer = document.getElementById('result-container');
-      if (resultContainer.style.display === 'block') {
-          calculateGPA();
-      }
-  }
-
-  // تهيئة الصفحة بـ 5 صفوف افتراضياً
-  window.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('courses-container');
-      container.innerHTML = '';
-      for(let i=0; i<5; i++) {
-        addCourseRow();
-      }
-  });
-</script>
-
-</body>
-</html>
+      document.getElementById('courseCount
