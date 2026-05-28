@@ -48,5 +48,10 @@
 
   { "id": "ISLM101", "name": "الحضارة الإسلامية", "hours": 3, "cat": "uni", "prereq": null },
   { "id": "SOCI101A", "name": "علم الاجتماع", "hours": 3, "cat": "uni", "prereq": null },
-  { "id": "MNGT313A", "name": "ريادة الأعمال", "hours": 3, "cat": "uni", "prereq": null }
+  { "id": "MNGT313A", "name": "ريادة الأعمال", "hours": 3, "cat": "uni", "prereq": null },
+
+  { "id": "ARAB415", "name": "المعجمية والمصطلحية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB315, ARAB321" },
+  { "id": "ARAB416", "name": "المدارس النحوية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB224, ARAB229" },
+  { "id": "ARAB425", "name": "أصول البحث اللغوي والأدبي (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB321, ARAB327" },
+  { "id": "ARAB426", "name": "تحليل نصوص أدبية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB327, ARAB313" }
 ]
