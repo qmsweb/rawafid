@@ -107,8 +107,6 @@
     .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
     .primary-btn { background: var(--primary-color) !important; color: white !important; border: none !important; }
     .primary-btn:hover { opacity: 0.9; }
-     
-    .danger-btn:hover { color: var(--cal-red); border-color: var(--cal-red); }
 
     /* === List Styles === */
     .ios-list-group {
@@ -138,10 +136,14 @@
     .course-row {
         display: grid;
         grid-template-columns: 2fr 1fr 1fr auto;
-        gap: 10px;
+        gap: 15px;
         margin-bottom: 15px;
-        align-items: center;
+        align-items: end; /* لمحاذاة الصناديق في الأسفل بجانب بعضها */
         animation: fadeInRow 0.3s ease;
+        background: var(--bg-body);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
     }
 
     @keyframes fadeInRow {
@@ -149,8 +151,21 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* أسلوب العناوين الجديدة فوق الصناديق */
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
     .input-field, .select-field {
-        background: var(--bg-body);
+        background: var(--bg-card);
         border: 1px solid var(--border-color);
         color: var(--text-main);
         padding: 10px;
@@ -169,20 +184,15 @@
         border: none;
         color: var(--text-muted);
         cursor: pointer;
-        padding: 8px;
-        border-radius: 50%;
+        padding: 10px;
+        border-radius: 8px;
         transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 42px; /* لمطابقة ارتفاع صناديق الإدخال */
     }
-    .delete-row-btn:hover { color: var(--cal-red); background: var(--bg-body); }
-
-    .labels-row {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr auto;
-        gap: 10px;
-        margin-bottom: 10px;
-        padding: 0 5px;
-    }
-    .labels-row span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    .delete-row-btn:hover { color: var(--cal-red); background: var(--bg-card); }
 
     /* === Result Section === */
     .gpa-result-box {
@@ -214,16 +224,19 @@
          
         .course-row { 
             grid-template-columns: 1fr 1fr; 
-            gap: 8px;
-            padding: 10px;
-            background: var(--bg-body);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            gap: 12px;
         }
-        .course-row .input-field:first-child { grid-column: span 2; }
-        .delete-row-btn { grid-column: span 2; width: 100%; text-align: center; color: var(--cal-red); border: 1px solid var(--border-color); border-radius: 6px; }
-         
-        .labels-row { display: none; }
+        /* جعل اسم المادة يأخذ سطر كامل في الهاتف */
+        .course-row .input-group:first-child { grid-column: span 2; }
+        
+        .delete-row-btn { 
+            grid-column: span 2; 
+            width: 100%; 
+            color: var(--cal-red); 
+            border: 1px solid var(--border-color); 
+            background: var(--bg-card);
+            margin-top: 5px;
+        }
     }
   </style>
 </head>
@@ -257,13 +270,6 @@
         </div>
          
         <div class="form-content">
-            <div class="labels-row">
-                <span>اسم المادة</span>
-                <span>الساعات</span>
-                <span>الدرجة</span>
-                <span></span>
-            </div>
-
             <div id="courses-container">
                 </div>
 
@@ -330,29 +336,41 @@
   const gradesOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
 
   function createRowHTML() {
-      let optionsHTML = '<option value="" disabled selected>الدرجة</option>';
+      let optionsHTML = '<option value="" disabled selected>اختر الدرجة</option>';
       gradesOptions.forEach(g => {
           optionsHTML += `<option value="${g}">${g}</option>`;
       });
 
-      // تم إضافة type="button" لزر الحذف لمنع إرسال النموذج بالخطأ
       return `
         <div class="course-row">
-            <input type="text" class="input-field course-name" placeholder="اسم المادة (اختياري)">
-            <input type="number" class="input-field course-hours" placeholder="الساعات" min="1" max="12" value="3">
-            <select class="select-field course-grade">
-                ${optionsHTML}
-            </select>
-            <button type="button" class="delete-row-btn" onclick="removeRow(this)">
-                <i class="fas fa-trash-alt"></i>
-            </button>
+            <div class="input-group">
+                <span class="input-label">اسم المادة</span>
+                <input type="text" class="input-field course-name" placeholder="اختياري">
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">الساعات</span>
+                <input type="number" class="input-field course-hours" min="1" max="12" value="3">
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">الدرجة</span>
+                <select class="select-field course-grade">
+                    ${optionsHTML}
+                </select>
+            </div>
+
+            <div class="input-group">
+                <button type="button" class="delete-row-btn" onclick="removeRow(this)" title="حذف المادة">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
         </div>
       `;
   }
 
   function addCourseRow() {
       const container = document.getElementById('courses-container');
-      // استخدام insertAdjacentHTML أكثر استقراراً لدمج العناصر
       container.insertAdjacentHTML('beforeend', createRowHTML());
       updateCount();
   }
@@ -404,7 +422,7 @@
       });
 
       if (totalHours === 0) {
-          alert("الرجاء إدخال الساعات والدرجة لمادة واحدة على الأقل.");
+          alert("الرجاء اختيار الدرجة لمادة واحدة على الأقل لإتمام الحساب.");
           return;
       }
 
@@ -427,7 +445,7 @@
       }
   }
 
-  // استخدام استدعاء مباشر لضمان تشغيل الكود بمجرد قراءة المتصفح له
+  // تهيئة الواجهة بمجرد قراءة المتصفح للكود
   (function init() {
       const container = document.getElementById('courses-container');
       if(container && container.children.length === 0) {
