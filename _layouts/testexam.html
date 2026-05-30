@@ -95,6 +95,7 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             min-height: 100vh;
+            font-family: "IBM Plex Sans Arabic", sans-serif;
             line-height: 1.6;
             display: flex;
             flex-direction: column;
@@ -111,7 +112,7 @@
         }
 
         /* إخفاء العناصر الخاصة بالطباعة في العرض العادي */
-        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container, .print-letter, .print-student-info, .print-exam-header {
+        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container, .print-letter {
             display: none;
         }
 
@@ -336,34 +337,111 @@
 
         #result {
             margin-top: 30px;
-            padding: 20px;
             display: none;
-            border-radius: 12px;
-            background-color: var(--bg-secondary);
             text-align: right;
             direction: rtl;
-            color: var(--text-main);
         }
 
-        #result .score {
-            font-size: 20px;
+        /* تنسيقات العداد وصندوق الإجابات (الجديدة) */
+        .score-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0 40px;
+        }
+        .score-gauge {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(var(--border-color) 100%, transparent 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background 1.5s ease-out;
+        }
+        .score-gauge::before {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background-color: var(--bg-card);
+            border-radius: 50%;
+        }
+        .score-gauge-text {
+            position: relative;
+            font-size: 32px;
             font-weight: bold;
-            text-align: center;
             color: var(--primary-color);
+            z-index: 1;
         }
-
-        #result h3 { margin-top: 20px; font-size: 18px; color: var(--text-main); }
-        #result ul { list-style: none; padding: 0; }
-        #result li {
-            margin-bottom: 15px;
-            padding: 15px;
+        .score-details {
+            margin-top: 15px;
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: bold;
+            background: var(--bg-secondary);
+            padding: 5px 15px;
+            border-radius: 20px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-card);
         }
 
-        .wrong { color: var(--wrong-bg); }
-        .correct { color: var(--correct-bg); }
+        .wrong-answer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .wrong-answer-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+        .wrong-answer-q {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+        .answer-badge {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            min-width: 110px;
+            text-align: center;
+        }
+        .badge-wrong { background-color: var(--wrong-bg); }
+        .badge-correct { background-color: var(--correct-bg); }
+        .answer-text {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        .points-lost {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .points-lost strong {
+            color: var(--wrong-bg);
+            font-size: 15px;
+        }
 
         .quiz-info-table {
             width: 100%;
@@ -374,6 +452,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-family: "IBM Plex Sans Arabic", sans-serif;
         }
 
         .quiz-info-table th, .quiz-info-table td {
@@ -420,21 +499,90 @@
             line-height: 1.7;
         }
 
-        /* === إعادة تصميم نسخة الطباعة لتصبح رسمية واحترافية === */
-        @media print {
-            @page {
-                size: A4;
-                margin: 20mm 15mm;
-            }
+        .tf-print-container {
+            border: 1px solid var(--text-main);
+            padding: 15px;
+            margin-bottom: 20px;
+            break-inside: avoid;
+            background-color: transparent;
+        }
+        
+        .tf-print-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
 
+        .tf-print-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            direction: rtl; 
+            gap: 15px;
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        .tf-box {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #000;
+            flex-shrink: 0;
+        }
+
+        .tf-text {
+            flex-grow: 1;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        /* === إعدادات الطباعة المُعدلة والمضغوطة === */
+        @media print {
             :root, [data-theme="dark"] {
                 --primary-color: #000000 !important;
                 --bg-body: #ffffff !important;
                 --bg-card: #ffffff !important;
                 --bg-secondary: #ffffff !important;
                 --text-main: #000000 !important;
-                --text-muted: #000000 !important;
+                --text-muted: #333333 !important;
                 --border-color: #000000 !important;
+                --hover-bg: #ffffff !important;
+            }
+
+            header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
+                display: none !important;
+            }
+
+            #questions-container {
+                display: block !important;
+            }
+
+            .screen-only-item {
+                display: none !important;
+            }
+
+            .tf-print-container {
+                display: block !important;
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+                background-color: transparent !important;
+                padding: 10px !important;
+                margin-bottom: 10px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .tf-print-header {
+                border-bottom: 1px solid #000 !important;
+            }
+
+            .tf-box {
+                border: 1px solid #000 !important;
             }
 
             body {
@@ -443,9 +591,7 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
                 direction: rtl !important;
-                font-family: "Times New Roman", "Traditional Arabic", serif !important;
-                font-size: 14pt !important;
-                line-height: 1.6 !important;
+                font-size: 14px !important;
             }
 
             .container {
@@ -457,295 +603,180 @@
                 border: none !important;
             }
 
-            /* إخفاء واجهة المستخدم */
-            header, footer, #submit-btn, #review-btn, #result, .essay-buttons, #print-btn, .top-bar, .site-header {
-                display: none !important;
-            }
-
-            /* صفحة الغلاف الرسمية */
-            .quiz-front-page {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                min-height: 95vh !important;
-                page-break-after: always !important;
-                break-after: page !important;
-            }
-
-            .print-exam-header {
-                display: block !important;
-                text-align: center !important;
-                margin-bottom: 30px !important;
-                border-bottom: 3px double #000 !important;
-                padding-bottom: 20px !important;
-            }
-
-            .print-exam-header h2 {
-                font-size: 20pt !important;
-                font-weight: bold !important;
-                margin: 5px 0 !important;
-            }
-
-            #print-only-logo { 
-                display: block !important; 
-                text-align: center !important; 
-                margin-bottom: 20px !important; 
-            }
-            #print-only-logo img {
-                filter: grayscale(100%) !important;
-            }
-
-            .quiz-header {
-                margin-bottom: 40px !important;
-            }
-
-            #quiz-title {
-                font-size: 24pt !important;
-                font-weight: bold !important;
-                text-decoration: underline !important;
-            }
-
-            /* بيانات الطالب */
-            .print-student-info {
-                display: block !important;
-                border: 2px solid #000 !important;
-                border-radius: 8px !important;
-                padding: 20px !important;
-                margin-bottom: 30px !important;
-                background-color: #fafafa !important;
-            }
-            .student-row {
-                display: flex !important;
-                justify-content: space-between !important;
-                margin-bottom: 20px !important;
-                font-size: 16pt !important;
-                font-weight: bold !important;
-            }
-            .student-row:last-child {
-                margin-bottom: 0 !important;
-            }
-
-            /* الجداول الرسمية */
             table, .quiz-info-table, #print-eval-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                margin-bottom: 30px !important;
-                border: 2px solid #000 !important;
+                margin-bottom: 25px !important;
+                border: 1px solid #000 !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
             }
 
             th, td {
                 border: 1px solid #000 !important;
-                padding: 12px !important;
+                padding: 10px !important;
                 color: #000 !important;
                 text-align: center !important;
                 background-color: transparent !important;
-                font-size: 14pt !important;
             }
 
             th {
-                background-color: #e6e6e6 !important;
+                background-color: #f0f0f0 !important;
                 font-weight: bold !important;
-                border-bottom: 2px solid #000 !important;
             }
 
-            #print-eval-table { 
-                display: table !important; 
-                margin-top: auto !important; /* لدفعه لأسفل صفحة الغلاف */
-            }
+            #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
+            #print-eval-table { display: table !important; }
 
-            /* الأسئلة والتنسيق الرسمي */
-            #questions-container {
-                display: block !important;
-            }
-
-            .screen-only-item {
-                display: none !important;
-            }
-
-            .question-item {
-                border: none !important;
-                border-bottom: 2px solid #000 !important; /* خط فاصل بين الأسئلة */
+            /* ضغط الأسئلة ومنع انقسامها بين الصفحات */
+            .question-item, .instructions-question {
+                border: 1px solid #000 !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 background-color: #fff !important;
-                margin-bottom: 25px !important;
-                padding: 0 0 25px 0 !important;
+                margin-bottom: 10px !important;
+                padding: 10px 15px !important;
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
             }
-            .question-item:last-child {
-                border-bottom: none !important;
-            }
-
-            .instructions-question {
-                border: 2px dashed #000 !important;
-                border-radius: 8px !important;
-                background: #f9f9f9 !important;
-                padding: 15px !important;
-                margin-bottom: 25px !important;
-                font-style: italic !important;
-            }
             
             .question-text {
-                margin-bottom: 15px !important;
-                font-size: 16pt !important;
-                align-items: baseline !important;
+                margin-bottom: 8px !important;
             }
 
-            .points-badge {
-                background-color: transparent !important;
-                color: #000 !important;
-                border: none !important;
-                padding: 0 !important;
-                font-size: 14pt !important;
-                font-weight: bold !important;
-            }
-            /* تنسيق الدرجة كأقواس رسمية */
-            .points-badge::before { content: "[ "; }
-            .points-badge::after { content: " ]"; }
-
-            /* اختيارات متعددة في شبكة */
+            /* تحويل الاختيارات لصف أفقي */
             .choices-container {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important; /* عمودين */
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
                 gap: 15px !important;
-                padding-right: 25px !important;
+                justify-content: flex-start !important;
             }
 
             .choice-label {
                 background-color: transparent !important;
                 border: none !important;
-                padding: 5px 0 !important;
+                padding: 0 !important;
                 color: #000 !important;
-                font-size: 15pt !important;
-                display: flex !important;
-                align-items: center !important;
+                flex: 0 1 auto !important;
             }
             
             .choice-radio { display: none !important; }
             
             .print-letter { 
                 display: inline-block !important; 
-                margin-left: 10px !important; 
-                font-weight: bold !important;
-                min-width: 30px !important;
+                margin-left: 5px; 
+                font-weight: bold;
+            }
+
+            .points-badge {
+                background-color: transparent !important;
+                color: #000 !important;
+                border: 1px solid #000 !important;
+                padding: 2px 6px !important;
+            }
+
+            /* الحفاظ على ورقة الغلاف كما هي */
+            .quiz-front-page {
+                display: block;
+                width: 100%;
+                break-after: page; 
+                page-break-after: always;
+                min-height: 90vh;
             }
 
             .essay-answer { display: none !important; }
 
-            /* أسطر الإجابة المقالية الرسمية */
             .print-essay-lines {
                 display: block !important;
-                margin-top: 20px !important;
-                width: 100% !important;
+                margin-top: 10px;
+                width: 100%;
             }
 
+            /* ضغط الأسطر المقالية لتوفير المساحة */
             .writing-line {
-                border-bottom: 1px solid #888 !important; /* خطوط صلبة رسمية */
-                height: 40px !important;
-                width: 100% !important;
-                margin-bottom: 0 !important;
+                border-bottom: 1px dotted #888;
+                height: 28px !important;
+                width: 100%;
+                margin-bottom: 5px !important;
             }
             
             .full-page-question {
-                break-before: page !important;
-                page-break-before: always !important;
-                min-height: 95vh !important;
-                display: flex !important;
-                flex-direction: column !important;
+                break-before: page;
+                page-break-before: always;
+                min-height: 95vh;
+                display: flex;
+                flex-direction: column;
             }
             
             .full-page-question .print-essay-lines {
-                flex-grow: 1 !important;
+                flex-grow: 1;
             }
 
-            /* أسئلة الصح والخطأ */
-            .tf-print-container {
-                display: block !important;
-                border: 2px solid #000 !important;
-                border-radius: 8px !important;
-                background-color: transparent !important;
-                padding: 20px !important;
-                margin-bottom: 25px !important;
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
-            }
-
-            .tf-print-header {
-                border-bottom: 2px solid #000 !important;
-                padding-bottom: 15px !important;
-                margin-bottom: 20px !important;
-                font-size: 16pt !important;
-            }
-
-            .tf-print-row {
-                font-size: 15pt !important;
-                margin-bottom: 18px !important;
-            }
-
-            .tf-box {
-                border: 2px solid #000 !important;
-                width: 30px !important;
-                height: 30px !important;
-                border-radius: 4px !important;
-            }
-
-            /* نموذج الإجابة */
             #printable-answer-key {
                 display: block !important;
-                break-before: page !important;
-                page-break-before: always !important;
-                direction: rtl !important;
-                padding-top: 20px !important;
+                break-before: page;
+                page-break-before: always;
+                direction: rtl;
+                padding-top: 30px;
                 color: #000 !important;
             }
 
+            /* تنسيق جدول الإجابة في الطباعة (تم تعديله لتفادي مشاكل الانقسام) */
             .answer-key-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                margin-top: 20px !important;
-                border: 2px solid #000 !important;
+                margin-bottom: 0 !important;
             }
             .answer-key-table th {
-                background-color: #d9d9d9 !important;
-                border: 1px solid #000 !important;
-                padding: 12px !important;
+                background-color: #e0e7ff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                border: 2px solid #1a2ac6 !important;
+                padding: 10px !important;
+                color: #000 !important;
             }
             .answer-key-table td {
                 border: 1px solid #000 !important;
-                padding: 10px !important;
+                padding: 8px !important;
+            }
+            .answer-key-table tbody tr:nth-child(even) {
+                background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
-            /* قسم الباركود */
             #printable-qr-section {
                 display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                break-before: auto !important;
-                page-break-inside: avoid !important;
-                text-align: center !important;
-                margin-top: 40px !important;
-                padding: 20px !important;
-                border: 2px dashed #000 !important;
-                width: 60% !important; 
-                margin-left: auto !important;
-                margin-right: auto !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                break-before: auto;
+                page-break-inside: avoid;
+                text-align: center;
+                margin-top: 20px;
+                padding: 20px;
+                width: 60%; 
+                margin-left: auto;
+                margin-right: auto;
+                background-color: #e0e7ff !important; 
+                border: 2px solid #1a2ac6 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             #printable-qr-section h3 {
-                color: #000 !important;
-                font-size: 16pt !important; 
-                margin-top: 15px !important;
-                font-weight: bold !important;
+                color: #1a2ac6 !important;
+                font-size: 18px; 
+                margin-top: 10px;
+                font-weight: bold;
             }
             
             #qrcode-container {
-                padding: 10px !important;
-                background: transparent !important;
-                border: none !important;
+                padding: 10px;
+                background: white;
+                border-radius: 8px;
+                border: 1px solid #1a2ac6;
             }
         }
 
@@ -761,13 +792,6 @@
         {{ content }}
 
         <div class="quiz-front-page">
-            
-            <div class="print-exam-header">
-                <h2>سلطنة عُمان</h2>
-                <h2>وزارة التعليم العالي والبحث العلمي والابتكار</h2>
-                <h2>ورقة اختبار رسمي</h2>
-            </div>
-
             <div id="print-only-logo">
                 <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="روافد" style="max-width: 150px; height: auto;">
             </div>
@@ -777,18 +801,7 @@
                     <i class="fa-solid fa-print"></i> طباعة الاختبار PDF
                 </button>
                 <h1 id="quiz-title">الاختبار</h1>
-            </div>
 
-            <!-- نموذج بيانات الطالب للطباعة فقط -->
-            <div class="print-student-info">
-                <div class="student-row">
-                    <div style="flex: 2;">اسم الطالب: ........................................................................</div>
-                    <div style="flex: 1;">الرقم الجامعي: ................................</div>
-                </div>
-                <div class="student-row">
-                    <div style="flex: 1;">الشعبة / التخصص: ................................</div>
-                    <div style="flex: 1;">التاريخ: ...... / ...... / ............ م</div>
-                </div>
             </div>
 
             <table class="quiz-info-table" id="quiz-info-table">
@@ -811,35 +824,41 @@
             <table id="print-eval-table">
                 <thead>
                     <tr>
-                        <th colspan="4" style="font-size: 18px;">جدول تقييم المصحح (للاستخدام الرسمي)</th>
+                        <th colspan="4" style="font-size: 18px;">جدول التقييم الذاتي للطالب</th>
                     </tr>
                     <tr>
-                        <th style="width: 40%;">السؤال</th>
-                        <th style="width: 20%;">الدرجة المخصصة</th>
-                        <th style="width: 20%;">الدرجة الحاصل عليها</th>
-                        <th style="width: 20%;">ملاحظات</th>
+                        <th style="width: 40%;">معيار التقييم</th>
+                        <th style="width: 20%;">ممتاز</th>
+                        <th style="width: 20%;">جيد جدًا</th>
+                        <th style="width: 20%;">بحاجة للمراجعة</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="text-align: right;">الأسئلة الموضوعية</td>
+                        <td style="text-align: right;">فهم الأسئلة واستيعاب المطلوب</td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right;">الأسئلة المقالية</td>
+                        <td style="text-align: right;">دقة الإجابات وصحتها العلمية</td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right;"><strong>المجموع الكلي</strong></td>
+                        <td style="text-align: right;">إدارة الوقت أثناء الحل</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;"><strong>التقدير العام للمستوى</strong></td>
                         <td colspan="3"></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
+            </div>
 
         <div id="questions-container"></div>
         <button id="submit-btn">تأكيد الإجابات</button>
@@ -894,27 +913,38 @@
             const oldQr = document.getElementById('printable-qr-section');
             if (oldQr) oldQr.remove();
 
+            // بناء جدول نموذج الإجابة معدل للطباعة بدون تداخل
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
-            let keyHTML = `
-                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px double #000; padding-bottom: 15px;">
-                    <h2 style="margin:0; font-size: 24px; color: #000;">نموذج الإجابة الرسمي</h2>
-                    <p style="margin:5px 0; font-size: 16px; font-weight: bold;">${quizTitleElement.textContent}</p>
-                </div>
-                <table class="answer-key-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 15%;">رقم السؤال</th>
-                            <th>الإجابة الصحيحة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
+            let keyHTML = '';
             let qCount = 1;
-            quizData[currentQuiz].questions.forEach(q => {
+            let tableOpen = false;
+            const rowsPerPage = 25; // تقسيم الجدول كل 25 سؤال للحفاظ على التنسيق
+
+            quizData[currentQuiz].questions.forEach((q, index) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                
+                // فتح جدول جديد إذا لزم الأمر
+                if (!tableOpen) {
+                    keyHTML += `
+                    <div style="page-break-inside: avoid; margin-bottom: 30px;">
+                        <div style="text-align: center; margin-bottom: 15px; border-bottom: 3px double #1a2ac6; padding-bottom: 10px;">
+                            <h2 style="margin:0; font-size: 20px; color: #1a2ac6;">نموذج الإجابة ${qCount > 1 ? '(يتبع)' : ''}</h2>
+                            <p style="margin:5px 0; font-size: 14px; font-weight: bold;">${quizTitleElement.textContent}</p>
+                        </div>
+                        <table class="answer-key-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">رقم السؤال</th>
+                                    <th>الإجابة الصحيحة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    tableOpen = true;
+                }
+
                 const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '—';
                 keyHTML += `
                     <tr>
@@ -922,13 +952,24 @@
                         <td style="text-align: right; line-height: 1.6;">${cleanAnswer}</td>
                     </tr>
                 `;
+                
+                // إغلاق الجدول إذا وصلنا للحد الأقصى في الصفحة
+                if (qCount % rowsPerPage === 0) {
+                    keyHTML += `</tbody></table></div>`;
+                    tableOpen = false;
+                }
                 qCount++;
             });
 
-            keyHTML += `</tbody></table>`;
+            // إغلاق أي جدول لم يتم إغلاقه
+            if (tableOpen) {
+                keyHTML += `</tbody></table></div>`;
+            }
+
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
 
+            // إنشاء قسم QR Code 
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
@@ -947,7 +988,7 @@
                 text: window.location.href,
                 width: 128, 
                 height: 128,
-                colorDark : "#000000", 
+                colorDark : "#1a2ac6", 
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
@@ -1079,7 +1120,7 @@
                         headerDiv.className = 'tf-print-header';
                         
                         const titleSpan = document.createElement('span');
-                        titleSpan.textContent = "ضع علامة (✓) أو (✗) في المربع المقابل لكل عبارة:";
+                        titleSpan.textContent = "ضع علامة صح أو خطأ في المربع للإجابة:";
                         
                         currentTfScoreSpan = document.createElement('span');
                         currentTfScoreSpan.className = 'points-badge'; 
@@ -1327,26 +1368,62 @@
 
         function showResult(earnedPoints, totalPoints) {
             resultElement.style.display = 'block';
-            let resultHTML = '';
-            const percentage = Math.round((earnedPoints * 100) / totalPoints);
-            resultHTML = `<p class='score'>درجتك: ${percentage}% (${earnedPoints} من ${totalPoints} درجة)</p>`;
+            const percentage = Math.round((earnedPoints * 100) / totalPoints) || 0;
+            
+            let resultHTML = `
+                <div class="score-gauge-container">
+                    <div class="score-gauge" style="background: conic-gradient(var(--border-color) 100%, transparent 0);">
+                        <span class="score-gauge-text">0%</span>
+                    </div>
+                    <div class="score-details">${earnedPoints} من ${totalPoints} درجة</div>
+                </div>
+            `;
 
             if (wrongAnswers.length > 0) {
-                resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
+                resultHTML += `
+                    <div style="margin-bottom:20px; font-size:22px; font-weight:bold; color:var(--text-main); border-bottom:2px solid var(--primary-color); padding-bottom:10px; display:inline-block;">
+                        مراجعة الإجابات الخاطئة
+                    </div>
+                    <div class="wrong-answers-list">
+                `;
+                
                 wrongAnswers.forEach(ans => {
                     const formattedQuestion = ans.question.replace(/\n/g, '<br>');
-                    resultHTML += `<li>
-                            <p>السؤال: ${formattedQuestion}</p>
-                            <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
-                            <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
-                            <p>الدرجات المفقودة: ${ans.points}</p>
-                        </li>`;
+                    resultHTML += `
+                        <div class="wrong-answer-card">
+                            <div class="wrong-answer-q">${formattedQuestion}</div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-wrong">إجابتك</span>
+                                <span class="answer-text">${ans.userAnswer || "لم تجب"}</span>
+                            </div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-correct">الإجابة الصحيحة</span>
+                                <span class="answer-text">${ans.correctAnswer}</span>
+                            </div>
+                            <div class="points-lost">
+                                الدرجات المفقودة في هذا السؤال: <strong>${ans.points}</strong>
+                            </div>
+                        </div>`;
                 });
-                resultHTML += '</ul>';
+                resultHTML += '</div>';
             } else if (totalPoints > 0) {
-                resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
+                resultHTML += `
+                    <div style="text-align:center; padding: 20px; background:var(--correct-bg); color:white; border-radius:12px; font-weight:bold; font-size:18px; margin-top: 20px;">
+                        أحسنت! جميع إجاباتك صحيحة.
+                    </div>`;
             }
+            
             resultElement.innerHTML = resultHTML;
+
+            // تفعيل حركة عداد النسبة المئوية
+            setTimeout(() => {
+                const gauge = document.querySelector('.score-gauge');
+                const text = document.querySelector('.score-gauge-text');
+                if(gauge && text) {
+                    gauge.style.background = `conic-gradient(var(--primary-color) ${percentage}%, var(--border-color) 0)`;
+                    text.textContent = `${percentage}%`;
+                }
+            }, 100);
         }
 
         function reviewAnswers() {
