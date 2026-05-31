@@ -112,7 +112,7 @@
         }
 
         /* إخفاء العناصر الخاصة بالطباعة في العرض العادي */
-        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .tf-print-container, .print-letter {
+        #print-only-logo, #print-eval-table, .print-essay-lines, #printable-qr-section, .print-letter {
             display: none;
         }
 
@@ -337,34 +337,110 @@
 
         #result {
             margin-top: 30px;
-            padding: 20px;
             display: none;
-            border-radius: 12px;
-            background-color: var(--bg-secondary);
             text-align: right;
             direction: rtl;
-            color: var(--text-main);
         }
 
-        #result .score {
-            font-size: 20px;
+        .score-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0 40px;
+        }
+        .score-gauge {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(var(--border-color) 100%, transparent 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background 1.5s ease-out;
+        }
+        .score-gauge::before {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background-color: var(--bg-card);
+            border-radius: 50%;
+        }
+        .score-gauge-text {
+            position: relative;
+            font-size: 32px;
             font-weight: bold;
-            text-align: center;
             color: var(--primary-color);
+            z-index: 1;
         }
-
-        #result h3 { margin-top: 20px; font-size: 18px; color: var(--text-main); }
-        #result ul { list-style: none; padding: 0; }
-        #result li {
-            margin-bottom: 15px;
-            padding: 15px;
+        .score-details {
+            margin-top: 15px;
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: bold;
+            background: var(--bg-secondary);
+            padding: 5px 15px;
+            border-radius: 20px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-card);
         }
 
-        .wrong { color: var(--wrong-bg); }
-        .correct { color: var(--correct-bg); }
+        .wrong-answer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .wrong-answer-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+        .wrong-answer-q {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+        .answer-badge {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            min-width: 110px;
+            text-align: center;
+        }
+        .badge-wrong { background-color: var(--wrong-bg); }
+        .badge-correct { background-color: var(--correct-bg); }
+        .answer-text {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        .points-lost {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .points-lost strong {
+            color: var(--wrong-bg);
+            font-size: 15px;
+        }
 
         .quiz-info-table {
             width: 100%;
@@ -422,12 +498,15 @@
             line-height: 1.7;
         }
 
-        .tf-print-container {
-            border: 1px solid var(--text-main);
-            padding: 15px;
-            margin-bottom: 20px;
+        /* === تنسيقات الصح والخطأ التفاعلية === */
+        .tf-interactive-container {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            background-color: var(--bg-card);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             break-inside: avoid;
-            background-color: transparent;
         }
         
         .tf-print-header {
@@ -439,32 +518,93 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
             font-size: 16px;
+            color: var(--text-main);
         }
 
-        .tf-print-row {
+        .tf-row {
             display: flex;
             align-items: flex-start;
             margin-bottom: 12px;
             direction: rtl; 
             gap: 15px;
-            flex-direction: row-reverse;
-            text-align: right;
+            justify-content: space-between;
         }
 
         .tf-box {
-            width: 25px;
-            height: 25px;
-            border: 1px solid #000;
+            width: 35px;
+            height: 35px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
             flex-shrink: 0;
+            position: relative;
+            cursor: pointer;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: auto;
+            margin-left: 0;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .tf-box:hover {
+            border-color: var(--primary-color);
         }
 
         .tf-text {
             flex-grow: 1;
             font-weight: bold;
-            line-height: 1.5;
+            line-height: 1.6;
+            text-align: right;
+            padding-top: 5px;
+            color: var(--text-main);
         }
 
-        /* === إعدادات الطباعة المُعدلة والمضغوطة === */
+        .tf-popup {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            display: none;
+            flex-direction: row;
+            gap: 5px;
+            padding: 5px;
+            z-index: 10;
+            margin-top: 8px;
+        }
+
+        .tf-popup.show {
+            display: flex;
+        }
+
+        .tf-popup-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .tf-popup-btn.btn-true { color: var(--correct-bg); }
+        .tf-popup-btn.btn-false { color: var(--wrong-bg); }
+        .tf-popup-btn:hover { background: var(--hover-bg); }
+
+        .correct-icon-true { color: var(--correct-bg); }
+        .correct-icon-false { color: var(--wrong-bg); }
+
+        /* === إعدادات الطباعة === */
         @media print {
             :root, [data-theme="dark"] {
                 --primary-color: #000000 !important;
@@ -485,12 +625,8 @@
                 display: block !important;
             }
 
-            .screen-only-item {
-                display: none !important;
-            }
-
-            .tf-print-container {
-                display: block !important;
+            /* تنسيقات الطباعة لمربع الصح والخطأ */
+            .tf-interactive-container {
                 border: 1px solid #000 !important;
                 box-shadow: none !important;
                 background-color: transparent !important;
@@ -500,13 +636,16 @@
                 page-break-inside: avoid !important;
             }
 
-            .tf-print-header {
-                border-bottom: 1px solid #000 !important;
-            }
-
+            .tf-print-header { border-bottom: 1px solid #000 !important; }
+            .tf-row { align-items: flex-start !important; }
             .tf-box {
                 border: 1px solid #000 !important;
+                background-color: transparent !important;
+                width: 25px !important;
+                height: 25px !important;
             }
+            .tf-box i { color: #000 !important; font-size: 16px !important; }
+            .tf-popup { display: none !important; }
 
             body {
                 background-color: #ffffff !important;
@@ -551,7 +690,6 @@
             #print-only-logo { display: block !important; text-align: center; margin-bottom: 20px; }
             #print-eval-table { display: table !important; }
 
-            /* ضغط الأسئلة ومنع انقسامها بين الصفحات */
             .question-item, .instructions-question {
                 border: 1px solid #000 !important;
                 border-radius: 0 !important;
@@ -563,11 +701,8 @@
                 page-break-inside: avoid !important;
             }
             
-            .question-text {
-                margin-bottom: 8px !important;
-            }
+            .question-text { margin-bottom: 8px !important; }
 
-            /* تحويل الاختيارات لصف أفقي */
             .choices-container {
                 display: flex !important;
                 flex-direction: row !important;
@@ -599,7 +734,6 @@
                 padding: 2px 6px !important;
             }
 
-            /* الحفاظ على ورقة الغلاف كما هي */
             .quiz-front-page {
                 display: block;
                 width: 100%;
@@ -616,7 +750,6 @@
                 width: 100%;
             }
 
-            /* ضغط الأسطر المقالية لتوفير المساحة */
             .writing-line {
                 border-bottom: 1px dotted #888;
                 height: 28px !important;
@@ -645,11 +778,10 @@
                 color: #000 !important;
             }
 
-            /* تنسيق جدول الإجابة في الطباعة */
             .answer-key-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                margin-top: 15px !important;
+                margin-bottom: 0 !important;
             }
             .answer-key-table th {
                 background-color: #e0e7ff !important;
@@ -662,10 +794,6 @@
             .answer-key-table td {
                 border: 1px solid #000 !important;
                 padding: 8px !important;
-            }
-            .answer-key-table tr {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
             }
             .answer-key-table tbody tr:nth-child(even) {
                 background-color: #f8f9fa !important;
@@ -828,6 +956,12 @@
             }
         });
 
+        // إغلاق أي قائمة منبثقة للصح والخطأ عند النقر في أي مكان آخر
+        document.addEventListener('click', () => {
+            if(reviewMode) return;
+            document.querySelectorAll('.tf-popup.show').forEach(p => p.classList.remove('show'));
+        });
+
         function printQuizPDF() {
             if (!quizData[currentQuiz] || !quizData[currentQuiz].questions) {
                 alert('لا توجد أسئلة للطباعة');
@@ -840,28 +974,36 @@
             const oldQr = document.getElementById('printable-qr-section');
             if (oldQr) oldQr.remove();
 
-            // 1. تحسين بناء جدول نموذج الإجابة
             const keyDiv = document.createElement('div');
             keyDiv.id = 'printable-answer-key';
             
-            let keyHTML = `
-                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px double #1a2ac6; padding-bottom: 15px;">
-                    <h2 style="margin:0; font-size: 24px; color: #1a2ac6;">نموذج الإجابة</h2>
-                    <p style="margin:5px 0; font-size: 16px; font-weight: bold;">${quizTitleElement.textContent}</p>
-                </div>
-                <table class="answer-key-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 15%;">رقم السؤال</th>
-                            <th>الإجابة الصحيحة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
+            let keyHTML = '';
             let qCount = 1;
-            quizData[currentQuiz].questions.forEach(q => {
+            let tableOpen = false;
+            const rowsPerPage = 25; 
+
+            quizData[currentQuiz].questions.forEach((q, index) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                
+                if (!tableOpen) {
+                    keyHTML += `
+                    <div style="page-break-inside: avoid; margin-bottom: 30px;">
+                        <div style="text-align: center; margin-bottom: 15px; border-bottom: 3px double #1a2ac6; padding-bottom: 10px;">
+                            <h2 style="margin:0; font-size: 20px; color: #1a2ac6;">نموذج الإجابة ${qCount > 1 ? '(يتبع)' : ''}</h2>
+                            <p style="margin:5px 0; font-size: 14px; font-weight: bold;">${quizTitleElement.textContent}</p>
+                        </div>
+                        <table class="answer-key-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">رقم السؤال</th>
+                                    <th>الإجابة الصحيحة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    tableOpen = true;
+                }
+
                 const cleanAnswer = q.answer ? q.answer.replace(/\n/g, '<br>') : '—';
                 keyHTML += `
                     <tr>
@@ -869,14 +1011,21 @@
                         <td style="text-align: right; line-height: 1.6;">${cleanAnswer}</td>
                     </tr>
                 `;
+                
+                if (qCount % rowsPerPage === 0) {
+                    keyHTML += `</tbody></table></div>`;
+                    tableOpen = false;
+                }
                 qCount++;
             });
 
-            keyHTML += `</tbody></table>`;
+            if (tableOpen) {
+                keyHTML += `</tbody></table></div>`;
+            }
+
             keyDiv.innerHTML = keyHTML;
             document.querySelector('.container').appendChild(keyDiv);
 
-            // 2. إنشاء قسم QR Code 
             const qrDiv = document.createElement('div');
             qrDiv.id = 'printable-qr-section';
             
@@ -1021,13 +1170,13 @@
                 if (q.type === 'tf') {
                     if (!currentTfContainer) {
                         currentTfContainer = document.createElement('div');
-                        currentTfContainer.className = 'tf-print-container';
+                        currentTfContainer.className = 'tf-interactive-container';
                         
                         const headerDiv = document.createElement('div');
                         headerDiv.className = 'tf-print-header';
                         
                         const titleSpan = document.createElement('span');
-                        titleSpan.textContent = "ضع علامة صح أو خطأ في المربع للإجابة:";
+                        titleSpan.textContent = "ضع علامة (✓) أو (✗) أمام العبارات التالية:";
                         
                         currentTfScoreSpan = document.createElement('span');
                         currentTfScoreSpan.className = 'points-badge'; 
@@ -1046,29 +1195,85 @@
                     currentTfScoreSpan.textContent = ` ${formatPoints(currentTfScore)}`;
                     
                     const tfRow = document.createElement('div');
-                    tfRow.className = 'tf-print-row';
-                    
-                    const box = document.createElement('div');
-                    box.className = 'tf-box';
+                    tfRow.className = 'tf-row question-item-tf';
+                    tfRow.dataset.questionIndex = qIndex;
                     
                     const text = document.createElement('div');
                     text.className = 'tf-text';
                     text.innerHTML = `${questionNumber}. ${q.question.replace(/\n/g, '<br>')}`;
+
+                    const box = document.createElement('div');
+                    box.className = 'tf-box';
                     
-                    tfRow.appendChild(box);
+                    const iconDisplay = document.createElement('i');
+                    iconDisplay.className = 'fa-solid fa-fw';
+                    iconDisplay.style.display = 'none';
+
+                    const popup = document.createElement('div');
+                    popup.className = 'tf-popup';
+
+                    const btnTrue = document.createElement('button');
+                    btnTrue.className = 'tf-popup-btn btn-true';
+                    btnTrue.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    
+                    const btnFalse = document.createElement('button');
+                    btnFalse.className = 'tf-popup-btn btn-false';
+                    btnFalse.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+                    let trueIndex = 0;
+                    let falseIndex = 1;
+                    if(q.choices) {
+                        const tIdx = q.choices.findIndex(c => c.includes('صح') || c.includes('صواب'));
+                        if(tIdx !== -1) trueIndex = tIdx;
+                        const fIdx = q.choices.findIndex(c => c.includes('خطأ'));
+                        if(fIdx !== -1) falseIndex = fIdx;
+                    }
+
+                    btnTrue.onclick = (e) => {
+                        e.stopPropagation();
+                        if(reviewMode) return;
+                        userAnswers[qIndex] = trueIndex;
+                        iconDisplay.className = 'fa-solid fa-fw fa-check correct-icon-true';
+                        iconDisplay.style.display = 'inline-block';
+                        popup.classList.remove('show');
+                    };
+
+                    btnFalse.onclick = (e) => {
+                        e.stopPropagation();
+                        if(reviewMode) return;
+                        userAnswers[qIndex] = falseIndex;
+                        iconDisplay.className = 'fa-solid fa-fw fa-xmark correct-icon-false';
+                        iconDisplay.style.display = 'inline-block';
+                        popup.classList.remove('show');
+                    };
+
+                    popup.appendChild(btnTrue);
+                    popup.appendChild(btnFalse);
+
+                    box.appendChild(iconDisplay);
+                    box.appendChild(popup);
+
+                    box.onclick = (e) => {
+                        if(reviewMode) return;
+                        document.querySelectorAll('.tf-popup.show').forEach(p => {
+                            if(p !== popup) p.classList.remove('show');
+                        });
+                        popup.classList.toggle('show');
+                        e.stopPropagation();
+                    };
+                    
                     tfRow.appendChild(text);
+                    tfRow.appendChild(box);
                     
                     currentTfContainer.appendChild(tfRow);
+                    questionNumber++;
+                    return; // الخروج من الحلقة لهذا السؤال فقط
                 }
 
+                // للأسئلة الأخرى
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-item';
                 if (q.type === 'info') questionDiv.classList.add('info-question');
-                
-                if (q.type === 'tf') {
-                    questionDiv.classList.add('screen-only-item');
-                }
-                
                 questionDiv.dataset.questionIndex = qIndex;
 
                 if (q.type === 'info') {
@@ -1124,7 +1329,6 @@
                 }
 
                 if (q.type === 'essay' || q.type === 'essay-image') {
-                    
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'essay-buttons';
                     const showAnswerBtn = document.createElement('button');
@@ -1164,7 +1368,7 @@
                     }
                     questionDiv.appendChild(linesContainer);
 
-                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
+                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
                     const choicesDiv = document.createElement('div');
                     choicesDiv.className = 'choices-container';
                     q.choices.forEach((choice, cIndex) => {
@@ -1252,13 +1456,13 @@
                     }
                 } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
                     const userAnswerIndex = userAnswers[qIndex];
-                    const correctAnswerIndex = q.choices.indexOf(q.answer);
+                    const correctAnswerIndex = q.choices ? q.choices.indexOf(q.answer) : (q.answer === 'صح' ? 0 : 1);
                     if (userAnswerIndex === correctAnswerIndex) {
                         earnedPoints += questionPoints;
                     } else {
                         wrongAnswers.push({
                             question: q.question,
-                            userAnswer: q.choices[userAnswerIndex] || "لم تجب",
+                            userAnswer: q.choices && q.choices[userAnswerIndex] ? q.choices[userAnswerIndex] : "إجابة خاطئة",
                             correctAnswer: q.answer,
                             points: questionPoints
                         });
@@ -1275,26 +1479,61 @@
 
         function showResult(earnedPoints, totalPoints) {
             resultElement.style.display = 'block';
-            let resultHTML = '';
-            const percentage = Math.round((earnedPoints * 100) / totalPoints);
-            resultHTML = `<p class='score'>درجتك: ${percentage}% (${earnedPoints} من ${totalPoints} درجة)</p>`;
+            const percentage = Math.round((earnedPoints * 100) / totalPoints) || 0;
+            
+            let resultHTML = `
+                <div class="score-gauge-container">
+                    <div class="score-gauge" style="background: conic-gradient(var(--border-color) 100%, transparent 0);">
+                        <span class="score-gauge-text">0%</span>
+                    </div>
+                    <div class="score-details">${earnedPoints} من ${totalPoints} درجة</div>
+                </div>
+            `;
 
             if (wrongAnswers.length > 0) {
-                resultHTML += '<h3>إجاباتك الخاطئة:</h3><ul>';
+                resultHTML += `
+                    <div style="margin-bottom:20px; font-size:22px; font-weight:bold; color:var(--text-main); border-bottom:2px solid var(--primary-color); padding-bottom:10px; display:inline-block;">
+                        مراجعة الإجابات الخاطئة
+                    </div>
+                    <div class="wrong-answers-list">
+                `;
+                
                 wrongAnswers.forEach(ans => {
                     const formattedQuestion = ans.question.replace(/\n/g, '<br>');
-                    resultHTML += `<li>
-                            <p>السؤال: ${formattedQuestion}</p>
-                            <p>إجابتك: <span class='wrong'>${ans.userAnswer || "لم تجب"}</span></p>
-                            <p>الصحيحة: <span class='correct'>${ans.correctAnswer}</span></p>
-                            <p>الدرجات المفقودة: ${ans.points}</p>
-                        </li>`;
+                    resultHTML += `
+                        <div class="wrong-answer-card">
+                            <div class="wrong-answer-q">${formattedQuestion}</div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-wrong">إجابتك</span>
+                                <span class="answer-text">${ans.userAnswer || "لم تجب"}</span>
+                            </div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-correct">الإجابة الصحيحة</span>
+                                <span class="answer-text">${ans.correctAnswer}</span>
+                            </div>
+                            <div class="points-lost">
+                                الدرجات المفقودة في هذا السؤال: <strong>${ans.points}</strong>
+                            </div>
+                        </div>`;
                 });
-                resultHTML += '</ul>';
+                resultHTML += '</div>';
             } else if (totalPoints > 0) {
-                resultHTML += '<p class="correct">أحسنت! جميع إجاباتك صحيحة</p>';
+                resultHTML += `
+                    <div style="text-align:center; padding: 20px; background:var(--correct-bg); color:white; border-radius:12px; font-weight:bold; font-size:18px; margin-top: 20px;">
+                        أحسنت! جميع إجاباتك صحيحة.
+                    </div>`;
             }
+            
             resultElement.innerHTML = resultHTML;
+
+            setTimeout(() => {
+                const gauge = document.querySelector('.score-gauge');
+                const text = document.querySelector('.score-gauge-text');
+                if(gauge && text) {
+                    gauge.style.background = `conic-gradient(var(--primary-color) ${percentage}%, var(--border-color) 0)`;
+                    text.textContent = `${percentage}%`;
+                }
+            }, 100);
         }
 
         function reviewAnswers() {
@@ -1307,25 +1546,74 @@
             const quiz = quizData[currentQuiz];
             quiz.questions.forEach((q, qIndex) => {
                 if (q.divider || q.type === 'info' || q.type === 'instructions') return;
-                const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
-                if (q.type === 'essay' || q.type === 'essay-image') {
-                    const answerDiv = questionDiv.querySelector('.essay-answer');
-                    answerDiv.style.display = 'block';
-                    const essayButtons = questionDiv.querySelector('.essay-buttons');
-                    essayButtons.style.display = 'none';
-                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
+
+                if (q.type === 'tf') {
+                    const tfRow = document.querySelector(`.tf-row[data-question-index="${qIndex}"]`);
+                    if (!tfRow) return;
+                    const box = tfRow.querySelector('.tf-box');
+                    const popup = tfRow.querySelector('.tf-popup');
+                    if (popup) popup.remove(); 
+
+                    let trueIndex = 0; let falseIndex = 1;
+                    if(q.choices) {
+                        const tIdx = q.choices.findIndex(c => c.includes('صح') || c.includes('صواب'));
+                        if(tIdx !== -1) trueIndex = tIdx;
+                        const fIdx = q.choices.findIndex(c => c.includes('خطأ'));
+                        if(fIdx !== -1) falseIndex = fIdx;
+                    }
+
                     const userAnswerIndex = userAnswers[qIndex];
-                    const correctAnswerIndex = q.choices.indexOf(q.answer);
-                    const choiceLabels = questionDiv.querySelectorAll('.choice-label');
-                    choiceLabels.forEach((label, btnIndex) => {
-                        const radio = label.querySelector('input[type="radio"]');
-                        if (btnIndex === correctAnswerIndex) {
-                            label.classList.add('correct');
-                        } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
-                            label.classList.add('wrong');
+                    const correctAnswerIndex = q.choices ? q.choices.indexOf(q.answer) : trueIndex;
+                    
+                    box.style.color = 'white';
+                    
+                    if (userAnswerIndex === correctAnswerIndex) {
+                        box.style.borderColor = 'var(--correct-bg)';
+                        box.style.backgroundColor = 'var(--correct-bg)';
+                        const icon = box.querySelector('i.fa-fw');
+                        if (icon) {
+                            icon.className = `fa-solid fa-fw ${correctAnswerIndex === trueIndex ? 'fa-check' : 'fa-xmark'}`;
+                            icon.style.display = 'inline-block';
+                            icon.style.color = 'white';
                         }
-                        radio.disabled = true;
-                    });
+                    } else {
+                        box.style.borderColor = 'var(--wrong-bg)';
+                        box.style.backgroundColor = 'var(--wrong-bg)';
+                        const icon = box.querySelector('i.fa-fw');
+                        if(icon && userAnswerIndex !== undefined) {
+                            icon.className = `fa-solid fa-fw ${userAnswerIndex === trueIndex ? 'fa-check' : 'fa-xmark'}`;
+                            icon.style.display = 'inline-block';
+                            icon.style.color = 'white';
+                        }
+
+                        const correctIcon = document.createElement('div');
+                        correctIcon.style.color = 'var(--wrong-bg)';
+                        correctIcon.style.fontSize = '14px';
+                        correctIcon.style.marginTop = '8px';
+                        correctIcon.innerHTML = `الإجابة الصحيحة: <i class="fa-solid ${correctAnswerIndex === trueIndex ? 'fa-check' : 'fa-xmark'}"></i>`;
+                        tfRow.querySelector('.tf-text').appendChild(correctIcon);
+                    }
+                } else {
+                    const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                    if (q.type === 'essay' || q.type === 'essay-image') {
+                        const answerDiv = questionDiv.querySelector('.essay-answer');
+                        answerDiv.style.display = 'block';
+                        const essayButtons = questionDiv.querySelector('.essay-buttons');
+                        essayButtons.style.display = 'none';
+                    } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                        const userAnswerIndex = userAnswers[qIndex];
+                        const correctAnswerIndex = q.choices.indexOf(q.answer);
+                        const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+                        choiceLabels.forEach((label, btnIndex) => {
+                            const radio = label.querySelector('input[type="radio"]');
+                            if (btnIndex === correctAnswerIndex) {
+                                label.classList.add('correct');
+                            } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
+                                label.classList.add('wrong');
+                            }
+                            radio.disabled = true;
+                        });
+                    }
                 }
             });
         }
