@@ -111,7 +111,7 @@
     }
 
     .about-header {
-      text-align: center; margin-bottom: 30px;
+      text-align: center; margin-bottom: 20px;
     }
    
     .about-title {
@@ -119,35 +119,36 @@
       margin-bottom: 10px;
     }
 
-    .info-card {
+    /* صندوق التعليمات الجديد */
+    .instructions-box {
       background: var(--bg-card);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 30px;
       border: 1px solid var(--border-color);
-      transition: background-color 0.3s, border-color 0.3s;
-    }
-
-    .info-card h3 {
-      margin-top: 0;
-      color: var(--title-color);
+      border-right: 5px solid var(--primary-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .info-text {
       font-size: 1.05rem;
       line-height: 1.8;
-      color: var(--text-muted);
+      color: var(--text-color);
       margin: 0;
       text-align: justify;
     }
 
-    .instruction-list {
-      padding-right: 20px;
+    .privacy-note {
+      display: inline-block;
       margin-top: 15px;
       color: var(--text-muted);
-      line-height: 1.8;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .privacy-note i {
+      margin-left: 5px;
+      color: var(--primary-color);
     }
 
     .highlight {
@@ -167,7 +168,7 @@
       font-weight: 700;
       border: none;
       border-radius: 12px;
-      margin-top: 25px;
+      margin-top: 15px;
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
       font-family: inherit;
@@ -182,9 +183,9 @@
 
     /* حاوية الإطار (النموذج) */
     #form-container {
-      display: none; /* مخفي افتراضياً */
+      display: none;
       width: 100%;
-      margin-top: 20px;
+      margin-top: 30px;
       background: var(--bg-card);
       border-radius: 16px;
       border: 1px solid var(--border-color);
@@ -233,24 +234,20 @@
       <h1 class="about-title">رأيك يهمنا</h1>
     </div>
 
-    <div class="info-card">
-      <h3>تعليمات التقييم</h3>
+    <div class="instructions-box">
       <p class="info-text">
-        مرحباً بك في صفحة التقييم الخاصة بمنصة <span class="highlight">"روافد"</span>. نسعى دائماً لتطوير المنصة وتحسين أدواتها لتلبي احتياجات طلبة جامعة الشرقية بأفضل صورة ممكنة.
+        نعمل باستمرار على تحسين وتحديث منصة <span class="highlight">"روافد"</span> لتكون عند حسن ظنكم، لذا يسعدنا أن تشاركونا تقييمكم ومقترحاتكم البناءة لنتمكن من تقديم الأفضل لكم وتلبية تطلعاتكم.
         <br><br>
-        <strong>يرجى مراعاة النقاط الآتية:</strong>
+        نرجو منكم التكرم بتعبئة هذا النموذج بهدف تحسين وتطوير الخدمات المقدمة عبر منصة روافد لطلبة كلية الآداب والعلوم الإنسانية بجامعة الشرقية. رأيكم يهمنا لتقديم تجربة أفضل.
       </p>
-      
-      <ul class="instruction-list">
-        <li>الشفافية والموضوعية في إبداء الرأي حول مستوى المقررات والأدوات التعليمية.</li>
-        <li>كتابة أي مقترحات تفصيلية لأدوات جديدة أو خصائص تود رؤيتها في المنصة مستقبلاً.</li>
-        <li>توضيح أي مشكلات تقنية أو صعوبات واجهتك أثناء التصفح.</li>
-      </ul>
-
-      <button class="eval-btn" id="start-eval-btn" onclick="showForm()">
-        <i class="fas fa-clipboard-list"></i> ابدأ التقييم الآن
-      </button>
+      <span class="privacy-note">
+        <i class="fas fa-shield-alt"></i> ستستعمل البيانات لأغراض تحسين وتطوير المنصة فقط.
+      </span>
     </div>
+
+    <button class="eval-btn" id="start-eval-btn" onclick="showForm()">
+      <i class="fas fa-clipboard-list"></i> ابدأ التقييم الآن
+    </button>
 
     <div id="form-container">
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSebZy8QJCSN7wPupwQd7hK7ZrY9FnyVdRdYrhTsKI9n5SJd4Q/viewform?embedded=true" title="نموذج تقييم منصة روافد">
@@ -281,7 +278,7 @@
     // إظهار الإطار
     formContainer.style.display = 'block';
     
-    // إخفاء الزر بعد النقر عليه (اختياري، يمكنك تركه إذا أردت)
+    // إخفاء الزر بعد النقر عليه
     evalBtn.style.display = 'none';
 
     // التمرير السلس إلى الأسفل ليظهر النموذج بالكامل
