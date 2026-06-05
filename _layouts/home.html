@@ -210,6 +210,91 @@
 
     .materials-list.grid-view { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
+    /* === تصميم النافذة المنبثقة (Modal) === */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(4px);
+    }
+    .popup-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .popup-content {
+      background-color: var(--bg-card);
+      padding: 30px 25px;
+      border-radius: var(--radius-md);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid var(--border-color);
+    }
+    .popup-overlay.show .popup-content {
+      transform: translateY(0) scale(1);
+    }
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+    }
+    .popup-close:hover {
+      color: var(--primary-color);
+      background-color: var(--primary-light-bg);
+    }
+    .popup-image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      margin-bottom: 25px;
+      border-radius: 8px;
+    }
+    .popup-btn {
+      display: block;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      box-shadow: 0 8px 20px rgba(26, 42, 198, 0.2);
+    }
+    .popup-btn:hover {
+      background-color: transparent;
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+
     /* === الشاشات المتوسطة والكبيرة === */
     @media (min-width: 768px) {
       .compact-label { display: inline; }
@@ -316,6 +401,14 @@
         </div>
 
     </div> {% include footer.html %}
+  </div>
+
+  <div class="popup-overlay" id="rating-popup">
+    <div class="popup-content">
+      <button class="popup-close" id="close-rating-popup"><i class="fas fa-times"></i></button>
+      <img src="{{ '/images/R26B1.png' | relative_url }}" alt="التقييم" class="popup-image">
+      <a href="/rate" target="_blank" class="popup-btn" id="open-rate-link">التقييم الآن</a>
+    </div>
   </div>
 
 <script>
@@ -457,10 +550,37 @@
         
         // إظهار كل شيء دفعة واحدة
         mainArea.classList.add('loaded');
+        
+        // إظهار النافذة المنبثقة بعد اكتمال تحميل المحتوى بـ 800 جزء من الثانية
+        setTimeout(() => {
+          document.getElementById('rating-popup').classList.add('show');
+        }, 800);
     })
     .catch(err => {
         console.error("Critical Load Error:", err);
         mainArea.classList.add('loaded');
+    });
+
+    /* === 5. التحكم في النافذة المنبثقة للتقييم === */
+    const ratingPopup = document.getElementById('rating-popup');
+    const closeRatingPopup = document.getElementById('close-rating-popup');
+    const rateLinkBtn = document.getElementById('open-rate-link');
+
+    // إغلاق عند الضغط على زر X
+    closeRatingPopup.addEventListener('click', () => {
+      ratingPopup.classList.remove('show');
+    });
+
+    // إغلاق النافذة عند الضغط على الزر الأساسي (سيتم فتح الرابط في نافذة جديدة)
+    rateLinkBtn.addEventListener('click', () => {
+      ratingPopup.classList.remove('show');
+    });
+
+    // إغلاق النافذة عند النقر خارج المحتوى (على الخلفية المعتمة)
+    ratingPopup.addEventListener('click', (e) => {
+      if (e.target === ratingPopup) {
+        ratingPopup.classList.remove('show');
+      }
     });
   });
 </script>
