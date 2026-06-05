@@ -104,7 +104,7 @@
     .banner-img {
       width: 100%;
       border-radius: 16px;
-      margin-bottom: 5px; /* تم تقليل المسافة هنا */
+      margin-bottom: 5px;
       object-fit: cover;
       box-shadow: 0 2px 10px rgba(0,0,0,0.03);
       border: 1px solid var(--border-color);
@@ -118,7 +118,7 @@
     .about-title {
       font-size: 2rem; font-weight: 800; color: var(--primary-color);
       margin-bottom: 10px;
-      margin-top: 5px; /* تعديل إضافي لتقليل المسافة */
+      margin-top: 5px;
     }
 
     /* حاوية التعليمات بدون صندوق */
@@ -201,14 +201,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .page-footer {
-      text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-color);
-      color: var(--footer-text);
-      font-size: 0.85rem;
-    }
   </style>
 </head>
 <body>
@@ -231,7 +223,6 @@
       <h1 class="about-title">رأيك يهمنا</h1>
     </div>
 
-    <!-- التعليمات كنص عادي -->
     <div class="instructions-container">
       <p class="info-text">
         نعمل باستمرار على تحسين وتحديث منصة <span class="highlight">"روافد"</span> لتكون عند حسن ظنكم، لذا يسعدنا أن تشاركونا تقييمكم ومقترحاتكم البناءة لنتمكن من تقديم الأفضل لكم وتلبية تطلعاتكم.
@@ -243,7 +234,6 @@
       </span>
     </div>
 
-    <!-- زر بدء التقييم -->
     <button class="eval-btn" id="start-eval-btn" onclick="showForm()">
       <i class="fas fa-clipboard-list"></i> ابدأ التقييم الآن
     </button>
@@ -254,11 +244,9 @@
       </iframe>
     </div>
 
-    <div class="page-footer">
-      جميع الحقوق محفوظة لجاسم الفارسي، تعود حقوق المحتوى لأصحابها الأصليين ما لم يتم ذكر اسم الجهة المالكة للمحتوى صراحة. &copy; {{ site.time | date: '%Y' }}
-    </div>
-
   </div>
+
+  {% include footer.html %}
 
 <script>
   // دالة تغيير الوضع
