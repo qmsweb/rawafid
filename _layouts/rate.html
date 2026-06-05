@@ -104,30 +104,27 @@
     .banner-img {
       width: 100%;
       border-radius: 16px;
-      margin-bottom: 25px;
+      margin-bottom: 5px; /* تم تقليل المسافة هنا */
       object-fit: cover;
       box-shadow: 0 2px 10px rgba(0,0,0,0.03);
       border: 1px solid var(--border-color);
     }
 
     .about-header {
-      text-align: center; margin-bottom: 20px;
+      text-align: center; 
+      margin-bottom: 20px;
     }
    
     .about-title {
       font-size: 2rem; font-weight: 800; color: var(--primary-color);
       margin-bottom: 10px;
+      margin-top: 5px; /* تعديل إضافي لتقليل المسافة */
     }
 
-    /* صندوق التعليمات الجديد */
-    .instructions-box {
-      background: var(--bg-card);
-      border-radius: 12px;
-      padding: 20px 25px;
+    /* حاوية التعليمات بدون صندوق */
+    .instructions-container {
       margin-bottom: 30px;
-      border: 1px solid var(--border-color);
-      border-right: 5px solid var(--primary-color);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      padding: 0 10px;
     }
 
     .info-text {
@@ -234,7 +231,8 @@
       <h1 class="about-title">رأيك يهمنا</h1>
     </div>
 
-    <div class="instructions-box">
+    <!-- التعليمات كنص عادي -->
+    <div class="instructions-container">
       <p class="info-text">
         نعمل باستمرار على تحسين وتحديث منصة <span class="highlight">"روافد"</span> لتكون عند حسن ظنكم، لذا يسعدنا أن تشاركونا تقييمكم ومقترحاتكم البناءة لنتمكن من تقديم الأفضل لكم وتلبية تطلعاتكم.
         <br><br>
@@ -245,6 +243,7 @@
       </span>
     </div>
 
+    <!-- زر بدء التقييم -->
     <button class="eval-btn" id="start-eval-btn" onclick="showForm()">
       <i class="fas fa-clipboard-list"></i> ابدأ التقييم الآن
     </button>
