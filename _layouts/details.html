@@ -387,6 +387,22 @@
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
             mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
         } 
+        // إضافة التعامل مع مستعرض اليوتيوب للفيديوهات
+        else if (item.type === 'videos' && (item.preview_url || item.download_url)) {
+            const videoUrl = item.preview_url || item.download_url;
+            let embedUrl = videoUrl;
+            
+            // استخراج معرف اليوتيوب (ID) في حال كان الرابط يوتيوب
+            const ytMatch = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
+            }
+            
+            // استخدام تصميم مشابه لـ PDF ولكن ملائم للفيديو
+            mediaHTML = `<div class="pdf-container" style="background: #000; height: auto; aspect-ratio: 16/9; max-height: 75vh;">
+                            <iframe src="${embedUrl}" class="pdf-frame" title="YouTube Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                         </div>`;
+        }
         else if (item.image_url) {
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
