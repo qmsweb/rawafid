@@ -139,7 +139,6 @@
      
     .course-row {
         display: grid;
-        /* تم تغيير الترتيب ليكون: الساعات، اسم المادة، الدرجة، حذف */
         grid-template-columns: 1fr 2fr 1fr auto;
         gap: 10px;
         margin-bottom: 15px;
@@ -357,23 +356,23 @@
   <div id="print-template" style="display: flex; width: 1080px; height: 1080px; background: #ffffff; padding: 60px; direction: rtl; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: space-between; position: fixed; top: -20000px; left: -20000px; font-family: 'IBM Plex Sans Arabic', sans-serif;">
       
       <div style="text-align: center; margin-bottom: 20px;">
-          <div style="color: #1a2ac6; font-size: 60px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 15px;">
-              <i class="fas fa-book-open"></i> روافد
+          <div style="display: flex; align-items: center; justify-content: center;">
+              <img src="images/Rawafid-white.png" alt="شعار روافد" style="height: 80px; filter: brightness(0) saturate(100%) invert(18%) sepia(91%) saturate(3366%) hue-rotate(228deg) brightness(85%) contrast(97%);">
           </div>
-          <h2 style="color: #2d2d2d; font-size: 32px; margin-top: 15px;">نتيجة المعدل الفصلي</h2>
+          <h2 style="color: #2d2d2d; font-size: 32px; margin-top: 25px;">نتيجة المعدل الفصلي</h2>
       </div>
 
-      <div style="width: 100%; flex-grow: 1; margin-top: 20px;">
+      <div style="width: 100%; flex-grow: 1; margin-top: 20px; border-radius: 16px; overflow: hidden; border: 2px solid #ccd1e0;">
           <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 24px; color: #2d2d2d;">
               <thead>
                   <tr style="background-color: #f4f6fb; border-bottom: 3px solid #1a2ac6;">
-                      <th style="padding: 20px; border: 1px solid #ccd1e0;">اسم المادة</th>
-                      <th style="padding: 20px; border: 1px solid #ccd1e0; width: 20%;">الدرجة</th>
-                      <th style="padding: 20px; border: 1px solid #ccd1e0; width: 20%;">الساعات</th>
+                      <th style="padding: 20px; border-left: 1px solid #ccd1e0;">اسم المادة</th>
+                      <th style="padding: 20px; border-left: 1px solid #ccd1e0; width: 20%;">الدرجة</th>
+                      <th style="padding: 20px; width: 20%;">الساعات</th>
                   </tr>
               </thead>
               <tbody id="print-tbody">
-                  </tbody>
+              </tbody>
           </table>
       </div>
 
@@ -520,7 +519,6 @@
       let totalPoints = 0;
       let totalHours = 0;
       
-      // تفريغ جدول الطباعة وتجهيزه
       const printTbody = document.getElementById('print-tbody');
       printTbody.innerHTML = '';
 
@@ -534,12 +532,12 @@
               totalPoints += (points * hours);
               totalHours += hours;
               
-              // إضافة المادة لجدول الطباعة
+              // التعديل هنا: تحسين حدود الخلايا لتتناسب مع الإطار الدائري الخارجي للجدول
               printTbody.innerHTML += `
-                  <tr>
-                      <td style="padding: 15px; border: 1px solid #ccd1e0; font-weight: 500;">${courseName}</td>
-                      <td style="padding: 15px; border: 1px solid #ccd1e0;">${gradeSymbol}</td>
-                      <td style="padding: 15px; border: 1px solid #ccd1e0;">${hours}</td>
+                  <tr style="border-bottom: 1px solid #ccd1e0;">
+                      <td style="padding: 15px; border-left: 1px solid #ccd1e0; font-weight: 500;">${courseName}</td>
+                      <td style="padding: 15px; border-left: 1px solid #ccd1e0;">${gradeSymbol}</td>
+                      <td style="padding: 15px;">${hours}</td>
                   </tr>
               `;
           }
@@ -552,12 +550,10 @@
 
       const gpa = totalPoints / totalHours;
 
-      // تحديث واجهة النتيجة
       document.getElementById('finalGPA').innerText = gpa.toFixed(2);
       document.getElementById('totalHours').innerText = totalHours;
       document.getElementById('totalPoints').innerText = totalPoints.toFixed(2);
        
-      // تحديث أرقام الطباعة المخفية
       document.getElementById('print-gpa').innerText = gpa.toFixed(2);
       document.getElementById('print-total-hours').innerText = totalHours;
       document.getElementById('print-total-points').innerText = totalPoints.toFixed(2);
@@ -578,13 +574,11 @@
   function exportToImage() {
       const printTemplate = document.getElementById('print-template');
       
-      // استخدام مكتبة html2canvas لالتقاط الصورة من العنصر المخفي
       html2canvas(printTemplate, {
-          scale: 2, // لضمان دقة عالية للصورة
+          scale: 2, 
           useCORS: true,
           backgroundColor: '#ffffff'
       }).then(canvas => {
-          // إنشاء رابط التحميل
           const link = document.createElement('a');
           link.download = 'نتيجة-المعدل.png';
           link.href = canvas.toDataURL('image/png');
@@ -595,7 +589,6 @@
       });
   }
 
-  // تهيئة الصفحة
   window.addEventListener('DOMContentLoaded', () => {
       fetchCoursesData();
       const container = document.getElementById('courses-container');
