@@ -11,7 +11,7 @@
    
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'حاسبة المعدل - روافد' }}">
@@ -113,13 +113,15 @@
     .danger-btn:hover { color: var(--cal-red); border-color: var(--cal-red); }
 
     /* === Segmented Control (Toggle) === */
+    /* تم التعديل لتصبح دائرية وأصغر */
     .segmented-control {
         display: flex;
         background-color: var(--bg-code);
-        border-radius: 12px;
+        border-radius: 30px;
         padding: 5px;
         margin-bottom: 30px;
         border: 1px solid var(--border-color);
+        gap: 5px;
     }
     .segmented-control input[type="radio"] {
         display: none;
@@ -127,12 +129,12 @@
     .segmented-control label {
         flex: 1;
         text-align: center;
-        padding: 10px 16px;
+        padding: 8px 15px;
         cursor: pointer;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         font-weight: 600;
         color: var(--text-muted);
-        border-radius: 8px;
+        border-radius: 25px;
         transition: all 0.3s ease;
     }
     .segmented-control input[type="radio"]:checked + label {
@@ -385,11 +387,11 @@
         <div class="form-content" style="display: flex; gap: 15px; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 200px;">
                 <label style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; display: block;">المعدل التراكمي السابق</label>
-                <input type="number" id="prev-gpa" class="input-field" placeholder="مثال: 3.50" step="0.01" min="0" max="4" oninput="recalculateIfVisible()">
+                <input type="number" id="prev-gpa" class="input-field" placeholder="مثال: 3.50" step="0.01" min="0" max="4" onchange="recalculateIfVisible()">
             </div>
             <div style="flex: 1; min-width: 200px;">
                 <label style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; display: block;">الساعات المقطوعة السابقة</label>
-                <input type="number" id="prev-hours" class="input-field" placeholder="مثال: 45" min="0" oninput="recalculateIfVisible()">
+                <input type="number" id="prev-hours" class="input-field" placeholder="مثال: 45" min="0" onchange="recalculateIfVisible()">
             </div>
         </div>
     </div>
@@ -593,7 +595,7 @@
 
       return `
         <div class="course-row">
-            <input type="number" class="input-field course-hours" placeholder="الساعات" min="1" max="12" oninput="recalculateIfVisible()">
+            <input type="number" class="input-field course-hours" placeholder="الساعات" min="1" max="12" onchange="recalculateIfVisible()">
             <div class="autocomplete-wrapper">
                 <input type="text" class="input-field course-name" placeholder="اسم المادة (اختياري)" oninput="handleInput(this)" autocomplete="off">
                 <div class="autocomplete-items"></div>
@@ -657,8 +659,9 @@
       const resultTbody = document.getElementById('result-tbody');
       const printTbody = document.getElementById('print-tbody');
       
-      resultTbody.innerHTML = '';
-      printTbody.innerHTML = '';
+      // تحسين الأداء: تجميع الـ HTML أولاً لتفادي إعادة رسم الـ DOM المتكرر
+      let resultHTML = '';
+      let printHTML = '';
 
       // حساب مواد الفصل الحالي
       rows.forEach(row => {
@@ -671,8 +674,8 @@
               currentSemesterPoints += (points * hours);
               currentSemesterHours += hours;
               
-              // إضافة للجدول في الصفحة
-              resultTbody.innerHTML += `
+              // إضافة للجدول في الصفحة (كنص)
+              resultHTML += `
                   <tr>
                       <td>${courseName}</td>
                       <td>${hours}</td>
@@ -680,8 +683,8 @@
                   </tr>
               `;
 
-              // إضافة لجدول الطباعة
-              printTbody.innerHTML += `
+              // إضافة لجدول الطباعة (كنص)
+              printHTML += `
                   <tr style="border-bottom: 1px solid #ccd1e0;">
                       <td style="padding: 15px; border-left: 1px solid #ccd1e0; font-weight: 500;">${courseName}</td>
                       <td style="padding: 15px; border-left: 1px solid #ccd1e0;">${gradeSymbol}</td>
@@ -690,6 +693,10 @@
               `;
           }
       });
+
+      // حقن البيانات دفعة واحدة لتقليل الثقل
+      resultTbody.innerHTML = resultHTML;
+      printTbody.innerHTML = printHTML;
 
       if (currentSemesterHours === 0 && !isCumulative) {
           alert("الرجاء إدخال الساعات والدرجة لمادة واحدة على الأقل.");
