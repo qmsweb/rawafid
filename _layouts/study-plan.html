@@ -446,10 +446,16 @@
       // المتطلب السابق
       const prereqEl = document.getElementById('cPrereq');
       if (course.prereq) {
-          const prereqName = currentCoursesDB.find(c => c.id === course.prereq)?.name || course.prereq;
-          prereqEl.innerHTML = `<a class="internal-link" onclick="displayCourse('${course.prereq}', true)">
-                                  <i class="fas fa-arrow-left"></i> ${course.prereq} (${prereqName})
-                                </a>`;
+          // تقسيم السلسلة النصية للتعامل مع المقررات المتعددة
+          const prereqList = course.prereq.split(',').map(p => p.trim());
+          const prereqLinks = prereqList.map(pId => {
+              const pCourse = currentCoursesDB.find(c => c.id === pId);
+              const pName = pCourse ? pCourse.name : pId;
+              return `<a class="internal-link" onclick="displayCourse('${pId}', true)">
+                        <i class="fas fa-arrow-left"></i> ${pId} (${pName})
+                      </a>`;
+          });
+          prereqEl.innerHTML = prereqLinks.join('');
       } else {
           prereqEl.innerHTML = '<span style="color:var(--text-muted)">لا يوجد متطلب سابق</span>';
       }
@@ -457,13 +463,28 @@
       // المتطلب المرافق
       const coreqEl = document.getElementById('cCoreq');
       if (course.coreq) {
-          coreqEl.innerHTML = `<strong>${course.coreq}</strong>`;
+          // التعامل مع المتطلبات المتزامنة بنفس طريقة السابقة لضمان عرض الاسم
+          const coreqList = course.coreq.split(',').map(p => p.trim());
+          const coreqLinks = coreqList.map(cId => {
+              const cCourse = currentCoursesDB.find(c => c.id === cId);
+              const cName = cCourse ? cCourse.name : cId;
+              return `<a class="internal-link" onclick="displayCourse('${cId}', true)">
+                        <i class="fas fa-exchange-alt"></i> ${cId} (${cName})
+                      </a>`;
+          });
+          coreqEl.innerHTML = coreqLinks.join('');
       } else {
-          coreqEl.innerText = "لا يوجد";
+          coreqEl.innerHTML = '<span style="color:var(--text-muted)">لا يوجد</span>';
       }
 
       // المتطلب اللاحق
-      const nextCourses = currentCoursesDB.filter(c => c.prereq === course.id);
+      // البحث في جميع المقررات عن المقررات التي تحتوي قائمة متطلباتها السابقة على معرف المقرر الحالي
+      const nextCourses = currentCoursesDB.filter(c => {
+          if (!c.prereq) return false;
+          const pList = c.prereq.split(',').map(p => p.trim());
+          return pList.includes(course.id);
+      });
+      
       const postreqContainer = document.getElementById('cPostreqContainer');
       const postreqVal = document.getElementById('cPostreq');
 
