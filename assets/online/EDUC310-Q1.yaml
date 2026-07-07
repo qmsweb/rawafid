@@ -3,7 +3,7 @@
   subject-code: EDUC310
   questions:
     - type: instructions 
-      mainTitle: ثالثًا الأسئلة الموضوعية (صواب أو خطأ)
+      mainTitle: أولًا الأسئلة الموضوعية (صواب أو خطأ)
       description: حدد ما إذا كانت العبارة صحيحة أم خاطئة
       
     - type: tf
