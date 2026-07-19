@@ -421,7 +421,40 @@
           document.getElementById('issue').value = "2";
           document.getElementById('pages').value = "45-67";
       }
-      // يمكن إضافة باقي الأمثلة هنا
+      else if (type === 'thesis_pub') {
+          document.getElementById('authors').value = "البلوشي، أحمد";
+          document.getElementById('year').value = "2024";
+          document.getElementById('title').value = "أثر استخدام استراتيجيات التعلم النشط في التحصيل الدراسي";
+          document.getElementById('bracketInfo').value = "رسالة ماجستير";
+          document.getElementById('publisher').value = "جامعة السلطان قابوس";
+          document.getElementById('sourceName').value = "مستودع شعاع";
+          document.getElementById('url').value = "https://shuaa.om/12345";
+      }
+      else if (type === 'thesis_unpub') {
+          document.getElementById('authors').value = "الفارسي، فاطمة";
+          document.getElementById('year').value = "2023";
+          document.getElementById('title').value = "فاعلية برنامج تدريبي مقترح في تنمية المهارات القيادية";
+          document.getElementById('bracketInfo').value = "أطروحة دكتوراة غير منشورة";
+          document.getElementById('publisher').value = "جامعة نزوى";
+      }
+      else if (type === 'conference') {
+          document.getElementById('authors').value = "الوهيبي، سعيد";
+          document.getElementById('year').value = "2025";
+          document.getElementById('fullDate').value = "15-17 مايو";
+          document.getElementById('title').value = "توظيف الواقع المعزز في المناهج العمانية";
+          document.getElementById('bracketInfo').value = "ورقة علمية";
+          document.getElementById('sourceName').value = "المؤتمر الدولي لتقنيات التعليم";
+          document.getElementById('location').value = "مسقط، عُمان";
+          document.getElementById('url').value = "https://conf.edu.om/paper2";
+      }
+      else if (type === 'newspaper') {
+          document.getElementById('authors').value = "السالمي، عبدالله";
+          document.getElementById('year').value = "2026";
+          document.getElementById('fullDate').value = "12 فبراير";
+          document.getElementById('title').value = "التحول الرقمي في المؤسسات الحكومية";
+          document.getElementById('sourceName').value = "صحيفة عمان";
+          document.getElementById('url').value = "https://www.omandaily.om/article123";
+      }
       
       generateCitation(); 
   }
