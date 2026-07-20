@@ -1,0 +1,14 @@
+{
+    "name": "الإدارة الصفية والمدرسية",
+    "description": "",
+    "url": "https://rawafid.jassim.one/c/EDUC317",
+    "items": [
+        {
+            "id": 1,
+            "title": "اختبار تفاعلي في الوحدة الأولى",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC317-ch1"
+        }
+    ]
+}
