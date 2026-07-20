@@ -9,6 +9,13 @@
             "description": "",
             "type": "quizzes",
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC317-ch1"
+        },
+        {
+            "id": 2,
+            "title": "اختبار تفاعلي في الوحدة الثانية",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC317-ch2"
         }
     ]
 }
