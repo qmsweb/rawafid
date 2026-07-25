@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "علوم اللغة - روافد" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="{{ '/css/topbar.css' | relative_url }}">
+
+  <meta property="og:title" content="علوم اللغة العربية - روافد" id="og-title">
+  <meta property="og:description" content="مكتبة ومنصة شاملة لعلوم اللغة العربية، الصوتيات، المعاجم، الأدوات التفاعلية والتطبيقات اللغوية." id="og-description">
+  <meta property="og:image" content="{{ '/images/cover2.png' | relative_url }}" id="og-image">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === 1. متغيرات الألوان (الأساس للوضع الداكن والفاتح) === */
+    :root {
+      /* الوضع الفاتح (الأصلي) */
+      --primary-color: #1a2ac6;
+      --primary-light: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-sticky: rgba(244, 246, 251, 0.92);
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-header: #1e1e2f;
+      --text-muted: #666666;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
+      --hover-bg: #e0e7ff;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+
+      /* ألوان الأيقونات (فاتح) */
+      --icon-doc-bg: #eff6ff; --icon-doc-cl: #3b82f6;
+      --icon-vid-bg: #fef2f2; --icon-vid-cl: #ef4444;
+      --icon-res-bg: #fffbeb; --icon-res-cl: #f59e0b;
+      --icon-quiz-bg: #f5f3ff; --icon-quiz-cl: #8b5cf6;
+      --icon-link-bg: #ecfdf5; --icon-link-cl: #10b981;
+      --icon-card-bg: #e0f7fa; --icon-card-cl: #00bcd4;
+      --icon-def-bg: #f3f4f6; --icon-def-cl: #6b7280;
+    }
+
+    /* الوضع الداكن (عند التفعيل) */
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-light: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-sticky: rgba(18, 18, 18, 0.92);
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-header: #ffffff;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+      --hover-bg: #2c2e3e;
+
+      /* ألوان الأيقونات (داكن) */
+      --icon-doc-bg: rgba(59, 130, 246, 0.15); --icon-doc-cl: #60a5fa;
+      --icon-vid-bg: rgba(239, 68, 68, 0.15); --icon-vid-cl: #f87171;
+      --icon-res-bg: rgba(245, 158, 11, 0.15); --icon-res-cl: #fbbf24;
+      --icon-quiz-bg: rgba(139, 92, 246, 0.15); --icon-quiz-cl: #a78bfa;
+      --icon-link-bg: rgba(16, 185, 129, 0.15); --icon-link-cl: #34d399;
+      --icon-card-bg: rgba(0, 188, 212, 0.15); --icon-card-cl: #26c6da;
+      --icon-def-bg: rgba(107, 114, 128, 0.15); --icon-def-cl: #9ca3af;
+    }
+
+    /* === 2. التنسيقات العامة === */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px; padding-bottom: 50px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1150px; margin: 0 auto; padding: 0 20px;
+    }
+
+    /* === Hero Section (التصميم الجديد) === */
+    .science-hero-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 35px 30px; margin-top: 20px; margin-bottom: 25px;
+      box-shadow: var(--card-shadow);
+      position: relative; overflow: hidden;
+      border: 1px solid var(--border-color);
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    
+    .science-hero-card::before {
+      content: ''; position: absolute; top: -60px; left: -60px;
+      width: 200px; height: 200px;
+      background: var(--primary-light);
+      border-radius: 50%; opacity: 0.7; z-index: 0;
+      filter: blur(20px);
+    }
+
+    .hero-main-content {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 15px;
+    }
+
+    .hero-top-bar {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      flex-wrap: wrap; gap: 15px;
+    }
+
+    .hero-title-area h1 {
+      font-size: 2.1rem; color: var(--text-header);
+      font-weight: 800; line-height: 1.3;
+      letter-spacing: -0.5px;
+    }
+    
+    .hero-title-area .category-tag {
+      font-size: 0.85rem; color: var(--primary-color);
+      background: var(--primary-light);
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 50px; margin-top: 10px; font-weight: 600;
+    }
+
+    .hero-desc {
+      color: var(--text-muted); font-size: 1rem;
+      line-height: 1.8; max-width: 850px;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+
+    .share-button {
+      background: var(--bg-card); color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 10px 22px; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.25s ease;
+    }
+    .share-button:hover {
+      background: var(--primary-color); color: #fff;
+      box-shadow: 0 4px 12px rgba(26, 42, 198, 0.2);
+    }
+
+    /* === شريط البحث والتصفية المدمج === */
+    .search-box-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 40px 10px 15px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted); font-size: 0.9rem;
+    }
+
+    /* === Sticky Filter Bar === */
+    .sticky-filter-container {
+      position: sticky; top: 70px; z-index: 90;
+      margin-bottom: 25px; padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-sticky);
+      margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .filter-wrapper {
+      display: flex; justify-content: space-between; align-items: center; gap: 15px;
+    }
+
+    .filter-bar {
+      display: flex; gap: 8px; align-items: center;
+      overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .view-toggle {
+      display: flex; gap: 4px; background: var(--bg-card);
+      padding: 4px; border-radius: 50px;
+      border: 1px solid var(--border-color); flex-shrink: 0;
+    }
+    .view-toggle i {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: 0.95rem;
+      color: var(--text-muted); cursor: pointer; transition: 0.2s;
+    }
+    .view-toggle i.active {
+      background-color: var(--primary-light); color: var(--primary-color);
+    }
+
+    .filter-divider {
+      width: 1px; height: 24px; background-color: var(--border-color);
+      margin: 0 4px; flex-shrink: 0;
+    }
+
+    .filter-item {
+      flex: 0 0 auto; padding: 8px 18px; border-radius: 50px;
+      background: var(--bg-card); color: var(--text-muted);
+      font-weight: 600; font-size: 0.85rem;
+      border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .filter-item:hover {
+      background: var(--hover-bg); color: var(--primary-color);
+      border-color: var(--border-color);
+    }
+    .filter-item.active {
+      background: var(--primary-color); color: #fff;
+      border-color: var(--primary-color);
+    }
+
+    /* === Materials List Layout === */
+    .materials-list {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .material-item {
+      background: var(--bg-card); border-radius: var(--radius-md);
+      padding: 18px; cursor: pointer; position: relative;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: flex; flex-direction: column;
+      transition: all 0.25s ease-in-out;
+    }
+
+    .material-item:hover {
+      box-shadow: var(--hover-shadow);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* === البطاقات الخاصة (خاصية التدرج المميز) === */
+    .material-item.special-card-style {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        border: none;
+        box-shadow: 0 6px 18px rgba(15, 32, 39, 0.35);
+    }
+    
+    .material-item.special-card-style:hover {
+        box-shadow: 0 12px 28px rgba(15, 32, 39, 0.55);
+        transform: translateY(-3px);
+    }
+
+    .material-item.special-card-style .item-title-text h3 {
+        color: #ffffff !important;
+    }
+    
+    .material-item.special-card-style .item-description-preview {
+        color: rgba(255, 255, 255, 0.88) !important;
+    }
+
+    .material-item.special-card-style .item-icon {
+        background: rgba(255, 255, 255, 0.12) !important;
+        color: #80deea !important;
+        backdrop-filter: blur(4px);
+    }
+
+    /* تفاصيل العنصر */
+    .item-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 8px;
+    }
+
+    .item-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: justify;
+      font-size: 1.25rem; flex-shrink: 0; align-items: center; justify-content: center;
+    }
+
+    .item-title-text h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 3px;
+      line-height: 1.4;
+    }
+
+    .item-description-preview {
+      font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;
+      margin-right: 58px; margin-bottom: 12px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .badges-container {
+      display: flex; gap: 8px; margin-right: 58px; flex-wrap: wrap;
+    }
+
+    .item-image { display: none; }
+
+    /* Grid View */
+    .materials-list.grid-view {
+      display: grid !important; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+    }
+    .materials-list.grid-view .material-item {
+      height: 100%; justify-content: flex-start; padding: 20px;
+    }
+    .materials-list.grid-view .item-header { margin-bottom: 12px; }
+    .materials-list.grid-view .item-description-preview {
+      margin-right: 0 !important; margin-bottom: 14px; flex-grow: 1; 
+    }
+    .materials-list.grid-view .badges-container {
+      margin-right: 0 !important; margin-top: auto;
+    }
+    .materials-list.grid-view .item-image {
+        display: block; width: 100%; margin-top: 14px;
+        border-radius: 10px; overflow: hidden; aspect-ratio: 16/9;
+    }
+    .item-image img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;
+    }
+    .material-item:hover .item-image img {
+      transform: scale(1.04);
+    }
+
+    /* Badges */
+    .badge { 
+      font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; 
+      font-weight: 700; letter-spacing: 0.3px; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .badge-important { background: #e3f2fd; color: #1a2ac6; }
+    .badge-new { background: #fffde7; color: #d48806; }
+    
+    [data-theme="dark"] .badge-important { background: rgba(26, 42, 198, 0.3); color: #9fa8da; }
+    [data-theme="dark"] .badge-new { background: rgba(251, 192, 45, 0.2); color: #fbc02d; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-top-bar { flex-direction: column; gap: 12px; }
+      .hero-actions { width: 100%; justify-content: space-between; }
+      .search-box-wrapper { max-width: 100%; }
+      .share-button { width: 100%; justify-content: center; }
+      .materials-list.grid-view { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+      .materials-list.grid-view .material-item { padding: 14px; }
+      .materials-list.grid-view .item-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+      .materials-list.grid-view .item-title-text h3 { font-size: 0.95rem; }
+      .materials-list.grid-view .item-description-preview { font-size: 0.82rem; }
+      .item-description-preview, .badges-container { margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  
+  {% include header.html %}
+
+  <div class="container">
+    
+    <!-- Hero Section -->
+    <div class="science-hero-card">
+      <div class="hero-main-content">
+        <div class="hero-top-bar">
+          <div class="hero-title-area">
+            <h1 id="course-title">جاري التحميل...</h1>
+            <span class="category-tag" id="course-code" style="display: none;"></span>
+          </div>
+          
+          <div class="hero-actions">
+            <div id="share-button" class="share-button">
+              <i class="fas fa-share-nodes"></i> مشاركة الرابط
+            </div>
+          </div>
+        </div>
+
+        <p class="hero-desc" id="course-desc"></p>
+
+        <!-- شريط البحث السريع داخل الهيرو -->
+        <div class="search-box-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="search-input" class="search-input" placeholder="ابحث في هذا القسم...">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Filter Container -->
+    <div class="sticky-filter-container">
+      <div class="filter-wrapper">
+        <div class="filter-bar">
+          <div class="view-toggle">
+              <i class="fas fa-list-ul active" id="list-view" title="عرض قائمة"></i>
+              <i class="fas fa-border-all" id="grid-view" title="عرض شبكي"></i>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-item active" data-filter="all"><i class="fas fa-layer-group"></i> الكل</div>
+          <div class="filter-item" data-filter="documents"><i class="fas fa-file-lines"></i> مستندات</div>
+          <div class="filter-item" data-filter="videos"><i class="fas fa-play"></i> مرئيات</div>
+          <div class="filter-item" data-filter="resources"><i class="fas fa-pen-nib"></i> تدوينات وملاحظات</div>
+          <div class="filter-item" data-filter="quizzes"><i class="fas fa-clipboard-question"></i> تطبيقات وتدريبات</div>
+          <div class="filter-item" data-filter="cards"><i class="fas fa-clone"></i> البطاقات التفاعلية</div>
+          <div class="filter-item" data-filter="links"><i class="fas fa-link"></i> روابط خارجية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Materials List -->
+    <div class="materials-list" id="materials-list"></div>
+    
+    {{ content }}
+
+    {% include footer.html %}
+  </div>
+
+<script>
+/* ======= 1. دالة تغيير الوضع (للربط مع الهيدر) ======= */
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+}
+
+/* ======= 2. تعريف المتغيرات ======= */
+const materialsList = document.getElementById('materials-list');
+const filterItems = document.querySelectorAll('.filter-item');
+const gridBtn = document.getElementById('grid-view');
+const listBtn = document.getElementById('list-view');
+const shareButton = document.getElementById('share-button');
+const searchInput = document.getElementById('search-input');
+
+// جلب الرمز من الرابط
+const courseCode = new URLSearchParams(window.location.search).get('i');
+
+let materialsData = [];
+let userToggledView = false; 
+let courseShareURL = null; 
+let currentFilter = 'all';
+let searchQuery = '';
+
+/* ======= 3. دوال مساعدة (للأيقونات) ======= */
+function getIconClass(type) {
+  switch (type) {
+    case 'documents': return 'fas fa-file-lines';
+    case 'videos': return 'fas fa-play';
+    case 'resources': return 'fas fa-pen-nib';
+    case 'quizzes': return 'fas fa-clipboard-question';
+    case 'links': return 'fas fa-link';
+    case 'cards': return 'fas fa-clone'; 
+    default: return 'fas fa-book-bookmark';
+  }
+}
+
+function getIconStyles(type) {
+  switch (type) {
+    case 'documents': return 'background: var(--icon-doc-bg); color: var(--icon-doc-cl);';
+    case 'videos': return 'background: var(--icon-vid-bg); color: var(--icon-vid-cl);';
+    case 'resources': return 'background: var(--icon-res-bg); color: var(--icon-res-cl);';
+    case 'quizzes': return 'background: var(--icon-quiz-bg); color: var(--icon-quiz-cl);';
+    case 'links': return 'background: var(--icon-link-bg); color: var(--icon-link-cl);';
+    case 'cards': return 'background: var(--icon-card-bg); color: var(--icon-card-cl);'; 
+    default: return 'background: var(--icon-def-bg); color: var(--icon-def-cl);';
+  }
+}
+
+/* ======= 4. ضبط العرض (شبكة/قائمة) ======= */
+function setView(view, save = true) {
+  if (view === 'grid') {
+    materialsList.classList.add('grid-view');
+    gridBtn.classList.add('active');
+    listBtn.classList.remove('active');
+  } else {
+    materialsList.classList.remove('grid-view');
+    listBtn.classList.add('active');
+    gridBtn.classList.remove('active');
+  }
+  if (save) localStorage.setItem('viewMode', view);
+}
+
+/* ======= 5. رسم العناصر وتصفيتها ======= */
+function renderMaterials() {
+  materialsList.innerHTML = '';
+  
+  const filtered = materialsData.filter(item => {
+    const matchesType = (currentFilter === 'all') || (item.type === currentFilter);
+    const matchesSearch = !searchQuery || 
+      (item.title && item.title.toLowerCase().includes(searchQuery)) ||
+      (item.description && item.description.toLowerCase().includes(searchQuery));
+    return matchesType && matchesSearch;
+  });
+
+  if (filtered.length === 0) {
+      materialsList.innerHTML = `
+        <div style="text-align:center; color:var(--text-muted); padding:50px 20px; background:var(--bg-card); border-radius:var(--radius-md); border:1px dashed var(--border-color);">
+          <i class="fas fa-folder-open fa-2x" style="margin-bottom:12px; opacity:0.5;"></i>
+          <p>لا توجد نتائج تطابق خيارات البحث أو التصفية المحددة.</p>
+        </div>`;
+      return;
+  }
+
+  const detailsBaseUrl = "{{ '/details.html' | relative_url }}";
+
+  filtered.forEach(item => {
+    const itemId = item.id ? item.id : '#';
+    const detailsUrl = `${detailsBaseUrl}?i=${courseCode}&id=${itemId}`;
+
+    const el = document.createElement('div');
+    el.className = 'material-item';
+    
+    if (item.type === 'cards') {
+        el.classList.add('special-card-style');
+    }
+
+    el.onclick = function() {
+        const targetUrl = item.preview_url || item.url;
+        if ((item.type === 'quizzes' || item.type === 'cards') && targetUrl) {
+            window.location.href = targetUrl;
+        } else {
+            window.location.href = detailsUrl;
+        }
+    };
+
+    let imageHTML = '';
+    if (item.image_url) { 
+        imageHTML = `<div class="item-image"><img src="${item.image_url}" alt="${item.title}" loading="lazy"></div>`;
+    }
+
+    let badgeHTML = '';
+    const now = Date.now();
+    const timeMs = item['time-ms'];
+    const MS_IN_DAY = 86400000;
+    if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
+      badgeHTML = `<span class="badge badge-new"><i class="fas fa-sparkles"></i> ${item.badgeText}</span>`;
+    } else if (item.badge) {
+      badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
+    }
+
+    let descriptionHTML = '';
+    if (item.description && item.description.trim() !== "") {
+        if (!item.description.includes('*')) {
+            descriptionHTML = `<p class="item-description-preview">${item.description}</p>`;
+        }
+    }
+
+    el.innerHTML = `
+      <div class="item-header">
+        <div class="item-icon" style="${getIconStyles(item.type)}">
+            <i class="${getIconClass(item.type)}"></i>
+        </div>
+        <div class="item-title-text">
+            <h3>${item.title}</h3>
+        </div>
+      </div>
+      ${descriptionHTML}
+      ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
+      ${imageHTML}
+    `;
+    materialsList.appendChild(el);
+  });
+}
+
+/* ======= 6. تشغيل الصفحة والربط ======= */
+document.addEventListener('DOMContentLoaded', () => {
+  
+  filterItems.forEach(item => {
+    item.addEventListener('click', function () {
+      filterItems.forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
+      currentFilter = this.dataset.filter;
+      renderMaterials();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim().toLowerCase();
+      renderMaterials();
+    });
+  }
+
+  gridBtn.addEventListener('click', () => { userToggledView = true; setView('grid'); });
+  listBtn.addEventListener('click', () => { userToggledView = true; setView('list'); });
+
+  const mq = window.matchMedia('(min-width: 992px)');
+  function applyDefaultView() {
+    if (!userToggledView && !localStorage.getItem('viewMode')) {
+      if (mq.matches) setView('grid', false);
+      else setView('list', false);
+    } else if (localStorage.getItem('viewMode')) {
+        setView(localStorage.getItem('viewMode'), false);
+    }
+  }
+  applyDefaultView();
+
+  if (!courseCode) {
+    materialsList.innerHTML = '<p style="text-align:center; padding:30px; color:var(--text-muted);">⚠️ يرجى اختيار القسم أو الموضوع لعرض المحتويات.</p>';
+    return;
+  }
+
+  const dataBasePath = "{{ '/assets/data/' | relative_url }}";
+  const fetchUrl = dataBasePath + courseCode + ".json";
+
+  fetch(fetchUrl)
+    .then(res => {
+      if (!res.ok) throw new Error("لم يتم العثور على البيانات");
+      return res.json();
+    })
+    .then(data => {
+      materialsData = data.items || [];
+      const titleEl = document.getElementById('course-title');
+      const codeEl = document.getElementById('course-code');
+      const descEl = document.getElementById('course-desc');
+      
+      if (titleEl) titleEl.textContent = data.name || 'علوم اللغة العربية';
+      if (codeEl) {
+          if(data.code) { 
+            codeEl.innerHTML = `<i class="fas fa-bookmark"></i> ${data.code}`; 
+            codeEl.style.display = 'inline-flex'; 
+          } else { 
+            codeEl.style.display = 'none'; 
+          }
+      }
+      if (descEl) descEl.textContent = data.description || '';
+      document.title = (data.name || 'علوم اللغة العربية') + ' - روافد';
+      
+      if (data.name) {
+        const ogTitle = document.getElementById('og-title');
+        if(ogTitle) ogTitle.setAttribute('content', data.name);
+      }
+      if (data.description) {
+         const ogDesc = document.getElementById('og-description');
+         if(ogDesc) ogDesc.setAttribute('content', data.description);
+      }
+
+      courseShareURL = (data && data.url) ? data.url : window.location.href;
+      renderMaterials();
+    })
+    .catch(err => {
+      console.error(err);
+      materialsList.innerHTML = `
+        <div style="text-align:center; padding:40px; color:var(--text-muted);">
+          <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom:10px;"></i>
+          <p>حدث خطأ أثناء تحميل بيانات هذا القسم.</p>
+        </div>`;
+    });
+});
+
+if (shareButton) {
+  shareButton.addEventListener('click', () => {
+    const shareUrl = courseShareURL || window.location.href;
+    const title = document.title || '';
+    if (navigator.share) {
+      navigator.share({ title, url: shareUrl }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      const originalText = shareButton.innerHTML;
+      shareButton.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+      setTimeout(() => shareButton.innerHTML = originalText, 2000);
+    }
+  });
+}
+</script>
+
+</body>
+</html>
