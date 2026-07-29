@@ -9,6 +9,20 @@
             "description": "",
             "type": "quizzes",
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-Q1"
+        },
+        {
+            "id": 2,
+            "title": "اختبار في الوحدة الثالثة",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-ch3"
+        },
+        {
+            "id": 3,
+            "title": "اختبار في الوحدة الرابعة",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-ch4"
         }
     ]
 }
