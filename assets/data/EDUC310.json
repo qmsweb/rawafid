@@ -4,6 +4,19 @@
     "url": "https://rawafid.jassim.one/c/EDUC310",
     "items": [
         {
+            "id": 5,
+            "title": "الدروس المحذوفة من الاختبار النهائي صيف 2026",
+            "description": "الوحدة الأولى\nالوحدة الثانية\nالوحدة الثالثة",
+            "type": "resources"
+        },
+        {
+            "id": 4,
+            "title": "الهيكل التنظيمي لوزارة التعليم",
+            "description": "",
+            "type": "links",
+            "image_url": "images/courses/moe_structure.jpg"
+        },
+        {
             "id": 1,
             "title": "اختبار تفاعلي في الوحدتين الأولى والثانية",
             "description": "",
@@ -23,19 +36,6 @@
             "description": "",
             "type": "quizzes",
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-ch4"
-        },
-        {
-            "id": 4,
-            "title": "الهيكل التنظيمي لوزارة التعليم",
-            "description": "",
-            "type": "links",
-            "image_url": "images/courses/moe_structure.jpg"
-        },
-        {
-            "id": 5,
-            "title": "الدروس المحذوفة من الاختبار النهائي صيف 2026",
-            "description": "الوحدة الأولى\nالوحدة الثانية\nالوحدة الثالثة",
-            "type": "resources"
         }
     ]
 }
