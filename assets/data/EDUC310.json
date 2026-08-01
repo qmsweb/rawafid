@@ -45,6 +45,13 @@
             "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-ch5"
         },
         {
+            "id": 8,
+            "title": "اختبار تفاعلي في الوحدة السادسة",
+            "description": "",
+            "type": "quizzes",
+            "preview_url": "https://rawafid.jassim.one/exam?i=EDUC310-ch6"
+        },
+        {
             "id": 6,
             "title": "اختبار تفاعلي في الوحدة التاسعة",
             "description": "",
