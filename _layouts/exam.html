@@ -209,6 +209,17 @@
             text-align: right;
         }
 
+        .question-long-text {
+            font-size: 15px;
+            font-weight: normal;
+            color: var(--text-main);
+            margin-top: 10px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+            text-align: justify;
+            width: 100%;
+        }
+
         .points-badge {
             flex-shrink: 0;
             display: inline-block;
@@ -1253,6 +1264,10 @@
                     text.className = 'tf-text';
                     text.innerHTML = `${questionNumber}. ${q.question.replace(/\n/g, '<br>')}`;
 
+                    if (q.text) {
+                        text.innerHTML += `<div class="question-long-text" style="margin-top: 8px;">${q.text.replace(/\n/g, '<br>')}</div>`;
+                    }
+
                     const box = document.createElement('div');
                     box.className = 'tf-box';
                     
@@ -1359,6 +1374,13 @@
                 }
 
                 questionDiv.appendChild(questionTextDiv);
+
+                if (q.text) {
+                    const longTextDiv = document.createElement('div');
+                    longTextDiv.className = 'question-long-text';
+                    longTextDiv.innerHTML = q.text.replace(/\n/g, '<br>');
+                    questionDiv.appendChild(longTextDiv);
+                }
 
                 if (q.image) {
                     const imageContainer = document.createElement('div');
