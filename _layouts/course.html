@@ -171,9 +171,9 @@
 
     .filter-bar {
       display: flex; gap: 10px; align-items: center;
-      overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;
+      flex-wrap: wrap; /* التعديل لتمكين العناصر من النزول كشاشة الاهتمامات */
+      padding-bottom: 5px; 
     }
-    .filter-bar::-webkit-scrollbar { display: none; }
 
     .view-toggle {
       display: flex; gap: 5px; background: var(--bg-card);
