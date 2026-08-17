@@ -67,7 +67,7 @@
     .nav-header {
       margin-top: 30px; 
       padding: 0 20px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       display: flex; align-items: center; justify-content: space-between; 
       max-width: 900px; margin-left: auto; margin-right: auto;
     }
@@ -76,7 +76,7 @@
       display: flex; gap: 8px;
     }
 
-    .back-btn, .share-btn-top, .print-btn-top {
+    .back-btn, .share-btn-top, .print-btn-top, .related-btn-top {
       text-decoration: none; color: var(--primary-color); 
       font-weight: 700; font-size: 0.9rem;
       display: inline-flex; align-items: center; gap: 8px; 
@@ -87,10 +87,19 @@
       cursor: pointer;
     }
     
-    .back-btn:hover, .share-btn-top:hover, .print-btn-top:hover { 
+    .back-btn:hover, .share-btn-top:hover, .print-btn-top:hover, .related-btn-top:hover { 
       background: var(--primary-color); 
       color: #ffffff; 
       border-color: var(--primary-color); 
+    }
+
+    /* حاوية زر المتعلقات الجديد */
+    .related-btn-wrapper {
+      max-width: 900px; 
+      margin: 0 auto 15px auto; 
+      padding: 0 20px;
+      display: flex;
+      justify-content: flex-end;
     }
 
     .content-container { 
@@ -182,7 +191,7 @@
     body.fullscreen-active { padding: 0 !important; overflow: hidden; background: #222; }
     body.fullscreen-active .content-container { padding: 0; margin: 0; max-width: none; }
     body.fullscreen-active .item-title, body.fullscreen-active .item-meta, body.fullscreen-active .item-description,
-    body.fullscreen-active .image-wrapper, body.fullscreen-active .nav-header, body.fullscreen-active .sticky-footer,
+    body.fullscreen-active .image-wrapper, body.fullscreen-active .nav-header, body.fullscreen-active .related-btn-wrapper, body.fullscreen-active .sticky-footer,
     body.fullscreen-active #topbar-container { display: none !important; }
 
     body.fullscreen-active .pdf-container {
@@ -211,7 +220,7 @@
       }
 
       /* إخفاء الأزرار وأشرطة التنقل أثناء الطباعة */
-      #topbar-container, .nav-header, .sticky-footer, .exit-fullscreen-btn, .loading-state {
+      #topbar-container, .nav-header, .related-btn-wrapper, .sticky-footer, .exit-fullscreen-btn, .loading-state {
         display: none !important;
       }
 
@@ -265,6 +274,12 @@
     </div>
   </div>
 
+  <div class="related-btn-wrapper" id="related-wrapper" style="display: none;">
+    <a href="#" id="related-btn" class="related-btn-top">
+      <i class="fas fa-link"></i> <span id="related-btn-text"></span>
+    </a>
+  </div>
+
   <div class="content-container" id="main-content">
     {{ content }}
     
@@ -303,7 +318,7 @@
       else body.classList.remove('fullscreen-active');
   }
 
-  // === دالة الطباعة الجديدة ===
+  // === دالة الطباعة ===
   function printContent() {
     const pdfFrame = document.querySelector('.pdf-frame');
     
@@ -330,7 +345,10 @@
     const footerBtns = document.getElementById('footer-buttons');
     const footerDiv = document.getElementById('actions-footer');
     const backLink = document.getElementById('back-link');
-    const printBtn = document.getElementById('print-btn'); // تعريف زر الطباعة
+    const printBtn = document.getElementById('print-btn');
+    const relatedBtn = document.getElementById('related-btn');
+    const relatedBtnText = document.getElementById('related-btn-text');
+    const relatedWrapper = document.getElementById('related-wrapper');
 
     backLink.addEventListener('click', (e) => {
         if (courseCode && courseCode !== 'null') {
@@ -367,6 +385,28 @@
             return;
         }
 
+        // معالجة زر المتعلقات
+        if (item.related && item.related.course && item.related.id) {
+            relatedWrapper.style.display = 'flex'; // إظهار الحاوية
+            relatedBtn.href = `${BASE_URL}/details.html?i=${item.related.course}&id=${item.related.id}`;
+            relatedBtnText.textContent = "...";
+            
+            // جلب اسم العنصر المتعلق من ملف المقرر الخاص به
+            fetch(`${BASE_URL}/assets/data/${item.related.course}.json?v=${timestamp}`, { cache: "no-store" })
+                .then(r => r.json())
+                .then(relatedData => {
+                    const rItem = relatedData.items.find(x => x.id == item.related.id || x['time-ms'] == item.related.id);
+                    if (rItem && rItem.title) {
+                        relatedBtnText.textContent = rItem.title;
+                    } else {
+                        relatedBtnText.textContent = "عنصر مرتبط";
+                    }
+                })
+                .catch(() => {
+                    relatedBtnText.textContent = "عنصر مرتبط";
+                });
+        }
+
         document.title = item.title;
         let mediaHTML = '';
         let finalViewerSrc = '';
@@ -387,22 +427,6 @@
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
             mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
         } 
-        // إضافة التعامل مع مستعرض اليوتيوب للفيديوهات
-        else if (item.type === 'videos' && (item.preview_url || item.download_url)) {
-            const videoUrl = item.preview_url || item.download_url;
-            let embedUrl = videoUrl;
-            
-            // استخراج معرف اليوتيوب (ID) في حال كان الرابط يوتيوب
-            const ytMatch = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-            if (ytMatch && ytMatch[1]) {
-                embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
-            }
-            
-            // استخدام تصميم مشابه لـ PDF ولكن ملائم للفيديو
-            mediaHTML = `<div class="pdf-container" style="background: #000; height: auto; aspect-ratio: 16/9; max-height: 75vh;">
-                            <iframe src="${embedUrl}" class="pdf-frame" title="YouTube Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                         </div>`;
-        }
         else if (item.image_url) {
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
