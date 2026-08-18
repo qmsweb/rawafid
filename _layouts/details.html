@@ -202,7 +202,6 @@
 
     /* === إعدادات الطباعة === */
     @media print {
-      /* إجبار الصفحة على اللون الفاتح لإبراز النص وتوفير الحبر */
       :root, [data-theme="dark"] {
         --primary-color: #000000 !important;
         --bg-color: #ffffff !important;
@@ -219,19 +218,16 @@
         margin: 0 !important;
       }
 
-      /* إخفاء الأزرار وأشرطة التنقل أثناء الطباعة */
       #topbar-container, .nav-header, .related-btn-wrapper, .sticky-footer, .exit-fullscreen-btn, .loading-state {
         display: none !important;
       }
 
-      /* إزالة الهوامش لتوسيع المحتوى على الورقة */
       .content-container {
         max-width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
       }
 
-      /* تنسيق الصور للطباعة */
       .image-wrapper {
         border: none !important;
         page-break-inside: avoid;
@@ -241,7 +237,6 @@
         max-height: 800px !important;
       }
 
-      /* تنسيق PDF في حال تمت الطباعة العادية */
       .pdf-container {
         height: 80vh !important;
         border: 1px solid #000 !important;
@@ -318,22 +313,19 @@
       else body.classList.remove('fullscreen-active');
   }
 
-  // === دالة الطباعة ===
   function printContent() {
     const pdfFrame = document.querySelector('.pdf-frame');
     
-    // إذا كان هناك ملف PDF معروض، نحاول طباعته مباشرة من داخله
     if (pdfFrame && pdfFrame.contentWindow) {
       try {
         pdfFrame.contentWindow.focus();
         pdfFrame.contentWindow.print();
-        return; // الخروج من الدالة بعد طباعة الـ PDF
+        return;
       } catch (error) {
         console.warn("تعذرت طباعة إطار PDF مباشرة بسبب سياسات المتصفح (CORS)، سيتم استخدام الطباعة العادية.");
       }
     }
     
-    // الطباعة العادية في حال كان المحتوى صورة أو نصاً (أو إذا فشلت طباعة إطار الـ PDF)
     window.print();
   }
 
@@ -387,11 +379,10 @@
 
         // معالجة زر المتعلقات
         if (item.related && item.related.course && item.related.id) {
-            relatedWrapper.style.display = 'flex'; // إظهار الحاوية
+            relatedWrapper.style.display = 'flex';
             relatedBtn.href = `${BASE_URL}/details.html?i=${item.related.course}&id=${item.related.id}`;
             relatedBtnText.textContent = "...";
             
-            // جلب اسم العنصر المتعلق من ملف المقرر الخاص به
             fetch(`${BASE_URL}/assets/data/${item.related.course}.json?v=${timestamp}`, { cache: "no-store" })
                 .then(r => r.json())
                 .then(relatedData => {
@@ -413,7 +404,6 @@
 
         const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
 
-        // إخفاء زر الطباعة إذا كان الملف PDF أو فيديو
         if (printBtn) {
             if (isPdf || item.type === 'videos') {
                 printBtn.style.display = 'none';
@@ -427,15 +417,21 @@
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
             mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
         } 
-        else if (item.type === 'videos' && item.youtube_id) {
-            mediaHTML = `
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color);">
-                <iframe src="https://www.youtube.com/embed/${item.youtube_id}" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                </iframe>
-            </div>`;
+        else if (item.type === 'videos' && item.preview_url) {
+            // دالة بسيطة لاستخراج معرف الفيديو (ID) من رابط يوتيوب القصير أو الطويل
+            const ytMatch = item.preview_url.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=))([^"&?\/\s]{11})/);
+            const ytId = ytMatch ? ytMatch[1] : null;
+
+            if (ytId) {
+                mediaHTML = `
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color);">
+                    <iframe src="https://www.youtube.com/embed/${ytId}" 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>`;
+            }
         }
         else if (item.image_url) {
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
