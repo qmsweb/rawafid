@@ -1,8 +1,6 @@
-[
-  { "name": "خطط تخصصات اللغة العربية", "type": "العامة", "code": "R1", "color": "#1e2ec6", "icon": "fa-star⁠", "hideCode": true
- },
- { "name": "المقررات التأسيسية", "type": "العامة", "code": "F1", "color": "#1e2ec6", "icon": "fa-star", "hideCode": true
- },
+[  { "name": "خطط تخصصات اللغة العربية", "type": "العامة", "code": "R1", "color": "#1e2ec6", "icon": "fa-star", "hideCode": true },
+  { "name": "المقررات التأسيسية", "type": "العامة", "code": "F1", "color": "#1e2ec6", "icon": "fa-star", "hideCode": true },
+
   { "name": "النحو 1", "type": "التخصصية", "code": "ARAB112", "color": "#D24545" },
   { "name": "النحو 2", "type": "التخصصية", "code": "ARAB124", "color": "#D24545" },
   { "name": "النحو 3", "type": "التخصصية", "code": "ARAB213", "color": "#D24545" },
