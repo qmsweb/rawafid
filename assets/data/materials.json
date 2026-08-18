@@ -1,5 +1,5 @@
 [
-  { "name": "خطط تخصصات اللغة العربية", "type": "العامة", "code": "R1", "color": "#09c983", "icon": "fa-⁠star-", "hideCode": true
+  { "name": "خطط تخصصات اللغة العربية", "type": "العامة", "code": "R1", "color": "#09c983", "icon": "fa-star⁠", "hideCode": true
  },
  { "name": "المقررات التأسيسية", "type": "العامة", "code": "F1", "color": "#09c983", "icon": "fa-star", "hideCode": true
  },
