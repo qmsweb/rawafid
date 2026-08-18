@@ -413,9 +413,9 @@
 
         const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
 
-        // إخفاء زر الطباعة إذا كان الملف PDF
+        // إخفاء زر الطباعة إذا كان الملف PDF أو فيديو
         if (printBtn) {
-            if (isPdf) {
+            if (isPdf || item.type === 'videos') {
                 printBtn.style.display = 'none';
             } else {
                 printBtn.style.display = 'inline-flex';
@@ -427,6 +427,16 @@
             finalViewerSrc = `${MOZILLA_VIEWER_URL}?file=${encodeURIComponent(absolutePdfUrl)}`;
             mediaHTML = `<div class="pdf-container"><iframe src="${finalViewerSrc}" class="pdf-frame" title="PDF Viewer" allowfullscreen></iframe></div>`;
         } 
+        else if (item.type === 'videos' && item.youtube_id) {
+            mediaHTML = `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color);">
+                <iframe src="https://www.youtube.com/embed/${item.youtube_id}" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>`;
+        }
         else if (item.image_url) {
             mediaHTML = `<div class="image-wrapper"><img src="${item.image_url}" alt="${item.title}"></div>`;
         }
