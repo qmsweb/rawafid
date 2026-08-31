@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "المدونة | منصة روافد" }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" defer></script>
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات (نفس هوية روافد) === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #14209e;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-code: #f4f6fb;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-dark: #5c6bc0;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-code: #2c2c2c;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* === الصفحة كاملة العرض (بدون بطاقة أو حواف) === */
+    .blog-page {
+      width: 100%;
+      max-width: none;
+      margin: 0 auto;
+      padding: 26px 24px;
+    }
+
+    /* === شريط الرجوع والميتا === */
+    .blog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 50px;
+      transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+    }
+    .back-btn:hover { background: var(--primary-color); color: #ffffff; border-color: var(--primary-color); transform: translateY(-2px); }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .page-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      line-height: 1.4;
+      margin: 6px 0 18px;
+      color: var(--text-main);
+    }
+
+    /* === تنسيق محتوى المارك داون === */
+    .page-content { color: var(--text-main); }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content h3,
+    .page-content h4 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-top: 34px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .page-content h1 { font-size: 1.45rem; }
+    .page-content h2 { font-size: 1.3rem; border-right: 4px solid var(--primary-color); padding-right: 12px; }
+    .page-content h3 { font-size: 1.15rem; }
+    .page-content h4 { font-size: 1.02rem; }
+
+    .page-content p {
+      font-size: 1.02rem;
+      line-height: 1.9;
+      margin-bottom: 18px;
+      opacity: 0.95;
+    }
+
+    .page-content a {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .page-content a:hover { opacity: 0.8; }
+
+    .page-content strong { font-weight: 700; }
+    .page-content em { font-style: italic; }
+    .page-content del { opacity: 0.6; }
+
+    .page-content ul,
+    .page-content ol {
+      padding-right: 26px;
+      margin-bottom: 20px;
+      line-height: 2;
+    }
+    .page-content li { margin-bottom: 6px; }
+    .page-content li::marker { color: var(--primary-color); font-weight: 700; }
+
+    .page-content blockquote {
+      background: var(--primary-light-bg);
+      border-right: 4px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 22px 0;
+      color: var(--text-main);
+      font-size: 0.98rem;
+    }
+    .page-content blockquote p { margin-bottom: 0; }
+
+    .page-content code {
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: "Courier New", monospace;
+      font-size: 0.88em;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .page-content pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 22px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    .page-content pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.88em;
+    }
+
+    .page-content img {
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      display: block;
+      margin: 26px auto;
+      box-shadow: var(--card-shadow);
+    }
+
+    .page-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.93rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .page-content th, .page-content td {
+      padding: 11px 15px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: right;
+    }
+    .page-content th {
+      background: var(--primary-light-bg);
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+    .page-content tr:last-child td { border-bottom: 0; }
+
+    .page-content hr {
+      border: 0;
+      border-top: 2px dashed var(--border-color);
+      margin: 30px 0;
+    }
+
+    .page-content .task-list-item { list-style: none; }
+    .page-content input[type="checkbox"] { margin-left: 8px; accent-color: var(--primary-color); }
+
+    /* === رسائل الحالة === */
+    .blog-status {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding: 30px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* === شاشات الجوال === */
+    @media (max-width: 600px) {
+      .blog-page { padding: 20px 16px; }
+      .page-content p { font-size: 0.98rem; }
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+
+  <main class="blog-page">
+    <div class="blog-actions">
+      <a href="{{ site.baseurl }}/" class="back-btn">
+        <i class="fas fa-arrow-right"></i> رجوع
+      </a>
+      <div id="post-meta" class="article-meta"></div>
+    </div>
+
+    <h1 id="post-title" class="page-title">{{ page.title | default: "المدونة" }}</h1>
+
+    <div id="post-content" class="page-content">
+      {{ content }}
+    </div>
+  </main>
+
+  {% include footer.html %}
+
+  <script>
+    /* === 1. تبديل الثيم === */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+    }
+
+    /* === 2. قراءة التدوينة بلغة مارك داون === */
+    const BASE_PATH = "{{ '/assets/data/blogs/' | relative_url }}";
+
+    function parseFrontMatter(md) {
+      const meta = {};
+      let body = md;
+      if (md.startsWith('---')) {
+        const end = md.indexOf('\n---', 4);
+        if (end !== -1) {
+          const raw = md.slice(3, end);
+          raw.split('\n').forEach(line => {
+            const idx = line.indexOf(':');
+            if (idx > 0) {
+              const key = line.slice(0, idx).trim();
+              const value = line.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+              meta[key] = value;
+            }
+          });
+          body = md.slice(end + 4);
+        }
+      }
+      return { meta, body };
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleDateString('ar-OM', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function loadPost(slug) {
+      const postContent = document.getElementById('post-content');
+      postContent.innerHTML = '<div class="blog-status"><i class="fas fa-spinner fa-spin"></i> جارٍ تحميل التدوينة...</div>';
+
+      fetch(BASE_PATH + slug + '.md')
+        .then(response => {
+          if (!response.ok) throw new Error('not found');
+          return response.text();
+        })
+        .then(md => {
+          if (typeof marked === 'undefined' || typeof DOMPurify === 'undefined') {
+            throw new Error('منظّم المارك داون لم يُحمَّل');
+          }
+
+          const { meta, body } = parseFrontMatter(md);
+          const html = DOMPurify.sanitize(marked.parse(body));
+          postContent.innerHTML = html;
+
+          // العنوان: من الميتا إن وُجد، وإلا من أول عنوان H1 داخل التدوينة
+          const firstHeading = postContent.querySelector('h1');
+          const title = meta.title || (firstHeading ? firstHeading.textContent : slug);
+          document.title = title + ' | منصة روافد';
+          document.getElementById('post-title').textContent = title;
+          if (firstHeading && !meta.title) firstHeading.remove();
+
+          let metaHtml = '';
+          if (meta.date) metaHtml += `<span><i class="far fa-calendar"></i> ${formatDate(meta.date)}</span>`;
+          if (meta.author) metaHtml += `<span><i class="far fa-user"></i> ${meta.author}</span>`;
+          document.getElementById('post-meta').innerHTML = metaHtml;
+        })
+        .catch(() => {
+          document.getElementById('post-title').textContent = "عذرًا";
+          postContent.innerHTML = '<div class="blog-status"><i class="fas fa-exclamation-circle"></i> تعذّر تحميل التدوينة. تأكد من وجود الملف في المسار الصحيح.</div>';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('i');
+      if (slug) loadPost(slug);
+    });
+  </script>
+
+</body>
+</html>
