@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title | default: "المدونة | منصة روافد" }}</title>
+
+  <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <link rel="icon" href="{{ '/images/blog-cover.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <meta property="og:title" content="{{ page.title | default: 'المدونة' }}">
+  <meta property="og:description" content="مدونة منصة روافد">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark','pink','green','purple','orange'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  {% assign visible_posts = site.posts | where: "visible", true %}
+  {% assign featured_post = visible_posts | where: "featured", true | first %}
+
+  <style>
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #14209e;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-code: #f4f6fb;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --radius-md: 14px;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-dark: #5c6bc0;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-code: #2c2c2c;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .posts-page {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 24px 20px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    /* === التاقات === */
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .post-tag {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 4px 14px;
+      background: var(--primary-light-bg);
+      border-radius: 50px;
+      transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: default;
+    }
+    .post-tag:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+    .page-title {
+      font-size: clamp(1.7rem, 3vw, 2rem);
+      font-weight: 800;
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      line-height: 1.4;
+      margin: 6px 0 22px;
+      color: var(--text-main);
+    }
+
+    .posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .posts-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .featured-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* === البطاقة العادية === */
+    .post-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      gap: 18px;
+      align-items: stretch;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: var(--card-shadow);
+    }
+    .post-card:hover {
+      box-shadow: 0 4px 20px rgba(26,42,198,0.08);
+      border-color: var(--primary-color);
+    }
+
+    .post-cover {
+      width: 200px;
+      min-width: 200px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-code);
+      flex-shrink: 0;
+    }
+
+    .post-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .post-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.5;
+      color: var(--text-main);
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+    }
+    .post-card:hover .post-title { color: var(--primary-color); }
+
+    .post-excerpt {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .post-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+    .post-meta i { color: var(--primary-color); margin-inline-end: 4px; }
+
+    /* === بطاقة المقال المميز === */
+    .featured-card {
+      background: var(--bg-card);
+      border: 4px solid var(--primary-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      gap: 20px;
+      align-items: stretch;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: box-shadow 0.25s ease;
+      box-shadow: 0 4px 20px rgba(26,42,198,0.1);
+      position: relative;
+    }
+    .featured-card:hover {
+      box-shadow: 0 6px 28px rgba(26,42,198,0.15);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -1px;
+      right: 20px;
+      background: var(--primary-color);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 0 0 8px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .featured-cover {
+      width: 280px;
+      min-width: 280px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-code);
+      flex-shrink: 0;
+    }
+
+    .featured-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+      padding-top: 8px;
+    }
+
+    .featured-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1.5;
+      color: var(--text-main);
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+    }
+    .featured-card:hover .featured-title { color: var(--primary-color); }
+
+    .featured-excerpt {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .featured-divider {
+      border: 0;
+      border-top: 1px dashed var(--border-color);
+      margin: 8px 0;
+    }
+
+    /* === حالة عدم وجود تدوينات === */
+    .posts-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding: 40px 10px;
+    }
+
+    /* === شاشات الجوال === */
+    @media (max-width: 768px) {
+      .posts-page { max-width: 100%; }
+      .featured-card { flex-direction: column; padding: 20px; }
+      .featured-cover { width: 100%; min-width: unset; aspect-ratio: 16/9; }
+      .featured-badge { right: 16px; }
+    }
+
+    @media (max-width: 600px) {
+      .posts-page { padding: 22px 16px 20px; }
+      .posts-list { grid-template-columns: 1fr; }
+      .post-card { flex-direction: column; padding: 16px; gap: 12px; }
+      .post-cover { width: 100%; min-width: unset; aspect-ratio: 16/9; }
+      .post-title { font-size: 1.05rem; }
+      .post-meta { gap: 10px; }
+      .featured-card { padding: 16px; }
+      .featured-cover { min-width: unset; aspect-ratio: 16/9; }
+      .featured-title { font-size: 1.15rem; }
+      .featured-excerpt { font-size: 0.88rem; -webkit-line-clamp: 2; }
+    }
+
+    @media (max-width: 400px) {
+      .posts-page { padding: 18px 12px 16px; }
+      .post-card { padding: 14px; }
+      .post-title { font-size: 1rem; }
+      .page-title { font-size: 1.5rem; }
+      .featured-title { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+  {% include loading.html %}
+
+  <main class="posts-page">
+    <h1 class="page-title">{{ page.title | default: "المقالات والأخبار" }}</h1>
+
+    {% if visible_posts.size > 0 %}
+      <div class="posts-list">
+
+        {% if featured_post %}
+          {% capture feat_cover %}
+            {% if featured_post.cover_image %}
+              {{ featured_post.cover_image }}
+            {% else %}
+              {% assign img_parts = featured_post.content | split: '![' %}
+              {% if img_parts.size > 1 %}
+                {% assign img_part = img_parts[1] | split: '](' %}
+                {% if img_part.size > 1 %}
+                  {{ img_part[1] | split: ')' | first | strip }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endcapture %}
+
+          {% if feat_cover != "" and feat_cover != blank %}
+          <a class="featured-card" href="{{ featured_post.url | relative_url }}">
+            <span class="featured-badge"><i class="fas fa-star"></i> مقال مميز</span>
+            <img class="featured-cover" src="{{ feat_cover | strip }}" alt="{{ featured_post.title }}" loading="lazy">
+            <div class="featured-body">
+              <h3 class="featured-title">{{ featured_post.title }}</h3>
+              {% if featured_post.excerpt and featured_post.excerpt != "" and featured_post.excerpt != featured_post.content %}
+                <p class="featured-excerpt">{{ featured_post.excerpt | strip_html | truncate: 200 }}</p>
+              {% endif %}
+              <div class="post-meta">
+                {% if featured_post.date %}
+                  {% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}
+                  {% assign month_index = featured_post.date | date: "%-m" | minus: 1 %}
+                  <span><i class="far fa-calendar"></i> {{ featured_post.date | date: "%-d" }} {{ months[month_index] }} {{ featured_post.date | date: "%Y" }}</span>
+                {% endif %}
+                {% if featured_post.author %}
+                  <span data-author-uid="{{ featured_post.author }}"><i class="far fa-user"></i> <span class="author-name">{{ featured_post.author }}</span></span>
+                {% endif %}
+              </div>
+              {% if featured_post.tags %}
+                <div class="post-tags">
+                  {% for tag in featured_post.tags %}
+                    <span class="post-tag">{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </a>
+          {% endif %}
+        {% endif %}
+
+        {% for post in visible_posts %}
+          {% if featured_post and post.url == featured_post.url %}
+            {% continue %}
+          {% endif %}
+
+          {% capture card_cover_url %}
+            {% if post.cover_image %}
+              {{ post.cover_image }}
+            {% else %}
+              {% assign img_parts = post.content | split: '![' %}
+              {% if img_parts.size > 1 %}
+                {% assign img_part = img_parts[1] | split: '](' %}
+                {% if img_part.size > 1 %}
+                  {{ img_part[1] | split: ')' | first | strip }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endcapture %}
+
+          <a class="post-card" href="{{ post.url | relative_url }}">
+            {% assign clean_cover_url = card_cover_url | strip %}
+            {% if clean_cover_url != "" and clean_cover_url != blank %}
+              <img class="post-cover" src="{{ clean_cover_url }}" alt="{{ post.title }}" loading="lazy">
+            {% endif %}
+
+            <div class="post-body">
+              <h3 class="post-title">{{ post.title }}</h3>
+              {% if post.excerpt and post.excerpt != "" and post.excerpt != post.content %}
+                <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+              {% endif %}
+              <div class="post-meta">
+                {% if post.date %}
+                  {% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}
+                  {% assign month_index = post.date | date: "%-m" | minus: 1 %}
+                  <span><i class="far fa-calendar"></i> {{ post.date | date: "%-d" }} {{ months[month_index] }} {{ post.date | date: "%Y" }}</span>
+                {% endif %}
+                {% if post.author %}
+                  <span data-author-uid="{{ post.author }}"><i class="far fa-user"></i> <span class="author-name">{{ post.author }}</span></span>
+                {% endif %}
+              </div>
+              {% if post.tags %}
+                <div class="post-tags">
+                  {% for tag in post.tags %}
+                    <span class="post-tag">{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </a>
+        {% endfor %}
+
+      </div>
+    {% else %}
+      <div class="posts-empty">
+        <i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--border-color);"></i>
+        لا توجد تدوينات حالياً.
+      </div>
+    {% endif %}
+  </main>
+
+  {% include footer.html %}
+
+  <script>
+    function toggleTheme() {
+      var html = document.documentElement;
+      var current = html.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('rawafed-theme', next);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      rawafidHideLoader();
+      var BASE_URL = '{{ site.baseurl }}';
+      var authorSpans = document.querySelectorAll('[data-author-uid]');
+      if (authorSpans.length === 0) return;
+
+      var timestamp = new Date().getTime();
+      fetch(BASE_URL + '/assets/blogdata/authors.json?v=' + timestamp, { cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(authorData) {
+          var authors = Array.isArray(authorData) ? authorData : (authorData.authors || []);
+          authorSpans.forEach(function(span) {
+            var uid = span.getAttribute('data-author-uid');
+            var author = authors.find(function(a) { return a.uid === uid; });
+            if (author) {
+              var nameEl = span.querySelector('.author-name');
+              if (nameEl) nameEl.textContent = author.name;
+            }
+          });
+        })
+        .catch(function() {});
+    });
+  </script>
+
+</body>
+</html>

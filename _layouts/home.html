@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="منصة روافد موجهة لطلبة اللغة العربية بجامعة الشرقية.">
+  <title>{{ page.title | default: "منصة روافد التعليمية" }}</title>
+
+  <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <meta property="og:title" content="{{ page.title | default: 'منصة روافد التعليمية' }}">
+  <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
+  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark','pink','green','purple','orange'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #14209e;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.12);
+      --radius-md: 16px;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-dark: #5c6bc0;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 0; transition: background-color 0.3s ease, color 0.3s ease; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* === نظام التحميل الموحد === */
+    #main-content-area { opacity: 0; transition: opacity 0.5s ease-in-out; }
+    #main-content-area.loaded { opacity: 1; }
+
+    /* === بطاقة الذكرى السنوية === */
+    .anniversary-hero { margin-top: 20px; }
+    .anniversary-card {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 30px 32px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      overflow: hidden;
+      box-shadow: var(--hover-shadow);
+    }
+    .anniversary-card::before,
+    .anniversary-card::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .anniversary-card::before { width: 220px; height: 220px; top: -80px; left: -60px; }
+    .anniversary-card::after { width: 140px; height: 140px; bottom: -50px; right: 15%; }
+
+    .anniversary-icon {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .anniversary-icon img {
+      width: 180px;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .anniversary-content { flex: 1; min-width: 0; }
+
+    .anniversary-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 50px;
+      padding: 5px 14px;
+      font-size: 0.78rem; font-weight: 700;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .anniversary-title {
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      font-weight: 900;
+      font-feature-settings: "ss01";
+      font-size: 1.45rem; margin-bottom: 8px; line-height: 1.5;
+    }
+
+    .anniversary-text { font-size: 0.95rem; line-height: 1.9; opacity: 0.95; max-width: 620px; }
+
+    .anniversary-num {
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      font-size: 5.5rem; font-weight: 800;
+      opacity: 0.18;
+      line-height: 1;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    /* === الأقسام === */
+    .home-section { margin-top: 32px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); border-right: 4px solid var(--primary-color); padding-right: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-title i { color: var(--primary-color); }
+
+    .view-more-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700; font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .view-more-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    .view-more-btn i { font-size: 0.8rem; }
+
+    /* === الأدوات === */
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      text-decoration: none; text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .tool-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    .tool-card .tool-card-icon {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--primary-light-bg); color: var(--primary-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      transition: 0.3s ease;
+    }
+    .tool-card:hover .tool-card-icon { background: var(--primary-color); color: #fff; }
+    .tool-card-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+
+    /* === المدونة === */
+    .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .blog-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      text-decoration: none; color: var(--text-main);
+      display: flex; flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .blog-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    .blog-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--bg-code); }
+    .blog-card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .blog-card-title { font-size: 0.98rem; font-weight: 800; line-height: 1.6; }
+    .blog-card:hover .blog-card-title { color: var(--primary-color); }
+    .blog-card-meta { margin-top: auto; font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+    .blog-card-meta i { color: var(--primary-color); margin-inline-end: 3px; }
+
+    /* === المقررات === */
+    .course-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px 16px;
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none; color: var(--text-main);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .course-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    .course-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .course-card-info { min-width: 0; }
+    .course-card-name { font-size: 0.92rem; font-weight: 700; line-height: 1.4; }
+    .course-card-code { font-size: 0.78rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; margin-top: 5px; border: 1px solid var(--border-color); }
+
+    /* === شريط الفلاتر === */
+    .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 20px; padding: 10px 0; border-bottom: 1px solid var(--border-color); backdrop-filter: blur(5px); background: var(--bg-body); }
+    @media (min-width: 769px) {
+      .sticky-filter-container { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
+    }
+    .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; overscroll-behavior-x: contain; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
+    .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; touch-action: manipulation; }
+    .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
+
+    .filter-divider { width: 1px; height: 20px; background: var(--border-color); margin: 0 10px; flex-shrink: 0; }
+
+    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s ease; }
+    .filter-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+    .filter-item.active:hover { color: #fff; }
+
+    /* === حاوية المقررات مع دعم عرض الشبكة/القائمة === */
+    .courses-container { display: flex; flex-direction: column; gap: 14px; }
+    .courses-container.grid-view { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    .courses-container .course-card { width: auto; }
+
+    /* === الاستجابة === */
+    @media (max-width: 820px) {
+      .tools-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
+      .courses-container.grid-view { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .anniversary-card { flex-direction: column; text-align: center; gap: 16px; padding: 26px 18px; }
+      .anniversary-icon { font-size: 1.3rem; }
+      .anniversary-icon img { width: 150px; }
+      .anniversary-title { font-size: 1.2rem; }
+      .anniversary-text { font-size: 0.9rem; }
+      .anniversary-num { position: absolute; bottom: 8px; left: 14px; font-size: 4rem; }
+      .section-head { margin-bottom: 14px; }
+
+      /* الأدوات: شبكة مصغّرة من 3 أعمدة */
+      .tools-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .tool-card { padding: 12px 6px; gap: 8px; }
+      .tool-card .tool-card-icon { width: 42px; height: 42px; font-size: 1rem; }
+      .tool-card-name { font-size: 0.72rem; }
+
+      /* المدونة: بطاقات شبكية صغيرة بدون غلاف */
+      .blog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .blog-card-cover { display: none; }
+      .blog-card-body { padding: 10px 12px; gap: 6px; }
+      .blog-card-title { font-size: 0.86rem; }
+      .blog-card-meta { font-size: 0.7rem; gap: 8px; }
+
+      /* المقررات: عمود واحد لإفساح أوسع مساحة */
+      .courses-container.grid-view { grid-template-columns: 1fr; gap: 10px; }
+      .course-card { padding: 14px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+  {% include loading.html %}
+
+  <div class="container">
+
+    {{ content }}
+
+    <div id="main-content-area">
+
+      <!-- === بطاقة الذكرى السنوية الأولى === -->
+      <section class="anniversary-hero">
+        <div class="anniversary-card">
+          <div class="anniversary-icon">
+            <img src="{{ 'images/rawafid-one.png' | relative_url }}" alt="شعار الذكرى السنوية الأولى">
+          </div>
+          <div class="anniversary-content">
+            <span class="anniversary-badge"><i class="fas fa-trophy"></i> عامنا الأول</span>
+            <h2 class="anniversary-title">الذكرى السنوية الأولى لانطلاقة روافد</h2>
+            <p class="anniversary-text">عام من العطاء.. شكرًا لكل من ساهم في نموّنا، ونعدكم بمواصلة المسير.</p>
+          </div>
+          <div class="anniversary-num">1</div>
+        </div>
+      </section>
+
+      <!-- === الأدوات === -->
+      <section class="home-section" id="tools">
+        <div class="section-head">
+          <h3 class="section-title"><i class="fas fa-wrench"></i> الأدوات</h3>
+          <a href="{{ '/tools' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left"></i></a>
+        </div>
+        <div class="tools-grid">
+          <a class="tool-card" href="{{ '/tools/gpa' | relative_url }}">
+            <div class="tool-card-icon"><i class="fas fa-calculator"></i></div>
+            <div class="tool-card-name">حاسبة المعدل</div>
+          </a>
+          <a class="tool-card" href="{{ '/tools/tawtheeq-tool' | relative_url }}">
+            <div class="tool-card-icon"><i class="fas fa-quote-right"></i></div>
+            <div class="tool-card-name">توثيق المراجع</div>
+          </a>
+          <a class="tool-card" href="{{ '/tools/study-plan' | relative_url }}">
+            <div class="tool-card-icon"><i class="fas fa-book-open"></i></div>
+            <div class="tool-card-name">الخطة الدراسية</div>
+          </a>
+          <a class="tool-card" href="{{ '/tools/calendar' | relative_url }}">
+            <div class="tool-card-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="tool-card-name">التقويم الأكاديمي</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- === المدونة === -->
+      {% assign blog_posts = site.posts | where: "visible", true | limit: 3 %}
+      <section class="home-section" id="blog">
+        <div class="section-head">
+          <h3 class="section-title"><i class="fas fa-newspaper"></i> المدونة</h3>
+          <a href="{{ '/blog' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left"></i></a>
+        </div>
+        <div class="blog-grid">
+          {% if blog_posts.size > 0 %}
+            {% for post in blog_posts %}
+              {% capture mini_cover %}
+                {% if post.cover_image %}
+                  {{ post.cover_image }}
+                {% else %}
+                  {% assign img_parts = post.content | split: '![' %}
+                  {% if img_parts.size > 1 %}
+                    {% assign img_part = img_parts[1] | split: '](' %}
+                    {% if img_part.size > 1 %}
+                      {{ img_part[1] | split: ')' | first | strip }}
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              {% endcapture %}
+
+              <a class="blog-card" href="{{ post.url | relative_url }}">
+                {% assign mini_cover_clean = mini_cover | strip %}
+                {% if mini_cover_clean != "" and mini_cover_clean != blank %}
+                  <img class="blog-card-cover" src="{{ mini_cover_clean }}" alt="{{ post.title }}" loading="lazy">
+                {% endif %}
+                <div class="blog-card-body">
+                  <h4 class="blog-card-title">{{ post.title }}</h4>
+                  <div class="blog-card-meta">
+                    {% if post.date %}
+                      {% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}
+                      {% assign month_index = post.date | date: "%-m" | minus: 1 %}
+                      <span><i class="far fa-calendar"></i> {{ post.date | date: "%-d" }} {{ months[month_index] }} {{ post.date | date: "%Y" }}</span>
+                    {% endif %}
+                    {% if post.author %}
+                      <span data-author-uid="{{ post.author }}"><i class="far fa-user"></i> <span class="author-name">{{ post.author }}</span></span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          {% else %}
+            <p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد تدوينات حالياً.</p>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- === المقررات === -->
+      <section class="home-section" id="courses">
+        <div class="section-head">
+          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
+        </div>
+        <div class="sticky-filter-container">
+          <div class="filter-bar" id="filter-bar"></div>
+        </div>
+        <div class="courses-container" id="courses-container">
+          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
+        </div>
+      </section>
+
+    </div>
+
+    {% include footer.html %}
+  </div>
+
+  <script>
+    /* === 1. إعدادات الثيم === */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+    }
+
+    /* === 2. المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
+    let allCourses = [];
+    let currentFilter = 'all';
+
+    function renderCourses() {
+      const container = document.getElementById('courses-container');
+      if (!container) return;
+
+      const filtered = currentFilter === 'all' ? allCourses : allCourses.filter(c => c.type === currentFilter);
+
+      container.innerHTML = '';
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد مقررات في هذا التصنيف.</p>';
+        return;
+      }
+      filtered.forEach(item => {
+        const card = document.createElement('a');
+        card.className = 'course-card';
+        card.href = "{{ '/course' | relative_url }}/" + encodeURIComponent(item.code);
+        const iconColor = item.color || '#1a2ac6';
+        const iconClass = item.icon || 'fa-book';
+        const iconBg = iconColor + '15';
+        card.innerHTML = `
+          <div class="course-card-icon" style="color: ${iconColor}; background-color: ${iconBg};">
+            <i class="fas ${iconClass}"></i>
+          </div>
+          <div class="course-card-info">
+            <div class="course-card-name">${item.name}</div>
+            <span class="course-card-code">${item.code}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function createFilters(courses) {
+      const filterBar = document.getElementById('filter-bar');
+      if (!filterBar) return;
+      filterBar.innerHTML = '';
+
+      const viewToggle = document.createElement('div');
+      viewToggle.className = 'view-toggle';
+      viewToggle.innerHTML = `<i class="fas fa-list" id="list-view" title="قائمة"></i><i class="fas fa-th-large" id="grid-view" title="شبكة"></i>`;
+      filterBar.appendChild(viewToggle);
+
+      const divider = document.createElement('div');
+      divider.className = 'filter-divider';
+      filterBar.appendChild(divider);
+
+      const types = [...new Set(courses.map(c => c.type))];
+      types.unshift('all');
+      types.forEach(type => {
+        const filterBtn = document.createElement('div');
+        filterBtn.className = 'filter-item';
+        filterBtn.textContent = type === 'all' ? 'الكل' : type;
+        if (type === 'all') filterBtn.classList.add('active');
+        filterBtn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+          filterBtn.classList.add('active');
+          currentFilter = type;
+          renderCourses();
+        });
+        filterBar.appendChild(filterBtn);
+      });
+
+      const container = document.getElementById('courses-container');
+      const gridBtn = viewToggle.querySelector('#grid-view');
+      const listBtn = viewToggle.querySelector('#list-view');
+      function setView(mode, save = true) {
+        if (mode === 'grid') { container.classList.add('grid-view'); gridBtn.classList.add('active'); listBtn.classList.remove('active'); }
+        else { container.classList.remove('grid-view'); listBtn.classList.add('active'); gridBtn.classList.remove('active'); }
+        if (save) localStorage.setItem('rawafed-courses-view', mode);
+      }
+      gridBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setView('grid'); });
+      listBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setView('list'); });
+      const savedMode = localStorage.getItem('rawafed-courses-view');
+      setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
+    }
+
+    /* === 3. أسماء المؤلفين في بطاقات المدونة === */
+    function resolveAuthors(authorData) {
+      const authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
+      if (!authors.length) return;
+      document.querySelectorAll('[data-author-uid]').forEach(span => {
+        const uid = span.getAttribute('data-author-uid');
+        const author = authors.find(a => a.uid === uid);
+        const nameEl = span.querySelector('.author-name');
+        if (author && nameEl) nameEl.textContent = author.name;
+      });
+    }
+
+    /* === 4. التحميل المتزامن === */
+    document.addEventListener('DOMContentLoaded', () => {
+      const mainArea = document.getElementById('main-content-area');
+
+      Promise.all([
+        fetch("{{ '/assets/data/materials.json' | relative_url }}").then(res => res.json()),
+        fetch("{{ '/assets/blogdata/authors.json' | relative_url }}", { cache: 'no-store' }).then(res => res.json()).catch(() => null)
+      ])
+      .then(([materialsData, authorData]) => {
+        allCourses = materialsData || [];
+        renderCourses();
+        createFilters(allCourses);
+        resolveAuthors(authorData);
+        mainArea.classList.add('loaded');
+        rawafidHideLoader();
+      })
+      .catch(err => {
+        console.error("Critical Load Error:", err);
+        renderCourses();
+        mainArea.classList.add('loaded');
+        rawafidHideLoader();
+      });
+    });
+  </script>
+
+</body>
+</html>

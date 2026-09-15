@@ -1,0 +1,590 @@
+<style>
+  :root {
+    --primary-color: #1a2ac6; /* اللون الأزرق للوضع الفاتح */
+    --nav-height: 70px;
+    --icon-size: 24px;
+    --btn-size: 42px;
+  }
+
+  /* === إعدادات الأوضاع === */
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --primary-color: #7986cb; 
+  }
+
+  [data-theme="dark"] .navbar {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* === الثيمات الملونة الجديدة (تُضاف على الوضعين الحاليين) === */
+  [data-theme="pink"] {
+    --primary-color: #d81b60;
+    --primary-dark: #ad1457;
+    --primary-light-bg: #fce4ec;
+    --bg-body: #faf6f8;
+    --bg-card: #ffffff;
+    --border-color: #eed9e1;
+    --text-main: #2d2d2d;
+    --text-muted: #8a6b76;
+    --bg-code: #f7eef2;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
+    --hover-shadow: 0 15px 30px -5px rgba(216, 27, 96, 0.16);
+  }
+
+  [data-theme="green"] {
+    --primary-color: #16a34a;
+    --primary-dark: #15803d;
+    --primary-light-bg: #dcfce7;
+    --bg-body: #f5faf6;
+    --bg-card: #ffffff;
+    --border-color: #d4e6da;
+    --text-main: #2d2d2d;
+    --text-muted: #5f7a68;
+    --bg-code: #edf7f0;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
+    --hover-shadow: 0 15px 30px -5px rgba(22, 163, 74, 0.16);
+  }
+
+  [data-theme="purple"] {
+    --primary-color: #7c3aed;
+    --primary-dark: #6d28d9;
+    --primary-light-bg: #ede9fe;
+    --bg-body: #f7f6fb;
+    --bg-card: #ffffff;
+    --border-color: #e1daf2;
+    --text-main: #2d2d2d;
+    --text-muted: #71608f;
+    --bg-code: #f1edfb;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
+    --hover-shadow: 0 15px 30px -5px rgba(124, 58, 237, 0.16);
+  }
+
+  [data-theme="orange"] {
+    --primary-color: #ea580c;
+    --primary-dark: #c2410c;
+    --primary-light-bg: #ffedd5;
+    --bg-body: #fbf7f3;
+    --bg-card: #ffffff;
+    --border-color: #efe0d2;
+    --text-main: #2d2d2d;
+    --text-muted: #8a6245;
+    --bg-code: #faf0e7;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
+    --hover-shadow: 0 15px 30px -5px rgba(234, 88, 12, 0.16);
+  }
+
+  /* === متغيرات قائمة اختيار المظهر === */
+  :root {
+    --theme-picker-bg: #ffffff;
+    --theme-picker-text: #2d2d2d;
+    --theme-picker-muted: #666666;
+    --theme-picker-border: rgba(0, 0, 0, 0.08);
+    --theme-picker-hover: #f0f2fb;
+    --theme-picker-active: #eff1ff;
+  }
+  [data-theme="dark"] {
+    --theme-picker-bg: #1f1f1f;
+    --theme-picker-text: #e0e0e0;
+    --theme-picker-muted: #a0a0a0;
+    --theme-picker-border: rgba(255, 255, 255, 0.1);
+    --theme-picker-hover: #2a2a2a;
+    --theme-picker-active: #282a36;
+  }
+  [data-theme="pink"] {
+    --theme-picker-active: #fce4ec;
+  }
+  [data-theme="green"] {
+    --theme-picker-active: #dcfce7;
+  }
+  [data-theme="purple"] {
+    --theme-picker-active: #ede9fe;
+  }
+  [data-theme="orange"] {
+    --theme-picker-active: #ffedd5;
+  }
+
+  body {
+    padding-top: var(--nav-height);
+  }
+
+  /* === إعدادات النافبار === */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    height: var(--nav-height);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* === الشعار === */
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo img {
+    height: 38px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+   
+  .logo img.loaded { opacity: 1; }
+
+  .logo:hover img.loaded {
+    transform: scale(1.05);
+  }
+
+  /* === الروابط === */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcc00;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+    .nav-links a:hover { color: #ffcc00; }
+
+    /* === زر تغيير الوضع في القائمة الجانبية === */
+    .sidebar-theme-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-theme-toggle:hover { color: #ffcc00; }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-theme-toggle .appearance-icon { display: block; }
+
+    /* === أزرار التحكم والأيقونات === */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+  }
+
+  .search-nav-btn { text-decoration: none; }
+
+  /* --- منطق زر المظهر --- */
+  .theme-toggle-btn .appearance-icon { display: block; }
+
+  .theme-toggle-btn:hover svg {
+      color: #ffcc00;
+      transform: rotate(20deg);
+  }
+
+  /* === قائمة اختيار المظهر === */
+  .theme-picker-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 230px;
+    background: var(--theme-picker-bg);
+    color: var(--theme-picker-text);
+    border: 1px solid var(--theme-picker-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.25);
+    padding: 0.55rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+    z-index: 100001;
+  }
+  .theme-picker-popup.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .theme-picker-title {
+    padding: 0.25rem 0.6rem 0.5rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--theme-picker-muted);
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+  }
+  .theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.55rem 0.6rem;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--theme-picker-text);
+    text-align: right;
+    transition: background 0.2s ease;
+  }
+  .theme-option:hover { background: var(--theme-picker-hover); }
+  .theme-option.active { background: var(--theme-picker-active); }
+  .theme-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  }
+  .theme-check {
+    margin-inline-start: auto;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  /* --- زر القائمة (Menu Toggle) --- */
+  .menu-toggle-btn { display: none; }
+   
+  .menu-toggle-btn .close-icon { 
+    display: none; 
+    position: absolute;
+  }
+   
+  .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+  .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
+
+
+  /* === تصميم الجوال === */
+  @media (max-width: 768px) {
+    .menu-toggle-btn { display: flex; }
+    .theme-toggle-btn { display: none; }
+    .sidebar-theme-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: 75%;
+      max-width: 300px;
+      height: calc(100vh - var(--nav-height));
+      background-color: var(--primary-color);
+      
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+      backdrop-filter: blur(12px); 
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li { width: 100%; margin-bottom: 8px; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
+    
+    .nav-links.active li { opacity: 1; transform: translateX(0); }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.25s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) { transition-delay: 0.35s; }
+    .nav-links.active li:nth-child(6) { transition-delay: 0.4s; }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0;
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 998;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+
+    .theme-picker-popup {
+      position: fixed;
+      top: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      min-width: 0;
+      border-radius: 18px 18px 0 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.22);
+      transform: translateY(100%);
+    }
+    .theme-picker-popup.open {
+      transform: translateY(0);
+    }
+    .theme-option { padding: 0.7rem 0.6rem; }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <img 
+        id="cached-logo"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+        data-url="/images/rawafid-1.png" 
+        alt="شعار روافد" 
+      />
+    </a>
+    
+    <div class="overlay" id="nav-overlay"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الصفحة الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="تغيير الوضع">
+          <span class="sidebar-theme-icon">
+            <svg class="appearance-icon" viewBox="0 0 24 24">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+            </svg>
+          </span>
+          <span id="sidebar-theme-label">المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="تغيير المظهر" title="تغيير المظهر">
+        <svg class="appearance-icon" viewBox="0 0 24 24">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+        </svg>
+      </button>
+
+      <div class="theme-picker-popup" id="theme-picker" role="listbox" aria-label="اختيار المظهر"></div>
+
+      <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    /* === 1. كاش اللوجو === */
+    const logoImg = document.getElementById('cached-logo');
+    const targetUrl = logoImg.getAttribute('data-url');
+    const CACHE_KEY_DATA = 'rawafid_logo_data';
+    const CACHE_KEY_URL = 'rawafid_logo_url';
+    const cachedData = localStorage.getItem(CACHE_KEY_DATA);
+    const cachedUrl = localStorage.getItem(CACHE_KEY_URL);
+
+    function displayLogo(src) {
+        logoImg.src = src;
+        logoImg.onload = () => logoImg.classList.add('loaded');
+    }
+
+    if (cachedData && cachedUrl === targetUrl) {
+        displayLogo(cachedData);
+    } else {
+        displayLogo(targetUrl);
+        fetch(targetUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    try {
+                        localStorage.setItem(CACHE_KEY_DATA, reader.result);
+                        localStorage.setItem(CACHE_KEY_URL, targetUrl);
+                    } catch (e) {}
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+    }
+
+    /* === خدمة تخزين الخطوط (Service Worker) === */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register("{{ '/sw.js' | relative_url }}")
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    /* === 2. منطق القائمة المنسدلة === */
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpened = navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      document.body.style.overflow = isOpened ? 'hidden' : '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+    }
+
+    /* === 3. نظام الثيمات المركزي === */
+    var themeScript = document.createElement('script');
+    themeScript.src = "{{ '/assets/js/theme.js' | relative_url }}";
+    themeScript.async = false;
+    document.head.appendChild(themeScript);
+  });
+</script>

@@ -1,0 +1,101 @@
+{
+  "name": "مقرر الأدب العماني",
+  "description": "",
+  "url": "/c/ARAB323",
+  "books": [
+    "book_1",
+    "book_2"
+  ],
+  "items": [
+    {
+      "title": "نص حديث خنافر",
+      "description": "",
+      "type": "documents",
+      "download_url": "https://m.jassim.one/ARAB323/%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%AE%D9%86%D8%A7%D9%81%D8%B1%20-%20%D8%B1%D9%88%D8%A7%D9%81%D8%AF.pdf",
+      "id": "7",
+      "time-ms": "1775365086471",
+      "related": {
+        "course": "ARAB323",
+        "id": "8"
+      }
+    },
+    {
+      "title": "تحليل نص حديث خنافر",
+      "type": "resources",
+      "direct": "yes",
+      "url": "/blog/kanafr",
+      "id": "8"
+    },
+    {
+      "title": "اختبار تفاعلي في الدرس الأول (مخطط عام في الأدب العماني)",
+      "description": "",
+      "id": "1",
+      "type": "quizzes",
+      "preview_url": "/exam/ARAB323-1",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "اختبار تفاعلي في الدرس الثاني (مصادر الأدب العماني)",
+      "description": "",
+      "id": "2",
+      "type": "quizzes",
+      "preview_url": "/exam/ARAB323-2",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "محاكاة لاختبار المنتصف",
+      "description": "",
+      "id": "6",
+      "type": "quizzes",
+      "preview_url": "/exam/ARAB323-MID",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "اختبار تفاعلي في الدرس الثالث (الأدب العماني القديم)",
+      "description": "",
+      "id": "3",
+      "type": "quizzes",
+      "preview_url": "/exam/ARAB323-3",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "شرح قصيدة كعب بن معدان الأشقري (ذكالي)",
+      "type": "resources",
+      "direct": "yes",
+      "url": "/blog/ashqari",
+      "id": "4"
+    },
+    {
+      "title": "ملخص الأدب العماني",
+      "description": "إعداد: ريام السالمي",
+      "type": "documents",
+      "download_url": "https://m.jassim.one/ARAB323/%E2%80%8E%E2%81%A8%D9%85%D9%84%D8%AE%D8%B5%20%D8%A7%D9%84%D8%A7%D9%94%D8%AF%D8%A8%20%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D9%86%D9%8A%E2%81%A9.pdf",
+      "id": "5",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "الإمام ناصر بن مرشد - عمان تحكي",
+      "description": "",
+      "type": "videos",
+      "id": "11",
+      "preview_url": "https://youtu.be/uyV4o7gn8ww?si=",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "الإمام سلطان بن سيف - عمان تحكي",
+      "description": "",
+      "type": "videos",
+      "id": "12",
+      "preview_url": "https://youtu.be/BUSv7yhZNu0?si=",
+      "time-ms": "1775365086471"
+    },
+    {
+      "title": "الإمام أحمد بن سعيد - عمان تحكي",
+      "description": "",
+      "type": "videos",
+      "id": "13",
+      "preview_url": "https://youtu.be/gT8I-Kjdq_w?si=40P-",
+      "time-ms": "1775365086471"
+    }
+  ]
+}
