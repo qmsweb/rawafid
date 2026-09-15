@@ -17,6 +17,11 @@
   <meta property="og:url" content="{{ page.url | absolute_url }}" id="og-url">
   <meta property="og:type" content="website">
 
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.og_title | default: 'المقررات - روافد' }}">
+  <meta name="twitter:description" content="{{ page.og_description | default: 'تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.' }}">
+  <meta name="twitter:image" content="{{ page.og_image | default: '/images/cover2.png' | absolute_url }}">
+
   <script>
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
