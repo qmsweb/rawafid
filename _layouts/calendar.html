@@ -488,7 +488,10 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
+    .timeline-card:hover { transform: translateY(-2px); box-shadow: var(--hover-shadow); border-color: var(--primary-color); }
     .timeline-item.is-current .timeline-card {
       border-color: var(--primary-color);
       background: var(--primary-light-bg);
@@ -568,7 +571,10 @@
       gap: 14px;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
+    .card-event:hover { transform: translateY(-2px); box-shadow: var(--hover-shadow); border-color: var(--primary-color); }
     .card-event.is-current {
       border-color: var(--primary-color);
       background: var(--primary-light-bg);
@@ -761,6 +767,127 @@
       .ce-day { font-size: 1.2rem; }
       .cards-grid { gap: 10px; }
     }
+
+    /* === النافذة المنبثقة لتفاصيل الحدث === */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      padding: 26px;
+      position: relative;
+      box-shadow: var(--hover-shadow);
+      animation: modalIn 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-code);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 1;
+    }
+    .modal-close:hover { background: var(--holiday-bg); color: var(--cal-red); border-color: var(--holiday-border); }
+
+    .modal-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-left: 40px; }
+    .modal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--primary-light-bg);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .modal-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .modal-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 15px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+    }
+    .modal-badge.holiday { background: var(--holiday-bg); color: var(--cal-red); }
+    .modal-badge.exam { background: var(--exam-bg); color: var(--cal-amber); }
+    .modal-badge.current { background: var(--primary-color); color: #fff; }
+
+    #modalTitle {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    #modalTitle.holiday { color: var(--cal-red); }
+    #modalDetails {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .modal-meta span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-countdown {
+      background: var(--countdown-bg);
+      border-radius: 16px;
+      padding: 16px;
+      color: #fff;
+      text-align: center;
+    }
+    .modal-countdown-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+    .modal-countdown .countdown-box { justify-content: center; }
+    .modal-countdown .countdown-label { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -875,6 +1002,27 @@
 
       </div>
 
+  </div>
+
+  <!-- النافذة المنبثقة لتفاصيل الحدث -->
+  <div class="modal-overlay" id="eventModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeEventModal()" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+      <div class="modal-top">
+        <div class="modal-icon" id="modalIcon"><i class="fas fa-book-open"></i></div>
+        <div class="modal-badges" id="modalBadges"></div>
+      </div>
+      <h3 id="modalTitle"></h3>
+      <p id="modalDetails"></p>
+      <div class="modal-meta">
+        <span id="modalDate"></span>
+        <span id="modalSemester"></span>
+      </div>
+      <div class="modal-countdown">
+        <div class="modal-countdown-label" id="modalCountdownLabel">العد التنازلي</div>
+        <div class="countdown-box" id="modalCountdownBox"></div>
+      </div>
+    </div>
   </div>
 
   {% include footer.html %}
@@ -1064,6 +1212,7 @@
           card.className = 'card-event' + (cur ? ' is-current' : '');
           card.setAttribute('data-type', type);
           card.setAttribute('data-filter', currentFilter);
+          card.setAttribute('data-index', allEvents.indexOf(ev));
 
           card.innerHTML = `
             <div class="ce-date-box">
@@ -1123,6 +1272,7 @@
           const item = document.createElement('div');
           item.className = 'timeline-item ' + type + (cur ? ' is-current' : '');
           item.setAttribute('data-filter', 'x');
+          item.setAttribute('data-index', allEvents.indexOf(ev));
 
           item.innerHTML = `
             <span class="timeline-dot"></span>
@@ -1202,6 +1352,7 @@
           const cur = isCurrent(ev);
           const dot = document.createElement('div');
           dot.className = 'cal-event-dot type-' + type + (cur ? ' type-current' : '');
+          dot.setAttribute('data-index', allEvents.indexOf(ev));
           dot.textContent = ev.title.length > 16 ? ev.title.slice(0, 15) + '…' : ev.title;
           dot.title = ev.title + ' - ' + ev.details;
           td.appendChild(dot);
@@ -1231,6 +1382,108 @@
       gridMonthOffset = 0;
       renderGrid();
     }
+
+    /* === النافذة المنبثقة لتفاصيل الحدث === */
+    let modalCountdownTimer = null;
+
+    function openEventModal(index) {
+      const ev = allEvents[index];
+      if (!ev) return;
+
+      const type = getEventType(ev);
+      const cur = isCurrent(ev);
+      const d = parseDate(ev.date);
+
+      document.getElementById('modalIcon').innerHTML = `<i class="fas ${getEventIcon(type)}"></i>`;
+      document.getElementById('modalBadges').innerHTML = `
+        <span class="modal-badge ${type === 'holiday' ? 'holiday' : type === 'exam' ? 'exam' : ''}">${type === 'holiday' ? 'إجازة' : type === 'exam' ? 'اختبار' : 'دراسي'}</span>
+        <span class="modal-badge">${ev.weekBadge || ''}</span>
+        ${cur ? '<span class="modal-badge current">الأسبوع الحالي</span>' : ''}
+      `;
+
+      const title = document.getElementById('modalTitle');
+      title.textContent = ev.title;
+      title.className = type === 'holiday' ? 'holiday' : '';
+
+      document.getElementById('modalDetails').textContent = ev.details;
+      document.getElementById('modalDate').innerHTML = `<i class="far fa-calendar-alt"></i> ${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+      document.getElementById('modalSemester').innerHTML = `<i class="fas fa-graduation-cap"></i> ${ev.semester || ''}`;
+
+      const modal = document.getElementById('eventModal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      startModalCountdown(ev);
+    }
+
+    function closeEventModal() {
+      const modal = document.getElementById('eventModal');
+      if (!modal.classList.contains('open')) return;
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      clearInterval(modalCountdownTimer);
+      modalCountdownTimer = null;
+    }
+
+    function startModalCountdown(ev) {
+      clearInterval(modalCountdownTimer);
+      const label = document.getElementById('modalCountdownLabel');
+      const box = document.getElementById('modalCountdownBox');
+
+      if (passed(ev)) {
+        label.textContent = 'انتهى هذا الحدث';
+        box.innerHTML = '';
+        return;
+      }
+
+      let target;
+      if (isCurrent(ev)) {
+        label.textContent = 'العد التنازلي لنهاية الأسبوع';
+        target = parseDate(ev.date);
+        target.setDate(target.getDate() + 7);
+      } else {
+        label.textContent = 'العد التنازلي لبداية الحدث';
+        target = parseDate(ev.date);
+      }
+
+      function tick() {
+        const now = new Date();
+        let diff = target - now;
+        if (diff < 0) diff = 0;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        box.innerHTML = `
+          <div class="countdown-unit"><span class="countdown-num">${days}</span><span class="countdown-label">يوم</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${hours}</span><span class="countdown-label">ساعة</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${minutes}</span><span class="countdown-label">دقيقة</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${seconds}</span><span class="countdown-label">ثانية</span></div>
+        `;
+      }
+      tick();
+      modalCountdownTimer = setInterval(tick, 1000);
+    }
+
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.modal-close') || e.target.classList.contains('modal-overlay')) {
+        closeEventModal();
+        return;
+      }
+      const trigger = e.target.closest('.card-event, .timeline-card, .cal-event-dot');
+      if (trigger) {
+        const idx = trigger.getAttribute('data-index');
+        if (idx !== null && idx !== undefined) {
+          openEventModal(parseInt(idx, 10));
+        }
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeEventModal();
+    });
 
     /* === الإعداد والإحصاءات === */
     function updateCounts() {
