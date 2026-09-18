@@ -237,6 +237,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -346,6 +348,7 @@
     // إظهار المحتوى بتأثير سلس
     setTimeout(() => {
       elements.mainArea.classList.add('loaded');
+      rawafidHideLoader();
     }, 100);
   }
 

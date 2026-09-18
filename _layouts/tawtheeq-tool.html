@@ -233,6 +233,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -587,6 +589,7 @@
 
   window.addEventListener('DOMContentLoaded', () => {
       updateFormFields();
+      rawafidHideLoader();
   });
 </script>
 

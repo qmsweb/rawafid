@@ -131,6 +131,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -182,6 +184,7 @@
     const mainArea = document.getElementById('main-content-area');
     setTimeout(() => {
         mainArea.classList.add('loaded');
+        rawafidHideLoader();
     }, 100);
   });
 </script>

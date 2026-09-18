@@ -417,6 +417,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -1019,7 +1021,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-      fetchCoursesData();
+      fetchCoursesData().finally(() => rawafidHideLoader());
       restoreState();
       preparePrintLogo();
       document.addEventListener('input', saveState);

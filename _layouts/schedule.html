@@ -262,6 +262,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -437,6 +439,9 @@
   function printSchedule() {
       window.print();
   }
+
+  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
+  window.addEventListener('load', rawafidHideLoader);
 </script>
 
 </body>

@@ -172,6 +172,8 @@ title: الصفحة غير موجودة
 </head>
 <body>
 
+  {% include loading.html %}
+
   <div id="topbar-container">
      {% include header.html %} 
   </div>
@@ -206,6 +208,9 @@ title: الصفحة غير موجودة
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('rawafed-theme', newTheme);
   }
+
+  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
+  window.addEventListener('load', rawafidHideLoader);
 </script>
 
 </body>

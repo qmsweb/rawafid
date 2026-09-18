@@ -327,6 +327,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   {% include header.html %}
 
   <div class="container">
@@ -565,6 +567,7 @@
 
   window.addEventListener('DOMContentLoaded', () => {
       drawWheel();
+      rawafidHideLoader();
   });
 
   namesInput.addEventListener('input', () => {

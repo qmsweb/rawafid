@@ -208,6 +208,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   <div id="topbar-container">
      {% include header.html %} 
   </div>
@@ -277,6 +279,9 @@
       formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
   }
+
+  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
+  window.addEventListener('load', rawafidHideLoader);
 </script>
 
 </body>

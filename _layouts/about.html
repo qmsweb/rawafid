@@ -183,6 +183,8 @@
 </head>
 <body>
 
+  {% include loading.html %}
+
   <div id="topbar-container">
      {% include header.html %} 
   </div>
@@ -262,6 +264,9 @@
       alert('تم نسخ رابط الصفحة');
     }
   }
+
+  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
+  window.addEventListener('load', rawafidHideLoader);
 </script>
 
 </body>
