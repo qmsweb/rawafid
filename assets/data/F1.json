@@ -25,6 +25,22 @@
             "type": "documents",
             "download_url": "https://m.jassim.one/F1/%D9%85%D9%84%D8%B2%D9%85%D8%A9%20%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%D9%8A%D8%A9.pdf",
             "time-ms": "1756579745911"
+        },
+        {
+            "id": 4,
+            "title": "طريقة تفعيل برنامج المودل والبريد الإلكتروني لطلبة جامعة الشرقية",
+            "description": "دليل توضيحي لطريقة تفعيل برنامج المودل والبريد الإلكتروني لطلبة جامعة الشرقية.",
+            "type": "documents",
+            "download_url": "https://m.jassim.one/F1/%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%85%D8%AC%20%D8%A7%D9%84%D9%85%D9%87%D9%85%D8%A9%20%D9%84%D8%B7%D9%84%D8%A8%D8%A9%20%D8%AC%D8%A7%D9%85%D8%B9%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9%20.pdf",
+            "time-ms": "1756579745911"
+        },
+        {
+            "id": 5,
+            "title": "مجلد لاختبارات تحديد المستوى",
+            "description": "رابط مجلد لاختبارات ونماذج تحديد المستوى.",
+            "type": "links",
+            "download_url": "https://drive.google.com/drive/mobile/folders/18glECEg9E5vyqgF9-PLBU0UB5z1DRnx1?usp=drive_open",
+            "time-ms": "1756579745911"
         }
     ]
 }

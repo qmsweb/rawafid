@@ -565,7 +565,7 @@ function renderMaterials(filter = 'all') {
             return;
         }
         const targetUrl = item.preview_url || item.url;
-        if ((item.type === 'quizzes' || item.type === 'cards') && targetUrl) {
+        if ((item.type === 'quizzes' || item.type === 'cards' || item.type === 'links') && targetUrl) {
             window.location.href = targetUrl;
         } else {
             window.location.href = detailsUrl;

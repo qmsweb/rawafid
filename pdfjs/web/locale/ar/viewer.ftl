@@ -100,8 +100,8 @@ pdfjs-spread-even-button-label = هوامش الصفحات الزوجية
 ## Document properties dialog
 
 pdfjs-document-properties-button =
-    .title = خصائص المستند…
-pdfjs-document-properties-button-label = خصائص المستند…
+    .title = خصائص الملف…
+pdfjs-document-properties-button-label = خصائص الملف…
 pdfjs-document-properties-file-name = اسم الملف:
 pdfjs-document-properties-file-size = حجم الملف:
 # Variables:
@@ -123,7 +123,7 @@ pdfjs-document-properties-modification-date = تاريخ التعديل:
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 pdfjs-document-properties-creator = المُنشئ:
 pdfjs-document-properties-producer = منتج PDF:
-pdfjs-document-properties-version = إصدارة PDF:
+pdfjs-document-properties-version = إصدار PDF:
 pdfjs-document-properties-page-count = عدد الصفحات:
 pdfjs-document-properties-page-size = مقاس الورقة:
 pdfjs-document-properties-page-size-unit-inches = بوصة
@@ -149,10 +149,10 @@ pdfjs-document-properties-page-size-dimension-name-string = ‏{ $width } × ‏
 
 # The linearization status of the document; usually called "Fast Web View" in
 # English locales of Adobe software.
-pdfjs-document-properties-linearized = العرض السريع عبر الوِب:
+pdfjs-document-properties-linearized = العرض السريع عبر الويب:
 pdfjs-document-properties-linearized-yes = نعم
 pdfjs-document-properties-linearized-no = لا
-pdfjs-document-properties-close-button = أغلق
+pdfjs-document-properties-close-button = إغلاق النافذة
 pdfjs-digital-signature-properties-view-certificate = اعرض الشهادة
 # Shown beneath an invalid signature card to explain why verification
 # failed. The text comes from NSS (e.g. "Signature integrity has been

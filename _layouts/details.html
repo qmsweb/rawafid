@@ -523,7 +523,8 @@
 
         let buttonsHTML = '';
         if (item.download_url) {
-            buttonsHTML += `<a href="${item.download_url}" class="floating-btn" download target="_blank"><i class="fas fa-download"></i> تحميل</a>`;
+            const downloadLabel = isPdf ? 'تحميل بهيئة PDF' : 'تحميل';
+            buttonsHTML += `<a href="${item.download_url}" class="floating-btn" download target="_blank"><i class="fas fa-download"></i> ${downloadLabel}</a>`;
         }
       
         if (isPdf && item.download_url) {
