@@ -1,47 +1,78 @@
+---
+# خريطة الموقع ديناميكية: تُبنى تلقائياً عند النشر عبر Jekyll
+---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+      xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+      xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
-
+<!-- ===== الصفحات الرئيسية ===== -->
 <url>
-  <loc>https://rawafid.jassim.one/</loc>
-  <lastmod>2026-02-03T21:57:55+00:00</lastmod>
+  <loc>{{ site.url }}/</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>weekly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://rawafid.jassim.one/about</loc>
-  <lastmod>2026-02-03T21:57:55+00:00</lastmod>
+  <loc>{{ site.url }}/tools</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://rawafid.jassim.one/tools</loc>
-  <lastmod>2026-02-03T21:57:55+00:00</lastmod>
+  <loc>{{ site.url }}/blog</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://rawafid.jassim.one/contact</loc>
-  <lastmod>2026-02-03T21:57:55+00:00</lastmod>
-  <priority>0.80</priority>
+  <loc>{{ site.url }}/about</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.70</priority>
 </url>
 <url>
-  <loc>https://rawafid.jassim.one/index.html</loc>
-  <lastmod>2026-02-03T21:57:55+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://rawafid.jassim.one/blog</loc>
-  <lastmod>2026-08-31T00:00:00+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://rawafid.jassim.one/blog/test</loc>
-  <lastmod>2026-08-31T00:00:00+00:00</lastmod>
-  <priority>0.64</priority>
+  <loc>{{ site.url }}/contact</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.50</priority>
 </url>
 
+<!-- ===== الأدوات ===== -->
+{% for tool in site.data.tools %}
+<url>
+  <loc>{{ tool.url | absolute_url }}</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.80</priority>
+</url>
+{% endfor %}
+
+<!-- ===== المقررات ===== -->
+{% for p in site.pages %}
+{% if p.layout == 'course' and p.code %}
+<url>
+  <loc>{{ p.url | absolute_url }}</loc>
+  {% if p.date %}<lastmod>{{ p.date | date_to_xmlschema }}</lastmod>{% else %}<lastmod>{{ site.time | date_to_xmlschema }}</lastmod>{% endif %}
+  <changefreq>weekly</changefreq>
+  <priority>0.70</priority>
+</url>
+{% endif %}
+{% endfor %}
+
+<!-- ===== المقالات ===== -->
+{% for post in site.posts %}
+{% if post.visible != false %}
+<url>
+  <loc>{{ post.url | absolute_url }}</loc>
+  {% if post.date %}<lastmod>{{ post.date | date_to_xmlschema }}</lastmod>{% else %}<lastmod>{{ site.time | date_to_xmlschema }}</lastmod>{% endif %}
+  <changefreq>monthly</changefreq>
+  <priority>0.60</priority>
+</url>
+{% endif %}
+{% endfor %}
 
 </urlset>

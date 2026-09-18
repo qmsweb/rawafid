@@ -12,7 +12,7 @@
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'دليل المقررات - روافد' }}">
   <meta property="og:description" content="دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة واللاحقة.">
-  <meta property="og:image" content="{{ '/images/plan.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/plan.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -300,6 +300,7 @@
     }
 
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

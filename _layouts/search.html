@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="">
   <title>{{ page.title | default: "بحث | منصة روافد" }}</title>
 
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
@@ -12,7 +11,7 @@
 
   <meta property="og:title" content="بحث | منصة روافد">
   <meta property="og:description" content="">
-  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -377,6 +376,7 @@
       .filter-tab { padding: 6px 14px; font-size: 0.78rem; }
     }
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

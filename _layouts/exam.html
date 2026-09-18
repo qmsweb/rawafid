@@ -13,14 +13,14 @@
 
     <meta property="og:title" content="{{ page.title }} - روافد" id="og-title">
     <meta property="og:description" content="{{ page.description | default: 'تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.' }}" id="og-description">
-    <meta property="og:image" content="{{ page.image | default: '/images/cover3.png' | relative_url }}" id="og-image">
+    <meta property="og:image" content="{{ page.image | default: '/images/cover3.png' | absolute_url }}" id="og-image">
     <meta property="og:url" content="{{ page.url | absolute_url }}">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ page.title }} - روافد">
     <meta name="twitter:description" content="{{ page.description | default: 'تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.' }}">
-    <meta name="twitter:image" content="{{ page.image | default: '/images/cover3.png' | relative_url }}">
+    <meta name="twitter:image" content="{{ page.image | default: '/images/cover3.png' | absolute_url }}">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 
@@ -805,6 +805,7 @@
             .choice-label { font-size: 0.92rem; min-height: 0; }
         }
     </style>
+  {% include seo.html %}
 </head>
 <body>
     

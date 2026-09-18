@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="لعبة قل ولا تقل التفاعلية لطلبة اللغة العربية - منصة روافد.">
   <title>{{ page.title | default: "روافد - لعبة قل ولا تقل" }}</title>
 
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
@@ -12,7 +11,7 @@
    
   <meta property="og:title" content="لعبة قل ولا تقل - روافد">
   <meta property="og:description" content="اختبر معلوماتك اللغوية وتعرف على الأخطاء الشائعة والصواب في اللغة العربية.">
-  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -234,6 +233,7 @@
       .question-text { font-size: 1.2rem; }
     }
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

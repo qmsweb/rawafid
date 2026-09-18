@@ -11,7 +11,7 @@
     
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
   <meta property="og:description" content="{{ page.description | default: 'منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.' }}">
-  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -127,6 +127,7 @@
       .tool-card-name { font-size: 0.72rem; }
     }
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

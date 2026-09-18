@@ -12,7 +12,7 @@
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
   <meta property="og:description" content="أداة لتوليد الاستشهادات المرجعية العلمية بدقة (APA7).">
-  <meta property="og:image" content="{{ '/images/tawtheeq.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/tawtheeq.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -229,6 +229,7 @@
         .select-field { width: 100% !important; }
     }
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

@@ -12,7 +12,7 @@
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'دليل القاعات - روافد' }}">
   <meta property="og:description" content="دليل تفاعلي للبحث عن أماكن القاعات الدراسية.">
-  <meta property="og:image" content="{{ '/images/cover.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -229,6 +229,7 @@
     .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
 
   </style>
+  {% include seo.html %}
 </head>
 <body>
 

@@ -12,7 +12,7 @@
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <meta property="og:title" content="{{ page.title | default: 'روافد' }}">
   <meta property="og:description" content="التقويم الأكاديمي لجامعة الشرقية 2026-2027.">
-  <meta property="og:image" content="{{ '/images/calendar.png' | relative_url }}">
+  <meta property="og:image" content="{{ '/images/calendar.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:type" content="website">
 
@@ -769,6 +769,7 @@
     }
 
     </style>
+  {% include seo.html %}
 </head>
 <body>
 
