@@ -1,133 +1,58 @@
 /* ============================================================
    نظام الثيمات الموحّد - روافد
-   لإضافة ثيم جديد:
-     1) أضف تعريفه في مصفوفة THEMES بالأسفل.
-     2) أضف كتلة [data-theme="..."] داخل _includes/header.html.
-     3) أضف الـ id إلى القائمة المحظورة في سكربت التهيئة باللوحات.
+   أيقونة القمر/الشمس في الهيدر تُبدّل الوضع مباشرة عند النقر
    ============================================================ */
 (function () {
   'use strict';
 
-  var THEMES = [
-    { id: 'light',  label: 'النهاري',   color: '#1a2ac6' },
-    { id: 'dark',   label: 'الليلي',    color: '#7986cb' }
-  ];
-
-  var VALID = {};
-  THEMES.forEach(function (t) { VALID[t.id] = true; });
+  var THEMES = ['light', 'dark'];
 
   function getCurrent() {
     var t = document.documentElement.getAttribute('data-theme');
-    return VALID[t] ? t : 'light';
+    return THEMES.indexOf(t) !== -1 ? t : 'light';
   }
 
   function applyTheme(id, save) {
-    if (!VALID[id]) id = 'light';
+    if (THEMES.indexOf(id) === -1) id = 'light';
     document.documentElement.setAttribute('data-theme', id);
     if (save !== false) {
       try { localStorage.setItem('rawafed-theme', id); } catch (e) {}
     }
-    updatePicker(id);
+    updateLabels(id);
   }
 
   /* عكس التوافق مع الصفحات القديمة التي تستدعي toggleTheme() */
-  function cycleTheme() {
+  function toggleTheme() {
     var cur = getCurrent();
-    var idx = 0;
-    for (var i = 0; i < THEMES.length; i++) {
-      if (THEMES[i].id === cur) { idx = i; break; }
-    }
-    applyTheme(THEMES[(idx + 1) % THEMES.length].id);
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
   }
-  window.toggleTheme = cycleTheme;
+  window.toggleTheme = toggleTheme;
 
-  function updatePicker(activeId) {
-    var picker = document.getElementById('theme-picker');
-    if (!picker) return;
-    var opts = picker.querySelectorAll('.theme-option');
-    for (var i = 0; i < opts.length; i++) {
-      var matched = opts[i].getAttribute('data-theme-id') === activeId;
-      opts[i].classList.toggle('active', matched);
-      var check = opts[i].querySelector('.theme-check');
-      if (check) check.style.display = matched ? '' : 'none';
+  function updateLabels(id) {
+    var next = id === 'dark' ? 'التبديل إلى الوضع النهاري' : 'التبديل إلى الوضع الليلي';
+    var navBtn = document.getElementById('theme-toggle-btn');
+    if (navBtn) {
+      navBtn.setAttribute('aria-label', next);
+      navBtn.setAttribute('title', next);
     }
-  }
-
-  function togglePicker(force) {
-    var picker = document.getElementById('theme-picker');
-    if (!picker) return;
-    if (typeof force === 'boolean') {
-      picker.classList.toggle('open', force);
-    } else {
-      picker.classList.toggle('open');
-    }
-  }
-
-  function buildPicker() {
-    var picker = document.getElementById('theme-picker');
-    if (!picker || picker.querySelector('.theme-option')) return;
-    var current = getCurrent();
-    var html = '<div class="theme-picker-title">اختر المظهر</div>';
-    THEMES.forEach(function (t) {
-      html +=
-        '<button type="button" class="theme-option' + (t.id === current ? ' active' : '') +
-        '" data-theme-id="' + t.id + '" role="option">' +
-        '<span class="theme-swatch" style="background:' + t.color + '"></span>' +
-        '<span class="theme-label">' + t.label + '</span>' +
-        '<span class="theme-check"' + (t.id === current ? '' : ' style="display:none"') + '>&#10003;</span>' +
-        '</button>';
-    });
-    picker.innerHTML = html;
+    var sideBtn = document.getElementById('sidebar-theme-toggle');
+    if (sideBtn) sideBtn.setAttribute('aria-label', next);
   }
 
   function init() {
     var saved = null;
     try { saved = localStorage.getItem('rawafed-theme'); } catch (e) {}
-    applyTheme(VALID[saved] ? saved : 'light', false);
-
-    buildPicker();
+    applyTheme(THEMES.indexOf(saved) !== -1 ? saved : 'light', false);
 
     var navBtn = document.getElementById('theme-toggle-btn');
     var sideBtn = document.getElementById('sidebar-theme-toggle');
-    var picker = document.getElementById('theme-picker');
-
-    function openFrom(e, btn) {
-      e.stopPropagation();
-      e.preventDefault();
-      if (btn && btn.classList.contains('open')) btn.classList.remove('open');
-      togglePicker();
-    }
 
     if (navBtn) {
-      navBtn.addEventListener('click', function (e) { openFrom(e, navBtn); });
+      navBtn.addEventListener('click', function (e) { e.preventDefault(); toggleTheme(); });
     }
     if (sideBtn) {
-      sideBtn.addEventListener('click', function (e) { openFrom(e, sideBtn); });
+      sideBtn.addEventListener('click', function (e) { e.preventDefault(); toggleTheme(); });
     }
-
-    if (picker) {
-      picker.addEventListener('click', function (e) {
-        var opt = e.target.closest ? e.target.closest('.theme-option') : null;
-        if (opt) {
-          applyTheme(opt.getAttribute('data-theme-id'));
-          togglePicker(false);
-        }
-      });
-    }
-
-    document.addEventListener('click', function (e) {
-      if (picker && picker.classList.contains('open')) {
-        var t = e.target;
-        var inside = picker === t || picker.contains(t);
-        if (!inside && t.id !== 'theme-toggle-btn' && t.id !== 'sidebar-theme-toggle') {
-          togglePicker(false);
-        }
-      }
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') togglePicker(false);
-    });
   }
 
   if (document.readyState === 'loading') {

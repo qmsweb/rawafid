@@ -299,12 +299,13 @@
           <a href="{{ '/tools' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left"></i></a>
         </div>
         <div class="tools-grid">
-          {% assign home_tools = site.data.tools | where: "show_on_home", true %}
-          {% for tool in home_tools %}
+          {% for tool in site.data.tools.tools %}
+            {% if tool.show_on_home %}
           <a class="tool-card" href="{{ tool.url | relative_url }}">
             <div class="tool-card-icon"><i class="{{ tool.icon }}"></i></div>
             <div class="tool-card-name">{{ tool.name }}</div>
           </a>
+            {% endif %}
           {% endfor %}
         </div>
       </section>

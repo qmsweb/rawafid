@@ -142,7 +142,7 @@
         <section class="home-section" style="margin-top: 20px;">
             <h3 class="section-title"><i class="fas fa-wrench"></i> الأدوات</h3>
             <div class="tools-grid">
-                {% for tool in site.data.tools %}
+                {% for tool in site.data.tools.tools %}
                 <a class="tool-card" href="{{ tool.url | relative_url }}">
                     <div class="tool-card-icon"><i class="{{ tool.icon }}"></i></div>
                     <div class="tool-card-name">{{ tool.name }}</div>
@@ -154,7 +154,7 @@
         <section class="home-section">
             <h3 class="section-title"><i class="fas fa-layer-group"></i> مشاريع أخرى</h3>
             <div class="tools-grid">
-                {% for project in site.data.projects %}
+                {% for project in site.data.tools.projects %}
                 <a class="tool-card {{ project.style }}" href="{{ project.url }}" target="_blank" rel="noopener">
                     <div class="tool-card-icon"><img src="{{ project.image }}" alt="شعار {{ project.name }}"></div>
                     <div class="tool-card-name">{{ project.name }}</div>

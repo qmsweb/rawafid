@@ -17,24 +17,6 @@
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
 
-  /* === متغيرات قائمة اختيار المظهر === */
-  :root {
-    --theme-picker-bg: #ffffff;
-    --theme-picker-text: #2d2d2d;
-    --theme-picker-muted: #666666;
-    --theme-picker-border: rgba(0, 0, 0, 0.08);
-    --theme-picker-hover: #f0f2fb;
-    --theme-picker-active: #eff1ff;
-  }
-  [data-theme="dark"] {
-    --theme-picker-bg: #1f1f1f;
-    --theme-picker-text: #e0e0e0;
-    --theme-picker-muted: #a0a0a0;
-    --theme-picker-border: rgba(255, 255, 255, 0.1);
-    --theme-picker-hover: #2a2a2a;
-    --theme-picker-active: #282a36;
-  }
-
   body {
     padding-top: var(--nav-height);
   }
@@ -150,6 +132,10 @@
       justify-content: center;
     }
 
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      position: relative;
+    }
+
     .sidebar-theme-toggle .sidebar-theme-icon svg {
       width: 20px;
       height: 20px;
@@ -158,9 +144,17 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      transition: opacity 0.3s ease, transform 0.35s ease;
     }
 
-    .sidebar-theme-toggle .appearance-icon { display: block; }
+    .sidebar-theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    .sidebar-theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
 
     /* === أزرار التحكم والأيقونات === */
   .nav-icons {
@@ -208,78 +202,22 @@
 
   .search-nav-btn { text-decoration: none; }
 
-  /* --- منطق زر المظهر --- */
-  .theme-toggle-btn .appearance-icon { display: block; }
-
-  .theme-toggle-btn:hover svg {
-      color: #ffcc00;
-      transform: rotate(20deg);
-  }
-
-  /* === قائمة اختيار المظهر === */
-  .theme-picker-popup {
+  /* --- منطق زر المظهر (قمر/شمس) --- */
+  .theme-toggle-btn .icon-moon,
+  .theme-toggle-btn .icon-sun {
     position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    min-width: 230px;
-    background: var(--theme-picker-bg);
-    color: var(--theme-picker-text);
-    border: 1px solid var(--theme-picker-border);
-    border-radius: 16px;
-    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.25);
-    padding: 0.55rem;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
-    z-index: 100001;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+    transition: opacity 0.3s ease, transform 0.35s ease;
   }
-  .theme-picker-popup.open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-  .theme-picker-title {
-    padding: 0.25rem 0.6rem 0.5rem;
-    font-size: 0.76rem;
-    font-weight: 700;
-    color: var(--theme-picker-muted);
-    font-family: "IBM Plex Sans Arabic", sans-serif;
-  }
-  .theme-option {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    width: 100%;
-    padding: 0.55rem 0.6rem;
-    margin-bottom: 2px;
-    border: none;
-    background: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-family: "IBM Plex Sans Arabic", sans-serif;
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--theme-picker-text);
-    text-align: right;
-    transition: background 0.2s ease;
-  }
-  .theme-option:hover { background: var(--theme-picker-hover); }
-  .theme-option.active { background: var(--theme-picker-active); }
-  .theme-swatch {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.85);
-    flex-shrink: 0;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
-  }
-  .theme-check {
-    margin-inline-start: auto;
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 0.85rem;
-  }
+
+  .theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  .theme-toggle-btn:hover svg { color: #ffcc00; }
 
   /* --- زر القائمة (Menu Toggle) --- */
   .menu-toggle-btn { display: none; }
@@ -361,27 +299,6 @@
         backdrop-filter: blur(2px);
     }
     .overlay.active { opacity: 1; visibility: visible; }
-
-    .theme-picker-popup {
-      position: fixed;
-      top: auto;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      min-width: 0;
-      border-radius: 18px 18px 0 0;
-      border-left: none;
-      border-right: none;
-      border-bottom: none;
-      padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
-      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.22);
-      transform: translateY(100%);
-    }
-    .theme-picker-popup.open {
-      transform: translateY(0);
-    }
-    .theme-option { padding: 0.7rem 0.6rem; }
   }
 </style>
 
@@ -405,14 +322,21 @@
       <li><a href="/contact">تواصل معنا</a></li>
       <li><a href="/about">عن روافد</a></li>
       <li>
-        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="تغيير الوضع">
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="التبديل إلى الوضع الليلي">
           <span class="sidebar-theme-icon">
-            <svg class="appearance-icon" viewBox="0 0 24 24">
-              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
-              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+            <svg class="icon-moon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
             </svg>
           </span>
           <span id="sidebar-theme-label">المظهر</span>
@@ -424,17 +348,22 @@
       <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       </a>
-      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="تغيير المظهر" title="تغيير المظهر">
-        <svg class="appearance-icon" viewBox="0 0 24 24">
-          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
-          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="التبديل إلى الوضع الليلي" title="التبديل إلى الوضع الليلي">
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
         </svg>
       </button>
-
-      <div class="theme-picker-popup" id="theme-picker" role="listbox" aria-label="اختيار المظهر"></div>
 
       <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
         <svg class="menu-icon" viewBox="0 0 24 24">
