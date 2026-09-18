@@ -1133,11 +1133,10 @@
           const item = document.createElement('div');
           item.className = 'timeline-item ' + type + (cur ? ' is-current' : '');
           item.setAttribute('data-filter', 'x');
-          item.setAttribute('data-index', allEvents.indexOf(ev));
 
           item.innerHTML = `
             <span class="timeline-dot"></span>
-            <div class="timeline-card">
+            <div class="timeline-card" data-index="${allEvents.indexOf(ev)}">
               <div class="tl-date-box">
                 <span class="tl-month">${monthNames[d.getMonth()]}</span>
                 <span class="tl-day">${d.getDate()}</span>
@@ -1254,7 +1253,7 @@
     }
 
     document.addEventListener('click', function(e) {
-      const trigger = e.target.closest('.card-event, .timeline-card, .cal-event-dot');
+      const trigger = e.target.closest('[data-index]');
       if (trigger) {
         const idx = trigger.getAttribute('data-index');
         if (idx !== null && idx !== undefined) {
