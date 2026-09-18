@@ -1,0 +1,38 @@
+# ====================================================
+# المصدر الوحيد للأدوات — عدّل هذا الملف فقط
+# الشكل: [الاسم، الرابط، الأيقونة، الظهور في الرئيسية]
+# الأيقونات من مكتبة Font Awesome 6
+# ====================================================
+
+tools:
+  - name: "حاسبة المعدل"
+    url: "/tools/gpa"
+    icon: "fas fa-calculator"
+    show_on_home: true
+
+  - name: "توثيق المراجع"
+    url: "/tools/tawtheeq-tool"
+    icon: "fas fa-quote-right"
+    show_on_home: true
+
+  - name: "الخطة الدراسية"
+    url: "/tools/study-plan"
+    icon: "fas fa-book-open"
+    show_on_home: true
+
+  - name: "التقويم الأكاديمي"
+    url: "/tools/calendar"
+    icon: "fas fa-calendar-alt"
+    show_on_home: true
+
+  - name: "العجلة الدوارة"
+    url: "/tools/wheel"
+    icon: "fas fa-dharmachakra"
+    show_on_home: true
+
+# مشاريع خارجية أخرى
+projects:
+  - name: "منصة صوامت"
+    url: "https://sawamet.jassim.one/"
+    image: "https://sawamet.jassim.one/images/sawamet-logo.png"
+    style: "purple"
