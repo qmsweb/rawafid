@@ -391,18 +391,19 @@
         let diff = target - now;
         if (diff < 0) diff = 0;
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const weeks = Math.floor(days / 7);
+        const remainingDays = days % 7;
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         box.innerHTML = `
-          <div class="countdown-unit"><span class="countdown-num">${days}</span><span class="countdown-unit-text">يوم</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${weeks}</span><span class="countdown-unit-text">أسبوع</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${remainingDays}</span><span class="countdown-unit-text">يوم</span></div>
           <div class="countdown-unit"><span class="countdown-num">${hours}</span><span class="countdown-unit-text">ساعة</span></div>
           <div class="countdown-unit"><span class="countdown-num">${minutes}</span><span class="countdown-unit-text">دقيقة</span></div>
-          <div class="countdown-unit"><span class="countdown-num">${seconds}</span><span class="countdown-unit-text">ثانية</span></div>
         `;
       }
       tick();
-      countdownTimer = setInterval(tick, 1000);
+      countdownTimer = setInterval(tick, 60000);
     }
 
     function shareEvent() {
