@@ -9,6 +9,12 @@ permalink: /blog/:slug
 # تنسيقات التاريخ
 timezone: Asia/Muscat
 
+# صفحة مستقلة لكل حدث في التقويم: /events/<slug>/
+collections:
+  events:
+    output: true
+    permalink: /events/:name/
+
 # استبعاد الملفات غير المطلوبة في النشر
 exclude:
   - README.md

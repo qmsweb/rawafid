@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <title>{{ page.title }} - التقويم الأكاديمي | روافد</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="{{ content | strip_html | strip_newlines | truncate: 160 }}">
+  <meta property="og:image" content="{{ '/images/calendar.png' | relative_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="article">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark','pink','green','purple','orange'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات والألوان === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #14209e;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --bg-code: #f1f5f9;
+      --radius-md: 16px;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.12);
+
+      --cal-red: #ef4444;
+      --cal-amber: #f59e0b;
+      --badge-bg: #e0e7ff;
+      --badge-text: #1a2ac6;
+      --holiday-bg: #fef2f2;
+      --holiday-border: #fecaca;
+      --exam-bg: #fffbeb;
+      --exam-border: #fde68a;
+      --countdown-bg: linear-gradient(135deg, #1a2ac6 0%, #4f46e5 100%);
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-dark: #5c6bc0;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+
+      --cal-red: #f87171;
+      --cal-amber: #fbbf24;
+      --badge-bg: #312e81;
+      --badge-text: #a5b4fc;
+      --holiday-bg: #2d1b1b;
+      --holiday-border: #7f1d1d;
+      --exam-bg: #2d2612;
+      --exam-border: #78350f;
+      --countdown-bg: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 70px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+
+    #main-content-area { opacity: 0; transition: opacity 0.5s ease-in-out; }
+    #main-content-area.loaded { opacity: 1; }
+
+    /* === أزرار أعلى الصفحة (تصميم أزرار صفحة التفاصيل) === */
+    .nav-header {
+      margin-top: 20px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .action-buttons-top { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .back-btn, .share-btn-top, .print-btn-top {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 50px;
+      transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .back-btn:hover, .share-btn-top:hover, .print-btn-top:hover {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+    }
+
+    /* === بطاقة الحدث === */
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: var(--hover-shadow);
+      margin-bottom: 18px;
+    }
+    .event-card.holiday { border-color: var(--holiday-border); }
+    .event-card.exam { border-color: var(--exam-border); }
+
+    .event-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+    .event-top .ev-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--primary-light-bg);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .event-top .ev-icon.holiday { background: var(--holiday-bg); color: var(--cal-red); border: 1px solid var(--holiday-border); }
+    .event-top .ev-icon.exam { background: var(--exam-bg); color: var(--cal-amber); border: 1px solid var(--exam-border); }
+
+    .ev-badges { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+    .ev-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 15px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+    }
+    .ev-badge.holiday { background: var(--holiday-bg); color: var(--cal-red); }
+    .ev-badge.exam { background: var(--exam-bg); color: var(--cal-amber); }
+    .ev-badge.current { background: var(--primary-color); color: #fff; }
+
+    .event-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      line-height: 1.5;
+      font-feature-settings: "ss01";
+    }
+    .event-title.holiday { color: var(--cal-red); }
+
+    .event-details {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .event-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .event-meta span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .event-meta span i { color: var(--primary-color); }
+
+    /* === العد التنازلي === */
+    .countdown-box {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .countdown-block {
+      background: var(--countdown-bg);
+      border-radius: 16px;
+      padding: 18px;
+      color: #fff;
+      text-align: center;
+    }
+    .countdown-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      opacity: 0.9;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .countdown-block .countdown-unit {
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 10px 14px;
+      text-align: center;
+      min-width: 62px;
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+    }
+    .countdown-num { font-size: 1.5rem; font-weight: 800; line-height: 1; display: block; }
+    .countdown-unit-text { font-size: 0.64rem; opacity: 0.85; margin-top: 4px; display: block; }
+
+    .event-url-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .event-url-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .event-url-label i { color: var(--primary-color); }
+
+    .no-events { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 0.95rem; }
+
+    /* === الطباعة === */
+    @media print {
+      :root, [data-theme="dark"] {
+        --primary-color: #000000 !important;
+        --bg-body: #ffffff !important;
+        --bg-card: #ffffff !important;
+        --text-main: #000000 !important;
+        --text-muted: #333333 !important;
+        --border-color: #cccccc !important;
+        --countdown-bg: none !important;
+      }
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; }
+      header, .nav-header, .event-url-card, .site-footer { display: none !important; }
+      .container { max-width: 100% !important; padding: 0 !important; }
+      .countdown-block .countdown-unit { background: #eee !important; color: #000 !important; border-color: #999 !important; }
+      .countdown-num, .countdown-unit-text, .countdown-label { color: #000 !important; }
+    }
+
+    @media (max-width: 560px) {
+      .event-card { padding: 20px 16px; }
+      .event-title { font-size: 1.2rem; }
+      .countdown-block { padding: 14px; }
+      .countdown-block .countdown-unit { min-width: 54px; padding: 8px 10px; }
+      .countdown-num { font-size: 1.25rem; }
+      .nav-header { flex-direction: column; align-items: stretch; }
+      .action-buttons-top { justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  {% include header.html %}
+  {% include loading.html %}
+
+  <div class="container">
+    <div id="main-content-area">
+
+      {% assign type = 'regular' %}
+      {% if page.isHoliday %}
+        {% assign type = 'holiday' %}
+      {% elsif page.title contains 'اختبار' or page.title contains 'امتحان' %}
+        {% assign type = 'exam' %}
+      {% endif %}
+
+      {% assign type_label = 'دراسي' %}
+      {% assign type_icon = 'fa-book-open' %}
+      {% if type == 'holiday' %}
+        {% assign type_label = 'إجازة' %}
+        {% assign type_icon = 'fa-umbrella-beach' %}
+      {% elsif type == 'exam' %}
+        {% assign type_label = 'اختبار' %}
+        {% assign type_icon = 'fa-clipboard-check' %}
+      {% endif %}
+
+      <div class="nav-header">
+        <a href="{{ '/tools/calendar' | relative_url }}" class="back-btn">
+          <i class="fas fa-arrow-right"></i> عودة للتقويم
+        </a>
+        <div class="action-buttons-top">
+          <button id="print-btn" onclick="window.print()" class="print-btn-top">
+            <i class="fas fa-print"></i> طباعة
+          </button>
+          <button onclick="shareEvent()" class="share-btn-top">
+            <i class="fas fa-share-alt"></i> مشاركة الرابط
+          </button>
+        </div>
+      </div>
+
+      <div class="event-card {{ type }}">
+        <div class="event-top">
+          <div class="ev-icon {{ type }}"><i class="fas {{ type_icon }}"></i></div>
+          <div class="ev-badges">
+            <span class="ev-badge {{ type }}">{{ type_label }}</span>
+            <span class="ev-badge">{{ page.weekBadge }}</span>
+            <span class="ev-badge" id="currentBadge" style="display:none;">الأسبوع الحالي</span>
+          </div>
+        </div>
+
+        <h1 class="event-title {{ type }}">{{ page.title }}</h1>
+        <div class="event-details">{{ content | strip_html | strip_newlines }}</div>
+
+        <div class="event-meta">
+          <span id="eventDate"><i class="far fa-calendar-alt"></i></span>
+          <span><i class="fas fa-graduation-cap"></i> {{ page.semester }}</span>
+        </div>
+
+        <div class="countdown-block">
+          <span class="countdown-label" id="countdownLabel">العد التنازلي</span>
+          <div class="countdown-box" id="countdownBox"></div>
+        </div>
+      </div>
+
+      <div class="event-url-card" id="urlCard" style="display:none;">
+        <span class="event-url-label"><i class="fas fa-link"></i> رابط الحدث</span>
+        <span id="eventUrl" style="direction:ltr; font-size:0.82rem; color: var(--text-main); word-break: break-all;"></span>
+      </div>
+
+    </div>
+  </div>
+
+  {% include footer.html %}
+
+  <script>
+    const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+    // بيانات الحدث محقونة من Jekyll
+    const eventDateStr = "{{ page.date | date: '%Y-%m-%d' }}";
+    const eventTitle = {{ page.title | jsonify }};
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+    }
+
+    function parseDate(dateStr) {
+      const parts = dateStr.split('-');
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function passed() {
+      const end = parseDate(eventDateStr);
+      end.setDate(end.getDate() + 7);
+      return end < new Date();
+    }
+
+    function isCurrent() {
+      const today = new Date();
+      const start = parseDate(eventDateStr);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 7);
+      return today >= start && today < end;
+    }
+
+    function renderDate() {
+      const d = parseDate(eventDateStr);
+      document.getElementById('eventDate').innerHTML =
+        `<i class="far fa-calendar-alt"></i> ${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+      if (isCurrent()) document.getElementById('currentBadge').style.display = 'inline-block';
+    }
+
+    function renderUrl() {
+      const card = document.getElementById('urlCard');
+      if (!card) return;
+      card.style.display = 'flex';
+      document.getElementById('eventUrl').textContent = window.location.href;
+    }
+
+    let countdownTimer = null;
+
+    function renderCountdown() {
+      clearInterval(countdownTimer);
+      const label = document.getElementById('countdownLabel');
+      const box = document.getElementById('countdownBox');
+
+      if (passed()) {
+        label.textContent = 'انتهى هذا الحدث';
+        box.innerHTML = '';
+        return;
+      }
+
+      let target;
+      if (isCurrent()) {
+        label.textContent = 'العد التنازلي لنهاية الأسبوع';
+        target = parseDate(eventDateStr);
+        target.setDate(target.getDate() + 7);
+      } else {
+        label.textContent = 'العد التنازلي لبداية الحدث';
+        target = parseDate(eventDateStr);
+      }
+
+      function tick() {
+        const now = new Date();
+        let diff = target - now;
+        if (diff < 0) diff = 0;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        box.innerHTML = `
+          <div class="countdown-unit"><span class="countdown-num">${days}</span><span class="countdown-unit-text">يوم</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${hours}</span><span class="countdown-unit-text">ساعة</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${minutes}</span><span class="countdown-unit-text">دقيقة</span></div>
+          <div class="countdown-unit"><span class="countdown-num">${seconds}</span><span class="countdown-unit-text">ثانية</span></div>
+        `;
+      }
+      tick();
+      countdownTimer = setInterval(tick, 1000);
+    }
+
+    function shareEvent() {
+      const url = window.location.href;
+      if (navigator.share) {
+        navigator.share({ title: eventTitle, url: url }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => alert('تم نسخ الرابط')).catch(() => { prompt('انسخ الرابط', url); });
+      } else {
+        prompt('انسخ الرابط', url);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDate();
+      renderCountdown();
+      renderUrl();
+      document.getElementById('main-content-area').classList.add('loaded');
+      rawafidHideLoader();
+    });
+  </script>
+
+</body>
+</html>
