@@ -9,11 +9,15 @@ permalink: /blog/:slug
 # تنسيقات التاريخ
 timezone: Asia/Muscat
 
+# التقويم الأكاديمي أحداثه كلها بتواريخ مستقبلية، فيجب نشرها دائماً
+future: true
+
 # صفحة مستقلة لكل حدث في التقويم: /events/<slug>/
 collections:
   events:
     output: true
     permalink: /events/:name/
+    future: true
 
 # استبعاد الملفات غير المطلوبة في النشر
 exclude:
