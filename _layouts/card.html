@@ -9,7 +9,7 @@
     
     <script>
         (function() {
-            var savedTheme = localStorage.getItem('rawafed-theme');
+            var savedTheme = localStorage.getItem('rawafed-card-theme');
             if (['light','dark','pink','green','purple','orange'].indexOf(savedTheme) === -1) savedTheme = 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
@@ -456,7 +456,7 @@
 
     // --- 2. إدارة المظهر (نظام الثيمات الموحّد) ---
     const THEMES = ['light', 'dark', 'pink', 'green', 'purple', 'orange'];
-    const savedTheme = localStorage.getItem('rawafed-theme');
+    const savedTheme = localStorage.getItem('rawafed-card-theme');
     const validSaved = THEMES.indexOf(savedTheme) !== -1 ? savedTheme : 'light';
     document.documentElement.setAttribute('data-theme', validSaved);
 
@@ -465,7 +465,7 @@
         const curIdx = THEMES.indexOf(currentTheme);
         const next = THEMES[(curIdx + 1) % THEMES.length];
         document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('rawafed-theme', next);
+        localStorage.setItem('rawafed-card-theme', next);
     }
 
     // --- 3. وظائف البطاقات ---

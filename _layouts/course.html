@@ -25,7 +25,7 @@
   <script>
     (function() {
       const savedTheme = localStorage.getItem('rawafed-theme');
-      document.documentElement.setAttribute('data-theme', ['light','dark','pink','green','purple','orange'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
     })();
   </script>
 
