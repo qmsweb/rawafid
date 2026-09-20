@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# صفحات داخلية لا داعي لفهرستها
+Disallow: /search
+Disallow: /rate
+Disallow: /404
+Disallow: /links/
+Disallow: /c/
+
+Sitemap: https://rawafid.jassim.one/sitemap.xml

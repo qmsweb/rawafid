@@ -30,6 +30,11 @@ tools:
     icon: "fas fa-dharmachakra"
     show_on_home: true
 
+  - name: "QR Maker"
+    url: "/tools/qr-maker"
+    icon: "fas fa-qrcode"
+    show_on_home: true
+
 # مشاريع خارجية أخرى
 projects:
   - name: "منصة صوامت"

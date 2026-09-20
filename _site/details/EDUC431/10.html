@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>اختبار تفاعلي (الاختبار الأول)</title>
+
+  <link rel="icon" href="/images/favicon.png" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="/topbar.css" />
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === إعدادات الألوان والمتغيرات === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #121e9ec4;
+      --text-color: #1d1d1d;
+      --text-muted: #666666;
+      --bg-color: #f8f9fc;
+      --bg-card: #ffffff;
+      --border-color: #e0e0e0;
+      --bg-pdf: #f4f4f7;
+      --btn-secondary-bg: #eff3ff;
+      --btn-secondary-text: #1a2ac6;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb; 
+      --primary-dark: #5c6bc0;
+      --text-color: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-color: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --bg-pdf: #2c2c2c;
+      --btn-secondary-bg: #2c2e3e;
+      --btn-secondary-text: #7986cb;
+    }
+
+    * { box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      margin: 0; padding: 0; 
+      background-color: var(--bg-color); 
+      color: var(--text-color);
+      padding-bottom: 90px;
+      padding-top: 60px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-header {
+      margin-top: 30px; 
+      padding: 0 20px;
+      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between; 
+      max-width: 900px; margin-left: auto; margin-right: auto;
+    }
+
+    .action-buttons-top {
+      display: flex; gap: 8px;
+    }
+
+    .back-btn, .share-btn-top, .print-btn-top, .related-btn-top {
+      text-decoration: none; color: var(--primary-color); 
+      font-weight: 700; font-size: 0.9rem;
+      display: inline-flex; align-items: center; gap: 8px; 
+      padding: 8px 16px;
+      background: var(--bg-card); 
+      border-radius: 50px; transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+    
+    .back-btn:hover, .share-btn-top:hover, .print-btn-top:hover, .related-btn-top:hover { 
+      background: var(--primary-color); 
+      color: #ffffff; 
+      border-color: var(--primary-color); 
+    }
+
+    /* حاوية زر المتعلقات الجديد */
+    .related-btn-wrapper {
+      max-width: 900px; 
+      margin: 0 auto 15px auto; 
+      padding: 0 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .content-container { 
+      max-width: 900px; margin: 0 auto; 
+      padding: 0 20px; 
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .item-title { 
+      font-size: 1.6rem; font-weight: 800; 
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      font-feature-settings: "ss01";
+      color: var(--text-color); 
+      margin-bottom: 5px; margin-top: 0; line-height: 1.3; 
+    }
+
+    .item-meta { 
+      font-size: 0.9rem; 
+      color: var(--text-muted); 
+      margin-bottom: 20px; 
+      display: flex; align-items: center; gap: 8px; 
+    }
+    .item-meta i { color: var(--primary-color); }
+
+    .item-description { 
+      font-size: 1rem; 
+      color: var(--text-color); 
+      line-height: 1.7; 
+      margin-bottom: 20px; 
+      white-space: pre-wrap; 
+      opacity: 0.9;
+    }
+
+    .bold-black-text { font-weight: 900; color: #000000; }
+    [data-theme="dark"] .bold-black-text { color: #ffffff; }
+
+    .image-wrapper { 
+      width: 100%; border-radius: 12px; overflow: hidden; 
+      margin-bottom: 15px; 
+      border: 1px solid var(--border-color); 
+    }
+    .image-wrapper img { 
+      width: 100%; height: auto; display: block; max-height: 450px; 
+      object-fit: contain; 
+      background: var(--bg-card); 
+    }
+
+    .video-wrapper { 
+      width: 100%; border-radius: 12px; overflow: hidden; 
+      margin-bottom: 15px; 
+      border: 1px solid var(--border-color); 
+      background: #000; 
+      aspect-ratio: 16 / 9; 
+      position: relative; 
+    }
+    .video-wrapper iframe { 
+      width: 100%; height: 100%; display: block; border: none; 
+      position: absolute; top: 0; left: 0; 
+    }
+
+    .pdf-container {
+      width: calc(100% + 40px); margin-left: -20px; margin-right: -20px;
+      height: 90vh;
+      border: none; border-radius: 0;
+      overflow: hidden; background: var(--bg-pdf); 
+      margin-bottom: 10px; position: relative;
+    }
+    
+    .pdf-frame { width: 100%; height: 100%; border: none; display: block; }
+    .pdfjs-iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    .pdf-fallback {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 30px 20px; text-align: center; min-height: 300px;
+    }
+
+    .exit-fullscreen-btn {
+       display: none; position: fixed; top: 20px; left: 20px; z-index: 99999;
+       background: rgba(0, 0, 0, 0.8); color: white; border: none;
+       padding: 10px 20px; border-radius: 30px; cursor: pointer;
+       font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s;
+    }
+    .exit-fullscreen-btn:hover { background: #000; transform: scale(1.05); }
+
+    .floating-btns {
+      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+      z-index: 1000;
+      display: flex; flex-direction: column; gap: 8px;
+      align-items: center;
+      transition: opacity 0.3s ease;
+    }
+
+    .floating-btn {
+      text-decoration: none; color: var(--primary-color);
+      font-weight: 700; font-size: 0.85rem;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50px; transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer; white-space: nowrap;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="dark"] .floating-btn {
+      background: rgba(30, 30, 30, 0.85);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-btn:hover {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+    }
+    
+    .hidden { display: none !important; }
+    .loading-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+
+    body.fullscreen-active { padding: 0 !important; overflow: hidden; background: #222; }
+    body.fullscreen-active .content-container { padding: 0; margin: 0; max-width: none; }
+    body.fullscreen-active .item-title, body.fullscreen-active .item-meta, body.fullscreen-active .item-description,
+    body.fullscreen-active .image-wrapper, body.fullscreen-active .nav-header, body.fullscreen-active .related-btn-wrapper, body.fullscreen-active .floating-btns,
+    body.fullscreen-active #topbar-container { display: none !important; }
+
+    body.fullscreen-active .pdf-container {
+       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+       width: 100vw; height: 100vh; z-index: 9999; margin: 0; border-radius: 0; border: none; background: #000;
+    }
+    body.fullscreen-active .exit-fullscreen-btn { display: block; }
+
+    /* === إعدادات الطباعة === */
+    @media print {
+      /* إجبار الصفحة على اللون الفاتح لإبراز النص وتوفير الحبر */
+      :root, [data-theme="dark"] {
+        --primary-color: #000000 !important;
+        --bg-color: #ffffff !important;
+        --bg-card: #ffffff !important;
+        --text-color: #000000 !important;
+        --text-muted: #333333 !important;
+        --border-color: #000000 !important;
+      }
+      
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* إخفاء الأزرار وأشرطة التنقل أثناء الطباعة */
+      #topbar-container, .nav-header, .related-btn-wrapper, .floating-btns, .exit-fullscreen-btn, .loading-state {
+        display: none !important;
+      }
+
+      /* إزالة الهوامش لتوسيع المحتوى على الورقة */
+      .content-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* تنسيق الصور للطباعة */
+      .image-wrapper {
+        border: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .image-wrapper img {
+        max-height: 800px !important;
+      }
+
+      /* تنسيق PDF في حال تمت الطباعة العادية */
+      .pdf-container {
+        height: 80vh !important;
+        border: 1px solid #000 !important;
+        page-break-inside: avoid;
+      }
+      .pdf-fallback embed { display: none !important; }
+      .pdfjs-iframe { display: none !important; }
+    }
+
+    @media (max-width: 768px) {
+      .pdf-container { height: 82vh; }
+      body.fullscreen-active .pdf-container { height: 100vh; }
+    }
+  </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/details/EDUC431/10">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="المنصة العربية للتعليم والمراجع">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "المنصة العربية للتعليم والمراجع",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
+    { "@type": "ListItem", "position": 2, "name": "اختبار تفاعلي (الاختبار الأول)", "item": "https://rawafid.jassim.one/details/EDUC431/10" }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+  <button id="exit-fullscreen" class="exit-fullscreen-btn" onclick="toggleFullScreen(false)">
+      <i class="fas fa-times"></i> خروج
+  </button>
+
+  <!-- === مكون التحميل الموحد === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: var(--bg-body, #f4f6fb);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  [data-theme="dark"] #rawafid-loading-overlay {
+    background: var(--bg-body, #121212);
+  }
+  .rawafid-loader-spinner {
+    width: 44px; height: 44px;
+    border: 3.5px solid var(--border-color, #ccd1e0);
+    border-top-color: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+  .rawafid-loader-text {
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted, #666666);
+    letter-spacing: 0.3px;
+  }
+  .rawafid-loader-dots {
+    display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px;
+  }
+  .rawafid-loader-dots span {
+    width: 5px; height: 5px;
+    background: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<div id="rawafid-loading-overlay">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  function rawafidHideLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+  function rawafidShowLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+</script>
+
+
+  <div id="topbar-container">
+      <style>
+  :root {
+    --primary-color: #1a2ac6; /* اللون الأزرق للوضع الفاتح */
+    --nav-height: 70px;
+    --icon-size: 24px;
+    --btn-size: 42px;
+  }
+
+  /* === إعدادات الأوضاع === */
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --primary-color: #7986cb; 
+  }
+
+  [data-theme="dark"] .navbar {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  body {
+    padding-top: var(--nav-height);
+  }
+
+  /* === إعدادات النافبار === */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    height: var(--nav-height);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* === الشعار === */
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo img {
+    height: 38px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+   
+  .logo img.loaded { opacity: 1; }
+
+  .logo:hover img.loaded {
+    transform: scale(1.05);
+  }
+
+  /* === الروابط === */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcc00;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+    .nav-links a:hover { color: #ffcc00; }
+
+    /* === زر تغيير الوضع في القائمة الجانبية === */
+    .sidebar-theme-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-theme-toggle:hover { color: #ffcc00; }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      position: relative;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      transition: opacity 0.3s ease, transform 0.35s ease;
+    }
+
+    .sidebar-theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    .sidebar-theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+    /* === أزرار التحكم والأيقونات === */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+  }
+
+  .search-nav-btn { text-decoration: none; }
+
+  /* --- منطق زر المظهر (قمر/شمس) --- */
+  .theme-toggle-btn .icon-moon,
+  .theme-toggle-btn .icon-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+    transition: opacity 0.3s ease, transform 0.35s ease;
+  }
+
+  .theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  .theme-toggle-btn:hover svg { color: #ffcc00; }
+
+  /* --- زر القائمة (Menu Toggle) --- */
+  .menu-toggle-btn { display: none; }
+   
+  .menu-toggle-btn .close-icon { 
+    display: none; 
+    position: absolute;
+  }
+   
+  .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+  .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
+
+
+  /* === تصميم الجوال === */
+  @media (max-width: 768px) {
+    .menu-toggle-btn { display: flex; }
+    .theme-toggle-btn { display: none; }
+    .sidebar-theme-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: 75%;
+      max-width: 300px;
+      height: calc(100vh - var(--nav-height));
+      background-color: var(--primary-color);
+      
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+      backdrop-filter: blur(12px); 
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li { width: 100%; margin-bottom: 8px; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
+    
+    .nav-links.active li { opacity: 1; transform: translateX(0); }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.25s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) { transition-delay: 0.35s; }
+    .nav-links.active li:nth-child(6) { transition-delay: 0.4s; }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0;
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 998;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <img 
+        id="cached-logo"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+        data-url="/images/rawafid-1.png" 
+        alt="شعار روافد" 
+      />
+    </a>
+    
+    <div class="overlay" id="nav-overlay"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الصفحة الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="التبديل إلى الوضع الليلي">
+          <span class="sidebar-theme-icon">
+            <svg class="icon-moon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+            </svg>
+          </span>
+          <span id="sidebar-theme-label">المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="التبديل إلى الوضع الليلي" title="التبديل إلى الوضع الليلي">
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    /* === 1. كاش اللوجو === */
+    const logoImg = document.getElementById('cached-logo');
+    const targetUrl = logoImg.getAttribute('data-url');
+    const CACHE_KEY_DATA = 'rawafid_logo_data';
+    const CACHE_KEY_URL = 'rawafid_logo_url';
+    const cachedData = localStorage.getItem(CACHE_KEY_DATA);
+    const cachedUrl = localStorage.getItem(CACHE_KEY_URL);
+
+    function displayLogo(src) {
+        logoImg.src = src;
+        logoImg.onload = () => logoImg.classList.add('loaded');
+    }
+
+    if (cachedData && cachedUrl === targetUrl) {
+        displayLogo(cachedData);
+    } else {
+        displayLogo(targetUrl);
+        fetch(targetUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    try {
+                        localStorage.setItem(CACHE_KEY_DATA, reader.result);
+                        localStorage.setItem(CACHE_KEY_URL, targetUrl);
+                    } catch (e) {}
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+    }
+
+    /* === خدمة تخزين الخطوط (Service Worker) === */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register("/sw.js")
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    /* === 2. منطق القائمة المنسدلة === */
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpened = navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      document.body.style.overflow = isOpened ? 'hidden' : '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+    }
+
+    /* === 3. نظام الثيمات المركزي === */
+    var themeScript = document.createElement('script');
+    themeScript.src = "/assets/js/theme.js";
+    themeScript.async = false;
+    document.head.appendChild(themeScript);
+  });
+</script>
+ 
+  </div>
+
+  <div class="nav-header">
+    <a href="#" id="back-link" class="back-btn">
+      <i class="fas fa-arrow-right"></i> عودة للمقرر
+    </a>
+    <div class="action-buttons-top">
+      <button id="print-btn" onclick="printContent()" class="print-btn-top">
+        <i class="fas fa-print"></i> طباعة
+      </button>
+      <button onclick="sharePage()" class="share-btn-top">
+        <i class="fas fa-share-alt"></i> مشاركة
+      </button>
+    </div>
+  </div>
+
+  <div class="related-btn-wrapper" id="related-wrapper" style="display: none;">
+    <a href="#" id="related-btn" class="related-btn-top">
+      <i class="fas fa-link"></i> <span id="related-btn-text"></span>
+    </a>
+  </div>
+
+  <div class="content-container" id="main-content">
+    
+
+    
+    <div class="loading-state">
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
+        جاري التحميل...
+    </div>
+  </div>
+
+  <div class="floating-btns hidden" id="floating-actions"></div>
+
+<script>
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  const BASE_URL = "";
+
+  function getIconClass(type) {
+    if (type === 'pdf') return 'fas fa-file-pdf';
+    if (type === 'videos') return 'fab fa-youtube';
+    return 'fas fa-file-alt';
+  }
+
+  function getYoutubeVideoId(url) {
+    if (!url) return null;
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.toLowerCase();
+      if (host.includes('youtu.be')) {
+        const id = parsed.pathname.split('/')[1] || '';
+        return id || null;
+      }
+      if (host.includes('youtube.com') || host.includes('youtube-nocookie.com')) {
+        const path = parsed.pathname;
+        if (path === '/watch') {
+          return parsed.searchParams.get('v');
+        }
+        if (path.startsWith('/embed/') || path.startsWith('/shorts/')) {
+          const id = path.split('/')[2] || '';
+          return id || null;
+        }
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function toggleFullScreen(forceState) {
+      const body = document.body;
+      const isActive = body.classList.contains('fullscreen-active');
+      const newState = (typeof forceState !== 'undefined') ? forceState : !isActive;
+      if (newState) body.classList.add('fullscreen-active');
+      else body.classList.remove('fullscreen-active');
+  }
+
+  // === دالة الطباعة ===
+  function printContent() {
+    const pdfFrame = document.querySelector('.pdfjs-iframe');
+    
+    // إذا كان هناك ملف PDF معروض في عارض pdfjs، نطبع من الصفحة الرئيسية
+    if (pdfFrame && pdfFrame.contentWindow) {
+      try {
+        window.print();
+        return;
+      } catch (error) {
+        console.warn("تعذرت طباعة إطار PDF، سيتم استخدام الطباعة العادية.");
+      }
+    }
+    
+    // الطباعة العادية في حال كان المحتوى صورة أو نصاً
+    window.print();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // عنوان المقرر ومعرّف العنصر يُحقنان عبر Jekyll في الصفحات النظيفة /details/CODE/ID
+    const pageCourse = "EDUC431";
+    const pageItemId = "10";
+    const urlParams = new URLSearchParams(window.location.search);
+    let courseCode = urlParams.get('i') || pageCourse;
+    let itemId = urlParams.get('id') || pageItemId;
+    const contentDiv = document.getElementById('main-content');
+    const floatingBtns = document.getElementById('floating-actions');
+    const backLink = document.getElementById('back-link');
+    const printBtn = document.getElementById('print-btn');
+    const relatedBtn = document.getElementById('related-btn');
+    const relatedBtnText = document.getElementById('related-btn-text');
+    const relatedWrapper = document.getElementById('related-wrapper');
+
+    backLink.addEventListener('click', (e) => {
+        if (courseCode && courseCode !== 'null') {
+            backLink.href = `${BASE_URL}/course/${courseCode}`;
+        } else {
+            e.preventDefault();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                backLink.href = `${BASE_URL}/index.html`;
+            }
+        }
+    });
+
+    if(courseCode) {
+        backLink.href = `${BASE_URL}/course/${courseCode}`;
+    }
+
+    const timestamp = new Date().getTime();
+    
+    fetch(`${BASE_URL}/assets/data/${courseCode}.json?v=${timestamp}`, { cache: "no-store" })
+      .then(res => res.json())
+      .then(data => {
+        rawafidHideLoader();
+        
+        const item = data.items.find(x => x.id == itemId || x['time-ms'] == itemId);
+        
+        if (!item) {
+            contentDiv.innerHTML = `
+            <div style="text-align:center; padding:80px 20px; color:var(--text-muted);">
+                <i class="fas fa-exclamation-triangle fa-3x" style="color:var(--primary-color); margin-bottom:15px;"></i>
+                <h3 style="color:var(--text-color); margin-bottom:10px;">عذراً، المحتوى غير متوفر</h3>
+                <p>لم نتمكن من العثور على هذا العنصر، ربما تم حذفه أو أن الرابط غير صحيح.</p>
+            </div>`;
+            return;
+        }
+
+        // تحويل العناصر المرتبطة بتدوينة (مفتاح direct) إلى رابط التدوينة مباشرة
+        if (item.direct === 'yes' && item.url) {
+            window.location.replace(item.url);
+            return;
+        }
+
+        // معالجة زر المتعلقات
+        if (item.related && item.related.course && item.related.id) {
+            relatedWrapper.style.display = 'flex'; // إظهار الحاوية
+            relatedBtn.href = `${BASE_URL}/details/${item.related.course}/${item.related.id}`;
+            relatedBtnText.textContent = "...";
+            
+            // جلب اسم العنصر المتعلق من ملف المقرر الخاص به
+            fetch(`${BASE_URL}/assets/data/${item.related.course}.json?v=${timestamp}`, { cache: "no-store" })
+                .then(r => r.json())
+                .then(relatedData => {
+                    const rItem = relatedData.items.find(x => x.id == item.related.id || x['time-ms'] == item.related.id);
+                    if (rItem && rItem.title) {
+                        relatedBtnText.textContent = rItem.title;
+                    } else {
+                        relatedBtnText.textContent = "عنصر مرتبط";
+                    }
+                })
+                .catch(() => {
+                    relatedBtnText.textContent = "عنصر مرتبط";
+                });
+        }
+
+        document.title = item.title;
+        let mediaHTML = '';
+
+        const isPdf = (item.type === 'pdf') || (item.download_url && item.download_url.toLowerCase().endsWith('.pdf'));
+
+        // إخفاء زر الطباعة إذا كان الملف PDF
+        if (printBtn) {
+            if (isPdf) {
+                printBtn.style.display = 'none';
+            } else {
+                printBtn.style.display = 'inline-flex';
+            }
+        }
+
+        if (isPdf && item.download_url) {
+            const absolutePdfUrl = new URL(item.download_url, window.location.href).href;
+            const pdfViewerUrl = `${BASE_URL}/pdfjs/web/viewer.html?file=${encodeURIComponent(absolutePdfUrl)}`;
+            mediaHTML = `<div class="pdf-container" id="pdf-wrapper">
+                <iframe id="pdf-embed" src="${pdfViewerUrl}" class="pdfjs-iframe" allowfullscreen></iframe>
+                <div class="pdf-fallback" id="pdf-fallback" style="display:none;">
+                    <i class="fas fa-file-pdf fa-3x" style="color:var(--primary-color); margin-bottom:15px;"></i>
+                    <p style="margin-bottom:15px; color:var(--text-muted);">تعذر عرض الملف مباشرة، يمكنك تحميله أو فتحه في تبويب جديد:</p>
+                    <a href="${absolutePdfUrl}" target="_blank" class="action-btn btn-primary" style="display:inline-flex; text-decoration:none; margin-bottom:10px; flex:none;"><i class="fas fa-external-link-alt"></i> فتح الملف في تبويب جديد</a>
+                </div>
+            </div>`;
+        }
+        else if (item.type === 'videos' && getYoutubeVideoId(item.preview_url)) {
+            const youtubeId = getYoutubeVideoId(item.preview_url);
+            mediaHTML = `<div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/${youtubeId}" title="${item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>`;
+        }
+        else if (item.image_url) {
+            const imgSrc = item.image_url.startsWith('http') || item.image_url.startsWith('/')
+                ? item.image_url
+                : new URL(item.image_url, window.location.href).href;
+            mediaHTML = `<div class="image-wrapper"><img src="${imgSrc}" alt="${item.title}"></div>`;
+        }
+
+        let formattedDescription = item.description || '';
+        formattedDescription = formattedDescription.replace(/\*\*(.*?)\*\*/g, '<span class="bold-black-text">$1</span>');
+        formattedDescription = formattedDescription.replace(/\*(.*?)\*/g, '<span class="bold-black-text">$1</span>');
+
+        contentDiv.innerHTML = `
+            <div class="item-meta"><i class="${getIconClass(item.type)}"></i> <span>${data.name}</span></div>
+            <h1 class="item-title">${item.title}</h1>
+            <div class="item-description">${formattedDescription}</div>
+            ${mediaHTML}
+            <div style="height: 10px;"></div>`;
+
+        let buttonsHTML = '';
+        if (item.download_url) {
+            const downloadLabel = isPdf ? 'تحميل بهيئة PDF' : 'تحميل';
+            buttonsHTML += `<a href="${item.download_url}" class="floating-btn" download target="_blank"><i class="fas fa-download"></i> ${downloadLabel}</a>`;
+        }
+      
+        if (isPdf && item.download_url) {
+             buttonsHTML += `<button onclick="toggleFullScreen(true)" class="floating-btn"><i class="fas fa-expand"></i> ملء الشاشة</button>`;
+        } 
+        else if (item.preview_url) {
+             buttonsHTML += `<a href="${item.preview_url}" class="floating-btn" target="_blank"><i class="fas fa-external-link-alt"></i> فتح</a>`;
+        }
+      
+        if (buttonsHTML.trim() !== '') {
+            floatingBtns.innerHTML = buttonsHTML;
+            floatingBtns.classList.remove('hidden');
+        } else {
+            floatingBtns.classList.add('hidden');
+        }
+
+        if (isPdf && item.download_url) {
+            const pdfEmbed = document.getElementById('pdf-embed');
+            const pdfFallback = document.getElementById('pdf-fallback');
+            if (pdfEmbed && pdfFallback) {
+                let loadTimeout = setTimeout(() => {
+                    pdfEmbed.style.display = 'none';
+                    pdfFallback.style.display = 'flex';
+                }, 8000);
+                pdfEmbed.addEventListener('load', () => {
+                    clearTimeout(loadTimeout);
+                });
+                pdfEmbed.addEventListener('error', () => {
+                    clearTimeout(loadTimeout);
+                    pdfEmbed.style.display = 'none';
+                    pdfFallback.style.display = 'flex';
+                });
+            }
+        }
+      })
+      .catch(err => {
+        rawafidHideLoader();
+         contentDiv.innerHTML = `<div style="text-align:center; padding:30px; color:red;">خطأ في التحميل: ${err.message}</div>`;
+      });
+  });
+
+  function sharePage() {
+    if (navigator.share) navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
+    else { navigator.clipboard.writeText(window.location.href); alert('تم النسخ'); }
+  }
+</script>
+</body>
+</html>

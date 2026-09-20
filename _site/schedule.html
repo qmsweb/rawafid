@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الجدول الدراسي - روافد</title>
+
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <link rel="icon" href="/images/favicon.png" type="image/jpg">
+  <meta property="og:title" content="الجدول الدراسي - روافد">
+  <meta property="og:description" content="أداة لتنظيم وطباعة الجدول الدراسي الجامعي.">
+  <meta property="og:image" content="https://rawafid.jassim.one/images/schedule.png">
+  <meta property="og:url" content="https://rawafid.jassim.one/schedule">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات والألوان === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header & Actions === */
+    .tool-header {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    .action-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 6px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .action-btn:hover { background: var(--bg-code); color: var(--primary-color); border-color: var(--primary-color); }
+    .primary-btn { background: var(--primary-color) !important; color: white !important; border: none !important; }
+    .primary-btn:hover { opacity: 0.9; }
+    .delete-btn { color: #e74c3c !important; border-color: #e74c3c !important; }
+    .delete-btn:hover { background: #e74c3c !important; color: white !important; }
+
+    /* === Form Styles === */
+    .ios-list-group {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 30px;
+        border: 1px solid var(--border-color);
+    }
+
+    .list-header {
+        background: var(--bg-code);
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-content { padding: 20px; }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+    }
+
+    .input-group { display: flex; flex-direction: column; gap: 8px; }
+    .full-width { grid-column: span 3; }
+
+    .input-field {
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: 0.2s;
+        width: 100%;
+    }
+    .input-field:focus { border-color: var(--primary-color); outline: none; }
+
+    label { font-weight: 600; font-size: 0.9rem; color: var(--text-main); }
+
+    /* Checkboxes */
+    .days-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        padding: 5px 0;
+    }
+    .day-option {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    /* === Schedule Table (Result) === */
+    .schedule-preview {
+        background: white;
+        padding: 0;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+
+    .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+        font-size: 0.95rem;
+    }
+
+    .schedule-table th, .schedule-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+        color: black; /* Always black for readability/printing */
+    }
+
+    .schedule-table th {
+        background-color: #f8f9fa;
+        font-weight: 700;
+        height: 50px;
+    }
+
+    .schedule-table td { height: 60px; }
+
+    /* Course Detail Cell Styling */
+    .course-details {
+        text-align: right !important;
+        padding-right: 15px !important;
+    }
+    .course-title { font-weight: 800; font-size: 1.1rem; display: block; margin-bottom: 4px; }
+    .course-meta { display: block; font-size: 0.85rem; color: #444; }
+    .course-meta span { margin-left: 10px; }
+    .course-meta i { margin-left: 4px; color: #666; }
+
+    .time-slot {
+        font-weight: 600;
+        display: block;
+        background: #f1f3f5;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .full-width { grid-column: span 1; }
+        .tool-header { flex-direction: column; align-items: flex-start; }
+        .header-actions { width: 100%; flex-wrap: wrap; }
+        .action-btn { flex: 1; justify-content: center; }
+    }
+
+    /* === Print Styles (PDF) === */
+    @media print {
+        @page { size: landscape; margin: 10mm; }
+        body { background: white; padding: 0; color: black; }
+        
+        .no-print, header, footer, .tool-header, .ios-list-group, .action-btn { 
+            display: none !important; 
+        }
+
+        .container { 
+            max-width: 100%; 
+            width: 100%; 
+            padding: 0; 
+            margin: 0; 
+        }
+
+        .schedule-preview {
+            border: none;
+            box-shadow: none;
+            display: block !important;
+        }
+
+        .schedule-table {
+            border: 2px solid black;
+            width: 100%;
+        }
+
+        .schedule-table th, .schedule-table td {
+            border: 1px solid black !important;
+            color: black !important;
+        }
+
+        .schedule-table th {
+            background-color: #eee !important;
+            -webkit-print-color-adjust: exact;
+        }
+        
+        /* Ensure specific columns have correct widths in print */
+        .col-day { width: 14%; }
+        .col-info { width: 30%; }
+    }
+  </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/schedule">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="منشئ الجدول الدراسي لتنظيم المحاضرات والمواعيد - منصة روافد.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "المنصة العربية للتعليم والمراجع",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
+    { "@type": "ListItem", "position": 2, "name": "الجدول الدراسي - روافد", "item": "https://rawafid.jassim.one/schedule" }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+  <!-- === مكون التحميل الموحد === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: var(--bg-body, #f4f6fb);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  [data-theme="dark"] #rawafid-loading-overlay {
+    background: var(--bg-body, #121212);
+  }
+  .rawafid-loader-spinner {
+    width: 44px; height: 44px;
+    border: 3.5px solid var(--border-color, #ccd1e0);
+    border-top-color: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+  .rawafid-loader-text {
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted, #666666);
+    letter-spacing: 0.3px;
+  }
+  .rawafid-loader-dots {
+    display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px;
+  }
+  .rawafid-loader-dots span {
+    width: 5px; height: 5px;
+    background: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<div id="rawafid-loading-overlay">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  function rawafidHideLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+  function rawafidShowLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+</script>
+
+
+  <style>
+  :root {
+    --primary-color: #1a2ac6; /* اللون الأزرق للوضع الفاتح */
+    --nav-height: 70px;
+    --icon-size: 24px;
+    --btn-size: 42px;
+  }
+
+  /* === إعدادات الأوضاع === */
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --primary-color: #7986cb; 
+  }
+
+  [data-theme="dark"] .navbar {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  body {
+    padding-top: var(--nav-height);
+  }
+
+  /* === إعدادات النافبار === */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    height: var(--nav-height);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* === الشعار === */
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo img {
+    height: 38px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+   
+  .logo img.loaded { opacity: 1; }
+
+  .logo:hover img.loaded {
+    transform: scale(1.05);
+  }
+
+  /* === الروابط === */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcc00;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+    .nav-links a:hover { color: #ffcc00; }
+
+    /* === زر تغيير الوضع في القائمة الجانبية === */
+    .sidebar-theme-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-theme-toggle:hover { color: #ffcc00; }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      position: relative;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      transition: opacity 0.3s ease, transform 0.35s ease;
+    }
+
+    .sidebar-theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    .sidebar-theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+    /* === أزرار التحكم والأيقونات === */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+  }
+
+  .search-nav-btn { text-decoration: none; }
+
+  /* --- منطق زر المظهر (قمر/شمس) --- */
+  .theme-toggle-btn .icon-moon,
+  .theme-toggle-btn .icon-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+    transition: opacity 0.3s ease, transform 0.35s ease;
+  }
+
+  .theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  .theme-toggle-btn:hover svg { color: #ffcc00; }
+
+  /* --- زر القائمة (Menu Toggle) --- */
+  .menu-toggle-btn { display: none; }
+   
+  .menu-toggle-btn .close-icon { 
+    display: none; 
+    position: absolute;
+  }
+   
+  .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+  .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
+
+
+  /* === تصميم الجوال === */
+  @media (max-width: 768px) {
+    .menu-toggle-btn { display: flex; }
+    .theme-toggle-btn { display: none; }
+    .sidebar-theme-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: 75%;
+      max-width: 300px;
+      height: calc(100vh - var(--nav-height));
+      background-color: var(--primary-color);
+      
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+      backdrop-filter: blur(12px); 
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li { width: 100%; margin-bottom: 8px; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
+    
+    .nav-links.active li { opacity: 1; transform: translateX(0); }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.25s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) { transition-delay: 0.35s; }
+    .nav-links.active li:nth-child(6) { transition-delay: 0.4s; }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0;
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 998;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <img 
+        id="cached-logo"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+        data-url="/images/rawafid-1.png" 
+        alt="شعار روافد" 
+      />
+    </a>
+    
+    <div class="overlay" id="nav-overlay"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الصفحة الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="التبديل إلى الوضع الليلي">
+          <span class="sidebar-theme-icon">
+            <svg class="icon-moon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+            </svg>
+          </span>
+          <span id="sidebar-theme-label">المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="التبديل إلى الوضع الليلي" title="التبديل إلى الوضع الليلي">
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    /* === 1. كاش اللوجو === */
+    const logoImg = document.getElementById('cached-logo');
+    const targetUrl = logoImg.getAttribute('data-url');
+    const CACHE_KEY_DATA = 'rawafid_logo_data';
+    const CACHE_KEY_URL = 'rawafid_logo_url';
+    const cachedData = localStorage.getItem(CACHE_KEY_DATA);
+    const cachedUrl = localStorage.getItem(CACHE_KEY_URL);
+
+    function displayLogo(src) {
+        logoImg.src = src;
+        logoImg.onload = () => logoImg.classList.add('loaded');
+    }
+
+    if (cachedData && cachedUrl === targetUrl) {
+        displayLogo(cachedData);
+    } else {
+        displayLogo(targetUrl);
+        fetch(targetUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    try {
+                        localStorage.setItem(CACHE_KEY_DATA, reader.result);
+                        localStorage.setItem(CACHE_KEY_URL, targetUrl);
+                    } catch (e) {}
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+    }
+
+    /* === خدمة تخزين الخطوط (Service Worker) === */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register("/sw.js")
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    /* === 2. منطق القائمة المنسدلة === */
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpened = navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      document.body.style.overflow = isOpened ? 'hidden' : '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+    }
+
+    /* === 3. نظام الثيمات المركزي === */
+    var themeScript = document.createElement('script');
+    themeScript.src = "/assets/js/theme.js";
+    themeScript.async = false;
+    document.head.appendChild(themeScript);
+  });
+</script>
+
+
+  <div class="container">
+    
+    <div class="tool-header no-print">
+      <div>
+          <h1>منشئ الجدول الدراسي</h1>
+          <p>أدخل مقرراتك يدويًا ثم اطبع الجدول بصيغة PDF</p>
+      </div>
+      
+      <div class="header-actions">
+          <button class="action-btn" onclick="clearTable()">
+            <i class="fas fa-trash-alt"></i> حذف الجدول
+          </button>
+          <button class="action-btn primary-btn" onclick="printSchedule()">
+            <i class="fas fa-print"></i> طباعة / PDF
+          </button>
+      </div>
+    </div>
+
+    <div class="ios-list-group no-print">
+        <div class="list-header">
+            <span>إضافة مقرر جديد</span>
+        </div>
+        
+        <div class="form-content">
+            <div class="form-grid">
+                
+                <div class="input-group">
+                    <label>اسم المقرر</label>
+                    <input type="text" id="cName" class="input-field" placeholder="النحو العربي">
+                </div>
+
+                <div class="input-group">
+                    <label>الدكتور</label>
+                    <input type="text" id="cProf" class="input-field" placeholder="د. محمد...">
+                </div>
+
+                <div class="input-group">
+                    <label>القاعة</label>
+                    <input type="text" id="cRoom" class="input-field" placeholder="101 / عن بعد">
+                </div>
+
+                <div class="input-group">
+                    <label>التوقيت</label>
+                    <input type="text" id="cTime" class="input-field" placeholder="08:00 - 10:00">
+                </div>
+                
+                <div class="input-group full-width">
+                    <label>الأيام</label>
+                    <div class="days-container">
+                        <label class="day-option"><input type="checkbox" value="sun"> الأحد</label>
+                        <label class="day-option"><input type="checkbox" value="mon"> الإثنين</label>
+                        <label class="day-option"><input type="checkbox" value="tue"> الثلاثاء</label>
+                        <label class="day-option"><input type="checkbox" value="wed"> الأربعاء</label>
+                        <label class="day-option"><input type="checkbox" value="thu"> الخميس</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 25px;">
+                <button class="action-btn primary-btn" onclick="addCourse()" style="width: 100%; justify-content: center; padding: 12px;">
+                    <i class="fas fa-plus-circle"></i> إضافة للجدول
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-container" style="display:none;">
+        <div class="ios-list-group schedule-preview">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th class="col-day">الخميس</th>
+                        <th class="col-day">الأربعاء</th>
+                        <th class="col-day">الثلاثاء</th>
+                        <th class="col-day">الإثنين</th>
+                        <th class="col-day">الأحد</th>
+                        <th class="col-info">بيانات المقرر</th>
+                        <th class="no-print" style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/images/jassim-logo.png" 
+             alt="روافد" 
+             class="footer-logo" 
+             loading="lazy" 
+             width="45" 
+             height="45">
+        <span class="copy-text">&copy; 2026 جاسم الفارسي · جميع الحقوق محفوظة</span>
+      </div>
+
+      <div class="footer-actions">
+        <nav class="footer-links">
+          <a href="/">الرئيسة</a>
+          <a href="/about">عن روافد</a>
+        </nav>
+
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn-compact" target="_blank" rel="noopener" aria-label="انضم لقناتنا">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>قناتنا</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  :root {
+    --footer-text: #000000;
+    --footer-copy-text: #666666;
+    --whatsapp-green: #25D366;
+    --logo-filter: brightness(0);
+  }
+
+  [data-theme="dark"] {
+    --footer-text: #e0e0e0;
+    --footer-copy-text: #a0a0a0;
+    --logo-filter: brightness(0) invert(1);
+  }
+
+  .site-footer, .site-footer * { box-sizing: border-box; }
+
+  .site-footer {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    margin-top: 1.5rem;
+    color: var(--footer-text);
+    direction: rtl;
+    border-top: 1px solid rgba(128,128,128,0.15);
+    overflow: hidden;
+  }
+
+  .footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-logo {
+    height: 26px;
+    width: auto;
+    filter: var(--logo-filter);
+    transition: filter 0.3s;
+    display: block;
+  }
+
+  .copy-text {
+    font-size: 0.78rem;
+    color: var(--footer-copy-text);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .footer-links a {
+    color: var(--footer-text);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .footer-links a:hover {
+    opacity: 1;
+    color: var(--primary-color, #1a2ac6);
+    background: var(--primary-light-bg, #eff1ff);
+  }
+
+  .whatsapp-btn-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--whatsapp-green);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.25s;
+  }
+
+  .whatsapp-btn-compact:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  }
+
+  /* === شاشة الجوال: سطر حقوق واحد مضغوط === */
+  @media (max-width: 768px) {
+    .site-footer {
+      padding: 0.5rem 0.6rem;
+      margin-top: 1rem;
+      border-top: none;
+    }
+
+    .footer-inner {
+      flex-direction: row;
+      gap: 0;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-actions {
+      gap: 0;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    .footer-brand {
+      flex: 1;
+      justify-content: center;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .footer-logo {
+      height: 18px;
+    }
+
+    .copy-text {
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .footer-links {
+      display: none;
+    }
+
+    .whatsapp-btn-compact {
+      font-size: 0.68rem;
+      padding: 5px 9px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* شاشات ضيقة جداً: تقليص إضافي */
+  @media (max-width: 380px) {
+    .copy-text { font-size: 0.6rem; }
+    .whatsapp-btn-compact { padding: 4px 8px; }
+    .whatsapp-btn-compact span { display: none; }
+  }
+</style>
+
+
+<script>
+  /* === Theme Logic === */
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  /* === Schedule Logic === */
+  function addCourse() {
+      // 1. Get Values
+      const name = document.getElementById('cName').value.trim();
+      const prof = document.getElementById('cProf').value.trim();
+      const room = document.getElementById('cRoom').value.trim();
+      const time = document.getElementById('cTime').value.trim();
+      
+      // Get Days
+      const days = Array.from(document.querySelectorAll('.days-container input:checked')).map(cb => cb.value);
+
+      if (!name || days.length === 0) {
+          alert('يرجى إدخال اسم المقرر واختيار يوم واحد على الأقل');
+          return;
+      }
+
+      // 2. Show Table
+      document.getElementById('result-container').style.display = 'block';
+
+      // 3. Build Row
+      const tbody = document.getElementById('scheduleBody');
+      const tr = document.createElement('tr');
+
+      // Helper for cells
+      const createDayCell = (dayCode) => {
+          if (days.includes(dayCode)) {
+              return `<td><span class="time-slot">${time}</span></td>`;
+          } else {
+              return `<td>-</td>`;
+          }
+      };
+
+      // HTML Structure for Row (RTL: Thu -> Sun)
+      tr.innerHTML = `
+          ${createDayCell('thu')}
+          ${createDayCell('wed')}
+          ${createDayCell('tue')}
+          ${createDayCell('mon')}
+          ${createDayCell('sun')}
+          
+          <td class="course-details">
+              <span class="course-title">${name}</span>
+              <div class="course-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> ${room}</span>
+                  <span><i class="fas fa-user-tie"></i> ${prof}</span>
+              </div>
+          </td>
+
+          <td class="no-print">
+              <button class="action-btn delete-btn" style="padding: 5px 10px;" onclick="this.closest('tr').remove()">
+                  <i class="fas fa-times"></i>
+              </button>
+          </td>
+      `;
+
+      tbody.appendChild(tr);
+
+      // 4. Reset Form
+      document.getElementById('cName').value = '';
+      document.getElementById('cTime').value = ''; 
+      // Keep Room/Prof as they might be similar (Optional UX choice)
+  }
+
+  function clearTable() {
+      if(confirm('هل أنت متأكد من حذف الجدول بالكامل؟')) {
+          document.getElementById('scheduleBody').innerHTML = '';
+          document.getElementById('result-container').style.display = 'none';
+      }
+  }
+
+  function printSchedule() {
+      window.print();
+  }
+
+  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
+  window.addEventListener('load', rawafidHideLoader);
+</script>
+
+</body>
+</html>

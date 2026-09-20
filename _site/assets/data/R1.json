@@ -1,0 +1,31 @@
+{
+    "name": "خطط تخصصات اللغة العربية",
+    "description": "في هذه الصفحة ستجد أبرز المحتويات التي تعني كل طلبة اللغة العربية بجامعة الشرقية.",
+    "items": [
+        {
+            "id": 1,
+            "title": "خطة بكالوريوس التربية في اللغة العربية (128 ساعة معتمدة)",
+            "description": "الخطة المعدلة لطلبة التربية في اللغة العربية، تم تعديلها في أبريل 2023",
+            "type": "documents",
+            "download_url": "https://m.jassim.one/R1/1.pdf",
+            "time-ms": "1756043599420"
+        },
+        {
+            "id": 2,
+            "title": "خطة بكالوريوس الآداب في اللغة العربية (123 ساعة معتمدة)",
+            "description": "",
+            "type": "documents",
+            "download_url": "https://m.jassim.one/R1/2.pdf",
+            "time-ms": "1756043599421"
+        },
+        {
+            "id": 3,
+            "title": "تقويم العام الأكاديمي 2026/2027 لجامعة الشرقية",
+            "description": "",
+            "image_url": "/images/banners/calendar-banner.png",
+            "type": "documents",
+            "download_url": "https://m.jassim.one/R1/%D8%AA%D9%82%D9%88%D9%8A%D9%85%20%D8%A7%D9%84%D8%B9%D8%A7%D9%85%20%D8%A7%D9%84%D8%A7%D9%94%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%202026%3A2027%20%D8%AC%D8%A7%D9%85%D8%B9%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9%20-%20%D8%B1%D9%88%D8%A7%D9%81%D8%AF.pdf",
+            "time-ms": "1756043599421"
+        }
+    ]
+}

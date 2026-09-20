@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تحليل نص حديث خنافر</title>
+
+  <link rel="icon" href="/images/favicon.png" type="image/jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  
+
+  <meta property="og:site_name" content="منصة روافد">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="تحليل نص حديث خنافر">
+  <meta property="og:url" content="https://rawafid.jassim.one/blog/kanafr">
+  <meta property="og:image" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="تحليل نص حديث خنافر">
+  <meta name="twitter:image" content="">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات (نفس هوية روافد) === */
+    :root {
+      --primary-color: #1a2ac6;
+      --primary-dark: #14209e;
+      --primary-light-bg: #eff1ff;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --bg-code: #f4f6fb;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #7986cb;
+      --primary-dark: #5c6bc0;
+      --primary-light-bg: #282a36;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-code: #2c2c2c;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* === الصفحة كاملة العرض (بدون بطاقة أو حواف) === */
+    .blog-page {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px 24px;
+    }
+
+    /* === شريط الرجوع والميتا === */
+    .blog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 50px;
+      transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+    .back-btn:hover { background: var(--primary-color); color: #ffffff; border-color: var(--primary-color); }
+
+    .action-buttons-top {
+      display: flex;
+      gap: 8px;
+    }
+
+    .share-btn-top, .print-btn-top, .related-btn-top {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 50px;
+      transition: 0.3s;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+    .share-btn-top:hover, .print-btn-top:hover, .related-btn-top:hover {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+    }
+
+    .related-btn-wrapper {
+      max-width: none;
+      margin: 0 auto 16px auto;
+      padding: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .article-meta .author-avatar {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      vertical-align: middle;
+      margin-inline-start: 6px;
+    }
+
+    #post-author {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: clamp(1.9rem, 3vw, 2rem);
+      font-weight: 800;
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      font-feature-settings: "ss01";
+      line-height: 1.4;
+      margin: 6px 0 18px;
+      color: var(--text-main);
+    }
+
+    /* === الصورة البارزة === */
+    .cover-image {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      display: block;
+      margin: 10px 0 24px;
+    }
+
+    .cover-caption {
+      display: block;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin: -14px 0 24px;
+    }
+
+    /* === تنسيق محتوى المارك داون === */
+    .page-content { color: var(--text-main); }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content h3,
+    .page-content h4 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-top: 34px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .page-content h1 { font-size: 1.45rem; }
+    .page-content h2 { font-size: 1.3rem; border-right: 4px solid var(--primary-color); padding-right: 12px; }
+    .page-content h3 { font-size: 1.15rem; }
+    .page-content h4 { font-size: 1.02rem; }
+
+    .page-content p {
+      font-size: 1.02rem;
+      line-height: 1.9;
+      margin-bottom: 18px;
+      opacity: 0.95;
+    }
+
+    .page-content a {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .page-content a:hover { opacity: 0.8; }
+
+    .page-content strong { font-weight: 700; }
+    .page-content em { font-style: italic; }
+    .page-content del { opacity: 0.6; }
+
+    .page-content ul,
+    .page-content ol {
+      padding-right: 26px;
+      margin-bottom: 20px;
+      line-height: 2;
+    }
+    .page-content li { margin-bottom: 6px; }
+    .page-content li::marker { color: var(--primary-color); font-weight: 700; }
+
+    .page-content blockquote {
+      background: var(--primary-light-bg);
+      border-right: 4px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 22px 0;
+      color: var(--text-main);
+      font-size: 0.98rem;
+    }
+    .page-content blockquote p { margin-bottom: 0; }
+
+    .page-content code {
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: "Courier New", monospace;
+      font-size: 0.88em;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .page-content pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 22px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    .page-content pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.88em;
+    }
+
+    .page-content img {
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      display: block;
+      margin: 26px auto;
+      box-shadow: var(--card-shadow);
+    }
+
+    /* === الجداول (تصميم بسيط بدون تدرّجات) === */
+    .page-content .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      max-width: 100%;
+      margin: 24px auto;
+    }
+    .page-content table {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.93rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+    .page-content thead th {
+      background: var(--primary-light-bg);
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: right;
+      padding: 13px 16px;
+      border: 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.96rem;
+    }
+    .page-content th, .page-content td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: right;
+    }
+    .page-content tbody tr { background: var(--bg-card); }
+    .page-content tbody tr:last-child td { border-bottom: 0; }
+    .page-content td { color: var(--text-main); }
+
+    .page-content hr {
+      border: 0;
+      border-top: 2px dashed var(--border-color);
+      margin: 30px 0;
+    }
+
+    .page-content .task-list-item { list-style: none; }
+    .page-content input[type="checkbox"] { margin-left: 8px; accent-color: var(--primary-color); }
+
+    /* === رسائل الحالة === */
+    .blog-status {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding: 30px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* === شاشات الجوال === */
+    @media (max-width: 900px) {
+      .blog-page { padding: 22px 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .blog-page { padding: 18px 14px; }
+      .page-content p { font-size: 0.98rem; }
+      .article-meta { gap: 10px; }
+      .page-title { font-size: 1.9rem; }
+      .page-content table, .page-content th, .page-content td { font-size: 0.85rem; padding: 10px 10px; }
+      .page-content .table-wrapper { margin: 18px 0; }
+      .page-content h1 { font-size: 1.25rem; }
+      .page-content h2 { font-size: 1.15rem; }
+      .page-content h3 { font-size: 1.05rem; }
+    }
+
+    /* === إعدادات الطباعة === */
+    @media print {
+      :root, [data-theme="dark"] {
+        --primary-color: #000000 !important;
+        --bg-color: #ffffff !important;
+        --bg-card: #ffffff !important;
+        --text-main: #000000 !important;
+        --text-muted: #333333 !important;
+        --border-color: #000000 !important;
+        --primary-light-bg: #f2f2f2 !important;
+      }
+
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      header, footer, .blog-actions, .action-buttons-top, .related-btn-wrapper {
+        display: none !important;
+      }
+
+      .cover-image {
+        max-height: 800px !important;
+        border: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .page-content table { box-shadow: none !important; max-width: 100% !important; }
+      .page-content thead th { background: #f2f2f2 !important; color: #000000 !important; }
+    }
+  </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/blog/kanafr">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="المنصة العربية للتعليم والمراجع">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "المنصة العربية للتعليم والمراجع",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "تحليل نص حديث خنافر",
+  "datePublished": "2026-04-17T00:00:00+04:00",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://rawafid.jassim.one/blog/kanafr" },
+  "author": { "@type": "Organization", "name": "منصة روافد", "url": "https://rawafid.jassim.one/" },
+  "publisher": { "@id": "https://rawafid.jassim.one/#organization" },
+  "image": "https://rawafid.jassim.one/images/cover.png",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
+    { "@type": "ListItem", "position": 2, "name": "تحليل نص حديث خنافر", "item": "https://rawafid.jassim.one/blog/kanafr" }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+  <style>
+  :root {
+    --primary-color: #1a2ac6; /* اللون الأزرق للوضع الفاتح */
+    --nav-height: 70px;
+    --icon-size: 24px;
+    --btn-size: 42px;
+  }
+
+  /* === إعدادات الأوضاع === */
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --primary-color: #7986cb; 
+  }
+
+  [data-theme="dark"] .navbar {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  body {
+    padding-top: var(--nav-height);
+  }
+
+  /* === إعدادات النافبار === */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    height: var(--nav-height);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* === الشعار === */
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo img {
+    height: 38px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+   
+  .logo img.loaded { opacity: 1; }
+
+  .logo:hover img.loaded {
+    transform: scale(1.05);
+  }
+
+  /* === الروابط === */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcc00;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+    .nav-links a:hover { color: #ffcc00; }
+
+    /* === زر تغيير الوضع في القائمة الجانبية === */
+    .sidebar-theme-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-theme-toggle:hover { color: #ffcc00; }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      position: relative;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      transition: opacity 0.3s ease, transform 0.35s ease;
+    }
+
+    .sidebar-theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    .sidebar-theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+    /* === أزرار التحكم والأيقونات === */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+  }
+
+  .search-nav-btn { text-decoration: none; }
+
+  /* --- منطق زر المظهر (قمر/شمس) --- */
+  .theme-toggle-btn .icon-moon,
+  .theme-toggle-btn .icon-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+    transition: opacity 0.3s ease, transform 0.35s ease;
+  }
+
+  .theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  .theme-toggle-btn:hover svg { color: #ffcc00; }
+
+  /* --- زر القائمة (Menu Toggle) --- */
+  .menu-toggle-btn { display: none; }
+   
+  .menu-toggle-btn .close-icon { 
+    display: none; 
+    position: absolute;
+  }
+   
+  .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+  .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
+
+
+  /* === تصميم الجوال === */
+  @media (max-width: 768px) {
+    .menu-toggle-btn { display: flex; }
+    .theme-toggle-btn { display: none; }
+    .sidebar-theme-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: 75%;
+      max-width: 300px;
+      height: calc(100vh - var(--nav-height));
+      background-color: var(--primary-color);
+      
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+      backdrop-filter: blur(12px); 
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li { width: 100%; margin-bottom: 8px; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
+    
+    .nav-links.active li { opacity: 1; transform: translateX(0); }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.25s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) { transition-delay: 0.35s; }
+    .nav-links.active li:nth-child(6) { transition-delay: 0.4s; }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0;
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 998;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <img 
+        id="cached-logo"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+        data-url="/images/rawafid-1.png" 
+        alt="شعار روافد" 
+      />
+    </a>
+    
+    <div class="overlay" id="nav-overlay"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الصفحة الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="التبديل إلى الوضع الليلي">
+          <span class="sidebar-theme-icon">
+            <svg class="icon-moon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+            </svg>
+          </span>
+          <span id="sidebar-theme-label">المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="التبديل إلى الوضع الليلي" title="التبديل إلى الوضع الليلي">
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    /* === 1. كاش اللوجو === */
+    const logoImg = document.getElementById('cached-logo');
+    const targetUrl = logoImg.getAttribute('data-url');
+    const CACHE_KEY_DATA = 'rawafid_logo_data';
+    const CACHE_KEY_URL = 'rawafid_logo_url';
+    const cachedData = localStorage.getItem(CACHE_KEY_DATA);
+    const cachedUrl = localStorage.getItem(CACHE_KEY_URL);
+
+    function displayLogo(src) {
+        logoImg.src = src;
+        logoImg.onload = () => logoImg.classList.add('loaded');
+    }
+
+    if (cachedData && cachedUrl === targetUrl) {
+        displayLogo(cachedData);
+    } else {
+        displayLogo(targetUrl);
+        fetch(targetUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    try {
+                        localStorage.setItem(CACHE_KEY_DATA, reader.result);
+                        localStorage.setItem(CACHE_KEY_URL, targetUrl);
+                    } catch (e) {}
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+    }
+
+    /* === خدمة تخزين الخطوط (Service Worker) === */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register("/sw.js")
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    /* === 2. منطق القائمة المنسدلة === */
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpened = navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      document.body.style.overflow = isOpened ? 'hidden' : '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+    }
+
+    /* === 3. نظام الثيمات المركزي === */
+    var themeScript = document.createElement('script');
+    themeScript.src = "/assets/js/theme.js";
+    themeScript.async = false;
+    document.head.appendChild(themeScript);
+  });
+</script>
+
+  <!-- === مكون التحميل الموحد === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: var(--bg-body, #f4f6fb);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  [data-theme="dark"] #rawafid-loading-overlay {
+    background: var(--bg-body, #121212);
+  }
+  .rawafid-loader-spinner {
+    width: 44px; height: 44px;
+    border: 3.5px solid var(--border-color, #ccd1e0);
+    border-top-color: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+  .rawafid-loader-text {
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted, #666666);
+    letter-spacing: 0.3px;
+  }
+  .rawafid-loader-dots {
+    display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px;
+  }
+  .rawafid-loader-dots span {
+    width: 5px; height: 5px;
+    background: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<div id="rawafid-loading-overlay">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  function rawafidHideLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+  function rawafidShowLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+</script>
+
+
+  <main class="blog-page">
+    <div class="blog-actions">
+      <a href="/" class="back-btn">
+        <i class="fas fa-arrow-right"></i> رجوع
+      </a>
+      
+      <div class="action-buttons-top">
+        <button id="print-btn" onclick="printContent()" class="print-btn-top">
+          <i class="fas fa-print"></i> طباعة
+        </button>
+        <button id="share-btn" onclick="sharePage()" class="share-btn-top">
+          <i class="fas fa-share-alt"></i> مشاركة
+        </button>
+      </div>
+      
+    </div>
+
+    <div class="related-btn-wrapper" id="related-wrapper" style="display: flex;">
+      <a href="#" id="related-btn" class="related-btn-top">
+        <i class="fas fa-link"></i> <span id="related-btn-text"></span>
+      </a>
+    </div>
+
+    <h1 id="post-title" class="page-title">تحليل نص حديث خنافر</h1>
+
+    <img id="post-cover" class="cover-image" src="" alt="تحليل نص حديث خنافر" style="display: none;">
+
+    <div id="post-meta" class="article-meta">
+      <span><i class="far fa-calendar"></i> 17 أبريل 2026</span>
+      <span id="post-author" data-author-uid="rawafid-edu"><i class="far fa-user"></i> <span class="author-name"></span><img class="author-avatar" alt=""></span>
+    </div>
+
+    <div id="post-content" class="page-content">
+      <h2 id="1--الراوي">1- الراوي</h2>
+<p>الراوي الأساسي الذي افتتح النص هو <strong>أبو بكر</strong> (<strong>محمد بن الحسن بن دريد</strong>)، وقد روى السند كالتالي: حدثني عمي، عن أبيه، عن ابن الكلبي، عن أبيه.</p>
+
+<h2 id="2--الشخوص-الشخصيات">2- الشخوص (الشخصيات)</h2>
+<ul>
+  <li><strong>خنافر بن التوأم الحميري</strong>: بطل القصة، وهو كاهن عاتٍ ذو بسطة في الجسم وسعة في المال.</li>
+  <li><strong>شصار (الرئي)</strong>: وهو الجني التابع لخنافر والذي كان يأتيه بالأخبار في الجاهلية.</li>
+  <li><strong>معاذ بن جبل</strong>: أمير رسول الله صلى الله عليه وسلم على صنعاء.</li>
+  <li><strong>النبي محمد صلى الله عليه وسلم</strong>: ذُكر في النص بصفته النبوية والمبعوث من مضر.</li>
+  <li><strong>آل العذام</strong>: قبيلة من قبائل الجن المتواجدين بأرض الشام.</li>
+  <li><strong>جودان بن يحيى الفرضمي</strong>: سيد منيع حالفه خنافر عندما لجأ إلى الشحر.</li>
+</ul>
+
+<h2 id="3--الزمان">3- الزمان</h2>
+<p>تدور أحداث القصة في <strong>فترة التحول التاريخية</strong>، وتحديداً في <strong>نهاية العصر الجاهلي</strong> مع بدايات ظهور الإسلام ووفود قبائل اليمن على النبي صلى الله عليه وسلم.</p>
+
+<h2 id="4--المكان">4- المكان</h2>
+<ul>
+  <li><strong>الشحر</strong>: الوادي المخصب الذي هرب إليه خنافر ونزل فيه.</li>
+  <li><strong>أرض الشام</strong>: المكان الذي التقى فيه الجني شصار بآل العذام من الجن.</li>
+  <li><strong>يثرب (ذات النخل / الحرة ذات النعل)</strong>: المكان الذي أشار إليه الجني ليدل خنافر على مكان الدين الجديد.</li>
+  <li><strong>الجوف</strong>: المكان الذي ورده خنافر ورد فيه الإبل لأصحابها.</li>
+  <li><strong>صنعاء</strong>: الوجهة النهائية التي التقى فيها بمعاذ بن جبل.</li>
+</ul>
+
+<h2 id="5--اللغة-والسجع">5- اللغة والسجع</h2>
+<p>اتسمت لغة النص بـ <strong>الجزالة والقوة</strong> مع وجود مفردات غريبة تناسب البيئة الجاهلية مثل: “الرئي”، “السجير”، “الزخيخ”، “الهوب”. واعتمد النص بشكل كبير على <strong>أسلوب السجع</strong>، خاصة في كلام الجني، ليعكس طبيعة الكهانة، مثل قوله: “لكل مدة نهاية، وكل ذي أمد إلى غاية”. وتنوعت الأساليب اللغوية بين <strong>الأمر والاستفهام</strong>.</p>
+
+<h2 id="6--الحوار">6- الحوار</h2>
+<p>طغى <strong>الحوار الخارجي</strong> على القصة، وتمثل في الحوار المباشر والطويل بين خنافر ورئيه (الجني شصار). كما تضمن النص <strong>حواراً داخلياً</strong> غير مصرح به بشكل كبير، يظهر في تفكر خنافر في كلام الجني وتساؤلاته المتتابعة للوصول إلى الحقيقة.</p>
+
+<h2 id="7--الصراع">7- الصراع</h2>
+<ul>
+  <li><strong>صراع نفسي</strong>: ظهر جلياً عندما انقطع الجني عن خنافر مدة طويلة بعد ظهور الإسلام، مما أثار استياءه وقلقه.</li>
+  <li><strong>صراع خارجي (عقائدي)</strong>: الصراع بين <strong>معتقدات الجاهلية</strong> المتمثلة في الكهانة والسلب، وبين <strong>الدين الإسلامي</strong> الجديد الذي يدعو للحق والعدل.</li>
+</ul>
+
+<h2 id="8--الحبكة">8- الحبكة</h2>
+<p>تبدأ <strong>العقدة</strong> بانقطاع الجني شصار عن خنافر، ثم ظهوره المفاجئ على هيئة عقاب ليلاً. تتصاعد الأحداث عندما يخبر الجني خنافر عن <strong>ظهور نبي جديد</strong>، وينصحه بترك الكفر واتباع الإيمان. وتبلغ الحبكة <strong>ذروتها</strong> بقرار خنافر الاستجابة لنداء الحق والتوجه للبحث عن هذا الدين.</p>
+
+<h2 id="9--المقدمة">9- المقدمة</h2>
+<p>بدأت القصة بـ <strong>تمهيد وصفي</strong> لشخصية البطل، حيث وصفه الراوي بأنه كاهن طاغية، ذو بنية قوية وثراء، متمرد سلب إبل قبيلة مراد وفر بها إلى وادي الشحر.</p>
+
+<h2 id="10--النهاية">10- النهاية</h2>
+<p>تنتهي الأحداث بمغادرة خنافر للوادي بعد بزوغ الفجر، وتوجهه إلى <strong>الجوف</strong> حيث قام برد الإبل المغتصبة إلى أصحابها.</p>
+
+<h2 id="11--الحل">11- الحل</h2>
+<p>يكمن الحل في وصول خنافر إلى <strong>صنعاء</strong> ولقائه بـ <strong>معاذ بن جبل</strong>، حيث أعلن إسلامه وتعلم سوراً من القرآن الكريم. وتُوج هذا الحل بـ <strong>إنشاد خنافر لأبيات شعرية</strong> يُقر فيها بفضل الله عليه بالهداية ونجاته من النار.</p>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/images/jassim-logo.png" 
+             alt="روافد" 
+             class="footer-logo" 
+             loading="lazy" 
+             width="45" 
+             height="45">
+        <span class="copy-text">&copy; 2026 جاسم الفارسي · جميع الحقوق محفوظة</span>
+      </div>
+
+      <div class="footer-actions">
+        <nav class="footer-links">
+          <a href="/">الرئيسة</a>
+          <a href="/about">عن روافد</a>
+        </nav>
+
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn-compact" target="_blank" rel="noopener" aria-label="انضم لقناتنا">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>قناتنا</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  :root {
+    --footer-text: #000000;
+    --footer-copy-text: #666666;
+    --whatsapp-green: #25D366;
+    --logo-filter: brightness(0);
+  }
+
+  [data-theme="dark"] {
+    --footer-text: #e0e0e0;
+    --footer-copy-text: #a0a0a0;
+    --logo-filter: brightness(0) invert(1);
+  }
+
+  .site-footer, .site-footer * { box-sizing: border-box; }
+
+  .site-footer {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    margin-top: 1.5rem;
+    color: var(--footer-text);
+    direction: rtl;
+    border-top: 1px solid rgba(128,128,128,0.15);
+    overflow: hidden;
+  }
+
+  .footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-logo {
+    height: 26px;
+    width: auto;
+    filter: var(--logo-filter);
+    transition: filter 0.3s;
+    display: block;
+  }
+
+  .copy-text {
+    font-size: 0.78rem;
+    color: var(--footer-copy-text);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .footer-links a {
+    color: var(--footer-text);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .footer-links a:hover {
+    opacity: 1;
+    color: var(--primary-color, #1a2ac6);
+    background: var(--primary-light-bg, #eff1ff);
+  }
+
+  .whatsapp-btn-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--whatsapp-green);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.25s;
+  }
+
+  .whatsapp-btn-compact:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  }
+
+  /* === شاشة الجوال: سطر حقوق واحد مضغوط === */
+  @media (max-width: 768px) {
+    .site-footer {
+      padding: 0.5rem 0.6rem;
+      margin-top: 1rem;
+      border-top: none;
+    }
+
+    .footer-inner {
+      flex-direction: row;
+      gap: 0;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-actions {
+      gap: 0;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    .footer-brand {
+      flex: 1;
+      justify-content: center;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .footer-logo {
+      height: 18px;
+    }
+
+    .copy-text {
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .footer-links {
+      display: none;
+    }
+
+    .whatsapp-btn-compact {
+      font-size: 0.68rem;
+      padding: 5px 9px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* شاشات ضيقة جداً: تقليص إضافي */
+  @media (max-width: 380px) {
+    .copy-text { font-size: 0.6rem; }
+    .whatsapp-btn-compact { padding: 4px 8px; }
+    .whatsapp-btn-compact span { display: none; }
+  }
+</style>
+
+
+  <script>
+    /* === 1. تبديل الثيم === */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+    }
+
+    /* === مشاركة الصفحة === */
+    function sharePage() {
+      if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('تم نسخ الرابط');
+      }
+    }
+
+    /* === طباعة التدوينة === */
+    function printContent() {
+      window.print();
+    }
+
+    /* === 2. رابط المرتبط === */
+    const BASE_URL = "";
+    const RELATED = {"course":"ARAB323","id":"7"};
+
+    document.addEventListener('DOMContentLoaded', function() {
+      rawafidHideLoader();
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('i');
+
+      if (slug) {
+        // الرابط القديم (blog?i=slug) — تحويله إلى الرابط النظيف (blog/slug)
+        const cleanUrl = (BASE_URL || '') + '/blog/' + encodeURIComponent(slug);
+        window.location.replace(cleanUrl);
+        return;
+      }
+
+      // الرابط النظيف (blog/slug) — المحتوى مُصرَّح ثابتاً عبر Jekyll
+      const coverImg = document.getElementById('post-cover');
+      if (coverImg && coverImg.getAttribute('src')) {
+        coverImg.style.display = 'block';
+      }
+
+      /* === جلب بيانات المؤلف من ملف authors.json عبر الـ UID === */
+      const authorEl = document.getElementById('post-author');
+      if (authorEl) {
+        const authorUid = authorEl.getAttribute('data-author-uid');
+        const timestamp = new Date().getTime();
+        fetch(`${BASE_URL}/assets/blogdata/authors.json?v=${timestamp}`, { cache: "no-store" })
+          .then(r => r.json())
+          .then(authorData => {
+            const authors = Array.isArray(authorData) ? authorData : (authorData.authors || []);
+            const author = authors.find(a => a.uid === authorUid);
+            if (author) {
+              const nameEl = authorEl.querySelector('.author-name');
+              if (nameEl) nameEl.textContent = author.name;
+              if (author.image) {
+                const imgEl = authorEl.querySelector('.author-avatar');
+                if (imgEl) {
+                  imgEl.src = author.image;
+                  imgEl.style.display = 'inline-block';
+                }
+              }
+            }
+          })
+          .catch(() => {
+            const nameEl = authorEl.querySelector('.author-name');
+            if (nameEl) nameEl.textContent = authorUid;
+          });
+      }
+
+      if (!RELATED) return;
+
+      const relatedWrapper = document.getElementById('related-wrapper');
+      const relatedBtn = document.getElementById('related-btn');
+      const relatedBtnText = document.getElementById('related-btn-text');
+
+      let relatedCourse = null;
+      let relatedId = null;
+
+      if (typeof RELATED === 'object') {
+        relatedCourse = RELATED.course;
+        relatedId = RELATED.id;
+      } else {
+        // قد يكون على شكل string مثل "course:7" أو "نص تدوينة"
+        const m = String(RELATED).match(/^([^:]+):(.+)$/);
+        if (m) {
+          relatedCourse = m[1].trim();
+          relatedId = m[2].trim();
+        }
+      }
+
+      if (relatedCourse && relatedId) {
+        relatedBtn.href = `${BASE_URL}/details/${encodeURIComponent(relatedCourse)}/${encodeURIComponent(relatedId)}`;
+        relatedBtnText.textContent = "...";
+
+        const timestamp = new Date().getTime();
+        fetch(`${BASE_URL}/assets/data/${relatedCourse}.json?v=${timestamp}`, { cache: "no-store" })
+          .then(r => r.json())
+          .then(relatedData => {
+            const rItem = relatedData.items.find(x => x.id == relatedId || x['time-ms'] == relatedId);
+            relatedBtnText.textContent = (rItem && rItem.title) ? rItem.title : "عنصر مرتبط";
+          })
+          .catch(() => { relatedBtnText.textContent = "عنصر مرتبط"; });
+      } else {
+        // مجرد رابط لتدوينة أخرى داخل المدونة
+        relatedBtn.href = (BASE_URL || '') + '/blog/' + encodeURIComponent(RELATED);
+        relatedBtnText.textContent = 'مقال مرتبط';
+      }
+    });
+  </script>
+
+</body>
+</html>
