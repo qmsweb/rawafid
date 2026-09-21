@@ -9,31 +9,31 @@
 <!-- ===== الصفحات الرئيسية ===== -->
 <url>
   <loc>https://rawafid.jassim.one/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://rawafid.jassim.one/tools</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://rawafid.jassim.one/blog</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://rawafid.jassim.one/about</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.70</priority>
 </url>
 <url>
   <loc>https://rawafid.jassim.one/contact</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.50</priority>
 </url>
@@ -42,14 +42,14 @@
 
 <url>
   <loc></loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 
 <url>
   <loc></loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
@@ -372,7 +372,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB101/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -381,7 +381,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB311/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -390,7 +390,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB125/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -399,7 +399,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB124/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -408,7 +408,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB312/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -417,7 +417,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB313/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -426,7 +426,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB315/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -435,7 +435,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB321/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -444,7 +444,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB322/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -453,7 +453,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB122/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -462,7 +462,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB112/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -471,7 +471,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB323/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -480,7 +480,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB111/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -519,7 +519,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/EDUC214/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -602,7 +602,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB212/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -739,7 +739,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/EDUC221/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -748,7 +748,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/EDUC310/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -757,7 +757,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB229/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -766,7 +766,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB215/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -775,7 +775,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB224/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -786,7 +786,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ARAB213/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -795,7 +795,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/EDUC317/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -804,7 +804,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/EDUC431/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -813,7 +813,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/F1/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -822,7 +822,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/ISLM101/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -831,7 +831,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/PHIL101A/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -840,7 +840,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/R1/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>
@@ -849,7 +849,7 @@
 
 <url>
   <loc>https://rawafid.jassim.one/course/SOCI101A/</loc>
-  <lastmod>2026-09-21T01:32:45+04:00</lastmod>
+  <lastmod>2026-09-21T15:37:20+04:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.70</priority>
 </url>

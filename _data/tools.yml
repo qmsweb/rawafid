@@ -30,7 +30,7 @@ tools:
     icon: "fas fa-dharmachakra"
     show_on_home: true
 
-  - name: "QR Maker"
+  - name: "صانع QR"
     url: "/tools/qr-maker"
     icon: "fas fa-qrcode"
     show_on_home: true

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Maker - روافد</title>
+  <title>صانع QR - روافد</title>
 
   <link rel="stylesheet" href="/fonts/fonts.css" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <link rel="icon" href="/images/favicon.png" type="image/jpg">
-  <meta property="og:title" content="QR Maker - روافد">
+  <meta property="og:title" content="صانع QR - روافد">
   <meta property="og:description" content="أداة مجانية لتحويل الروابط إلى رموز QR وحفظها كصورة بجودة عالية.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/plan.png">
   <meta property="og:url" content="https://rawafid.jassim.one/tools/qr-maker">
@@ -273,10 +273,30 @@
     }
 
     /* === الاستجابة === */
+    /* التوزيع: نموذج الإدخال جانبياً والمعاينة في الأعلى على الشاشات الكبيرة */
+    .qr-split {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 26px;
+        align-items: start;
+    }
+    .qr-side, .qr-main { min-width: 0; }
+    .qr-side {
+        position: sticky;
+        top: calc(var(--nav-height, 70px) + 24px);
+    }
+    .qr-side .ios-list-group { margin-bottom: 0; }
+
     @media (min-width: 1100px) {
         .container { max-width: 1360px; padding: 0 28px; }
         .form-content { padding: 28px; }
         .input-field, .select-field { padding: 14px; font-size: 1.05rem; }
+    }
+
+    @media (max-width: 1000px) {
+        .qr-split { grid-template-columns: 1fr; }
+        .qr-side { position: static; }
+        .qr-side .ios-list-group { margin-bottom: 30px; }
     }
 
     @media (max-width: 600px) {
@@ -285,6 +305,7 @@
         .action-btn { flex: 1; justify-content: center; }
         .options-row { grid-template-columns: 1fr; }
         .qr-preview-wrap { padding: 20px 12px; }
+        .qr-actions .action-btn { flex: 1; min-width: 0; white-space: nowrap; }
     }
   </style>
   
@@ -328,7 +349,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
-    { "@type": "ListItem", "position": 2, "name": "QR Maker - روافد", "item": "https://rawafid.jassim.one/tools/qr-maker" }
+    { "@type": "ListItem", "position": 2, "name": "صانع QR - روافد", "item": "https://rawafid.jassim.one/tools/qr-maker" }
   ]
 }
 </script>
@@ -871,69 +892,75 @@
 
     <div class="tool-header">
       <div>
-          <h1>QR Maker</h1>
+          <h1>صانع QR</h1>
           <p>حوّل أي رابط إلى رمز QR واحفظه كصورة بجودة عالية</p>
       </div>
     </div>
 
-    <div class="ios-list-group">
-        <div class="list-header">
-            <span>الرابط</span>
-        </div>
-        <div class="form-content">
-            <div class="input-group">
-                <label>أدخل الرابط أو النص</label>
-                <input type="text" id="qrText" class="input-field" placeholder="https://example.com" dir="auto">
-                <span class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i> الرجاء إدخال رابط أو نص أولاً</span>
+    <div class="qr-split">
+      <aside class="qr-side">
+        <div class="ios-list-group">
+            <div class="list-header">
+                <span>الرابط</span>
             </div>
-
-            <div class="options-row">
+            <div class="form-content">
                 <div class="input-group">
-                    <label>جودة الصورة</label>
-                    <select id="qrSize" class="select-field">
-                        <option value="512">عادية - 512×512</option>
-                        <option value="1024" selected>عالية - 1024×1024</option>
-                        <option value="2048">قصوى - 2048×2048</option>
-                    </select>
+                    <label>أدخل الرابط أو النص</label>
+                    <input type="text" id="qrText" class="input-field" placeholder="https://example.com" dir="auto">
+                    <span class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i> الرجاء إدخال رابط أو نص أولاً</span>
                 </div>
-                <div class="input-group">
-                    <label>لون الرمز</label>
-                    <div class="color-row">
-                        <input type="color" id="qrColor" class="color-input" value="#1a2ac6">
-                        <span class="helper-text">اختر لون الرمز (يُحفظ على خلفية بيضاء)</span>
+
+                <div class="options-row">
+                    <div class="input-group">
+                        <label>جودة الصورة</label>
+                        <select id="qrSize" class="select-field">
+                            <option value="512">عادية - 512×512</option>
+                            <option value="1024" selected>عالية - 1024×1024</option>
+                            <option value="2048">قصوى - 2048×2048</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>لون الرمز</label>
+                        <div class="color-row">
+                            <input type="color" id="qrColor" class="color-input" value="#1a2ac6">
+                            <span class="helper-text">اختر لون الرمز (يُحفظ على خلفية بيضاء)</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button class="action-btn primary-btn generate-btn" onclick="generateQR()">
-                <i class="fas fa-qrcode"></i> إنشاء الرمز
-            </button>
+                <button class="action-btn primary-btn generate-btn" onclick="generateQR()">
+                    <i class="fas fa-qrcode"></i> إنشاء الرمز
+                </button>
+            </div>
         </div>
-    </div>
+      </aside>
 
-    <div class="ios-list-group">
-        <div class="list-header">
-            <span>المعاينة والتحميل</span>
-        </div>
-        <div class="qr-preview-wrap">
-            <div class="qr-placeholder" id="qrPlaceholder">
-                <i class="fas fa-qrcode"></i>
-                <span>أدخل الرابط ثم اضغط "إنشاء الرمز" لعرضه هنا</span>
+      <main class="qr-main">
+        <div class="ios-list-group">
+            <div class="list-header">
+                <span>المعاينة والتحميل</span>
             </div>
-            <div class="qr-preview" id="qrPreview"></div>
-            <div class="qr-actions" id="qrActions">
-                <button class="action-btn download-btn" onclick="downloadPNG()">
-                    <i class="fas fa-download"></i> حفظ كصورة PNG
-                </button>
-                <button class="action-btn" onclick="copyImage()">
-                    <i class="far fa-copy"></i> نسخ الصورة
-                </button>
-                <button class="action-btn" onclick="printQR()">
-                    <i class="fas fa-print"></i> طباعة
-                </button>
+            <div class="qr-preview-wrap">
+                <div class="qr-placeholder" id="qrPlaceholder">
+                    <i class="fas fa-qrcode"></i>
+                    <span>أدخل الرابط ثم اضغط "إنشاء الرمز" لعرضه هنا</span>
+                </div>
+                <div class="qr-preview" id="qrPreview"></div>
+                <div class="qr-actions" id="qrActions">
+                    <button class="action-btn download-btn" onclick="downloadPNG()">
+                        <i class="fas fa-download"></i> حفظ كصورة PNG
+                    </button>
+                    <button class="action-btn" onclick="copyImage()">
+                        <i class="far fa-copy"></i> نسخ الصورة
+                    </button>
+                    <button class="action-btn" onclick="printQR()">
+                        <i class="fas fa-print"></i> طباعة
+                    </button>
+                </div>
+                <div class="export-info" id="qrExportInfo"></div>
             </div>
-            <div class="export-info" id="qrExportInfo"></div>
         </div>
+      </main>
     </div>
 
   </div>
