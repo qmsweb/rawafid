@@ -382,6 +382,63 @@
         box-shadow: 0 0 0 2px var(--primary-color), var(--card-shadow);
     }
 
+    /* === زر ولوحة المقررات الاختيارية (اختر مقررين من 4) === */
+    .elective-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-body);
+        border: 1px dashed var(--primary-color);
+        color: var(--primary-color);
+        padding: 9px 18px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 2px;
+    }
+    .elective-btn:hover { background: var(--hover-bg); }
+    .elective-btn i { font-size: 0.85rem; }
+
+    .elective-pool {
+        margin-top: 16px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    @media (min-width: 700px) {
+        .elective-pool { grid-template-columns: repeat(2, 1fr); }
+    }
+    .elective-pool .pool-head {
+        grid-column: 1 / -1;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .elective-pool .pool-head i { color: var(--primary-color); }
+    .elective-pool .course-card.in-list { box-shadow: none; }
+
+    .course-summary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        line-height: 1.6;
+    }
+    .course-summary i { color: var(--primary-color); flex-shrink: 0; }
+
     @media (min-width: 1100px) {
         .container { max-width: 1360px; padding: 0 28px; }
         .card-header { padding: 24px 30px; }
@@ -1493,7 +1550,7 @@
       const allBtn = document.createElement('div');
       allBtn.className = 'filter-item';
       allBtn.dataset.cat = '';
-      allBtn.textContent = 'جميع الأنواع';
+      allBtn.textContent = 'الكل';
       allBtn.addEventListener('click', () => onCatClick(''));
       bar.appendChild(allBtn);
 
@@ -1526,6 +1583,7 @@
       const sem = selectedSemester;
       const cat = selectedCat;
       currentFilteredCourses = currentCoursesDB.filter(c => {
+          if (c.hidden) return false;
           if (year && c.year !== year) return false;
           if (sem && c.semester !== sem) return false;
           if (cat && c.cat !== cat) return false;
@@ -1586,11 +1644,12 @@
   }
 
   /* === بناء بطاقة مقرر كاملة التفاصيل === */
-  function buildCourseCard(course) {
+  function buildCourseCard(course, suppressElectiveBtn = false) {
       let tagClass = 'tag-uni', catText = 'متطلب جامعي', icon = 'fa-university';
       if (course.cat === 'spec') { tagClass = 'tag-spec'; catText = 'متطلب تخصص'; icon = 'fa-book'; }
       else if (course.cat === 'edu') { tagClass = 'tag-edu'; catText = 'متطلب تربوي'; icon = 'fa-chalkboard-teacher'; }
       else if (course.cat === 'found') { tagClass = 'tag-found'; catText = 'متطلب البرنامج التأسيسي'; icon = 'fa-layer-group'; }
+      else if (course.cat === 'elective') { tagClass = 'tag-spec'; catText = 'متطلب تخصص'; icon = 'fa-book'; }
 
       const hoursText = course.hours === 0
           ? '0 ساعات معتمدة'
@@ -1620,6 +1679,16 @@
           ? nextCourses.map(c => linkOf(c.id, 'fa-unlock-alt')).join('')
           : '';
 
+      const isElectiveSlot = /^ELECTIVE\d+$/.test(course.id) && !course.hidden;
+
+      const electiveExpandHtml = (isElectiveSlot && !suppressElectiveBtn) ? `
+                <div class="elective-expand" style="margin-top: 16px;">
+                    <button type="button" class="elective-btn" onclick="toggleElectives(this)">
+                        <i class="fas fa-list-ul"></i> عرض المقررات الاختيارية الأربعة (اختر مقررين منها)
+                    </button>
+                    <div class="elective-pool" id="electivePool-${course.id}" style="display: none;"></div>
+                </div>` : '';
+
       return `
         <div class="course-card in-list" data-id="${course.id}">
             <div class="card-header">
@@ -1633,6 +1702,7 @@
                 <div class="tags-container">
                     <div class="tag ${tagClass}"><i class="fas ${icon}"></i> ${catText}</div>
                 </div>
+                ${course.summary ? `<p class="course-summary"><i class="fas fa-info-circle"></i> ${course.summary}</p>` : ''}
                 <div class="info-grid">
                     <div class="info-item">
                         <span class="info-label"><i class="fas fa-link"></i> المتطلب السابق</span>
@@ -1648,8 +1718,31 @@
                         <div class="info-value">${postreqHtml}</div>
                     </div>` : ''}
                 </div>
+                ${electiveExpandHtml}
             </div>
         </div>`;
+  }
+
+  /* === إظهار/إخفاء لوحة المقررات الاختيارية الأربعة داخل الصفحة === */
+  function toggleElectives(btn) {
+      const expand = btn.parentElement;
+      const pool = expand.querySelector('.elective-pool');
+      const willOpen = pool.style.display === 'none';
+
+      if (willOpen) {
+          if (!pool.dataset.loaded) {
+              const electives = currentCoursesDB.filter(c => /^ELECTIVE\d+$/.test(c.id));
+              pool.innerHTML =
+                  '<div class="pool-head"><i class="fas fa-th-list"></i> المقررات الاختيارية المتاحة في الفصل (اختر مقررين منها فقط)</div>' +
+                  electives.map(c => buildCourseCard(c, true)).join('');
+              pool.dataset.loaded = '1';
+          }
+          pool.style.display = 'grid';
+          btn.innerHTML = '<i class="fas fa-times"></i> إخفاء المقررات الاختيارية';
+      } else {
+          pool.style.display = 'none';
+          btn.innerHTML = '<i class="fas fa-list-ul"></i> عرض المقررات الاختيارية الأربعة (اختر مقررين منها)';
+      }
   }
 
   /* === الانتقال إلى مقرر معين (من القائمة أو الروابط الداخلية) === */

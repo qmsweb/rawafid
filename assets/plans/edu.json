@@ -50,5 +50,9 @@
   { "id": "SOCI101A", "name": "علم الاجتماع", "hours": 3, "cat": "uni", "prereq": null, "year": "السنة الدراسية الثالثة", "semester": "الصيفي" },
   { "id": "MNGT313A", "name": "ريادة الأعمال", "hours": 3, "cat": "uni", "prereq": null, "year": "السنة الدراسية الثالثة", "semester": "الصيفي" },
 
-  { "id": "ELEC1A", "name": "مقرر اختياري (يختار الطالب مقررين)", "hours": 4, "cat": "elective", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف" }
+  { "id": "ELECTIVE1", "name": "مقرر اختياري", "hours": 2, "cat": "spec", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف", "summary": "يختار الطالب مقررين من أربعة مقررات اختيارية" },
+  { "id": "ELECTIVE2", "name": "مقرر اختياري", "hours": 2, "cat": "spec", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف", "summary": "يختار الطالب مقررين من أربعة مقررات اختيارية" },
+  { "id": "ELECTIVE3", "name": "مقرر اختياري", "hours": 2, "cat": "spec", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف", "hidden": true, "summary": "يختار الطالب مقررين من أربعة مقررات اختيارية" },
+  { "id": "ELECTIVE4", "name": "مقرر اختياري", "hours": 2, "cat": "spec", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف", "hidden": true, "summary": "يختار الطالب مقررين من أربعة مقررات اختيارية" }
+
 ]
