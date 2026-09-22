@@ -50,8 +50,5 @@
   { "id": "SOCI101A", "name": "علم الاجتماع", "hours": 3, "cat": "uni", "prereq": null, "year": "السنة الدراسية الثالثة", "semester": "الصيفي" },
   { "id": "MNGT313A", "name": "ريادة الأعمال", "hours": 3, "cat": "uni", "prereq": null, "year": "السنة الدراسية الثالثة", "semester": "الصيفي" },
 
-  { "id": "ARAB415", "name": "المعجمية والمصطلحية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB315, ARAB321", "year": "السنة الدراسية الرابعة", "semester": "الخريف" },
-  { "id": "ARAB416", "name": "المدارس النحوية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB224, ARAB229", "year": "السنة الدراسية الرابعة", "semester": "الخريف" },
-  { "id": "ARAB425", "name": "أصول البحث اللغوي والأدبي (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB321, ARAB327", "year": "السنة الدراسية الرابعة", "semester": "الخريف" },
-  { "id": "ARAB426", "name": "تحليل نصوص أدبية (مقرر اختياري)", "hours": 2, "cat": "elective", "prereq": "ARAB327, ARAB313", "year": "السنة الدراسية الرابعة", "semester": "الخريف" }
+  { "id": "ELEC1A", "name": "مقرر اختياري (يختار الطالب مقررين)", "hours": 4, "cat": "elective", "prereq": null, "year": "السنة الدراسية الرابعة", "semester": "الخريف" }
 ]
