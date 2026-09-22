@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB421",
+    "name":  "بلاغة (بيان وبديع)",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB326",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB326",
+                        "name":  "بلاغة (علم المعاني)"
+                    }
+                ]
+}

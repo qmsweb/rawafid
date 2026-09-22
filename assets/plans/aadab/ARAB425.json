@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB425",
+    "name":  "أصول البحث اللغوي والأدبي (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB413",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB413",
+                        "name":  "الأدب المقارن"
+                    }
+                ]
+}

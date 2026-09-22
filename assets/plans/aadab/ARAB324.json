@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB324",
+    "name":  "تحليل الخطاب",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB311",
+    "coreq":  null,
+    "postreq":  "ARAB426",
+    "related":  [
+                    {
+                        "id":  "ARAB311",
+                        "name":  "اللسانيات"
+                    },
+                    {
+                        "id":  "ARAB426",
+                        "name":  "تحليل نصوص أدبية (مقرر اختياري)"
+                    }
+                ]
+}

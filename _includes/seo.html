@@ -82,6 +82,17 @@
   "inLanguage": "ar"
 }
 </script>
+{% endif %}{% if page.layout == 'study-plan' and page.code %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": {{ page.title | jsonify }},
+  "description": {{ page.og_description | default: site.description | jsonify }},
+  "provider": { "@type": "Organization", "name": "{{ site.title }}", "url": "{{ site.url }}/" },
+  "inLanguage": "ar"
+}
+</script>
 {% endif %}
 
 {% if page.layout != 'home' and page.layout != 'home-v1' and page.url != '/' and page.url != '/index.html' %}

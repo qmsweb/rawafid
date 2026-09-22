@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB215",
+    "name":  "الصرف",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB112",
+    "coreq":  null,
+    "postreq":  "ARAB314",
+    "related":  [
+                    {
+                        "id":  "ARAB112",
+                        "name":  "نحو 1"
+                    },
+                    {
+                        "id":  "ARAB314",
+                        "name":  "علم الأصوات"
+                    }
+                ]
+}

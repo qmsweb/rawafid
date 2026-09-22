@@ -1,0 +1,12 @@
+{
+    "id":  "MNGT313A",
+    "name":  "ريادة الأعمال",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

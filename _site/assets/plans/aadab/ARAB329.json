@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB329",
+    "name":  "اللهجات العربية (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB314",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB314",
+                        "name":  "علم الأصوات"
+                    }
+                ]
+}

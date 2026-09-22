@@ -1,0 +1,25 @@
+{
+    "id":  "ARAB212",
+    "name":  "الشعر العباسي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB122",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الخريف",
+    "postreq":  "ARAB313, ARAB327",
+    "related":  [
+                    {
+                        "id":  "ARAB122",
+                        "name":  "الشعر الإسلامي والأموي"
+                    },
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    },
+                    {
+                        "id":  "ARAB327",
+                        "name":  "النقد قديم"
+                    }
+                ]
+}

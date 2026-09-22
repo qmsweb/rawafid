@@ -1,0 +1,17 @@
+{
+    "id":  "FPIT001A",
+    "name":  "تقنية معلومات 1 (IT 1)",
+    "hours":  0,
+    "cat":  "found",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الخريف",
+    "postreq":  "FPIT002A",
+    "related":  [
+                    {
+                        "id":  "FPIT002A",
+                        "name":  "تقنية معلومات 2 (IT 2)"
+                    }
+                ]
+}

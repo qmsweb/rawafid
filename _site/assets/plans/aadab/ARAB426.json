@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB426",
+    "name":  "تحليل نصوص أدبية (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB324",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB324",
+                        "name":  "تحليل الخطاب"
+                    }
+                ]
+}

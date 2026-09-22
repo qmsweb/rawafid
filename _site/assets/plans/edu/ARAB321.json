@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB321",
+    "name":  "فقه اللغة",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB315",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الربيع",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB315",
+                        "name":  "علم الدلالة"
+                    }
+                ]
+}

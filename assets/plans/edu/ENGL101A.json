@@ -1,0 +1,17 @@
+{
+    "id":  "ENGL101A",
+    "name":  "مهارات الاتصال 1 (إنجليزي)",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الخريف",
+    "postreq":  "ENGL102A",
+    "related":  [
+                    {
+                        "id":  "ENGL102A",
+                        "name":  "مهارات الاتصال 2"
+                    }
+                ]
+}

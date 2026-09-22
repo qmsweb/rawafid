@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB415",
+    "name":  "المعجمية والمصطلحية (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB321",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB321",
+                        "name":  "فقه اللغة"
+                    }
+                ]
+}

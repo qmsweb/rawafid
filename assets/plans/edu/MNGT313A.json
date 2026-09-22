@@ -1,0 +1,14 @@
+{
+    "id":  "MNGT313A",
+    "name":  "ريادة الأعمال",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الصيفي",
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

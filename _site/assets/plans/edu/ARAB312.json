@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB312",
+    "name":  "النثر الحديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB125",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الخريف",
+    "postreq":  "ARAB419",
+    "related":  [
+                    {
+                        "id":  "ARAB125",
+                        "name":  "النثر القديم"
+                    },
+                    {
+                        "id":  "ARAB419",
+                        "name":  "أدب الطفل"
+                    }
+                ]
+}

@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB423",
+    "name":  "علم العروض والقافية",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB414",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB414",
+                        "name":  "تطبيقات نحوية"
+                    }
+                ]
+}

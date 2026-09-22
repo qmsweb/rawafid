@@ -1,0 +1,23 @@
+{
+    "id":  "ARAB311",
+    "name":  "اللسانيات",
+    "hours":  4,
+    "cat":  "spec",
+    "prereq":  "ARAB224",
+    "coreq":  null,
+    "postreq":  "ARAB321, ARAB324",
+    "related":  [
+                    {
+                        "id":  "ARAB224",
+                        "name":  "نحو 4"
+                    },
+                    {
+                        "id":  "ARAB321",
+                        "name":  "فقه اللغة"
+                    },
+                    {
+                        "id":  "ARAB324",
+                        "name":  "تحليل الخطاب"
+                    }
+                ]
+}

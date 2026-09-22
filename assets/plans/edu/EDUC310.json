@@ -1,0 +1,17 @@
+{
+    "id":  "EDUC310",
+    "name":  "نظام التعليم في عمان ودول الخليج العربي",
+    "hours":  3,
+    "cat":  "edu",
+    "prereq":  "EDUC101",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الربيع",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "EDUC101",
+                        "name":  "أصول التربية"
+                    }
+                ]
+}

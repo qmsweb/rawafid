@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB122",
+    "name":  "الشعر الإسلامي والأموي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB111",
+    "coreq":  null,
+    "postreq":  "ARAB212",
+    "related":  [
+                    {
+                        "id":  "ARAB111",
+                        "name":  "الشعر الجاهلي"
+                    },
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    }
+                ]
+}

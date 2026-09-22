@@ -1,0 +1,15 @@
+{
+    "id":  "FPIT002A",
+    "name":  "تقنية معلومات 2 (IT 2)",
+    "hours":  0,
+    "cat":  "found",
+    "prereq":  "FPIT001A",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "FPIT001A",
+                        "name":  "تقنية معلومات 1 (IT 1)"
+                    }
+                ]
+}

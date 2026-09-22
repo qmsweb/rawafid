@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB315",
+    "name":  "علم الدلالة",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB128",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB128",
+                        "name":  "مدخل إلى المصادر اللغوية والأدبية"
+                    }
+                ]
+}

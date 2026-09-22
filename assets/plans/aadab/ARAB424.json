@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB424",
+    "name":  "تحقيق النصوص",
+    "hours":  4,
+    "cat":  "spec",
+    "prereq":  "ARAB411",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB411",
+                        "name":  "النقد الأدبي القديم"
+                    }
+                ]
+}

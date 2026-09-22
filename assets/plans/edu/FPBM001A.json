@@ -1,0 +1,17 @@
+{
+    "id":  "FPBM001A",
+    "name":  "رياضيات أساسية (Basic Math)",
+    "hours":  0,
+    "cat":  "found",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الخريف",
+    "postreq":  "FPAM003A",
+    "related":  [
+                    {
+                        "id":  "FPAM003A",
+                        "name":  "رياضيات تطبيقية (Applied Math)"
+                    }
+                ]
+}

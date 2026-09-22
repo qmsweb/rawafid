@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB326",
+    "name":  "بلاغة (علم المعاني)",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB224",
+    "coreq":  null,
+    "postreq":  "ARAB421",
+    "related":  [
+                    {
+                        "id":  "ARAB224",
+                        "name":  "نحو 4"
+                    },
+                    {
+                        "id":  "ARAB421",
+                        "name":  "بلاغة (بيان وبديع)"
+                    }
+                ]
+}

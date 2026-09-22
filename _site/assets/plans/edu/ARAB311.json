@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB311",
+    "name":  "اللسانيات",
+    "hours":  4,
+    "cat":  "spec",
+    "prereq":  "ARAB229",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB229",
+                        "name":  "علم الأصوات - الصوتيات"
+                    }
+                ]
+}

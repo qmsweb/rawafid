@@ -1,0 +1,12 @@
+{
+    "id":  "SOCIO101A",
+    "name":  "علم الاجتماع",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

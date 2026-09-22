@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB422",
+    "name":  "النقد الأدبي الحديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB411",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB411",
+                        "name":  "النقد الأدبي القديم"
+                    }
+                ]
+}

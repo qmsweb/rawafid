@@ -1,0 +1,29 @@
+{
+    "id":  "ARAB313",
+    "name":  "الشعر الحديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB212",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الخريف",
+    "postreq":  "ARAB323, ARAB322, ARAB419",
+    "related":  [
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    },
+                    {
+                        "id":  "ARAB323",
+                        "name":  "الأدب العماني"
+                    },
+                    {
+                        "id":  "ARAB322",
+                        "name":  "البلاغة العربية"
+                    },
+                    {
+                        "id":  "ARAB419",
+                        "name":  "أدب الطفل"
+                    }
+                ]
+}

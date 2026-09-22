@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB418",
+    "name":  "موسيقا الشعر",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB323",
+    "coreq":  null,
+    "year":  "السنة الدراسية الرابعة",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB323",
+                        "name":  "الأدب العماني"
+                    }
+                ]
+}

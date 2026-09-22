@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB315",
+    "name":  "علم الدلالة",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB215",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الخريف",
+    "postreq":  "ARAB321",
+    "related":  [
+                    {
+                        "id":  "ARAB215",
+                        "name":  "الصرف"
+                    },
+                    {
+                        "id":  "ARAB321",
+                        "name":  "فقه اللغة"
+                    }
+                ]
+}

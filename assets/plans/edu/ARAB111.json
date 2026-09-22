@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB111",
+    "name":  "الشعر الجاهلي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الخريف",
+    "postreq":  "ARAB122",
+    "related":  [
+                    {
+                        "id":  "ARAB122",
+                        "name":  "الشعر الإسلامي والأموي"
+                    }
+                ]
+}

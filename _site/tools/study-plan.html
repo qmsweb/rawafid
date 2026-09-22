@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
   <link rel="icon" href="/images/favicon.png" type="image/jpg">
-  <meta property="og:title" content="الخطة الدراسية - روافد">
-  <meta property="og:description" content="دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة واللاحقة.">
+  <meta property="og:title" content="الخطة الدراسية - روافد" id="og-title">
+  <meta property="og:description" content="دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة واللاحقة." id="og-description">
   <meta property="og:image" content="https://rawafid.jassim.one/images/plan.png">
   <meta property="og:url" content="https://rawafid.jassim.one/tools/study-plan">
   <meta property="og:type" content="website">
@@ -240,6 +240,37 @@
     }
     .internal-link:hover { text-decoration: underline; opacity: 0.8; }
     .internal-link i { font-size: 0.8em; margin-left: 5px; }
+
+    /* === أزرار وضع المقرر (مشاركة + تصفح الخطة) === */
+    .share-button {
+        background: var(--bg-card);
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    .share-button:hover { background: var(--primary-color); color: #fff; }
+    .browse-plan-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 50px;
+        border: 1px dashed var(--primary-color);
+        transition: all 0.3s;
+    }
+    .browse-plan-btn:hover { background: var(--hover-bg); }
 
     /* === Empty State === */
     .empty-state {
@@ -1043,8 +1074,16 @@
       
     <div class="tool-header">
       <div>
-          <h1>الخطة الدراسية</h1>
-          <p>دليل تفاعلي للمقررات والمتطلبات والساعات المعتمدة</p>
+          <h1 id="planTitle">الخطة الدراسية</h1>
+          <p id="planSubtitle">دليل تفاعلي للمقررات والمتطلبات والساعات المعتمدة</p>
+      </div>
+      <div id="courseActions" class="plan-controls" style="display: none;">
+          <button type="button" id="shareCourseBtn" class="share-button">
+              <i class="fas fa-share-nodes"></i> مشاركة رابط المقرر
+          </button>
+          <a class="browse-plan-btn" href="/tools/study-plan">
+              <i class="fas fa-th-large"></i> تصفح الخطة كاملة
+          </a>
       </div>
     </div>
 
@@ -1052,19 +1091,25 @@
       <aside class="plan-side">
         <div class="search-box-container">
           <div class="side-label"><i class="fas fa-graduation-cap"></i> التخصص</div>
-          <select id="planSelector" class="select-field" onchange="fetchPlanData()">
+          <select id="planSelector" class="select-field" onchange="onPlanChanged()">
               <option value="edu" selected>تخصص التربية في اللغة العربية</option>
               <option value="aadab">تخصص آداب اللغة العربية</option>
           </select>
 
-          <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
-          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)">
-              <option value="" disabled selected>جاري تحميل المقررات...</option>
-          </select>
-          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>يمكنك اختيار أي مقرر مباشرة من القائمة — جميع مقررات الخطة متاحة فيها. أما فلاتر السنة والفصل أدناه فتعرض مقررات سنة معينة وتفاصيلها كاملة.</p>
+          <div id="courseSelectGroup">
+              <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
+              <select id="courseSelect" class="select-field" onchange="onCourseSelectChange(this.value)">
+                  <option value="" disabled selected>جاري تحميل المقررات...</option>
+              </select>
+              <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>يمكنك اختيار أي مقرر مباشرة من القائمة — جميع مقررات الخطة متاحة فيها. أما فلاتر السنة والفصل أدناه فتعرض مقررات سنة معينة وتفاصيلها كاملة.</p>
+          </div>
+
+          <div id="courseModePanel" style="display: none;">
+              <p class="side-hint" style="margin-top: 18px;"><i class="fas fa-info-circle" style="margin-left: 6px; color: var(--primary-color);"></i>تعرض هذه الصفحة بيانات المقرر المفتوح فقط بدلاً من الخطة كاملة. غيّر التخصص بالأعلى لعرض المقرر في خطة أخرى، أو تصفح الخطة كاملة.</p>
+          </div>
         </div>
 
-        <div class="plan-filter-bar">
+        <div class="plan-filter-bar" id="planFilterBar">
             <div class="filter-group">
                 <div class="filter-group-label"><i class="fas fa-calendar-alt"></i> السنة الدراسية</div>
                 <div class="filter-bar" id="yearFilterBar"></div>
@@ -1306,36 +1351,139 @@
       localStorage.setItem('rawafed-theme', newTheme);
   }
 
+  // === إعدادات الصفحة (تُحقن من جيكل لصفحات المقررات المولّدة) ===
+  const PAGE_PLAN = "";
+  const PAGE_CODE = "";
+  // الأساس العام للمسارات (يدعم الاستضافة داخل مسار فرعي)
+  const PLAN_TOOL_BASE = "/tools/study-plan".replace(/\/+$/, '');
+  const PLANS_DATA_BASE = "/assets/plans".replace(/\/+$/, '');
+
   let currentCoursesDB = [];
   let currentFilteredCourses = [];
   let selectedYear = '';
   let selectedSemester = '';
   let selectedCat = '';
   let lastCourseId = null;
+  let currentPlan = PAGE_PLAN || 'edu';   // الخطة الحالية
+  let focusedCourseCode = null;           // مقرر العرض المفرد (وضع المقرر)
+  let fullPlanLoaded = false;             // هل حُمّلت الخطة كاملة (وضع التصفح)
 
   // 1. عند تحميل الصفحة
-  window.addEventListener('DOMContentLoaded', () => {
-      // تحميل الخطة تلقائياً (بدون تحميل مواد حتى اختيار السنة)
-      fetchPlanData();
-      
+  window.addEventListener('DOMContentLoaded', async () => {
+      // زر مشاركة رابط المقرر (وضع المقرر)
+      const shareBtn = document.getElementById('shareCourseBtn');
+      if (shareBtn) shareBtn.addEventListener('click', shareCourseLink);
+
       // التعامل مع زر الرجوع في المتصفح
-      window.addEventListener('popstate', (event) => {
+      window.addEventListener('popstate', onPopState);
+
+      // اعتراض نقرات روابط المقررات الداخلية للتنقل داخل الصفحة
+      document.addEventListener('click', onInternalLinkClick);
+
+      if (PAGE_CODE) {
+          // وضع المقرر: نجلب بيانات المقرر المفتوح فقط (وليس الخطة كاملة)
+          currentPlan = PAGE_PLAN;
+          await fetchSingleCourse(PAGE_PLAN, PAGE_CODE);
+      } else {
+          // دعم الروابط القديمة ?id=CODE: فتح المقرر عبر مساره النظيف
           const urlParams = new URLSearchParams(window.location.search);
-          const courseId = urlParams.get('id');
-          if (courseId) {
-              scrollToCourse(courseId, false);
+          const legacyId = urlParams.get('id');
+          if (legacyId) {
+              const plan = document.getElementById('planSelector').value;
+              const ok = await fetchSingleCourse(plan, legacyId, { historyAction: 'replace' });
+              if (!ok) {
+                  // قد ينتمي المقرر للخطة الأخرى
+                  const other = plan === 'edu' ? 'aadab' : 'edu';
+                  await fetchSingleCourse(other, legacyId, { historyAction: 'replace' });
+              }
           } else {
-              document.getElementById('courseSelect').value = "";
-              selectedYear = '';
-              selectedSemester = '';
-              selectedCat = '';
-              updateYearFilterActive();
-              populateSemesterFilterBar();
-              updateCatFilterActive();
-              resetCourseSelect();
+              // وضع التصفح: تحميل الخطة كاملة
+              fetchPlanData();
           }
-      });
+      }
   });
+
+  /* === روابط المقررات النظيفة على غرار /course/CODE === */
+  function courseUrl(plan, code) {
+      return `${PLAN_TOOL_BASE}/${encodeURIComponent(plan)}/${encodeURIComponent(code)}`;
+  }
+
+  // يستخرج الخطة ورمز المقرر من المسار (مثل /tools/study-plan/edu/ARAB111)
+  function parseCoursePath() {
+      const path = window.location.pathname;
+      const idx = path.indexOf(PLAN_TOOL_BASE + '/');
+      if (idx === -1) return null;
+      const rest = path.slice(idx + PLAN_TOOL_BASE.length + 1).replace(/\/+$/, '');
+      const parts = rest.split('/');
+      if (parts.length < 2 || !parts[0] || !parts[1]) return null;
+      return { plan: parts[0], code: decodeURIComponent(parts[1]) };
+  }
+
+  function applyHistoryAction(action, plan, code) {
+      if (!action) return;
+      const url = courseUrl(plan, code);
+      if (action === 'push') window.history.pushState({ plan, code }, '', url);
+      else if (action === 'replace') window.history.replaceState({ plan, code }, '', url);
+  }
+
+  /* === فتح مقرر: يحدّث الرابط النظيف ويجلب المقرر المفتوح فقط === */
+  function openCourse(plan, code, opts = {}) {
+      currentPlan = plan;
+      const action = opts.historyAction !== undefined ? opts.historyAction : 'push';
+      if (fullPlanLoaded) {
+          // البيانات متوفرة مسبقاً في وضع التصفح: نكتفي بالتمرير
+          const course = currentCoursesDB.find(c => c.id === code);
+          if (!course) return;
+          applyHistoryAction(action, plan, code);
+          scrollToCourseCard(code, opts.scroll !== false);
+      } else {
+          // وضع المقرر: نجلب بيانات المقرر المفتوح فقط
+          fetchSingleCourse(plan, code, { historyAction: action });
+      }
+  }
+
+  function onCourseSelectChange(code) {
+      if (code) openCourse(currentPlan, code);
+  }
+
+  // اعتراض نقرات الروابط الداخلية: تنقل داخل الأداة مع الحفاظ على الرابط الحقيقي
+  function onInternalLinkClick(e) {
+      const a = e.target.closest('a.internal-link');
+      if (!a) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const code = a.dataset.code;
+      if (!code) return;
+      e.preventDefault();
+      openCourse(currentPlan, code);
+  }
+
+  function onPopState() {
+      const parsed = parseCoursePath();
+      if (parsed) {
+          openCourse(parsed.plan, parsed.code, { historyAction: null, scroll: false });
+          return;
+      }
+      if (fullPlanLoaded) {
+          resetBrowseView();
+          return;
+      }
+      if (!PAGE_CODE) {
+          window.location.href = PLAN_TOOL_BASE;
+      }
+  }
+
+  function onPlanChanged() {
+      const plan = document.getElementById('planSelector').value;
+      currentPlan = plan;
+      if (focusedCourseCode) {
+          // وضع المقرر: محاولة فتح نفس المقرر في الخطة الجديدة
+          fetchSingleCourse(plan, focusedCourseCode, { historyAction: 'replace' });
+      } else {
+          // وضع التصفح: تحميل الخطة الجديدة والعودة لرابط الأداة
+          window.history.replaceState({}, '', PLAN_TOOL_BASE);
+          fetchPlanData();
+      }
+  }
 
   async function fetchPlanData() {
       const planName = document.getElementById('planSelector').value;
@@ -1344,12 +1492,23 @@
       // إظهار حالة التحميل داخل قائمة المواد
       select.innerHTML = '<option value="" disabled selected>جاري تحميل بيانات الخطة...</option>';
       select.disabled = true;
+      fullPlanLoaded = false;
 
       try {
-          const response = await fetch(`/assets/plans/${planName}.json`);
+          const response = await fetch(`${PLANS_DATA_BASE}/${planName}.json`);
           if (!response.ok) throw new Error("لم يتم العثور على ملف الخطة");
           const data = await response.json();
           currentCoursesDB = data;
+          currentPlan = planName;
+          fullPlanLoaded = true;
+          focusedCourseCode = null;
+
+          // إعادة واجهة التصفح الكاملة (في حال قدمنا من وضع المقرر)
+          restoreHeader();
+          document.getElementById('courseSelectGroup').style.display = '';
+          document.getElementById('courseModePanel').style.display = 'none';
+          document.getElementById('planFilterBar').style.display = '';
+          document.getElementById('courseActions').style.display = 'none';
 
           select.disabled = false;
           selectedYear = '';
@@ -1363,29 +1522,7 @@
           populateCatFilterBar();
           rawafidHideLoader();
 
-          // التحقق من الرابط في حال وجود ID لمقرر معين
-          const urlParams = new URLSearchParams(window.location.search);
-          const initialCourseId = urlParams.get('id');
-          if (initialCourseId) {
-              const exists = currentCoursesDB.find(c => c.id === initialCourseId);
-              if (exists) {
-                  if (exists.year) {
-                      selectedYear = exists.year;
-                      updateYearFilterActive();
-                      populateSemesterFilterBar();
-                      if (exists.semester) {
-                          selectedSemester = exists.semester;
-                          updateSemesterFilterActive();
-                      }
-                  }
-                  applyFilters();
-                  scrollToCourse(initialCourseId, false);
-              } else {
-                  document.getElementById('emptyState').style.display = 'block';
-              }
-          } else {
-              refreshMaterials();
-          }
+          refreshMaterials();
 
       } catch (error) {
           console.error(error);
@@ -1393,6 +1530,142 @@
           select.innerHTML = '<option value="" disabled selected>حدثت مشكلة</option>';
           select.disabled = true;
           alert("حدث خطأ أثناء تحميل الخطة الدراسية.");
+      }
+  }
+
+  /* === جلب المقرر المفتوح فقط (وليس الخطة كاملة) === */
+  async function fetchSingleCourse(plan, code, opts = {}) {
+      const empty = document.getElementById('emptyState');
+      const emptyText = document.getElementById('emptyStateText');
+      document.getElementById('materialsSection').style.display = 'none';
+      emptyText.textContent = 'جاري تحميل بيانات المقرر...';
+      empty.style.display = 'block';
+
+      try {
+          const response = await fetch(`${PLANS_DATA_BASE}/${encodeURIComponent(plan)}/${encodeURIComponent(code)}.json`);
+          if (!response.ok) throw new Error("لم يتم العثور على المقرر");
+          const course = await response.json();
+
+          // قاعدة بيانات محلية تضم المقرر ومقرراته المرتبطة فقط
+          currentCoursesDB = [course].concat(course.related || []);
+          currentFilteredCourses = [course];
+          currentPlan = plan;
+          focusedCourseCode = course.id;
+          lastCourseId = course.id;
+
+          renderFocusedCourse(course);
+          applyHistoryAction(opts.historyAction, plan, code);
+          rawafidHideLoader();
+          return true;
+      } catch (error) {
+          console.error(error);
+          focusedCourseCode = null;
+          showCourseError(plan, code);
+          rawafidHideLoader();
+          return false;
+      }
+  }
+
+  /* === عرض مقرر واحد في وضع المقرر === */
+  function renderFocusedCourse(course) {
+      // رأس الصفحة
+      const titleEl = document.getElementById('planTitle');
+      const subEl = document.getElementById('planSubtitle');
+      if (titleEl) titleEl.textContent = course.name || course.id;
+      if (subEl) {
+          const parts = [course.id];
+          if (course.year) parts.push(course.year.replace('السنة الدراسية', 'السنة'));
+          if (course.semester) parts.push(course.semester);
+          subEl.textContent = parts.join(' · ');
+      }
+      document.title = (course.name || course.id) + ' - الخطة الدراسية - روافد';
+      updateCourseMeta(course);
+
+      // إظهار عناصر وضع المقرر وإخفاء عناصر التصفح
+      document.getElementById('courseSelectGroup').style.display = 'none';
+      document.getElementById('courseModePanel').style.display = 'block';
+      document.getElementById('planFilterBar').style.display = 'none';
+      document.getElementById('courseActions').style.display = 'flex';
+
+      const list = document.getElementById('materialsList');
+      list.innerHTML = buildCourseCard(course);
+      document.getElementById('materialsCount').textContent = 'مقرر واحد';
+      document.getElementById('materialsLabel').textContent = course.name || course.id;
+      document.getElementById('materialsSection').style.display = 'block';
+      document.getElementById('emptyState').style.display = 'none';
+
+      // التأكد من أن قائمة التخصص تشير إلى الخطة الحالية
+      const sel = document.getElementById('planSelector');
+      if (sel) sel.value = currentPlan;
+  }
+
+  function showCourseError(plan, code) {
+      document.getElementById('courseSelectGroup').style.display = 'none';
+      document.getElementById('courseModePanel').style.display = 'block';
+      document.getElementById('planFilterBar').style.display = 'none';
+      document.getElementById('materialsSection').style.display = 'none';
+      const empty = document.getElementById('emptyState');
+      document.getElementById('emptyStateText').textContent =
+          'هذا المقرر غير متوفر ضمن الخطة المحددة، جرّب تغيير التخصص بالأعلى أو تصفح الخطة كاملة';
+      empty.style.display = 'block';
+  }
+
+  /* === إعادة ضبط واجهة التصفح (عند الرجوع في المتصفح) === */
+  function resetBrowseView() {
+      focusedCourseCode = null;
+      restoreHeader();
+      document.getElementById('courseSelectGroup').style.display = '';
+      document.getElementById('courseModePanel').style.display = 'none';
+      document.getElementById('planFilterBar').style.display = '';
+      document.getElementById('courseActions').style.display = 'none';
+      selectedYear = '';
+      selectedSemester = '';
+      selectedCat = '';
+      lastCourseId = null;
+      updateYearFilterActive();
+      populateSemesterFilterBar();
+      updateCatFilterActive();
+      resetCourseSelect();
+  }
+
+  function restoreHeader() {
+      const titleEl = document.getElementById('planTitle');
+      const subEl = document.getElementById('planSubtitle');
+      if (titleEl) titleEl.textContent = 'الخطة الدراسية';
+      if (subEl) subEl.textContent = 'دليل تفاعلي للمقررات والمتطلبات والساعات المعتمدة';
+      document.title = 'الخطة الدراسية - روافد';
+      const ogTitle = document.getElementById('og-title');
+      if (ogTitle) ogTitle.setAttribute('content', 'الخطة الدراسية - روافد');
+      const ogDesc = document.getElementById('og-description');
+      if (ogDesc) ogDesc.setAttribute('content', 'دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة واللاحقة.');
+  }
+
+  function updateCourseMeta(course) {
+      const ogTitle = document.getElementById('og-title');
+      if (ogTitle) ogTitle.setAttribute('content', (course.name || course.id) + ' - الخطة الدراسية - روافد');
+      const ogDesc = document.getElementById('og-description');
+      if (ogDesc) {
+          const prereqText = course.prereq
+              ? 'متطلب سابق: ' + course.prereq
+              : 'لا يوجد متطلب سابق';
+          ogDesc.setAttribute('content', `تفاصيل مقرر ${course.name || course.id} (${course.id}) - ${prereqText}.`);
+      }
+  }
+
+  /* === مشاركة رابط المقرر النظيف === */
+  function shareCourseLink() {
+      const url = focusedCourseCode ? courseUrl(currentPlan, focusedCourseCode) : window.location.href;
+      const title = document.title || 'الخطة الدراسية - روافد';
+      if (navigator.share) {
+          navigator.share({ title, url }).catch(() => {});
+      } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+              const btn = document.getElementById('shareCourseBtn');
+              if (!btn) return;
+              const original = btn.innerHTML;
+              btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+              setTimeout(() => { btn.innerHTML = original; }, 2000);
+          }).catch(() => {});
       }
   }
 
@@ -1655,13 +1928,13 @@
           ? '0 ساعات معتمدة'
           : course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
 
-      const linkOf = (pId, iconName) => {
-          const pCourse = currentCoursesDB.find(c => c.id === pId);
-          const pName = pCourse ? pCourse.name : pId;
-          return `<a class="internal-link" href="javascript:void(0)" onclick="scrollToCourse('${pId}', true)">
-                    <i class="fas ${iconName}"></i> ${pId} (${pName})
-                  </a>`;
-      };
+       const linkOf = (pId, iconName) => {
+           const pCourse = currentCoursesDB.find(c => c.id === pId);
+           const pName = pCourse ? pCourse.name : pId;
+           return `<a class="internal-link" href="${courseUrl(currentPlan, pId)}" data-code="${pId}">
+                     <i class="fas ${iconName}"></i> ${pId} (${pName})
+                   </a>`;
+       };
 
       const prereqHtml = course.prereq
           ? course.prereq.split(',').map(p => linkOf(p.trim(), 'fa-arrow-left')).join('')
@@ -1671,13 +1944,20 @@
           ? course.coreq.split(',').map(p => linkOf(p.trim(), 'fa-exchange-alt')).join('')
           : '<span style="color:var(--text-muted)">لا يوجد</span>';
 
-      const nextCourses = currentCoursesDB.filter(c => {
-          if (!c.prereq) return false;
-          return c.prereq.split(',').map(p => p.trim()).includes(course.id);
-      });
-      const postreqHtml = nextCourses.length > 0
-          ? nextCourses.map(c => linkOf(c.id, 'fa-unlock-alt')).join('')
-          : '';
+       // المتطلبات اللاحقة: محسوبة من الخطة كاملة، أو من حقل postreq في وضع المقرر
+       let nextCourses;
+       if (course.postreq) {
+           const postIds = course.postreq.split(',').map(p => p.trim());
+           nextCourses = postIds.map(id => currentCoursesDB.find(c => c.id === id)).filter(Boolean);
+       } else {
+           nextCourses = currentCoursesDB.filter(c => {
+               if (!c.prereq) return false;
+               return c.prereq.split(',').map(p => p.trim()).includes(course.id);
+           });
+       }
+       const postreqHtml = nextCourses.length > 0
+           ? nextCourses.map(c => linkOf(c.id, 'fa-unlock-alt')).join('')
+           : '';
 
       const isElectiveSlot = /^ELECTIVE\d+$/.test(course.id) && !course.hidden;
 
@@ -1745,16 +2025,16 @@
       }
   }
 
-  /* === الانتقال إلى مقرر معين (من القائمة أو الروابط الداخلية) === */
-  function scrollToCourse(courseId, updateHistory = true, doScroll = true) {
-      const course = currentCoursesDB.find(c => c.id === courseId);
+  /* === التمرير إلى مقرر ضمن قائمة التصفح (البيانات محمّلة مسبقاً) === */
+  function scrollToCourseCard(code, doScroll = true) {
+      const course = currentCoursesDB.find(c => c.id === code);
       if (!course) return;
 
       const select = document.getElementById('courseSelect');
-      select.value = courseId;
+      if (select && !select.disabled) select.value = code;
 
       // إذا لم يكن المقرر ضمن النتائج الحالية، نعيد التصفية حسب سنته وفصله
-      if (!currentFilteredCourses.some(c => c.id === courseId)) {
+      if (!currentFilteredCourses.some(c => c.id === code)) {
           if (course.year) {
               selectedYear = course.year;
               updateYearFilterActive();
@@ -1767,18 +2047,13 @@
           applyFilters();
       }
 
-      lastCourseId = courseId;
+      lastCourseId = code;
       const cards = document.querySelectorAll('#materialsList .course-card');
       cards.forEach(card => card.classList.remove('highlighted'));
-      const card = document.querySelector(`#materialsList .course-card[data-id="${courseId}"]`);
+      const card = document.querySelector(`#materialsList .course-card[data-id="${code}"]`);
       if (card) {
           card.classList.add('highlighted');
           if (doScroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      if (updateHistory) {
-          const newUrl = `${window.location.pathname}?id=${courseId}`;
-          window.history.pushState({ path: newUrl }, '', newUrl);
       }
   }
 </script>

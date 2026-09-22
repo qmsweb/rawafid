@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB213",
+    "name":  "نحو 3",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB124",
+    "coreq":  null,
+    "postreq":  "ARAB224",
+    "related":  [
+                    {
+                        "id":  "ARAB124",
+                        "name":  "نحو 2"
+                    },
+                    {
+                        "id":  "ARAB224",
+                        "name":  "نحو 4"
+                    }
+                ]
+}

@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB327",
+    "name":  "النقد قديم",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB212",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الربيع",
+    "postreq":  "ARAB417",
+    "related":  [
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    },
+                    {
+                        "id":  "ARAB417",
+                        "name":  "النقد حديث"
+                    }
+                ]
+}

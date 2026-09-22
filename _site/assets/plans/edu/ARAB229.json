@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB229",
+    "name":  "علم الأصوات - الصوتيات",
+    "hours":  4,
+    "cat":  "spec",
+    "prereq":  "ARAB215",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الربيع",
+    "postreq":  "ARAB311",
+    "related":  [
+                    {
+                        "id":  "ARAB215",
+                        "name":  "الصرف"
+                    },
+                    {
+                        "id":  "ARAB311",
+                        "name":  "اللسانيات"
+                    }
+                ]
+}

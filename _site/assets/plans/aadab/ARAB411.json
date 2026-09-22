@@ -1,0 +1,23 @@
+{
+    "id":  "ARAB411",
+    "name":  "النقد الأدبي القديم",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB212",
+    "coreq":  null,
+    "postreq":  "ARAB422, ARAB424",
+    "related":  [
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    },
+                    {
+                        "id":  "ARAB422",
+                        "name":  "النقد الأدبي الحديث"
+                    },
+                    {
+                        "id":  "ARAB424",
+                        "name":  "تحقيق النصوص"
+                    }
+                ]
+}

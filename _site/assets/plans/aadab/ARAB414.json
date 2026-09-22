@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB414",
+    "name":  "تطبيقات نحوية",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB224",
+    "coreq":  null,
+    "postreq":  "ARAB423",
+    "related":  [
+                    {
+                        "id":  "ARAB224",
+                        "name":  "نحو 4"
+                    },
+                    {
+                        "id":  "ARAB423",
+                        "name":  "علم العروض والقافية"
+                    }
+                ]
+}

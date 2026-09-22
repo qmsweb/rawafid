@@ -1,0 +1,14 @@
+{
+    "id":  "PHL101A",
+    "name":  "الفلسفة",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

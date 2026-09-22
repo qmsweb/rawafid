@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB223",
+    "name":  "الشعر الأندلسي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB212",
+    "coreq":  null,
+    "postreq":  "ARAB313",
+    "related":  [
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    },
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    }
+                ]
+}

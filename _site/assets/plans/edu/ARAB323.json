@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB323",
+    "name":  "الأدب العماني",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB313",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الربيع",
+    "postreq":  "ARAB418",
+    "related":  [
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    },
+                    {
+                        "id":  "ARAB418",
+                        "name":  "موسيقا الشعر"
+                    }
+                ]
+}

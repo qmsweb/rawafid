@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رياضيات أساسية (Basic Math) - الخطة الدراسية</title>
+
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+  <link rel="icon" href="/images/favicon.png" type="image/jpg">
+  <meta property="og:title" content="رياضيات أساسية (Basic Math) - الخطة الدراسية - روافد" id="og-title">
+  <meta property="og:description" content="تفاصيل مقرر رياضيات أساسية (Basic Math) (FPBM001A) ضمن تخصص التربية في اللغة العربية: المتطلبات السابقة والمتزامنة والساعات المعتمدة." id="og-description">
+  <meta property="og:image" content="https://rawafid.jassim.one/images/plan.png">
+  <meta property="og:url" content="https://rawafid.jassim.one/tools/study-plan/edu/FPBM001A">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+        const savedTheme = localStorage.getItem('rawafed-theme');
+        document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === المتغيرات والألوان === */
+    :root {
+      --primary-color: #1a2ac6;
+      --bg-body: #f4f6fb;
+      --bg-card: #ffffff;
+      --border-color: #ccd1e0;
+      --text-main: #2d2d2d;
+      --text-muted: #666666;
+      --bg-code: #f4f6fb;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --radius-md: 12px;
+      --hover-bg: #e0e7ff;
+        
+      /* ألوان التصنيف */
+      --tag-spec-bg: #fff8e1;
+      --tag-spec-text: #f57f17;
+      
+      --tag-edu-bg: #e8f5e9;
+      --tag-edu-text: #2e7d32;
+      
+      --tag-uni-bg: #e3f2fd;
+      --tag-uni-text: #1565c0;
+
+      --tag-found-bg: #f3e5f5;
+      --tag-found-text: #7b1fa2;
+    }
+
+    html[data-theme="dark"] {
+      --primary-color: #7986cb;
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --bg-code: #2c2c2c;
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      --hover-bg: #2c2e3e;
+      
+      --tag-spec-bg: #4a3b0a;
+      --tag-spec-text: #ffd54f;
+      
+      --tag-edu-bg: #1b5e20;
+      --tag-edu-text: #a5d6a7;
+      
+      --tag-uni-bg: #0d47a1;
+      --tag-uni-text: #90caf9;
+
+      --tag-found-bg: #4a148c;
+      --tag-found-text: #e1bee7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* === Header & Actions === */
+    .tool-header {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      border-right: 4px solid var(--primary-color);
+      padding-right: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .tool-header p { color: var(--text-muted); margin-top: 5px; }
+
+    /* حاوية أزرار التحكم في الخطة */
+    .plan-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .header-select {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        cursor: pointer;
+        outline: none;
+        min-width: 200px;
+    }
+    .header-select:focus { border-color: var(--primary-color); }
+
+    /* === Input Section === */
+    .search-box-container {
+        background: var(--bg-card);
+        padding: 20px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+    }
+
+    .select-field {
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+    }
+    .select-field:focus { border-color: var(--primary-color); }
+
+    /* === Result Card Styles === */
+    .course-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        display: none; 
+        animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+        background: var(--bg-code);
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .course-code { font-weight: 700; color: var(--primary-color); font-size: 1.1rem; }
+    .course-hours-badge { 
+        background: var(--bg-body); 
+        padding: 5px 12px; 
+        border-radius: 20px; 
+        font-size: 0.85rem; 
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .card-body { padding: 25px; }
+    
+    .course-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .tags-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .tag-spec { background: var(--tag-spec-bg); color: var(--tag-spec-text); }
+    .tag-edu { background: var(--tag-edu-bg); color: var(--tag-edu-text); }
+    .tag-uni { background: var(--tag-uni-bg); color: var(--tag-uni-text); }
+    .tag-found { background: var(--tag-found-bg); color: var(--tag-found-text); }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .info-label { font-size: 0.85rem; color: var(--text-muted); }
+    .info-value { font-size: 1.1rem; font-weight: 500; }
+
+    /* تنسيق خاص للروابط الداخلية */
+    .internal-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        cursor: pointer;
+        display: block;
+        padding: 4px 0;
+        transition: 0.2s;
+    }
+    .internal-link:hover { text-decoration: underline; opacity: 0.8; }
+    .internal-link i { font-size: 0.8em; margin-left: 5px; }
+
+    /* === أزرار وضع المقرر (مشاركة + تصفح الخطة) === */
+    .share-button {
+        background: var(--bg-card);
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    .share-button:hover { background: var(--primary-color); color: #fff; }
+    .browse-plan-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 50px;
+        border: 1px dashed var(--primary-color);
+        transition: all 0.3s;
+    }
+    .browse-plan-btn:hover { background: var(--hover-bg); }
+
+    /* === Empty State === */
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-muted);
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+    /* === التوزيع العمودي (الشاشات الكبيرة) === */
+    .plan-split {
+        display: grid;
+        grid-template-columns: 330px 1fr;
+        gap: 26px;
+        align-items: start;
+    }
+    .plan-side, .plan-main { min-width: 0; }
+    .plan-side {
+        position: sticky;
+        top: calc(var(--nav-height, 70px) + 24px);
+    }
+    .plan-side .search-box-container { margin-bottom: 0; }
+    .side-label {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .side-label i { color: var(--primary-color); }
+    .side-hint {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 14px;
+        line-height: 1.7;
+    }
+
+    /* === فلاتر السنة والفصل الدراسي: شرائح بجانب بعضها وتحت بعضها === */
+    .plan-filter-bar {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+    .filter-group-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+    .filter-group-label i { color: var(--primary-color); font-size: 0.8rem; }
+
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-item {
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: var(--bg-card);
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.82rem;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    .filter-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+    .filter-item.active:hover { color: #fff; }
+
+    /* === شبكة المقررات المتاحة (تظهر بعد اختيار السنة/الفصل) === */
+    .materials-section {
+        margin-bottom: 26px;
+    }
+    .materials-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .materials-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .materials-title i { color: var(--primary-color); }
+    .materials-count {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        padding: 4px 14px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .materials-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* في الشاشات الكبيرة: عرض المقررات بطريقة شبكية (مقرران في الصف الواحد) */
+    @media (min-width: 1151px) {
+        .materials-list {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start;
+        }
+        .materials-list > .course-card:only-child { grid-column: 1 / -1; }
+    }
+
+    /* بطاقة مقرر كاملة التفاصيل داخل قائمة المقررات */
+    .course-card.in-list { display: block; margin-bottom: 0; }
+    .course-card.in-list .card-header { padding: 14px 22px; }
+    .course-card.in-list .card-body { padding: 18px 22px; }
+    .course-card.in-list .course-title { font-size: 1.2rem; margin-bottom: 12px; }
+    .course-card.in-list .tags-container { margin-bottom: 14px; }
+    .course-card.in-list .info-grid { margin-top: 14px; padding-top: 14px; gap: 14px; }
+    .course-card.highlighted {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color), var(--card-shadow);
+    }
+
+    /* === زر ولوحة المقررات الاختيارية (اختر مقررين من 4) === */
+    .elective-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-body);
+        border: 1px dashed var(--primary-color);
+        color: var(--primary-color);
+        padding: 9px 18px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 2px;
+    }
+    .elective-btn:hover { background: var(--hover-bg); }
+    .elective-btn i { font-size: 0.85rem; }
+
+    .elective-pool {
+        margin-top: 16px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    @media (min-width: 700px) {
+        .elective-pool { grid-template-columns: repeat(2, 1fr); }
+    }
+    .elective-pool .pool-head {
+        grid-column: 1 / -1;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .elective-pool .pool-head i { color: var(--primary-color); }
+    .elective-pool .course-card.in-list { box-shadow: none; }
+
+    .course-summary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        line-height: 1.6;
+    }
+    .course-summary i { color: var(--primary-color); flex-shrink: 0; }
+
+    @media (min-width: 1100px) {
+        .container { max-width: 1360px; padding: 0 28px; }
+        .card-header { padding: 24px 30px; }
+        .card-body { padding: 30px; }
+        .course-title { font-size: 2rem; }
+    }
+
+    @media (max-width: 1150px) {
+        .plan-split { grid-template-columns: 1fr; }
+        .plan-side { position: static; }
+        .plan-side .search-box-container { margin-bottom: 30px; }
+    }
+
+    @media (max-width: 600px) {
+        .tool-header { flex-direction: column; align-items: flex-start; }
+        .course-title { font-size: 1.4rem; }
+        .card-body { padding: 18px; }
+        .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+
+  </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/tools/study-plan/edu/FPBM001A">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="المنصة العربية للتعليم والمراجع">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "المنصة العربية للتعليم والمراجع",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "رياضيات أساسية (Basic Math) - الخطة الدراسية",
+  "description": "تفاصيل مقرر رياضيات أساسية (Basic Math) (FPBM001A) ضمن تخصص التربية في اللغة العربية: المتطلبات السابقة والمتزامنة والساعات المعتمدة.",
+  "provider": { "@type": "Organization", "name": "منصة روافد", "url": "https://rawafid.jassim.one/" },
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
+    { "@type": "ListItem", "position": 2, "name": "رياضيات أساسية (Basic Math) - الخطة الدراسية", "item": "https://rawafid.jassim.one/tools/study-plan/edu/FPBM001A" }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+  <style>
+  :root {
+    --primary-color: #1a2ac6; /* اللون الأزرق للوضع الفاتح */
+    --nav-height: 70px;
+    --icon-size: 24px;
+    --btn-size: 42px;
+  }
+
+  /* === إعدادات الأوضاع === */
+  /* الوضع الداكن */
+  [data-theme="dark"] {
+    --primary-color: #7986cb; 
+  }
+
+  [data-theme="dark"] .navbar {
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  body {
+    padding-top: var(--nav-height);
+  }
+
+  /* === إعدادات النافبار === */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    height: var(--nav-height);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* === الشعار === */
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo img {
+    height: 38px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+   
+  .logo img.loaded { opacity: 1; }
+
+  .logo:hover img.loaded {
+    transform: scale(1.05);
+  }
+
+  /* === الروابط === */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcc00;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+    .nav-links a:hover { color: #ffcc00; }
+
+    /* === زر تغيير الوضع في القائمة الجانبية === */
+    .sidebar-theme-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-theme-toggle:hover { color: #ffcc00; }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon {
+      position: relative;
+    }
+
+    .sidebar-theme-toggle .sidebar-theme-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      transition: opacity 0.3s ease, transform 0.35s ease;
+    }
+
+    .sidebar-theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    .sidebar-theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .sidebar-theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+    /* === أزرار التحكم والأيقونات === */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+  }
+
+  .search-nav-btn { text-decoration: none; }
+
+  /* --- منطق زر المظهر (قمر/شمس) --- */
+  .theme-toggle-btn .icon-moon,
+  .theme-toggle-btn .icon-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+    transition: opacity 0.3s ease, transform 0.35s ease;
+  }
+
+  .theme-toggle-btn .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+  .theme-toggle-btn .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  [data-theme="dark"] .theme-toggle-btn .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+
+  .theme-toggle-btn:hover svg { color: #ffcc00; }
+
+  /* --- زر القائمة (Menu Toggle) --- */
+  .menu-toggle-btn { display: none; }
+   
+  .menu-toggle-btn .close-icon { 
+    display: none; 
+    position: absolute;
+  }
+   
+  .menu-toggle-btn.open .menu-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+  .menu-toggle-btn.open .close-icon { display: block; opacity: 1; transform: rotate(90deg) scale(1); }
+
+
+  /* === تصميم الجوال === */
+  @media (max-width: 768px) {
+    .menu-toggle-btn { display: flex; }
+    .theme-toggle-btn { display: none; }
+    .sidebar-theme-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: 75%;
+      max-width: 300px;
+      height: calc(100vh - var(--nav-height));
+      background-color: var(--primary-color);
+      
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+      
+      transform: translateX(100%); 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+      backdrop-filter: blur(12px); 
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li { width: 100%; margin-bottom: 8px; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
+    
+    .nav-links.active li { opacity: 1; transform: translateX(0); }
+    .nav-links.active li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.25s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) { transition-delay: 0.35s; }
+    .nav-links.active li:nth-child(6) { transition-delay: 0.4s; }
+
+    .nav-links a {
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0;
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 998;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active { opacity: 1; visibility: visible; }
+  }
+</style>
+
+<header>
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <img 
+        id="cached-logo"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+        data-url="/images/rawafid-1.png" 
+        alt="شعار روافد" 
+      />
+    </a>
+    
+    <div class="overlay" id="nav-overlay"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الصفحة الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="sidebar-theme-toggle" id="sidebar-theme-toggle" aria-label="التبديل إلى الوضع الليلي">
+          <span class="sidebar-theme-icon">
+            <svg class="icon-moon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+            </svg>
+          </span>
+          <span id="sidebar-theme-label">المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="/search" class="icon-btn search-nav-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="التبديل إلى الوضع الليلي" title="التبديل إلى الوضع الليلي">
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="icon-btn menu-toggle-btn" id="menu-toggle" aria-label="القائمة">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    /* === 1. كاش اللوجو === */
+    const logoImg = document.getElementById('cached-logo');
+    const targetUrl = logoImg.getAttribute('data-url');
+    const CACHE_KEY_DATA = 'rawafid_logo_data';
+    const CACHE_KEY_URL = 'rawafid_logo_url';
+    const cachedData = localStorage.getItem(CACHE_KEY_DATA);
+    const cachedUrl = localStorage.getItem(CACHE_KEY_URL);
+
+    function displayLogo(src) {
+        logoImg.src = src;
+        logoImg.onload = () => logoImg.classList.add('loaded');
+    }
+
+    if (cachedData && cachedUrl === targetUrl) {
+        displayLogo(cachedData);
+    } else {
+        displayLogo(targetUrl);
+        fetch(targetUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    try {
+                        localStorage.setItem(CACHE_KEY_DATA, reader.result);
+                        localStorage.setItem(CACHE_KEY_URL, targetUrl);
+                    } catch (e) {}
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+    }
+
+    /* === خدمة تخزين الخطوط (Service Worker) === */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register("/sw.js")
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    /* === 2. منطق القائمة المنسدلة === */
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpened = navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      document.body.style.overflow = isOpened ? 'hidden' : '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+    }
+
+    /* === 3. نظام الثيمات المركزي === */
+    var themeScript = document.createElement('script');
+    themeScript.src = "/assets/js/theme.js";
+    themeScript.async = false;
+    document.head.appendChild(themeScript);
+  });
+</script>
+
+  <!-- === مكون التحميل الموحد === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: var(--bg-body, #f4f6fb);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  [data-theme="dark"] #rawafid-loading-overlay {
+    background: var(--bg-body, #121212);
+  }
+  .rawafid-loader-spinner {
+    width: 44px; height: 44px;
+    border: 3.5px solid var(--border-color, #ccd1e0);
+    border-top-color: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+  .rawafid-loader-text {
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted, #666666);
+    letter-spacing: 0.3px;
+  }
+  .rawafid-loader-dots {
+    display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px;
+  }
+  .rawafid-loader-dots span {
+    width: 5px; height: 5px;
+    background: var(--primary-color, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<div id="rawafid-loading-overlay">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  function rawafidHideLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+  function rawafidShowLoader() {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+</script>
+
+
+  <div class="container">
+      
+    <div class="tool-header">
+      <div>
+          <h1 id="planTitle">الخطة الدراسية</h1>
+          <p id="planSubtitle">دليل تفاعلي للمقررات والمتطلبات والساعات المعتمدة</p>
+      </div>
+      <div id="courseActions" class="plan-controls" style="display: none;">
+          <button type="button" id="shareCourseBtn" class="share-button">
+              <i class="fas fa-share-nodes"></i> مشاركة رابط المقرر
+          </button>
+          <a class="browse-plan-btn" href="/tools/study-plan">
+              <i class="fas fa-th-large"></i> تصفح الخطة كاملة
+          </a>
+      </div>
+    </div>
+
+    <div class="plan-split">
+      <aside class="plan-side">
+        <div class="search-box-container">
+          <div class="side-label"><i class="fas fa-graduation-cap"></i> التخصص</div>
+          <select id="planSelector" class="select-field" onchange="onPlanChanged()">
+              <option value="edu" selected>تخصص التربية في اللغة العربية</option>
+              <option value="aadab">تخصص آداب اللغة العربية</option>
+          </select>
+
+          <div id="courseSelectGroup">
+              <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
+              <select id="courseSelect" class="select-field" onchange="onCourseSelectChange(this.value)">
+                  <option value="" disabled selected>جاري تحميل المقررات...</option>
+              </select>
+              <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>يمكنك اختيار أي مقرر مباشرة من القائمة — جميع مقررات الخطة متاحة فيها. أما فلاتر السنة والفصل أدناه فتعرض مقررات سنة معينة وتفاصيلها كاملة.</p>
+          </div>
+
+          <div id="courseModePanel" style="display: none;">
+              <p class="side-hint" style="margin-top: 18px;"><i class="fas fa-info-circle" style="margin-left: 6px; color: var(--primary-color);"></i>تعرض هذه الصفحة بيانات المقرر المفتوح فقط بدلاً من الخطة كاملة. غيّر التخصص بالأعلى لعرض المقرر في خطة أخرى، أو تصفح الخطة كاملة.</p>
+          </div>
+        </div>
+
+        <div class="plan-filter-bar" id="planFilterBar">
+            <div class="filter-group">
+                <div class="filter-group-label"><i class="fas fa-calendar-alt"></i> السنة الدراسية</div>
+                <div class="filter-bar" id="yearFilterBar"></div>
+            </div>
+            <div class="filter-group" id="semesterGroup" style="display: none;">
+                <div class="filter-group-label"><i class="fas fa-clock"></i> الفصل الدراسي</div>
+                <div class="filter-bar" id="semesterFilterBar"></div>
+            </div>
+            <div class="filter-group" id="catGroup">
+                <div class="filter-group-label"><i class="fas fa-tags"></i> نوع المقرر</div>
+                <div class="filter-bar" id="catFilterBar"></div>
+            </div>
+        </div>
+      </aside>
+
+      <main class="plan-main">
+        <div id="resultContainer">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-book-open empty-icon"></i>
+            <p id="emptyStateText">اختر السنة الدراسية ثم الفصل من القائمة لعرض المققرات المتاحة</p>
+        </div>
+
+        <section class="materials-section" id="materialsSection" style="display: none;">
+            <div class="materials-head">
+                <div class="materials-title"><i class="fas fa-book-open"></i> <span id="materialsLabel">المقررات المتاحة</span></div>
+                <span class="materials-count" id="materialsCount">0 مقرر</span>
+            </div>
+            <div class="materials-list" id="materialsList"></div>
+        </section>
+      </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/images/jassim-logo.png" 
+             alt="روافد" 
+             class="footer-logo" 
+             loading="lazy" 
+             width="45" 
+             height="45">
+        <span class="copy-text">&copy; 2026 جاسم الفارسي · جميع الحقوق محفوظة</span>
+      </div>
+
+      <div class="footer-actions">
+        <nav class="footer-links">
+          <a href="/">الرئيسة</a>
+          <a href="/about">عن روافد</a>
+        </nav>
+
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn-compact" target="_blank" rel="noopener" aria-label="انضم لقناتنا">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>قناتنا</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  :root {
+    --footer-text: #000000;
+    --footer-copy-text: #666666;
+    --whatsapp-green: #25D366;
+    --logo-filter: brightness(0);
+  }
+
+  [data-theme="dark"] {
+    --footer-text: #e0e0e0;
+    --footer-copy-text: #a0a0a0;
+    --logo-filter: brightness(0) invert(1);
+  }
+
+  .site-footer, .site-footer * { box-sizing: border-box; }
+
+  .site-footer {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    margin-top: 1.5rem;
+    color: var(--footer-text);
+    direction: rtl;
+    border-top: 1px solid rgba(128,128,128,0.15);
+    overflow: hidden;
+  }
+
+  .footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-logo {
+    height: 26px;
+    width: auto;
+    filter: var(--logo-filter);
+    transition: filter 0.3s;
+    display: block;
+  }
+
+  .copy-text {
+    font-size: 0.78rem;
+    color: var(--footer-copy-text);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .footer-links a {
+    color: var(--footer-text);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .footer-links a:hover {
+    opacity: 1;
+    color: var(--primary-color, #1a2ac6);
+    background: var(--primary-light-bg, #eff1ff);
+  }
+
+  .whatsapp-btn-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--whatsapp-green);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.25s;
+  }
+
+  .whatsapp-btn-compact:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  }
+
+  /* === شاشة الجوال: سطر حقوق واحد مضغوط === */
+  @media (max-width: 768px) {
+    .site-footer {
+      padding: 0.5rem 0.6rem;
+      margin-top: 1rem;
+      border-top: none;
+    }
+
+    .footer-inner {
+      flex-direction: row;
+      gap: 0;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-actions {
+      gap: 0;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    .footer-brand {
+      flex: 1;
+      justify-content: center;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .footer-logo {
+      height: 18px;
+    }
+
+    .copy-text {
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .footer-links {
+      display: none;
+    }
+
+    .whatsapp-btn-compact {
+      font-size: 0.68rem;
+      padding: 5px 9px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* شاشات ضيقة جداً: تقليص إضافي */
+  @media (max-width: 380px) {
+    .copy-text { font-size: 0.6rem; }
+    .whatsapp-btn-compact { padding: 4px 8px; }
+    .whatsapp-btn-compact span { display: none; }
+  }
+</style>
+
+
+<script>
+  // دالة تبديل الوضع (مبقية لكي يستخدمها زر الهيدر)
+  function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('rawafed-theme', newTheme);
+  }
+
+  // === إعدادات الصفحة (تُحقن من جيكل لصفحات المقررات المولّدة) ===
+  const PAGE_PLAN = "edu";
+  const PAGE_CODE = "FPBM001A";
+  // الأساس العام للمسارات (يدعم الاستضافة داخل مسار فرعي)
+  const PLAN_TOOL_BASE = "/tools/study-plan".replace(/\/+$/, '');
+  const PLANS_DATA_BASE = "/assets/plans".replace(/\/+$/, '');
+
+  let currentCoursesDB = [];
+  let currentFilteredCourses = [];
+  let selectedYear = '';
+  let selectedSemester = '';
+  let selectedCat = '';
+  let lastCourseId = null;
+  let currentPlan = PAGE_PLAN || 'edu';   // الخطة الحالية
+  let focusedCourseCode = null;           // مقرر العرض المفرد (وضع المقرر)
+  let fullPlanLoaded = false;             // هل حُمّلت الخطة كاملة (وضع التصفح)
+
+  // 1. عند تحميل الصفحة
+  window.addEventListener('DOMContentLoaded', async () => {
+      // زر مشاركة رابط المقرر (وضع المقرر)
+      const shareBtn = document.getElementById('shareCourseBtn');
+      if (shareBtn) shareBtn.addEventListener('click', shareCourseLink);
+
+      // التعامل مع زر الرجوع في المتصفح
+      window.addEventListener('popstate', onPopState);
+
+      // اعتراض نقرات روابط المقررات الداخلية للتنقل داخل الصفحة
+      document.addEventListener('click', onInternalLinkClick);
+
+      if (PAGE_CODE) {
+          // وضع المقرر: نجلب بيانات المقرر المفتوح فقط (وليس الخطة كاملة)
+          currentPlan = PAGE_PLAN;
+          await fetchSingleCourse(PAGE_PLAN, PAGE_CODE);
+      } else {
+          // دعم الروابط القديمة ?id=CODE: فتح المقرر عبر مساره النظيف
+          const urlParams = new URLSearchParams(window.location.search);
+          const legacyId = urlParams.get('id');
+          if (legacyId) {
+              const plan = document.getElementById('planSelector').value;
+              const ok = await fetchSingleCourse(plan, legacyId, { historyAction: 'replace' });
+              if (!ok) {
+                  // قد ينتمي المقرر للخطة الأخرى
+                  const other = plan === 'edu' ? 'aadab' : 'edu';
+                  await fetchSingleCourse(other, legacyId, { historyAction: 'replace' });
+              }
+          } else {
+              // وضع التصفح: تحميل الخطة كاملة
+              fetchPlanData();
+          }
+      }
+  });
+
+  /* === روابط المقررات النظيفة على غرار /course/CODE === */
+  function courseUrl(plan, code) {
+      return `${PLAN_TOOL_BASE}/${encodeURIComponent(plan)}/${encodeURIComponent(code)}`;
+  }
+
+  // يستخرج الخطة ورمز المقرر من المسار (مثل /tools/study-plan/edu/ARAB111)
+  function parseCoursePath() {
+      const path = window.location.pathname;
+      const idx = path.indexOf(PLAN_TOOL_BASE + '/');
+      if (idx === -1) return null;
+      const rest = path.slice(idx + PLAN_TOOL_BASE.length + 1).replace(/\/+$/, '');
+      const parts = rest.split('/');
+      if (parts.length < 2 || !parts[0] || !parts[1]) return null;
+      return { plan: parts[0], code: decodeURIComponent(parts[1]) };
+  }
+
+  function applyHistoryAction(action, plan, code) {
+      if (!action) return;
+      const url = courseUrl(plan, code);
+      if (action === 'push') window.history.pushState({ plan, code }, '', url);
+      else if (action === 'replace') window.history.replaceState({ plan, code }, '', url);
+  }
+
+  /* === فتح مقرر: يحدّث الرابط النظيف ويجلب المقرر المفتوح فقط === */
+  function openCourse(plan, code, opts = {}) {
+      currentPlan = plan;
+      const action = opts.historyAction !== undefined ? opts.historyAction : 'push';
+      if (fullPlanLoaded) {
+          // البيانات متوفرة مسبقاً في وضع التصفح: نكتفي بالتمرير
+          const course = currentCoursesDB.find(c => c.id === code);
+          if (!course) return;
+          applyHistoryAction(action, plan, code);
+          scrollToCourseCard(code, opts.scroll !== false);
+      } else {
+          // وضع المقرر: نجلب بيانات المقرر المفتوح فقط
+          fetchSingleCourse(plan, code, { historyAction: action });
+      }
+  }
+
+  function onCourseSelectChange(code) {
+      if (code) openCourse(currentPlan, code);
+  }
+
+  // اعتراض نقرات الروابط الداخلية: تنقل داخل الأداة مع الحفاظ على الرابط الحقيقي
+  function onInternalLinkClick(e) {
+      const a = e.target.closest('a.internal-link');
+      if (!a) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const code = a.dataset.code;
+      if (!code) return;
+      e.preventDefault();
+      openCourse(currentPlan, code);
+  }
+
+  function onPopState() {
+      const parsed = parseCoursePath();
+      if (parsed) {
+          openCourse(parsed.plan, parsed.code, { historyAction: null, scroll: false });
+          return;
+      }
+      if (fullPlanLoaded) {
+          resetBrowseView();
+          return;
+      }
+      if (!PAGE_CODE) {
+          window.location.href = PLAN_TOOL_BASE;
+      }
+  }
+
+  function onPlanChanged() {
+      const plan = document.getElementById('planSelector').value;
+      currentPlan = plan;
+      if (focusedCourseCode) {
+          // وضع المقرر: محاولة فتح نفس المقرر في الخطة الجديدة
+          fetchSingleCourse(plan, focusedCourseCode, { historyAction: 'replace' });
+      } else {
+          // وضع التصفح: تحميل الخطة الجديدة والعودة لرابط الأداة
+          window.history.replaceState({}, '', PLAN_TOOL_BASE);
+          fetchPlanData();
+      }
+  }
+
+  async function fetchPlanData() {
+      const planName = document.getElementById('planSelector').value;
+      const select = document.getElementById('courseSelect');
+
+      // إظهار حالة التحميل داخل قائمة المواد
+      select.innerHTML = '<option value="" disabled selected>جاري تحميل بيانات الخطة...</option>';
+      select.disabled = true;
+      fullPlanLoaded = false;
+
+      try {
+          const response = await fetch(`${PLANS_DATA_BASE}/${planName}.json`);
+          if (!response.ok) throw new Error("لم يتم العثور على ملف الخطة");
+          const data = await response.json();
+          currentCoursesDB = data;
+          currentPlan = planName;
+          fullPlanLoaded = true;
+          focusedCourseCode = null;
+
+          // إعادة واجهة التصفح الكاملة (في حال قدمنا من وضع المقرر)
+          restoreHeader();
+          document.getElementById('courseSelectGroup').style.display = '';
+          document.getElementById('courseModePanel').style.display = 'none';
+          document.getElementById('planFilterBar').style.display = '';
+          document.getElementById('courseActions').style.display = 'none';
+
+          select.disabled = false;
+          selectedYear = '';
+          selectedSemester = '';
+          selectedCat = '';
+          lastCourseId = null;
+
+          // تجهيز شريط فلاتر السنوات والفصول والتصنيف (النتائج تبقى خاضعة للفلاتر)
+          populateYearFilterBar();
+          populateSemesterFilterBar();
+          populateCatFilterBar();
+          rawafidHideLoader();
+
+          refreshMaterials();
+
+      } catch (error) {
+          console.error(error);
+          rawafidHideLoader();
+          select.innerHTML = '<option value="" disabled selected>حدثت مشكلة</option>';
+          select.disabled = true;
+          alert("حدث خطأ أثناء تحميل الخطة الدراسية.");
+      }
+  }
+
+  /* === جلب المقرر المفتوح فقط (وليس الخطة كاملة) === */
+  async function fetchSingleCourse(plan, code, opts = {}) {
+      const empty = document.getElementById('emptyState');
+      const emptyText = document.getElementById('emptyStateText');
+      document.getElementById('materialsSection').style.display = 'none';
+      emptyText.textContent = 'جاري تحميل بيانات المقرر...';
+      empty.style.display = 'block';
+
+      try {
+          const response = await fetch(`${PLANS_DATA_BASE}/${encodeURIComponent(plan)}/${encodeURIComponent(code)}.json`);
+          if (!response.ok) throw new Error("لم يتم العثور على المقرر");
+          const course = await response.json();
+
+          // قاعدة بيانات محلية تضم المقرر ومقرراته المرتبطة فقط
+          currentCoursesDB = [course].concat(course.related || []);
+          currentFilteredCourses = [course];
+          currentPlan = plan;
+          focusedCourseCode = course.id;
+          lastCourseId = course.id;
+
+          renderFocusedCourse(course);
+          applyHistoryAction(opts.historyAction, plan, code);
+          rawafidHideLoader();
+          return true;
+      } catch (error) {
+          console.error(error);
+          focusedCourseCode = null;
+          showCourseError(plan, code);
+          rawafidHideLoader();
+          return false;
+      }
+  }
+
+  /* === عرض مقرر واحد في وضع المقرر === */
+  function renderFocusedCourse(course) {
+      // رأس الصفحة
+      const titleEl = document.getElementById('planTitle');
+      const subEl = document.getElementById('planSubtitle');
+      if (titleEl) titleEl.textContent = course.name || course.id;
+      if (subEl) {
+          const parts = [course.id];
+          if (course.year) parts.push(course.year.replace('السنة الدراسية', 'السنة'));
+          if (course.semester) parts.push(course.semester);
+          subEl.textContent = parts.join(' · ');
+      }
+      document.title = (course.name || course.id) + ' - الخطة الدراسية - روافد';
+      updateCourseMeta(course);
+
+      // إظهار عناصر وضع المقرر وإخفاء عناصر التصفح
+      document.getElementById('courseSelectGroup').style.display = 'none';
+      document.getElementById('courseModePanel').style.display = 'block';
+      document.getElementById('planFilterBar').style.display = 'none';
+      document.getElementById('courseActions').style.display = 'flex';
+
+      const list = document.getElementById('materialsList');
+      list.innerHTML = buildCourseCard(course);
+      document.getElementById('materialsCount').textContent = 'مقرر واحد';
+      document.getElementById('materialsLabel').textContent = course.name || course.id;
+      document.getElementById('materialsSection').style.display = 'block';
+      document.getElementById('emptyState').style.display = 'none';
+
+      // التأكد من أن قائمة التخصص تشير إلى الخطة الحالية
+      const sel = document.getElementById('planSelector');
+      if (sel) sel.value = currentPlan;
+  }
+
+  function showCourseError(plan, code) {
+      document.getElementById('courseSelectGroup').style.display = 'none';
+      document.getElementById('courseModePanel').style.display = 'block';
+      document.getElementById('planFilterBar').style.display = 'none';
+      document.getElementById('materialsSection').style.display = 'none';
+      const empty = document.getElementById('emptyState');
+      document.getElementById('emptyStateText').textContent =
+          'هذا المقرر غير متوفر ضمن الخطة المحددة، جرّب تغيير التخصص بالأعلى أو تصفح الخطة كاملة';
+      empty.style.display = 'block';
+  }
+
+  /* === إعادة ضبط واجهة التصفح (عند الرجوع في المتصفح) === */
+  function resetBrowseView() {
+      focusedCourseCode = null;
+      restoreHeader();
+      document.getElementById('courseSelectGroup').style.display = '';
+      document.getElementById('courseModePanel').style.display = 'none';
+      document.getElementById('planFilterBar').style.display = '';
+      document.getElementById('courseActions').style.display = 'none';
+      selectedYear = '';
+      selectedSemester = '';
+      selectedCat = '';
+      lastCourseId = null;
+      updateYearFilterActive();
+      populateSemesterFilterBar();
+      updateCatFilterActive();
+      resetCourseSelect();
+  }
+
+  function restoreHeader() {
+      const titleEl = document.getElementById('planTitle');
+      const subEl = document.getElementById('planSubtitle');
+      if (titleEl) titleEl.textContent = 'الخطة الدراسية';
+      if (subEl) subEl.textContent = 'دليل تفاعلي للمقررات والمتطلبات والساعات المعتمدة';
+      document.title = 'الخطة الدراسية - روافد';
+      const ogTitle = document.getElementById('og-title');
+      if (ogTitle) ogTitle.setAttribute('content', 'الخطة الدراسية - روافد');
+      const ogDesc = document.getElementById('og-description');
+      if (ogDesc) ogDesc.setAttribute('content', 'دليل تفاعلي لمعرفة تفاصيل المقررات والمتطلبات السابقة واللاحقة.');
+  }
+
+  function updateCourseMeta(course) {
+      const ogTitle = document.getElementById('og-title');
+      if (ogTitle) ogTitle.setAttribute('content', (course.name || course.id) + ' - الخطة الدراسية - روافد');
+      const ogDesc = document.getElementById('og-description');
+      if (ogDesc) {
+          const prereqText = course.prereq
+              ? 'متطلب سابق: ' + course.prereq
+              : 'لا يوجد متطلب سابق';
+          ogDesc.setAttribute('content', `تفاصيل مقرر ${course.name || course.id} (${course.id}) - ${prereqText}.`);
+      }
+  }
+
+  /* === مشاركة رابط المقرر النظيف === */
+  function shareCourseLink() {
+      const url = focusedCourseCode ? courseUrl(currentPlan, focusedCourseCode) : window.location.href;
+      const title = document.title || 'الخطة الدراسية - روافد';
+      if (navigator.share) {
+          navigator.share({ title, url }).catch(() => {});
+      } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+              const btn = document.getElementById('shareCourseBtn');
+              if (!btn) return;
+              const original = btn.innerHTML;
+              btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+              setTimeout(() => { btn.innerHTML = original; }, 2000);
+          }).catch(() => {});
+      }
+  }
+
+  // القائمة تحتوي دائماً على جميع مقررات الخطة (دون اشتراط تحديد السنة)
+  // أما النتائج فتعرض في حالة الخطة ذات السنوات أو الفصل فقط
+  function refreshMaterials() {
+      if (getDistinctYears().length === 0) {
+          applyFilters();
+      } else {
+          populateSelectMenu();
+          currentFilteredCourses = [];
+          updateMaterialsView();
+      }
+  }
+
+  // القائمة تحتوي دائماً على جميع مقررات الخطة كاملة (دون اشتراط تحديد السنة)
+  function populateSelectMenu() {
+      const select = document.getElementById('courseSelect');
+      select.innerHTML = '';
+
+      const allCourses = [...currentCoursesDB].sort((a, b) => a.id.localeCompare(b.id));
+      if (allCourses.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>لا توجد مقررات</option>';
+          select.disabled = true;
+          return;
+      }
+      select.disabled = false;
+      select.innerHTML = '<option value="" disabled selected>-- ابحث عن المقرر أو الرمز --</option>';
+
+      allCourses.forEach(course => {
+          const option = document.createElement('option');
+          option.value = course.id;
+          option.text = `${course.id} - ${course.name}`;
+          select.appendChild(option);
+      });
+  }
+
+  /* === شريط الفلاتر: السنة الدراسية والفصل === */
+  const CATS = [
+      { key: 'spec', text: 'متطلب تخصص' },
+      { key: 'edu', text: 'متطلب تربوي' },
+      { key: 'uni', text: 'متطلب جامعي' },
+      { key: 'found', text: 'متطلب البرنامج التأسيسي' }
+  ];
+
+  function getDistinctYears() {
+      const seen = [];
+      currentCoursesDB.forEach(c => {
+          if (c.year && seen.indexOf(c.year) === -1) seen.push(c.year);
+      });
+      const order = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة', 'الخامسة', 'السادسة'];
+      return seen.sort((a, b) => {
+          const ia = order.findIndex(w => a.indexOf(w) !== -1);
+          const ib = order.findIndex(w => b.indexOf(w) !== -1);
+          const ra = ia === -1 ? order.length : ia;
+          const rb = ib === -1 ? order.length : ib;
+          if (ra !== rb) return ra - rb;
+          return a.localeCompare(b, 'ar');
+      });
+  }
+
+  function getDistinctSemestersForYear(year) {
+      if (!year) return [];
+      const seen = [];
+      currentCoursesDB.forEach(c => {
+          if (c.year === year && c.semester && seen.indexOf(c.semester) === -1) seen.push(c.semester);
+      });
+      const order = ['الخريف', 'الربيع', 'الصيفي'];
+      return seen.sort((a, b) => {
+          const ia = order.indexOf(a) === -1 ? order.length : order.indexOf(a);
+          const ib = order.indexOf(b) === -1 ? order.length : order.indexOf(b);
+          return ia - ib;
+      });
+  }
+
+  function populateYearFilterBar() {
+      const bar = document.getElementById('yearFilterBar');
+      bar.innerHTML = '';
+      getDistinctYears().forEach(y => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.year = y;
+          btn.textContent = y.replace('السنة الدراسية', 'السنة');
+          btn.addEventListener('click', () => onYearClick(y));
+          bar.appendChild(btn);
+      });
+      updateYearFilterActive();
+  }
+
+  function populateSemesterFilterBar() {
+      const bar = document.getElementById('semesterFilterBar');
+      bar.innerHTML = '';
+      if (!selectedYear) {
+          selectedSemester = '';
+          document.getElementById('semesterGroup').style.display = 'none';
+          return;
+      }
+      const allBtn = document.createElement('div');
+      allBtn.className = 'filter-item';
+      allBtn.dataset.sem = '';
+      allBtn.textContent = 'جميع الفصول';
+      allBtn.addEventListener('click', () => onSemesterClick(''));
+      bar.appendChild(allBtn);
+
+      getDistinctSemestersForYear(selectedYear).forEach(s => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.sem = s;
+          btn.textContent = s;
+          btn.addEventListener('click', () => onSemesterClick(s));
+          bar.appendChild(btn);
+      });
+
+      selectedSemester = '';
+      document.getElementById('semesterGroup').style.display = 'flex';
+      updateSemesterFilterActive();
+  }
+
+  function onYearClick(year) {
+      const isDeselect = selectedYear === year;
+      selectedYear = isDeselect ? '' : year;
+      selectedSemester = '';
+      lastCourseId = null;
+      updateYearFilterActive();
+      populateSemesterFilterBar();
+      if (isDeselect) {
+          resetCourseSelect();
+      } else {
+          applyFilters();
+      }
+  }
+
+  function onSemesterClick(sem) {
+      selectedSemester = sem;
+      lastCourseId = null;
+      updateSemesterFilterActive();
+      applyFilters();
+  }
+
+  function updateYearFilterActive() {
+      document.querySelectorAll('#yearFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.year === selectedYear);
+      });
+  }
+
+  function updateSemesterFilterActive() {
+      document.querySelectorAll('#semesterFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', (btn.dataset.sem || '') === selectedSemester);
+      });
+  }
+
+  function populateCatFilterBar() {
+      const bar = document.getElementById('catFilterBar');
+      bar.innerHTML = '';
+      const allBtn = document.createElement('div');
+      allBtn.className = 'filter-item';
+      allBtn.dataset.cat = '';
+      allBtn.textContent = 'الكل';
+      allBtn.addEventListener('click', () => onCatClick(''));
+      bar.appendChild(allBtn);
+
+      CATS.forEach(c => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.cat = c.key;
+          btn.textContent = c.text;
+          btn.addEventListener('click', () => onCatClick(c.key));
+          bar.appendChild(btn);
+      });
+      updateCatFilterActive();
+  }
+
+  function onCatClick(cat) {
+      selectedCat = cat;
+      lastCourseId = null;
+      updateCatFilterActive();
+      applyFilters();
+  }
+
+  function updateCatFilterActive() {
+      document.querySelectorAll('#catFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', (btn.dataset.cat || '') === selectedCat);
+      });
+  }
+
+  function applyFilters() {
+      const year = selectedYear;
+      const sem = selectedSemester;
+      const cat = selectedCat;
+      currentFilteredCourses = currentCoursesDB.filter(c => {
+          if (c.hidden) return false;
+          if (year && c.year !== year) return false;
+          if (sem && c.semester !== sem) return false;
+          if (cat && c.cat !== cat) return false;
+          return true;
+      });
+      populateSelectMenu();
+      updateMaterialsView();
+
+      // إسقاط التحديد إذا لم يعد المقرر ضمن النتائج
+      if (lastCourseId && !currentFilteredCourses.some(c => c.id === lastCourseId)) {
+          lastCourseId = null;
+      }
+  }
+
+  function resetCourseSelect() {
+      populateSelectMenu();
+      currentFilteredCourses = [];
+      updateMaterialsView();
+  }
+
+  /* === عرض كل المقررات المفلترة بتفاصيلها الكاملة === */
+  function updateMaterialsView() {
+      const section = document.getElementById('materialsSection');
+      const list = document.getElementById('materialsList');
+      const count = document.getElementById('materialsCount');
+      const empty = document.getElementById('emptyState');
+      const emptyText = document.getElementById('emptyStateText');
+
+      if (currentFilteredCourses.length === 0) {
+          if (selectedYear || selectedCat) {
+              emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
+          } else {
+              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض جميع المقررات وتفاصيلها';
+          }
+          section.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+      }
+
+      list.innerHTML = [...currentFilteredCourses]
+          .sort((a, b) => a.id.localeCompare(b.id))
+          .map(buildCourseCard)
+          .join('');
+
+      count.textContent = currentFilteredCourses.length + (currentFilteredCourses.length > 2 ? ' مقررات' : ' مقرر');
+      const catLabel = CATS.find(c => c.key === selectedCat) ? CATS.find(c => c.key === selectedCat).text : '';
+      const yearLabel = selectedYear ? selectedYear.replace('السنة الدراسية', 'السنة') : '';
+      document.getElementById('materialsLabel').textContent =
+          [yearLabel, selectedSemester, catLabel].filter(Boolean).join(' · ') || 'جميع المقررات';
+      section.style.display = 'block';
+      empty.style.display = 'none';
+
+      // إعادة تمييز المقرر المحدد سابقاً (عند تغيير الفلاتر)
+      if (lastCourseId) {
+          const card = list.querySelector(`.course-card[data-id="${lastCourseId}"]`);
+          if (card) card.classList.add('highlighted');
+      }
+  }
+
+  /* === بناء بطاقة مقرر كاملة التفاصيل === */
+  function buildCourseCard(course, suppressElectiveBtn = false) {
+      let tagClass = 'tag-uni', catText = 'متطلب جامعي', icon = 'fa-university';
+      if (course.cat === 'spec') { tagClass = 'tag-spec'; catText = 'متطلب تخصص'; icon = 'fa-book'; }
+      else if (course.cat === 'edu') { tagClass = 'tag-edu'; catText = 'متطلب تربوي'; icon = 'fa-chalkboard-teacher'; }
+      else if (course.cat === 'found') { tagClass = 'tag-found'; catText = 'متطلب البرنامج التأسيسي'; icon = 'fa-layer-group'; }
+      else if (course.cat === 'elective') { tagClass = 'tag-spec'; catText = 'متطلب تخصص'; icon = 'fa-book'; }
+
+      const hoursText = course.hours === 0
+          ? '0 ساعات معتمدة'
+          : course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
+
+       const linkOf = (pId, iconName) => {
+           const pCourse = currentCoursesDB.find(c => c.id === pId);
+           const pName = pCourse ? pCourse.name : pId;
+           return `<a class="internal-link" href="${courseUrl(currentPlan, pId)}" data-code="${pId}">
+                     <i class="fas ${iconName}"></i> ${pId} (${pName})
+                   </a>`;
+       };
+
+      const prereqHtml = course.prereq
+          ? course.prereq.split(',').map(p => linkOf(p.trim(), 'fa-arrow-left')).join('')
+          : '<span style="color:var(--text-muted)">لا يوجد متطلب سابق</span>';
+
+      const coreqHtml = course.coreq
+          ? course.coreq.split(',').map(p => linkOf(p.trim(), 'fa-exchange-alt')).join('')
+          : '<span style="color:var(--text-muted)">لا يوجد</span>';
+
+       // المتطلبات اللاحقة: محسوبة من الخطة كاملة، أو من حقل postreq في وضع المقرر
+       let nextCourses;
+       if (course.postreq) {
+           const postIds = course.postreq.split(',').map(p => p.trim());
+           nextCourses = postIds.map(id => currentCoursesDB.find(c => c.id === id)).filter(Boolean);
+       } else {
+           nextCourses = currentCoursesDB.filter(c => {
+               if (!c.prereq) return false;
+               return c.prereq.split(',').map(p => p.trim()).includes(course.id);
+           });
+       }
+       const postreqHtml = nextCourses.length > 0
+           ? nextCourses.map(c => linkOf(c.id, 'fa-unlock-alt')).join('')
+           : '';
+
+      const isElectiveSlot = /^ELECTIVE\d+$/.test(course.id) && !course.hidden;
+
+      const electiveExpandHtml = (isElectiveSlot && !suppressElectiveBtn) ? `
+                <div class="elective-expand" style="margin-top: 16px;">
+                    <button type="button" class="elective-btn" onclick="toggleElectives(this)">
+                        <i class="fas fa-list-ul"></i> عرض المقررات الاختيارية الأربعة (اختر مقررين منها)
+                    </button>
+                    <div class="elective-pool" id="electivePool-${course.id}" style="display: none;"></div>
+                </div>` : '';
+
+      return `
+        <div class="course-card in-list" data-id="${course.id}">
+            <div class="card-header">
+                <span class="course-code">${course.id}</span>
+                <div class="course-hours-badge">
+                    <i class="far fa-clock"></i> <span>${hoursText}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h2 class="course-title">${course.name}</h2>
+                <div class="tags-container">
+                    <div class="tag ${tagClass}"><i class="fas ${icon}"></i> ${catText}</div>
+                </div>
+                ${course.summary ? `<p class="course-summary"><i class="fas fa-info-circle"></i> ${course.summary}</p>` : ''}
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-link"></i> المتطلب السابق</span>
+                        <div class="info-value">${prereqHtml}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-exchange-alt"></i> المتطلب المتزامن (مرافق)</span>
+                        <div class="info-value">${coreqHtml}</div>
+                    </div>
+                    ${postreqHtml ? `
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-unlock-alt"></i> يفتح المقررات التالية</span>
+                        <div class="info-value">${postreqHtml}</div>
+                    </div>` : ''}
+                </div>
+                ${electiveExpandHtml}
+            </div>
+        </div>`;
+  }
+
+  /* === إظهار/إخفاء لوحة المقررات الاختيارية الأربعة داخل الصفحة === */
+  function toggleElectives(btn) {
+      const expand = btn.parentElement;
+      const pool = expand.querySelector('.elective-pool');
+      const willOpen = pool.style.display === 'none';
+
+      if (willOpen) {
+          if (!pool.dataset.loaded) {
+              const electives = currentCoursesDB.filter(c => /^ELECTIVE\d+$/.test(c.id));
+              pool.innerHTML =
+                  '<div class="pool-head"><i class="fas fa-th-list"></i> المقررات الاختيارية المتاحة في الفصل (اختر مقررين منها فقط)</div>' +
+                  electives.map(c => buildCourseCard(c, true)).join('');
+              pool.dataset.loaded = '1';
+          }
+          pool.style.display = 'grid';
+          btn.innerHTML = '<i class="fas fa-times"></i> إخفاء المقررات الاختيارية';
+      } else {
+          pool.style.display = 'none';
+          btn.innerHTML = '<i class="fas fa-list-ul"></i> عرض المقررات الاختيارية الأربعة (اختر مقررين منها)';
+      }
+  }
+
+  /* === التمرير إلى مقرر ضمن قائمة التصفح (البيانات محمّلة مسبقاً) === */
+  function scrollToCourseCard(code, doScroll = true) {
+      const course = currentCoursesDB.find(c => c.id === code);
+      if (!course) return;
+
+      const select = document.getElementById('courseSelect');
+      if (select && !select.disabled) select.value = code;
+
+      // إذا لم يكن المقرر ضمن النتائج الحالية، نعيد التصفية حسب سنته وفصله
+      if (!currentFilteredCourses.some(c => c.id === code)) {
+          if (course.year) {
+              selectedYear = course.year;
+              updateYearFilterActive();
+              populateSemesterFilterBar();
+              if (course.semester) {
+                  selectedSemester = course.semester;
+                  updateSemesterFilterActive();
+              }
+          }
+          applyFilters();
+      }
+
+      lastCourseId = code;
+      const cards = document.querySelectorAll('#materialsList .course-card');
+      cards.forEach(card => card.classList.remove('highlighted'));
+      const card = document.querySelector(`#materialsList .course-card[data-id="${code}"]`);
+      if (card) {
+          card.classList.add('highlighted');
+          if (doScroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+  }
+</script>
+
+</body>
+</html>

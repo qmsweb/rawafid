@@ -1,0 +1,17 @@
+{
+    "id":  "EDUC410",
+    "name":  "مناهج البحث في التربية",
+    "hours":  3,
+    "cat":  "edu",
+    "prereq":  "EDUC101",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "EDUC101",
+                        "name":  "أصول التربية"
+                    }
+                ]
+}

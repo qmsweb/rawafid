@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB322",
+    "name":  "البلاغة العربية",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB313",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثالثة",
+    "semester":  "الربيع",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    }
+                ]
+}

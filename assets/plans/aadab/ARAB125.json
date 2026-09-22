@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB125",
+    "name":  "النثر القديم",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  "ARAB214, ARAB222",
+    "related":  [
+                    {
+                        "id":  "ARAB214",
+                        "name":  "النثر الأندلسي"
+                    },
+                    {
+                        "id":  "ARAB222",
+                        "name":  "النثر العباسي"
+                    }
+                ]
+}

@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB224",
+    "name":  "النحو 4",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB213",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الربيع",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB213",
+                        "name":  "النحو 3"
+                    }
+                ]
+}

@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB417",
+    "name":  "النقد حديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB327",
+    "coreq":  null,
+    "year":  "السنة الدراسية الرابعة",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB327",
+                        "name":  "النقد قديم"
+                    }
+                ]
+}

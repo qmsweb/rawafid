@@ -1,0 +1,25 @@
+{
+    "id":  "ARAB215",
+    "name":  "الصرف",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB112",
+    "coreq":  null,
+    "year":  "السنة الدراسية الثانية",
+    "semester":  "الخريف",
+    "postreq":  "ARAB229, ARAB315",
+    "related":  [
+                    {
+                        "id":  "ARAB112",
+                        "name":  "النحو 1"
+                    },
+                    {
+                        "id":  "ARAB229",
+                        "name":  "علم الأصوات - الصوتيات"
+                    },
+                    {
+                        "id":  "ARAB315",
+                        "name":  "علم الدلالة"
+                    }
+                ]
+}

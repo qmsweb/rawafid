@@ -1,0 +1,17 @@
+{
+    "id":  "ARAB125",
+    "name":  "النثر القديم",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الربيع",
+    "postreq":  "ARAB312",
+    "related":  [
+                    {
+                        "id":  "ARAB312",
+                        "name":  "النثر الحديث"
+                    }
+                ]
+}

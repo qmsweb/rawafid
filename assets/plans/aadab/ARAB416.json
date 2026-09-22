@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB416",
+    "name":  "المدارس النحوية (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB224",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB224",
+                        "name":  "نحو 4"
+                    }
+                ]
+}

@@ -1,0 +1,14 @@
+{
+    "id":  "ARAB101",
+    "name":  "اللغة العربية",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

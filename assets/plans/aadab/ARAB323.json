@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB323",
+    "name":  "الأدب العماني",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB313",
+    "coreq":  null,
+    "postreq":  "ARAB413",
+    "related":  [
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    },
+                    {
+                        "id":  "ARAB413",
+                        "name":  "الأدب المقارن"
+                    }
+                ]
+}

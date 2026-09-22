@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB412",
+    "name":  "أدب الطفل",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB312",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB312",
+                        "name":  "النثر الحديث"
+                    }
+                ]
+}

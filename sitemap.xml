@@ -63,6 +63,18 @@
 {% endif %}
 {% endfor %}
 
+<!-- ===== صفحات مقررات الخطة الدراسية ===== -->
+{% for p in site.pages %}
+{% if p.layout == 'study-plan' and p.code %}
+<url>
+  <loc>{{ p.url | absolute_url }}</loc>
+  <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.60</priority>
+</url>
+{% endif %}
+{% endfor %}
+
 <!-- ===== المقالات ===== -->
 {% for post in site.posts %}
 {% if post.visible != false %}

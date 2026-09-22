@@ -1,0 +1,31 @@
+{
+    "id":  "ARAB224",
+    "name":  "نحو 4",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB213",
+    "coreq":  null,
+    "postreq":  "ARAB311, ARAB326, ARAB414, ARAB416",
+    "related":  [
+                    {
+                        "id":  "ARAB213",
+                        "name":  "نحو 3"
+                    },
+                    {
+                        "id":  "ARAB311",
+                        "name":  "اللسانيات"
+                    },
+                    {
+                        "id":  "ARAB326",
+                        "name":  "بلاغة (علم المعاني)"
+                    },
+                    {
+                        "id":  "ARAB414",
+                        "name":  "تطبيقات نحوية"
+                    },
+                    {
+                        "id":  "ARAB416",
+                        "name":  "المدارس النحوية (مقرر اختياري)"
+                    }
+                ]
+}

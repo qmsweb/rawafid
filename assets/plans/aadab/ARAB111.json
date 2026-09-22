@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB111",
+    "name":  "الشعر الجاهلي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  "ARAB122, ARAB128",
+    "related":  [
+                    {
+                        "id":  "ARAB122",
+                        "name":  "الشعر الإسلامي والأموي"
+                    },
+                    {
+                        "id":  "ARAB128",
+                        "name":  "مدخل إلى المصادر اللغوية والأدبية"
+                    }
+                ]
+}

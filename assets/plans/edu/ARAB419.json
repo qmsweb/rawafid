@@ -1,0 +1,21 @@
+{
+    "id":  "ARAB419",
+    "name":  "أدب الطفل",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB312, ARAB313",
+    "coreq":  null,
+    "year":  "السنة الدراسية الرابعة",
+    "semester":  "الخريف",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB312",
+                        "name":  "النثر الحديث"
+                    },
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    }
+                ]
+}

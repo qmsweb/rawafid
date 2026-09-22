@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB321",
+    "name":  "فقه اللغة",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB311",
+    "coreq":  null,
+    "postreq":  "ARAB415",
+    "related":  [
+                    {
+                        "id":  "ARAB311",
+                        "name":  "اللسانيات"
+                    },
+                    {
+                        "id":  "ARAB415",
+                        "name":  "المعجمية والمصطلحية (مقرر اختياري)"
+                    }
+                ]
+}

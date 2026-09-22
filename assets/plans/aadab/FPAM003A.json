@@ -1,0 +1,15 @@
+{
+    "id":  "FPAM003A",
+    "name":  "رياضيات تطبيقية (Applied Math)",
+    "hours":  0,
+    "cat":  "found",
+    "prereq":  "FPBM001A",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "FPBM001A",
+                        "name":  "رياضيات أساسية (Basic Math)"
+                    }
+                ]
+}

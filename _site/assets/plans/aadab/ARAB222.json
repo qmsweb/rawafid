@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB222",
+    "name":  "النثر العباسي",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB125",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB125",
+                        "name":  "النثر القديم"
+                    }
+                ]
+}

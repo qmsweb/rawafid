@@ -1,0 +1,14 @@
+{
+    "id":  "ISLM101",
+    "name":  "الحضارة الإسلامية",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الأولى",
+    "semester":  "الصيفي",
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

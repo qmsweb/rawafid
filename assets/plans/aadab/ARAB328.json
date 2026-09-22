@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB328",
+    "name":  "أدب الخيال العلمي (مقرر اختياري)",
+    "hours":  2,
+    "cat":  "elective",
+    "prereq":  "ARAB313",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB313",
+                        "name":  "الشعر الحديث"
+                    }
+                ]
+}

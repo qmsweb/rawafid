@@ -1,0 +1,43 @@
+{
+    "id":  "ELECTIVE3",
+    "name":  "مقرر اختياري",
+    "hours":  2,
+    "cat":  "spec",
+    "prereq":  null,
+    "coreq":  null,
+    "year":  "السنة الدراسية الرابعة",
+    "semester":  "الخريف",
+    "summary":  "يختار الطالب مقررين من أربعة مقررات اختيارية",
+    "hidden":  true,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ELECTIVE1",
+                        "name":  "مقرر اختياري",
+                        "hours":  2,
+                        "cat":  "spec",
+                        "prereq":  null,
+                        "coreq":  null,
+                        "summary":  "يختار الطالب مقررين من أربعة مقررات اختيارية"
+                    },
+                    {
+                        "id":  "ELECTIVE2",
+                        "name":  "مقرر اختياري",
+                        "hours":  2,
+                        "cat":  "spec",
+                        "prereq":  null,
+                        "coreq":  null,
+                        "summary":  "يختار الطالب مقررين من أربعة مقررات اختيارية"
+                    },
+                    {
+                        "id":  "ELECTIVE4",
+                        "name":  "مقرر اختياري",
+                        "hours":  2,
+                        "cat":  "spec",
+                        "prereq":  null,
+                        "coreq":  null,
+                        "summary":  "يختار الطالب مقررين من أربعة مقررات اختيارية",
+                        "hidden":  true
+                    }
+                ]
+}

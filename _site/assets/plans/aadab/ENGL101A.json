@@ -1,0 +1,15 @@
+{
+    "id":  "ENGL101A",
+    "name":  "مهارات الاتصال 1 (إنجليزي)",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  "ENGL102A",
+    "related":  [
+                    {
+                        "id":  "ENGL102A",
+                        "name":  "مهارات الاتصال 2"
+                    }
+                ]
+}

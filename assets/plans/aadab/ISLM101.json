@@ -1,0 +1,12 @@
+{
+    "id":  "ISLM101",
+    "name":  "الحضارة الإسلامية",
+    "hours":  3,
+    "cat":  "uni",
+    "prereq":  null,
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+
+                ]
+}

@@ -1,0 +1,17 @@
+{
+    "id":  "EDUC499",
+    "name":  "التربية العملية",
+    "hours":  9,
+    "cat":  "edu",
+    "prereq":  "EDUC419",
+    "coreq":  null,
+    "year":  "السنة الدراسية الرابعة",
+    "semester":  "الربيع",
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "EDUC419",
+                        "name":  "تطبيقات عملية"
+                    }
+                ]
+}

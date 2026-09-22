@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB312",
+    "name":  "النثر الحديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB214",
+    "coreq":  null,
+    "postreq":  "ARAB412",
+    "related":  [
+                    {
+                        "id":  "ARAB214",
+                        "name":  "النثر الأندلسي"
+                    },
+                    {
+                        "id":  "ARAB412",
+                        "name":  "أدب الطفل"
+                    }
+                ]
+}

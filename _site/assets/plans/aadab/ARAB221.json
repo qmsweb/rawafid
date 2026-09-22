@@ -1,0 +1,15 @@
+{
+    "id":  "ARAB221",
+    "name":  "أدب العصور المتتابعة",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB212",
+    "coreq":  null,
+    "postreq":  null,
+    "related":  [
+                    {
+                        "id":  "ARAB212",
+                        "name":  "الشعر العباسي"
+                    }
+                ]
+}

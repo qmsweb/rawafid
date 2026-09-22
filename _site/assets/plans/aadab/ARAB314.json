@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB314",
+    "name":  "علم الأصوات",
+    "hours":  4,
+    "cat":  "spec",
+    "prereq":  "ARAB215",
+    "coreq":  null,
+    "postreq":  "ARAB329",
+    "related":  [
+                    {
+                        "id":  "ARAB215",
+                        "name":  "الصرف"
+                    },
+                    {
+                        "id":  "ARAB329",
+                        "name":  "اللهجات العربية (مقرر اختياري)"
+                    }
+                ]
+}

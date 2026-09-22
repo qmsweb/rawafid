@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB413",
+    "name":  "الأدب المقارن",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB323",
+    "coreq":  null,
+    "postreq":  "ARAB425",
+    "related":  [
+                    {
+                        "id":  "ARAB323",
+                        "name":  "الأدب العماني"
+                    },
+                    {
+                        "id":  "ARAB425",
+                        "name":  "أصول البحث اللغوي والأدبي (مقرر اختياري)"
+                    }
+                ]
+}

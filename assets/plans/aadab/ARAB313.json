@@ -1,0 +1,23 @@
+{
+    "id":  "ARAB313",
+    "name":  "الشعر الحديث",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB223",
+    "coreq":  null,
+    "postreq":  "ARAB323, ARAB328",
+    "related":  [
+                    {
+                        "id":  "ARAB223",
+                        "name":  "الشعر الأندلسي"
+                    },
+                    {
+                        "id":  "ARAB323",
+                        "name":  "الأدب العماني"
+                    },
+                    {
+                        "id":  "ARAB328",
+                        "name":  "أدب الخيال العلمي (مقرر اختياري)"
+                    }
+                ]
+}

@@ -1,0 +1,19 @@
+{
+    "id":  "ARAB128",
+    "name":  "مدخل إلى المصادر اللغوية والأدبية",
+    "hours":  3,
+    "cat":  "spec",
+    "prereq":  "ARAB111",
+    "coreq":  null,
+    "postreq":  "ARAB315",
+    "related":  [
+                    {
+                        "id":  "ARAB111",
+                        "name":  "الشعر الجاهلي"
+                    },
+                    {
+                        "id":  "ARAB315",
+                        "name":  "علم الدلالة"
+                    }
+                ]
+}
