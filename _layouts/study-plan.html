@@ -279,27 +279,37 @@
         line-height: 1.7;
     }
 
-    /* === شريط فلاتر السنة والفصل الدراسي (مثل صفحة home) === */
+    /* === فلاتر السنة والفصل الدراسي: شرائح بجانب بعضها وتحت بعضها === */
     .plan-filter-bar {
         margin-top: 16px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 16px;
     }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+    .filter-group-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+    .filter-group-label i { color: var(--primary-color); font-size: 0.8rem; }
 
     .filter-bar {
         display: flex;
-        gap: 8px;
+        flex-wrap: wrap;
         align-items: center;
-        overflow-x: auto;
-        padding-bottom: 5px;
-        scrollbar-width: none;
-        overscroll-behavior-x: contain;
+        gap: 8px;
     }
-    .filter-bar::-webkit-scrollbar { display: none; }
 
     .filter-item {
-        flex: 0 0 auto;
         padding: 8px 16px;
         border-radius: 50px;
         background: var(--bg-card);
@@ -315,6 +325,62 @@
     .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
     .filter-item.active:hover { color: #fff; }
 
+    /* === شبكة المقررات المتاحة (تظهر بعد اختيار السنة/الفصل) === */
+    .materials-section {
+        margin-bottom: 26px;
+    }
+    .materials-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .materials-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .materials-title i { color: var(--primary-color); }
+    .materials-count {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        padding: 4px 14px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 14px;
+    }
+
+    .course-chip {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        box-shadow: var(--card-shadow);
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+    .course-chip:hover { border-color: var(--primary-color); transform: translateY(-3px); }
+    .course-chip.active { border-color: var(--primary-color); background: var(--hover-bg); }
+    .cc-code { font-weight: 700; color: var(--primary-color); font-size: 0.9rem; }
+    .cc-name { font-size: 0.98rem; font-weight: 600; line-height: 1.5; }
+    .cc-hours { font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-top: auto; }
+
     @media (min-width: 1100px) {
         .container { max-width: 1360px; padding: 0 28px; }
         .card-header { padding: 24px 30px; }
@@ -322,7 +388,7 @@
         .course-title { font-size: 2rem; }
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1150px) {
         .plan-split { grid-template-columns: 1fr; }
         .plan-side { position: static; }
         .plan-side .search-box-container { margin-bottom: 30px; }
@@ -333,6 +399,7 @@
         .course-title { font-size: 1.4rem; }
         .card-body { padding: 18px; }
         .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .materials-grid { grid-template-columns: 1fr; }
     }
 
   </style>
@@ -369,8 +436,14 @@
         </div>
 
         <div class="plan-filter-bar">
-            <div class="filter-bar" id="yearFilterBar"></div>
-            <div class="filter-bar" id="semesterFilterBar" style="display: none;"></div>
+            <div class="filter-group">
+                <div class="filter-group-label"><i class="fas fa-calendar-alt"></i> السنة الدراسية</div>
+                <div class="filter-bar" id="yearFilterBar"></div>
+            </div>
+            <div class="filter-group" id="semesterGroup" style="display: none;">
+                <div class="filter-group-label"><i class="fas fa-clock"></i> الفصل الدراسي</div>
+                <div class="filter-bar" id="semesterFilterBar"></div>
+            </div>
         </div>
       </aside>
 
@@ -378,8 +451,16 @@
         <div id="resultContainer">
         <div class="empty-state" id="emptyState">
             <i class="fas fa-book-open empty-icon"></i>
-            <p>اختر السنة الدراسية ثم الفصل من الشريط، وبعدها حدد مقررًا من القائمة لعرض المتطلبات والساعات وتفاصيل المقرر</p>
+            <p id="emptyStateText">اختر السنة الدراسية ثم الفصل من القائمة لعرض المقررات المتاحة</p>
         </div>
+
+        <section class="materials-section" id="materialsSection" style="display: none;">
+            <div class="materials-head">
+                <div class="materials-title"><i class="fas fa-book-open"></i> <span id="materialsLabel">المقررات المتاحة</span></div>
+                <span class="materials-count" id="materialsCount">0 مقرر</span>
+            </div>
+            <div class="materials-grid" id="materialsGrid"></div>
+        </section>
 
         <div class="course-card" id="courseCard">
             <div class="card-header">
@@ -451,8 +532,13 @@
               displayCourse(courseId, false);
           } else {
               document.getElementById('courseCard').style.display = 'none';
-              document.getElementById('emptyState').style.display = 'block';
               document.getElementById('courseSelect').value = "";
+              selectedYear = '';
+              selectedSemester = '';
+              updateYearFilterActive();
+              populateSemesterFilterBar();
+              resetCourseSelect();
+              resetResult();
           }
       });
   });
@@ -595,7 +681,7 @@
       bar.innerHTML = '';
       if (!selectedYear) {
           selectedSemester = '';
-          bar.style.display = 'none';
+          document.getElementById('semesterGroup').style.display = 'none';
           return;
       }
       const allBtn = document.createElement('div');
@@ -615,27 +701,24 @@
       });
 
       selectedSemester = '';
-      bar.style.display = 'flex';
+      document.getElementById('semesterGroup').style.display = 'flex';
       updateSemesterFilterActive();
   }
 
   function onYearClick(year) {
-      if (selectedYear === year) {
-          selectedYear = '';
-          selectedSemester = '';
-          updateYearFilterActive();
-          populateSemesterFilterBar();
-          resetCourseSelect();
-          resetResult();
-          return;
-      }
-      selectedYear = year;
+      const isDeselect = selectedYear === year;
+      selectedYear = isDeselect ? '' : year;
       selectedSemester = '';
       lastCourseId = null;
       updateYearFilterActive();
       populateSemesterFilterBar();
-      applyFilters();
-      resetResult();
+      if (isDeselect) {
+          resetCourseSelect();
+          resetResult();
+      } else {
+          applyFilters();
+          resetResult();
+      }
   }
 
   function onSemesterClick(sem) {
@@ -667,6 +750,7 @@
           return true;
       });
       populateSelectMenu();
+      updateMaterialsView();
 
       // إخفاء الكارد إذا لم يعد المقرر المعروض ضمن النتائج
       if (lastCourseId && !currentFilteredCourses.some(c => c.id === lastCourseId)) {
@@ -680,11 +764,57 @@
       select.innerHTML = '<option value="" disabled selected>اختر السنة الدراسية أولاً</option>';
       select.disabled = true;
       currentFilteredCourses = [];
+      updateMaterialsView();
   }
 
   function resetResult() {
       document.getElementById('courseCard').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'block';
+  }
+
+  /* === عرض المقررات المفلترة بشكل مرئي في المساحة الرئيسية === */
+  function updateMaterialsView() {
+      const section = document.getElementById('materialsSection');
+      const grid = document.getElementById('materialsGrid');
+      const count = document.getElementById('materialsCount');
+      const empty = document.getElementById('emptyState');
+      const emptyText = document.getElementById('emptyStateText');
+
+      if (currentFilteredCourses.length === 0) {
+          if (selectedYear) {
+              emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
+          } else {
+              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض المقررات المتاحة';
+          }
+          section.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+      }
+
+      grid.innerHTML = '';
+      [...currentFilteredCourses].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
+          const card = document.createElement('a');
+          card.href = 'javascript:void(0)';
+          card.className = 'course-chip';
+          card.dataset.id = course.id;
+          card.setAttribute('aria-label', `عرض تفاصيل ${course.id} - ${course.name}`);
+          card.innerHTML = `
+              <span class="cc-code">${course.id}</span>
+              <span class="cc-name">${course.name}</span>
+              <span class="cc-hours"><i class="fas fa-clock"></i> ${course.hours} ساعات</span>
+          `;
+          card.addEventListener('click', (e) => {
+              e.preventDefault();
+              displayCourse(course.id, true);
+          });
+          grid.appendChild(card);
+      });
+
+      count.textContent = currentFilteredCourses.length + (currentFilteredCourses.length > 2 ? ' مقررات' : ' مقرر');
+      const yearLabel = selectedYear ? selectedYear.replace('السنة الدراسية', 'السنة') : '';
+      document.getElementById('materialsLabel').textContent =
+          [yearLabel, selectedSemester].filter(Boolean).join(' · ') || 'جميع المقررات';
+      section.style.display = 'block';
+      empty.style.display = 'none';
   }
 
   /* === دالة العرض === */
@@ -730,7 +860,15 @@
 
       emptyState.style.display = 'none';
       courseCard.style.display = 'none'; 
-      setTimeout(() => courseCard.style.display = 'block', 10);
+      setTimeout(() => {
+          courseCard.style.display = 'block';
+          courseCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 10);
+
+      // تمييز بطاقة المقرر المحدد داخل شبكة المقررات
+      document.querySelectorAll('#materialsGrid .course-chip').forEach(chip => {
+          chip.classList.toggle('active', chip.dataset.id === courseId);
+      });
 
       document.getElementById('cCode').innerText = course.id;
       document.getElementById('cName').innerText = course.name;
