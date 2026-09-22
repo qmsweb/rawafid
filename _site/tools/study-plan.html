@@ -356,9 +356,18 @@
     }
 
     .materials-list {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    /* في الشاشات الكبيرة: عرض المقررات بطريقة شبكية (مقرران في الصف الواحد) */
+    @media (min-width: 1151px) {
+        .materials-list {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start;
+        }
+        .materials-list > .course-card:only-child { grid-column: 1 / -1; }
     }
 
     /* بطاقة مقرر كاملة التفاصيل داخل قائمة المقررات */
