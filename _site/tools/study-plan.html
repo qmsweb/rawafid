@@ -992,10 +992,10 @@
           </select>
 
           <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
-          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)">
-              <option value="" disabled selected>اختر السنة الدراسية أولاً</option>
+          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)" onfocus="loadAllCoursesIfEmpty()">
+              <option value="" disabled selected>جاري تحميل المقررات...</option>
           </select>
-          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>اختر السنة والفصل لعرض جميع مقرراتها وتفاصيلها كاملة: المتطلبات السابقة واللاحقة وعدد الساعات.</p>
+          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>جميع المقررات متاحة في القائمة فور فتح الصفحة، ويمكنك استخدام فلاتر السنة والفصل أدناه لتصفية العرض.</p>
         </div>
 
         <div class="plan-filter-bar">
@@ -1014,7 +1014,7 @@
         <div id="resultContainer">
         <div class="empty-state" id="emptyState">
             <i class="fas fa-book-open empty-icon"></i>
-            <p id="emptyStateText">اختر السنة الدراسية ثم الفصل من القائمة لعرض المقررات المتاحة</p>
+            <p id="emptyStateText">لا توجد مقررات لعرضها حالياً</p>
         </div>
 
         <section class="materials-section" id="materialsSection" style="display: none;">
@@ -1283,7 +1283,7 @@
           selectedSemester = '';
           lastCourseId = null;
 
-          // تجهيز شريط فلاتر السنوات والفصول (بدون تحميل أي مواد)
+          // تجهيز شريط فلاتر السنوات والفصول ثم تحميل جميع المقررات مباشرة
           populateYearFilterBar();
           populateSemesterFilterBar();
           rawafidHideLoader();
@@ -1321,12 +1321,16 @@
       }
   }
 
-  // عند عدم وجود سنوات في الخطة يتم عرض جميع المواد، وتظل القائمة فارغة خلاف ذلك
+  // تحميل جميع المقررات مباشرة في القائمة والنتائج دون اشتراط اختيار السنة الدراسية
   function refreshMaterials() {
-      if (getDistinctYears().length === 0) {
+      applyFilters();
+  }
+
+  // عند النقر على قائمة المقررات: تحميل كل المقررات إذا لم تكن محملة بعد
+  function loadAllCoursesIfEmpty() {
+      const select = document.getElementById('courseSelect');
+      if (select.options && select.options.length <= 1) {
           applyFilters();
-      } else {
-          resetCourseSelect();
       }
   }
 
@@ -1475,11 +1479,7 @@
   }
 
   function resetCourseSelect() {
-      const select = document.getElementById('courseSelect');
-      select.innerHTML = '<option value="" disabled selected>اختر السنة الدراسية أولاً</option>';
-      select.disabled = true;
-      currentFilteredCourses = [];
-      updateMaterialsView();
+      applyFilters();
   }
 
   /* === عرض كل المقررات المفلترة بتفاصيلها الكاملة === */
@@ -1494,7 +1494,7 @@
           if (selectedYear) {
               emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
           } else {
-              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض جميع المقررات وتفاصيلها';
+              emptyText.textContent = 'لا توجد مقررات لعرضها حالياً';
           }
           section.style.display = 'none';
           empty.style.display = 'block';
