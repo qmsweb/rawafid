@@ -420,10 +420,10 @@
           </select>
 
           <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
-          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)" onfocus="loadAllCoursesIfEmpty()">
+          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)">
               <option value="" disabled selected>جاري تحميل المقررات...</option>
           </select>
-          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>جميع المقررات متاحة في القائمة فور فتح الصفحة، ويمكنك استخدام فلاتر السنة والفصل أدناه لتصفية العرض.</p>
+          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>يمكنك اختيار أي مقرر مباشرة من القائمة — جميع مقررات الخطة متاحة فيها. أما فلاتر السنة والفصل أدناه فتعرض مقررات سنة معينة وتفاصيلها كاملة.</p>
         </div>
 
         <div class="plan-filter-bar">
@@ -442,7 +442,7 @@
         <div id="resultContainer">
         <div class="empty-state" id="emptyState">
             <i class="fas fa-book-open empty-icon"></i>
-            <p id="emptyStateText">لا توجد مقررات لعرضها حالياً</p>
+            <p id="emptyStateText">اختر السنة الدراسية ثم الفصل من القائمة لعرض المققرات المتاحة</p>
         </div>
 
         <section class="materials-section" id="materialsSection" style="display: none;">
@@ -517,7 +517,7 @@
           selectedSemester = '';
           lastCourseId = null;
 
-          // تجهيز شريط فلاتر السنوات والفصول ثم تحميل جميع المقررات مباشرة
+          // تجهيز شريط فلاتر السنوات والفصول (النتائج تبقى خاضعة للفلاتر)
           populateYearFilterBar();
           populateSemesterFilterBar();
           rawafidHideLoader();
@@ -555,32 +555,33 @@
       }
   }
 
-  // تحميل جميع المقررات مباشرة في القائمة والنتائج دون اشتراط اختيار السنة الدراسية
+  // القائمة تحتوي دائماً على جميع مقررات الخطة (دون اشتراط تحديد السنة)
+  // أما النتائج فتعرض في حالة الخطة ذات السنوات أو الفصل فقط
   function refreshMaterials() {
-      applyFilters();
-  }
-
-  // عند النقر على قائمة المقررات: تحميل كل المقررات إذا لم تكن محملة بعد
-  function loadAllCoursesIfEmpty() {
-      const select = document.getElementById('courseSelect');
-      if (select.options && select.options.length <= 1) {
+      if (getDistinctYears().length === 0) {
           applyFilters();
+      } else {
+          populateSelectMenu();
+          currentFilteredCourses = [];
+          updateMaterialsView();
       }
   }
 
+  // القائمة تحتوي دائماً على جميع مقررات الخطة كاملة (دون اشتراط تحديد السنة)
   function populateSelectMenu() {
       const select = document.getElementById('courseSelect');
       select.innerHTML = '';
 
-      if (currentFilteredCourses.length === 0) {
-          select.innerHTML = '<option value="" disabled selected>لا توجد مقررات مطابقة</option>';
+      const allCourses = [...currentCoursesDB].sort((a, b) => a.id.localeCompare(b.id));
+      if (allCourses.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>لا توجد مقررات</option>';
           select.disabled = true;
           return;
       }
       select.disabled = false;
       select.innerHTML = '<option value="" disabled selected>-- ابحث عن المقرر أو الرمز --</option>';
 
-      [...currentFilteredCourses].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
+      allCourses.forEach(course => {
           const option = document.createElement('option');
           option.value = course.id;
           option.text = `${course.id} - ${course.name}`;
@@ -713,7 +714,9 @@
   }
 
   function resetCourseSelect() {
-      applyFilters();
+      populateSelectMenu();
+      currentFilteredCourses = [];
+      updateMaterialsView();
   }
 
   /* === عرض كل المقررات المفلترة بتفاصيلها الكاملة === */
@@ -728,7 +731,7 @@
           if (selectedYear) {
               emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
           } else {
-              emptyText.textContent = 'لا توجد مقررات لعرضها حالياً';
+              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض جميع المقررات وتفاصيلها';
           }
           section.style.display = 'none';
           empty.style.display = 'block';
