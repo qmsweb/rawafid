@@ -1016,6 +1016,10 @@
                 <div class="filter-group-label"><i class="fas fa-clock"></i> الفصل الدراسي</div>
                 <div class="filter-bar" id="semesterFilterBar"></div>
             </div>
+            <div class="filter-group" id="catGroup">
+                <div class="filter-group-label"><i class="fas fa-tags"></i> نوع المقرر</div>
+                <div class="filter-bar" id="catFilterBar"></div>
+            </div>
         </div>
       </aside>
 
@@ -1249,6 +1253,7 @@
   let currentFilteredCourses = [];
   let selectedYear = '';
   let selectedSemester = '';
+  let selectedCat = '';
   let lastCourseId = null;
 
   // 1. عند تحميل الصفحة
@@ -1266,8 +1271,10 @@
               document.getElementById('courseSelect').value = "";
               selectedYear = '';
               selectedSemester = '';
+              selectedCat = '';
               updateYearFilterActive();
               populateSemesterFilterBar();
+              updateCatFilterActive();
               resetCourseSelect();
           }
       });
@@ -1290,11 +1297,13 @@
           select.disabled = false;
           selectedYear = '';
           selectedSemester = '';
+          selectedCat = '';
           lastCourseId = null;
 
-          // تجهيز شريط فلاتر السنوات والفصول (النتائج تبقى خاضعة للفلاتر)
+          // تجهيز شريط فلاتر السنوات والفصول والتصنيف (النتائج تبقى خاضعة للفلاتر)
           populateYearFilterBar();
           populateSemesterFilterBar();
+          populateCatFilterBar();
           rawafidHideLoader();
 
           // التحقق من الرابط في حال وجود ID لمقرر معين
@@ -1365,6 +1374,13 @@
   }
 
   /* === شريط الفلاتر: السنة الدراسية والفصل === */
+  const CATS = [
+      { key: 'spec', text: 'متطلب تخصص' },
+      { key: 'edu', text: 'متطلب تربوي' },
+      { key: 'uni', text: 'متطلب جامعي' },
+      { key: 'found', text: 'متطلب البرنامج التأسيسي' }
+  ];
+
   function getDistinctYears() {
       const seen = [];
       currentCoursesDB.forEach(c => {
@@ -1471,12 +1487,48 @@
       });
   }
 
+  function populateCatFilterBar() {
+      const bar = document.getElementById('catFilterBar');
+      bar.innerHTML = '';
+      const allBtn = document.createElement('div');
+      allBtn.className = 'filter-item';
+      allBtn.dataset.cat = '';
+      allBtn.textContent = 'جميع الأنواع';
+      allBtn.addEventListener('click', () => onCatClick(''));
+      bar.appendChild(allBtn);
+
+      CATS.forEach(c => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.cat = c.key;
+          btn.textContent = c.text;
+          btn.addEventListener('click', () => onCatClick(c.key));
+          bar.appendChild(btn);
+      });
+      updateCatFilterActive();
+  }
+
+  function onCatClick(cat) {
+      selectedCat = cat;
+      lastCourseId = null;
+      updateCatFilterActive();
+      applyFilters();
+  }
+
+  function updateCatFilterActive() {
+      document.querySelectorAll('#catFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', (btn.dataset.cat || '') === selectedCat);
+      });
+  }
+
   function applyFilters() {
       const year = selectedYear;
       const sem = selectedSemester;
+      const cat = selectedCat;
       currentFilteredCourses = currentCoursesDB.filter(c => {
           if (year && c.year !== year) return false;
           if (sem && c.semester !== sem) return false;
+          if (cat && c.cat !== cat) return false;
           return true;
       });
       populateSelectMenu();
@@ -1503,7 +1555,7 @@
       const emptyText = document.getElementById('emptyStateText');
 
       if (currentFilteredCourses.length === 0) {
-          if (selectedYear) {
+          if (selectedYear || selectedCat) {
               emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
           } else {
               emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض جميع المقررات وتفاصيلها';
@@ -1519,9 +1571,10 @@
           .join('');
 
       count.textContent = currentFilteredCourses.length + (currentFilteredCourses.length > 2 ? ' مقررات' : ' مقرر');
+      const catLabel = CATS.find(c => c.key === selectedCat) ? CATS.find(c => c.key === selectedCat).text : '';
       const yearLabel = selectedYear ? selectedYear.replace('السنة الدراسية', 'السنة') : '';
       document.getElementById('materialsLabel').textContent =
-          [yearLabel, selectedSemester].filter(Boolean).join(' · ') || 'جميع المقررات';
+          [yearLabel, selectedSemester, catLabel].filter(Boolean).join(' · ') || 'جميع المقررات';
       section.style.display = 'block';
       empty.style.display = 'none';
 
