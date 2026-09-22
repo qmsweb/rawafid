@@ -355,31 +355,23 @@
         white-space: nowrap;
     }
 
-    .materials-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-        gap: 14px;
-    }
-
-    .course-chip {
+    .materials-list {
         display: flex;
         flex-direction: column;
-        gap: 7px;
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        padding: 16px;
-        box-shadow: var(--card-shadow);
-        cursor: pointer;
-        text-decoration: none;
-        color: var(--text-main);
-        transition: all 0.2s ease;
+        gap: 16px;
     }
-    .course-chip:hover { border-color: var(--primary-color); transform: translateY(-3px); }
-    .course-chip.active { border-color: var(--primary-color); background: var(--hover-bg); }
-    .cc-code { font-weight: 700; color: var(--primary-color); font-size: 0.9rem; }
-    .cc-name { font-size: 0.98rem; font-weight: 600; line-height: 1.5; }
-    .cc-hours { font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-top: auto; }
+
+    /* بطاقة مقرر كاملة التفاصيل داخل قائمة المقررات */
+    .course-card.in-list { display: block; margin-bottom: 0; }
+    .course-card.in-list .card-header { padding: 14px 22px; }
+    .course-card.in-list .card-body { padding: 18px 22px; }
+    .course-card.in-list .course-title { font-size: 1.2rem; margin-bottom: 12px; }
+    .course-card.in-list .tags-container { margin-bottom: 14px; }
+    .course-card.in-list .info-grid { margin-top: 14px; padding-top: 14px; gap: 14px; }
+    .course-card.highlighted {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color), var(--card-shadow);
+    }
 
     @media (min-width: 1100px) {
         .container { max-width: 1360px; padding: 0 28px; }
@@ -399,7 +391,6 @@
         .course-title { font-size: 1.4rem; }
         .card-body { padding: 18px; }
         .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-        .materials-grid { grid-template-columns: 1fr; }
     }
 
   </style>
@@ -1001,10 +992,10 @@
           </select>
 
           <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
-          <select id="courseSelect" class="select-field" onchange="displayCourse(this.value, true)">
+          <select id="courseSelect" class="select-field" onchange="scrollToCourse(this.value, true)">
               <option value="" disabled selected>اختر السنة الدراسية أولاً</option>
           </select>
-          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>اختر مقررًا من القائمة لعرض المتطلبات السابقة واللاحقة، وعدد الساعات، ووصف المقرر.</p>
+          <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>اختر السنة والفصل لعرض جميع مقرراتها وتفاصيلها كاملة: المتطلبات السابقة واللاحقة وعدد الساعات.</p>
         </div>
 
         <div class="plan-filter-bar">
@@ -1031,42 +1022,8 @@
                 <div class="materials-title"><i class="fas fa-book-open"></i> <span id="materialsLabel">المقررات المتاحة</span></div>
                 <span class="materials-count" id="materialsCount">0 مقرر</span>
             </div>
-            <div class="materials-grid" id="materialsGrid"></div>
+            <div class="materials-list" id="materialsList"></div>
         </section>
-
-        <div class="course-card" id="courseCard">
-            <div class="card-header">
-                <span class="course-code" id="cCode">CODE101</span>
-                <div class="course-hours-badge">
-                    <i class="far fa-clock"></i>
-                    <span id="cHours">3 ساعات</span>
-                </div>
-            </div>
-            
-            <div class="card-body">
-                <h2 class="course-title" id="cName">اسم المقرر</h2>
-                
-                <div class="tags-container" id="cTags"></div>
-
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-link"></i> المتطلب السابق</span>
-                        <div class="info-value" id="cPrereq">-</div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <span class="info-label"><i class="fas fa-exchange-alt"></i> المتطلب المتزامن (مرافق)</span>
-                        <div class="info-value" id="cCoreq">لا يوجد</div>
-                    </div>
-
-                    <div class="info-item" id="cPostreqContainer" style="display: none;">
-                        <span class="info-label"><i class="fas fa-unlock-alt"></i> يفتح المقررات التالية</span>
-                        <div class="info-value" id="cPostreq"></div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
       </div>
 
       </main>
@@ -1295,16 +1252,14 @@
           const urlParams = new URLSearchParams(window.location.search);
           const courseId = urlParams.get('id');
           if (courseId) {
-              displayCourse(courseId, false);
+              scrollToCourse(courseId, false);
           } else {
-              document.getElementById('courseCard').style.display = 'none';
               document.getElementById('courseSelect').value = "";
               selectedYear = '';
               selectedSemester = '';
               updateYearFilterActive();
               populateSemesterFilterBar();
               resetCourseSelect();
-              resetResult();
           }
       });
   });
@@ -1349,9 +1304,8 @@
                       }
                   }
                   applyFilters();
-                  displayCourse(initialCourseId, false);
+                  scrollToCourse(initialCourseId, false);
               } else {
-                  document.getElementById('courseCard').style.display = 'none';
                   document.getElementById('emptyState').style.display = 'block';
               }
           } else {
@@ -1373,7 +1327,6 @@
           applyFilters();
       } else {
           resetCourseSelect();
-          resetResult();
       }
   }
 
@@ -1480,10 +1433,8 @@
       populateSemesterFilterBar();
       if (isDeselect) {
           resetCourseSelect();
-          resetResult();
       } else {
           applyFilters();
-          resetResult();
       }
   }
 
@@ -1492,7 +1443,6 @@
       lastCourseId = null;
       updateSemesterFilterActive();
       applyFilters();
-      resetResult();
   }
 
   function updateYearFilterActive() {
@@ -1518,10 +1468,9 @@
       populateSelectMenu();
       updateMaterialsView();
 
-      // إخفاء الكارد إذا لم يعد المقرر المعروض ضمن النتائج
+      // إسقاط التحديد إذا لم يعد المقرر ضمن النتائج
       if (lastCourseId && !currentFilteredCourses.some(c => c.id === lastCourseId)) {
           lastCourseId = null;
-          resetResult();
       }
   }
 
@@ -1533,14 +1482,10 @@
       updateMaterialsView();
   }
 
-  function resetResult() {
-      document.getElementById('courseCard').style.display = 'none';
-  }
-
-  /* === عرض المقررات المفلترة بشكل مرئي في المساحة الرئيسية === */
+  /* === عرض كل المقررات المفلترة بتفاصيلها الكاملة === */
   function updateMaterialsView() {
       const section = document.getElementById('materialsSection');
-      const grid = document.getElementById('materialsGrid');
+      const list = document.getElementById('materialsList');
       const count = document.getElementById('materialsCount');
       const empty = document.getElementById('emptyState');
       const emptyText = document.getElementById('emptyStateText');
@@ -1549,31 +1494,17 @@
           if (selectedYear) {
               emptyText.textContent = 'لا توجد مقررات مطابقة للفلاتر المحددة';
           } else {
-              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض المقررات المتاحة';
+              emptyText.textContent = 'اختر السنة الدراسية ثم الفصل من القائمة لعرض جميع المقررات وتفاصيلها';
           }
           section.style.display = 'none';
           empty.style.display = 'block';
           return;
       }
 
-      grid.innerHTML = '';
-      [...currentFilteredCourses].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
-          const card = document.createElement('a');
-          card.href = 'javascript:void(0)';
-          card.className = 'course-chip';
-          card.dataset.id = course.id;
-          card.setAttribute('aria-label', `عرض تفاصيل ${course.id} - ${course.name}`);
-          card.innerHTML = `
-              <span class="cc-code">${course.id}</span>
-              <span class="cc-name">${course.name}</span>
-              <span class="cc-hours"><i class="fas fa-clock"></i> ${course.hours} ساعات</span>
-          `;
-          card.addEventListener('click', (e) => {
-              e.preventDefault();
-              displayCourse(course.id, true);
-          });
-          grid.appendChild(card);
-      });
+      list.innerHTML = [...currentFilteredCourses]
+          .sort((a, b) => a.id.localeCompare(b.id))
+          .map(buildCourseCard)
+          .join('');
 
       count.textContent = currentFilteredCourses.length + (currentFilteredCourses.length > 2 ? ' مقررات' : ' مقرر');
       const yearLabel = selectedYear ? selectedYear.replace('السنة الدراسية', 'السنة') : '';
@@ -1581,153 +1512,116 @@
           [yearLabel, selectedSemester].filter(Boolean).join(' · ') || 'جميع المقررات';
       section.style.display = 'block';
       empty.style.display = 'none';
+
+      // إعادة تمييز المقرر المحدد سابقاً (عند تغيير الفلاتر)
+      if (lastCourseId) {
+          const card = list.querySelector(`.course-card[data-id="${lastCourseId}"]`);
+          if (card) card.classList.add('highlighted');
+      }
   }
 
-  /* === دالة العرض === */
-  function displayCourse(courseId, updateHistory = true) {
+  /* === بناء بطاقة مقرر كاملة التفاصيل === */
+  function buildCourseCard(course) {
+      let tagClass = 'tag-uni', catText = 'متطلب جامعي', icon = 'fa-university';
+      if (course.cat === 'spec') { tagClass = 'tag-spec'; catText = 'متطلب تخصص'; icon = 'fa-book'; }
+      else if (course.cat === 'edu') { tagClass = 'tag-edu'; catText = 'متطلب تربوي'; icon = 'fa-chalkboard-teacher'; }
+      else if (course.cat === 'found') { tagClass = 'tag-found'; catText = 'متطلب البرنامج التأسيسي'; icon = 'fa-layer-group'; }
+
+      const hoursText = course.hours === 0
+          ? '0 ساعات معتمدة'
+          : course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
+
+      const linkOf = (pId, iconName) => {
+          const pCourse = currentCoursesDB.find(c => c.id === pId);
+          const pName = pCourse ? pCourse.name : pId;
+          return `<a class="internal-link" href="javascript:void(0)" onclick="scrollToCourse('${pId}', true)">
+                    <i class="fas ${iconName}"></i> ${pId} (${pName})
+                  </a>`;
+      };
+
+      const prereqHtml = course.prereq
+          ? course.prereq.split(',').map(p => linkOf(p.trim(), 'fa-arrow-left')).join('')
+          : '<span style="color:var(--text-muted)">لا يوجد متطلب سابق</span>';
+
+      const coreqHtml = course.coreq
+          ? course.coreq.split(',').map(p => linkOf(p.trim(), 'fa-exchange-alt')).join('')
+          : '<span style="color:var(--text-muted)">لا يوجد</span>';
+
+      const nextCourses = currentCoursesDB.filter(c => {
+          if (!c.prereq) return false;
+          return c.prereq.split(',').map(p => p.trim()).includes(course.id);
+      });
+      const postreqHtml = nextCourses.length > 0
+          ? nextCourses.map(c => linkOf(c.id, 'fa-unlock-alt')).join('')
+          : '';
+
+      return `
+        <div class="course-card in-list" data-id="${course.id}">
+            <div class="card-header">
+                <span class="course-code">${course.id}</span>
+                <div class="course-hours-badge">
+                    <i class="far fa-clock"></i> <span>${hoursText}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h2 class="course-title">${course.name}</h2>
+                <div class="tags-container">
+                    <div class="tag ${tagClass}"><i class="fas ${icon}"></i> ${catText}</div>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-link"></i> المتطلب السابق</span>
+                        <div class="info-value">${prereqHtml}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-exchange-alt"></i> المتطلب المتزامن (مرافق)</span>
+                        <div class="info-value">${coreqHtml}</div>
+                    </div>
+                    ${postreqHtml ? `
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-unlock-alt"></i> يفتح المقررات التالية</span>
+                        <div class="info-value">${postreqHtml}</div>
+                    </div>` : ''}
+                </div>
+            </div>
+        </div>`;
+  }
+
+  /* === الانتقال إلى مقرر معين (من القائمة أو الروابط الداخلية) === */
+  function scrollToCourse(courseId, updateHistory = true, doScroll = true) {
+      const course = currentCoursesDB.find(c => c.id === courseId);
+      if (!course) return;
+
       const select = document.getElementById('courseSelect');
       select.value = courseId;
 
-      const course = currentCoursesDB.find(c => c.id === courseId);
-      const emptyState = document.getElementById('emptyState');
-      const courseCard = document.getElementById('courseCard');
-
-      if (!course) return;
-
-      lastCourseId = courseId;
-
-      // مزامنة شريط الفلاتر مع المقرر المعروض (عند التنقل عبر الروابط)
-      const hasYears = currentCoursesDB.some(c => c.year);
-      if (hasYears && course.year) {
-          selectedYear = course.year;
-          updateYearFilterActive();
-          populateSemesterFilterBar();
-          if (course.semester) {
-              selectedSemester = course.semester;
-              updateSemesterFilterActive();
+      // إذا لم يكن المقرر ضمن النتائج الحالية، نعيد التصفية حسب سنته وفصله
+      if (!currentFilteredCourses.some(c => c.id === courseId)) {
+          if (course.year) {
+              selectedYear = course.year;
+              updateYearFilterActive();
+              populateSemesterFilterBar();
+              if (course.semester) {
+                  selectedSemester = course.semester;
+                  updateSemesterFilterActive();
+              }
           }
           applyFilters();
-      } else if (hasYears) {
-          selectedYear = '';
-          selectedSemester = '';
-          updateYearFilterActive();
-          populateSemesterFilterBar();
-          applyFilters();
-      } else {
-          applyFilters();
       }
-      // إعادة تعيين القائمة بعد التصفية لضمان بقاء المقرر المحدد
-      select.value = courseId;
+
+      lastCourseId = courseId;
+      const cards = document.querySelectorAll('#materialsList .course-card');
+      cards.forEach(card => card.classList.remove('highlighted'));
+      const card = document.querySelector(`#materialsList .course-card[data-id="${courseId}"]`);
+      if (card) {
+          card.classList.add('highlighted');
+          if (doScroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
 
       if (updateHistory) {
           const newUrl = `${window.location.pathname}?id=${courseId}`;
           window.history.pushState({ path: newUrl }, '', newUrl);
       }
-
-      emptyState.style.display = 'none';
-      courseCard.style.display = 'none'; 
-      setTimeout(() => {
-          courseCard.style.display = 'block';
-          courseCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 10);
-
-      // تمييز بطاقة المقرر المحدد داخل شبكة المقررات
-      document.querySelectorAll('#materialsGrid .course-chip').forEach(chip => {
-          chip.classList.toggle('active', chip.dataset.id === courseId);
-      });
-
-      document.getElementById('cCode').innerText = course.id;
-      document.getElementById('cName').innerText = course.name;
-      
-      if (course.hours === 0) {
-        document.getElementById('cHours').innerText = '0 ساعات معتمدة';
-      } else {
-        document.getElementById('cHours').innerText = course.hours + (course.hours > 2 ? ' ساعات' : ' ساعتان');
-      }
-      
-      // المتطلب السابق
-      const prereqEl = document.getElementById('cPrereq');
-      if (course.prereq) {
-          // تقسيم السلسلة النصية للتعامل مع المقررات المتعددة
-          const prereqList = course.prereq.split(',').map(p => p.trim());
-          const prereqLinks = prereqList.map(pId => {
-              const pCourse = currentCoursesDB.find(c => c.id === pId);
-              const pName = pCourse ? pCourse.name : pId;
-              return `<a class="internal-link" onclick="displayCourse('${pId}', true)">
-                        <i class="fas fa-arrow-left"></i> ${pId} (${pName})
-                      </a>`;
-          });
-          prereqEl.innerHTML = prereqLinks.join('');
-      } else {
-          prereqEl.innerHTML = '<span style="color:var(--text-muted)">لا يوجد متطلب سابق</span>';
-      }
-
-      // المتطلب المرافق
-      const coreqEl = document.getElementById('cCoreq');
-      if (course.coreq) {
-          // التعامل مع المتطلبات المتزامنة بنفس طريقة السابقة لضمان عرض الاسم
-          const coreqList = course.coreq.split(',').map(p => p.trim());
-          const coreqLinks = coreqList.map(cId => {
-              const cCourse = currentCoursesDB.find(c => c.id === cId);
-              const cName = cCourse ? cCourse.name : cId;
-              return `<a class="internal-link" onclick="displayCourse('${cId}', true)">
-                        <i class="fas fa-exchange-alt"></i> ${cId} (${cName})
-                      </a>`;
-          });
-          coreqEl.innerHTML = coreqLinks.join('');
-      } else {
-          coreqEl.innerHTML = '<span style="color:var(--text-muted)">لا يوجد</span>';
-      }
-
-      // المتطلب اللاحق
-      // البحث في جميع المقررات عن المقررات التي تحتوي قائمة متطلباتها السابقة على معرف المقرر الحالي
-      const nextCourses = currentCoursesDB.filter(c => {
-          if (!c.prereq) return false;
-          const pList = c.prereq.split(',').map(p => p.trim());
-          return pList.includes(course.id);
-      });
-      
-      const postreqContainer = document.getElementById('cPostreqContainer');
-      const postreqVal = document.getElementById('cPostreq');
-
-      if (nextCourses.length > 0) {
-          postreqContainer.style.display = 'flex'; 
-          postreqVal.innerHTML = nextCourses.map(c => 
-              `<a class="internal-link" onclick="displayCourse('${c.id}', true)">
-                 <i class="fas fa-arrow-left"></i> ${c.name} (${c.id})
-               </a>`
-          ).join('');
-      } else {
-          postreqContainer.style.display = 'none'; 
-      }
-
-      // التصنيف
-      const tagsContainer = document.getElementById('cTags');
-      let tagClass = '', catText = '', icon = '';
-
-      if (course.cat === 'spec') {
-          tagClass = 'tag-spec';
-          catText = 'متطلب تخصص';
-          icon = 'fa-book';
-      } else if (course.cat === 'edu') {
-          tagClass = 'tag-edu';
-          catText = 'متطلب تربوي';
-          icon = 'fa-chalkboard-teacher';
-      } else if (course.cat === 'found') {
-          tagClass = 'tag-found';
-          catText = 'متطلب البرنامج التأسيسي';
-          icon = 'fa-layer-group';
-      } else {
-          tagClass = 'tag-uni';
-          catText = 'متطلب جامعي';
-          icon = 'fa-university';
-      }
-
-      tagsContainer.innerHTML = `
-        <div class="tag ${tagClass}">
-            <i class="fas ${icon}"></i> ${catText}
-        </div>
-      `;
   }
 </script>
 
