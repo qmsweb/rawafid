@@ -161,6 +161,20 @@
       cursor: pointer;
     }
     .tool-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
+    @media (min-width: 769px) {
+      .tools-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+      .tool-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px;
+        border-radius: 23px;
+        text-align: right;
+      }
+      .tool-card:hover { transform: translateY(-2px); }
+      .tool-card .tool-card-icon { width: 32px; height: 32px; font-size: 0.9rem; border-radius: 50%; flex-shrink: 0; }
+      .tool-card-name { font-size: 0.85rem; white-space: nowrap; }
+    }
     .tool-card .tool-card-icon {
       width: 60px; height: 60px; border-radius: 50%;
       background: var(--primary-light-bg); color: var(--primary-color);

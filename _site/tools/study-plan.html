@@ -279,6 +279,42 @@
         line-height: 1.7;
     }
 
+    /* === شريط فلاتر السنة والفصل الدراسي (مثل صفحة home) === */
+    .plan-filter-bar {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filter-bar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .filter-item {
+        flex: 0 0 auto;
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: var(--bg-card);
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.82rem;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    .filter-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+    .filter-item.active:hover { color: #fff; }
+
     @media (min-width: 1100px) {
         .container { max-width: 1360px; padding: 0 28px; }
         .card-header { padding: 24px 30px; }
@@ -897,23 +933,16 @@
               <option value="aadab">تخصص آداب اللغة العربية</option>
           </select>
 
-          <div class="side-label" style="margin-top: 18px;"><i class="fas fa-calendar-alt"></i> السنة الدراسية</div>
-          <select id="yearSelect" class="select-field" onchange="onYearChange()">
-              <option value="">جميع السنوات الدراسية</option>
-          </select>
-
-          <div id="semesterRow" style="display: none; margin-top: 14px;">
-              <div class="side-label"><i class="fas fa-layer-group"></i> الفصل الدراسي</div>
-              <select id="semesterSelect" class="select-field" onchange="onSemesterChange()">
-                  <option value="">جميع الفصول</option>
-              </select>
-          </div>
-
           <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
           <select id="courseSelect" class="select-field" onchange="displayCourse(this.value, true)">
-              <option value="" disabled selected>-- جاري تحميل الخطة --</option>
+              <option value="" disabled selected>اختر السنة الدراسية أولاً</option>
           </select>
           <p class="side-hint"><i class="fas fa-lightbulb" style="margin-left: 6px; color: var(--primary-color);"></i>اختر مقررًا من القائمة لعرض المتطلبات السابقة واللاحقة، وعدد الساعات، ووصف المقرر.</p>
+        </div>
+
+        <div class="plan-filter-bar">
+            <div class="filter-bar" id="yearFilterBar"></div>
+            <div class="filter-bar" id="semesterFilterBar" style="display: none;"></div>
         </div>
       </aside>
 
@@ -921,7 +950,7 @@
         <div id="resultContainer">
         <div class="empty-state" id="emptyState">
             <i class="fas fa-book-open empty-icon"></i>
-            <p>الرجاء اختيار مقرر من القائمة أعلاه لعرض المتطلبات والساعات وتفاصيل المقرر</p>
+            <p>اختر السنة الدراسية ثم الفصل من الشريط، وبعدها حدد مقررًا من القائمة لعرض المتطلبات والساعات وتفاصيل المقرر</p>
         </div>
 
         <div class="course-card" id="courseCard">
@@ -1171,10 +1200,13 @@
 
   let currentCoursesDB = [];
   let currentFilteredCourses = [];
+  let selectedYear = '';
+  let selectedSemester = '';
+  let lastCourseId = null;
 
   // 1. عند تحميل الصفحة
   window.addEventListener('DOMContentLoaded', () => {
-      // تحميل الخطة تلقائياً
+      // تحميل الخطة تلقائياً (بدون تحميل مواد حتى اختيار السنة)
       fetchPlanData();
       
       // التعامل مع زر الرجوع في المتصفح
@@ -1204,26 +1236,40 @@
           if (!response.ok) throw new Error("لم يتم العثور على ملف الخطة");
           const data = await response.json();
           currentCoursesDB = data;
-          
-          // تفعيل القائمة وتعبئتها
+
           select.disabled = false;
-          populateYearSelect();
-          populateSemesterSelect();
-          applyFilters();
+          selectedYear = '';
+          selectedSemester = '';
+          lastCourseId = null;
+
+          // تجهيز شريط فلاتر السنوات والفصول (بدون تحميل أي مواد)
+          populateYearFilterBar();
+          populateSemesterFilterBar();
           rawafidHideLoader();
-          
+
           // التحقق من الرابط في حال وجود ID لمقرر معين
           const urlParams = new URLSearchParams(window.location.search);
           const initialCourseId = urlParams.get('id');
           if (initialCourseId) {
               const exists = currentCoursesDB.find(c => c.id === initialCourseId);
-              if(exists) {
+              if (exists) {
+                  if (exists.year) {
+                      selectedYear = exists.year;
+                      updateYearFilterActive();
+                      populateSemesterFilterBar();
+                      if (exists.semester) {
+                          selectedSemester = exists.semester;
+                          updateSemesterFilterActive();
+                      }
+                  }
+                  applyFilters();
                   displayCourse(initialCourseId, false);
               } else {
-                  // إذا كان المعرف غير موجود في هذه الخطة، قم بإخفاء الكارد
                   document.getElementById('courseCard').style.display = 'none';
                   document.getElementById('emptyState').style.display = 'block';
               }
+          } else {
+              refreshMaterials();
           }
 
       } catch (error) {
@@ -1235,12 +1281,29 @@
       }
   }
 
+  // عند عدم وجود سنوات في الخطة يتم عرض جميع المواد، وتظل القائمة فارغة خلاف ذلك
+  function refreshMaterials() {
+      if (getDistinctYears().length === 0) {
+          applyFilters();
+      } else {
+          resetCourseSelect();
+          resetResult();
+      }
+  }
+
   function populateSelectMenu() {
       const select = document.getElementById('courseSelect');
-      const list = currentFilteredCourses.length ? currentFilteredCourses : currentCoursesDB;
+      select.innerHTML = '';
+
+      if (currentFilteredCourses.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>لا توجد مقررات مطابقة</option>';
+          select.disabled = true;
+          return;
+      }
+      select.disabled = false;
       select.innerHTML = '<option value="" disabled selected>-- ابحث عن المقرر أو الرمز --</option>';
 
-      [...list].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
+      [...currentFilteredCourses].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
           const option = document.createElement('option');
           option.value = course.id;
           option.text = `${course.id} - ${course.name}`;
@@ -1248,7 +1311,7 @@
       });
   }
 
-  /* === شريط الفلتر: السنة الدراسية والفصل === */
+  /* === شريط الفلاتر: السنة الدراسية والفصل === */
   function getDistinctYears() {
       const seen = [];
       currentCoursesDB.forEach(c => {
@@ -1265,18 +1328,6 @@
       });
   }
 
-  function populateYearSelect() {
-      const yearSelect = document.getElementById('yearSelect');
-      yearSelect.innerHTML = '<option value="">جميع السنوات الدراسية</option>';
-      getDistinctYears().forEach(y => {
-          const option = document.createElement('option');
-          option.value = y;
-          option.text = y;
-          yearSelect.appendChild(option);
-      });
-      yearSelect.value = '';
-  }
-
   function getDistinctSemestersForYear(year) {
       if (!year) return [];
       const seen = [];
@@ -1291,44 +1342,115 @@
       });
   }
 
-  function populateSemesterSelect() {
-      const semSelect = document.getElementById('semesterSelect');
-      const semRow = document.getElementById('semesterRow');
-      const year = document.getElementById('yearSelect').value;
-      if (!year) {
-          semRow.style.display = 'none';
-          semSelect.innerHTML = '';
+  function populateYearFilterBar() {
+      const bar = document.getElementById('yearFilterBar');
+      bar.innerHTML = '';
+      getDistinctYears().forEach(y => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.year = y;
+          btn.textContent = y.replace('السنة الدراسية', 'السنة');
+          btn.addEventListener('click', () => onYearClick(y));
+          bar.appendChild(btn);
+      });
+      updateYearFilterActive();
+  }
+
+  function populateSemesterFilterBar() {
+      const bar = document.getElementById('semesterFilterBar');
+      bar.innerHTML = '';
+      if (!selectedYear) {
+          selectedSemester = '';
+          bar.style.display = 'none';
           return;
       }
-      semSelect.innerHTML = '<option value="">جميع فصول هذه السنة</option>';
-      getDistinctSemestersForYear(year).forEach(s => {
-          const option = document.createElement('option');
-          option.value = s;
-          option.text = s;
-          semSelect.appendChild(option);
+      const allBtn = document.createElement('div');
+      allBtn.className = 'filter-item';
+      allBtn.dataset.sem = '';
+      allBtn.textContent = 'جميع الفصول';
+      allBtn.addEventListener('click', () => onSemesterClick(''));
+      bar.appendChild(allBtn);
+
+      getDistinctSemestersForYear(selectedYear).forEach(s => {
+          const btn = document.createElement('div');
+          btn.className = 'filter-item';
+          btn.dataset.sem = s;
+          btn.textContent = s;
+          btn.addEventListener('click', () => onSemesterClick(s));
+          bar.appendChild(btn);
       });
-      semSelect.value = '';
-      semRow.style.display = 'block';
+
+      selectedSemester = '';
+      bar.style.display = 'flex';
+      updateSemesterFilterActive();
   }
 
-  function onYearChange() {
-      populateSemesterSelect();
+  function onYearClick(year) {
+      if (selectedYear === year) {
+          selectedYear = '';
+          selectedSemester = '';
+          updateYearFilterActive();
+          populateSemesterFilterBar();
+          resetCourseSelect();
+          resetResult();
+          return;
+      }
+      selectedYear = year;
+      selectedSemester = '';
+      lastCourseId = null;
+      updateYearFilterActive();
+      populateSemesterFilterBar();
       applyFilters();
+      resetResult();
   }
 
-  function onSemesterChange() {
+  function onSemesterClick(sem) {
+      selectedSemester = sem;
+      lastCourseId = null;
+      updateSemesterFilterActive();
       applyFilters();
+      resetResult();
+  }
+
+  function updateYearFilterActive() {
+      document.querySelectorAll('#yearFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.year === selectedYear);
+      });
+  }
+
+  function updateSemesterFilterActive() {
+      document.querySelectorAll('#semesterFilterBar .filter-item').forEach(btn => {
+          btn.classList.toggle('active', (btn.dataset.sem || '') === selectedSemester);
+      });
   }
 
   function applyFilters() {
-      const year = document.getElementById('yearSelect').value;
-      const sem = document.getElementById('semesterSelect').value;
+      const year = selectedYear;
+      const sem = selectedSemester;
       currentFilteredCourses = currentCoursesDB.filter(c => {
           if (year && c.year !== year) return false;
           if (sem && c.semester !== sem) return false;
           return true;
       });
       populateSelectMenu();
+
+      // إخفاء الكارد إذا لم يعد المقرر المعروض ضمن النتائج
+      if (lastCourseId && !currentFilteredCourses.some(c => c.id === lastCourseId)) {
+          lastCourseId = null;
+          resetResult();
+      }
+  }
+
+  function resetCourseSelect() {
+      const select = document.getElementById('courseSelect');
+      select.innerHTML = '<option value="" disabled selected>اختر السنة الدراسية أولاً</option>';
+      select.disabled = true;
+      currentFilteredCourses = [];
+  }
+
+  function resetResult() {
+      document.getElementById('courseCard').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'block';
   }
 
   /* === دالة العرض === */
@@ -1342,17 +1464,26 @@
 
       if (!course) return;
 
-      // مزامنة شريط الفلتر مع المقرر المعروض (عند التنقل عبر الروابط)
+      lastCourseId = courseId;
+
+      // مزامنة شريط الفلاتر مع المقرر المعروض (عند التنقل عبر الروابط)
       const hasYears = currentCoursesDB.some(c => c.year);
-      const yearSelect = document.getElementById('yearSelect');
       if (hasYears && course.year) {
-          yearSelect.value = course.year;
-          populateSemesterSelect();
-          document.getElementById('semesterSelect').value = course.semester || '';
+          selectedYear = course.year;
+          updateYearFilterActive();
+          populateSemesterFilterBar();
+          if (course.semester) {
+              selectedSemester = course.semester;
+              updateSemesterFilterActive();
+          }
           applyFilters();
       } else if (hasYears) {
-          yearSelect.value = '';
-          populateSemesterSelect();
+          selectedYear = '';
+          selectedSemester = '';
+          updateYearFilterActive();
+          populateSemesterFilterBar();
+          applyFilters();
+      } else {
           applyFilters();
       }
       // إعادة تعيين القائمة بعد التصفية لضمان بقاء المقرر المحدد
