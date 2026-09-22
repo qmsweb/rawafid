@@ -325,6 +325,18 @@
               <option value="aadab">تخصص آداب اللغة العربية</option>
           </select>
 
+          <div class="side-label" style="margin-top: 18px;"><i class="fas fa-calendar-alt"></i> السنة الدراسية</div>
+          <select id="yearSelect" class="select-field" onchange="onYearChange()">
+              <option value="">جميع السنوات الدراسية</option>
+          </select>
+
+          <div id="semesterRow" style="display: none; margin-top: 14px;">
+              <div class="side-label"><i class="fas fa-layer-group"></i> الفصل الدراسي</div>
+              <select id="semesterSelect" class="select-field" onchange="onSemesterChange()">
+                  <option value="">جميع الفصول</option>
+              </select>
+          </div>
+
           <div class="side-label" style="margin-top: 18px;"><i class="fas fa-book-open"></i> المقرر</div>
           <select id="courseSelect" class="select-field" onchange="displayCourse(this.value, true)">
               <option value="" disabled selected>-- جاري تحميل الخطة --</option>
@@ -392,6 +404,7 @@
   }
 
   let currentCoursesDB = [];
+  let currentFilteredCourses = [];
 
   // 1. عند تحميل الصفحة
   window.addEventListener('DOMContentLoaded', () => {
@@ -428,7 +441,9 @@
           
           // تفعيل القائمة وتعبئتها
           select.disabled = false;
-          populateSelectMenu();
+          populateYearSelect();
+          populateSemesterSelect();
+          applyFilters();
           rawafidHideLoader();
           
           // التحقق من الرابط في حال وجود ID لمقرر معين
@@ -456,16 +471,98 @@
 
   function populateSelectMenu() {
       const select = document.getElementById('courseSelect');
+      const list = currentFilteredCourses.length ? currentFilteredCourses : currentCoursesDB;
       select.innerHTML = '<option value="" disabled selected>-- ابحث عن المقرر أو الرمز --</option>';
 
-      currentCoursesDB.sort((a, b) => a.id.localeCompare(b.id));
-
-      currentCoursesDB.forEach(course => {
+      [...list].sort((a, b) => a.id.localeCompare(b.id)).forEach(course => {
           const option = document.createElement('option');
           option.value = course.id;
           option.text = `${course.id} - ${course.name}`;
           select.appendChild(option);
       });
+  }
+
+  /* === شريط الفلتر: السنة الدراسية والفصل === */
+  function getDistinctYears() {
+      const seen = [];
+      currentCoursesDB.forEach(c => {
+          if (c.year && seen.indexOf(c.year) === -1) seen.push(c.year);
+      });
+      const order = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة', 'الخامسة', 'السادسة'];
+      return seen.sort((a, b) => {
+          const ia = order.findIndex(w => a.indexOf(w) !== -1);
+          const ib = order.findIndex(w => b.indexOf(w) !== -1);
+          const ra = ia === -1 ? order.length : ia;
+          const rb = ib === -1 ? order.length : ib;
+          if (ra !== rb) return ra - rb;
+          return a.localeCompare(b, 'ar');
+      });
+  }
+
+  function populateYearSelect() {
+      const yearSelect = document.getElementById('yearSelect');
+      yearSelect.innerHTML = '<option value="">جميع السنوات الدراسية</option>';
+      getDistinctYears().forEach(y => {
+          const option = document.createElement('option');
+          option.value = y;
+          option.text = y;
+          yearSelect.appendChild(option);
+      });
+      yearSelect.value = '';
+  }
+
+  function getDistinctSemestersForYear(year) {
+      if (!year) return [];
+      const seen = [];
+      currentCoursesDB.forEach(c => {
+          if (c.year === year && c.semester && seen.indexOf(c.semester) === -1) seen.push(c.semester);
+      });
+      const order = ['الخريف', 'الربيع', 'الصيفي'];
+      return seen.sort((a, b) => {
+          const ia = order.indexOf(a) === -1 ? order.length : order.indexOf(a);
+          const ib = order.indexOf(b) === -1 ? order.length : order.indexOf(b);
+          return ia - ib;
+      });
+  }
+
+  function populateSemesterSelect() {
+      const semSelect = document.getElementById('semesterSelect');
+      const semRow = document.getElementById('semesterRow');
+      const year = document.getElementById('yearSelect').value;
+      if (!year) {
+          semRow.style.display = 'none';
+          semSelect.innerHTML = '';
+          return;
+      }
+      semSelect.innerHTML = '<option value="">جميع فصول هذه السنة</option>';
+      getDistinctSemestersForYear(year).forEach(s => {
+          const option = document.createElement('option');
+          option.value = s;
+          option.text = s;
+          semSelect.appendChild(option);
+      });
+      semSelect.value = '';
+      semRow.style.display = 'block';
+  }
+
+  function onYearChange() {
+      populateSemesterSelect();
+      applyFilters();
+  }
+
+  function onSemesterChange() {
+      applyFilters();
+  }
+
+  function applyFilters() {
+      const year = document.getElementById('yearSelect').value;
+      const sem = document.getElementById('semesterSelect').value;
+      currentFilteredCourses = currentCoursesDB.filter(c => {
+          if (year && c.year !== year) return false;
+          if (sem && c.semester !== sem) return false;
+          return true;
+      });
+      populateSelectMenu();
   }
 
   /* === دالة العرض === */
@@ -478,6 +575,22 @@
       const courseCard = document.getElementById('courseCard');
 
       if (!course) return;
+
+      // مزامنة شريط الفلتر مع المقرر المعروض (عند التنقل عبر الروابط)
+      const hasYears = currentCoursesDB.some(c => c.year);
+      const yearSelect = document.getElementById('yearSelect');
+      if (hasYears && course.year) {
+          yearSelect.value = course.year;
+          populateSemesterSelect();
+          document.getElementById('semesterSelect').value = course.semester || '';
+          applyFilters();
+      } else if (hasYears) {
+          yearSelect.value = '';
+          populateSemesterSelect();
+          applyFilters();
+      }
+      // إعادة تعيين القائمة بعد التصفية لضمان بقاء المقرر المحدد
+      select.value = courseId;
 
       if (updateHistory) {
           const newUrl = `${window.location.pathname}?id=${courseId}`;
