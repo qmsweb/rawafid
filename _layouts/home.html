@@ -324,6 +324,19 @@
         </div>
       </section>
 
+      <!-- === المقررات === -->
+      <section class="home-section" id="courses">
+        <div class="section-head">
+          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
+        </div>
+        <div class="sticky-filter-container">
+          <div class="filter-bar" id="filter-bar"></div>
+        </div>
+        <div class="courses-container" id="courses-container">
+          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
+        </div>
+      </section>
+
       <!-- === المدونة === -->
       {% assign blog_posts = site.posts | where: "visible", true | limit: 3 %}
       <section class="home-section" id="blog">
@@ -371,19 +384,6 @@
           {% else %}
             <p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد تدوينات حالياً.</p>
           {% endif %}
-        </div>
-      </section>
-
-      <!-- === المقررات === -->
-      <section class="home-section" id="courses">
-        <div class="section-head">
-          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
-        </div>
-        <div class="sticky-filter-container">
-          <div class="filter-bar" id="filter-bar"></div>
-        </div>
-        <div class="courses-container" id="courses-container">
-          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
         </div>
       </section>
 
