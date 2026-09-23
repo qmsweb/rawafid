@@ -218,7 +218,7 @@
     .course-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
     .course-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
     .course-card-info { min-width: 0; }
-    .course-card-name { font-size: 0.92rem; font-weight: 700; line-height: 1.4; }
+    .course-card-name { font-size: 0.92rem; font-weight: 700; font-feature-settings: "ss01"; line-height: 1.4; }
     .course-card-code { font-size: 0.78rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; margin-top: 5px; border: 1px solid var(--border-color); }
 
     /* === شريط الفلاتر === */
@@ -245,6 +245,39 @@
     .courses-container.grid-view { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 
     .courses-container .course-card { width: auto; }
+
+    /* === تخطيط الشاشات الكبيرة: الأدوات ثابتة يمينًا === */
+    @media (min-width: 992px) {
+      #main-content-area {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        column-gap: 28px;
+        grid-template-areas:
+          "anniversary anniversary"
+          "tools main";
+        align-items: start;
+      }
+
+      .anniversary-hero { grid-area: anniversary; }
+
+      #tools {
+        grid-area: tools;
+        position: sticky;
+        top: calc(var(--nav-height) + 16px);
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 18px;
+        box-shadow: var(--card-shadow);
+      }
+
+      #tools .tools-grid { flex-direction: column; align-items: stretch; gap: 8px; }
+      #tools .tool-card { width: 100%; justify-content: flex-start; }
+
+      .home-main { grid-area: main; min-width: 0; }
+
+      .sticky-filter-container { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+    }
 
     /* === الاستجابة === */
     @media (max-width: 820px) {
@@ -940,6 +973,21 @@
         </div>
       </section>
 
+      <div class="home-main">
+
+      <!-- === المقررات === -->
+      <section class="home-section" id="courses">
+        <div class="section-head">
+          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
+        </div>
+        <div class="sticky-filter-container">
+          <div class="filter-bar" id="filter-bar"></div>
+        </div>
+        <div class="courses-container" id="courses-container">
+          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
+        </div>
+      </section>
+
       <!-- === المدونة === -->
       
       <section class="home-section" id="blog">
@@ -1018,18 +1066,7 @@
         </div>
       </section>
 
-      <!-- === المقررات === -->
-      <section class="home-section" id="courses">
-        <div class="section-head">
-          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
-        </div>
-        <div class="sticky-filter-container">
-          <div class="filter-bar" id="filter-bar"></div>
-        </div>
-        <div class="courses-container" id="courses-container">
-          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
-        </div>
-      </section>
+      </div>
 
     </div>
 
