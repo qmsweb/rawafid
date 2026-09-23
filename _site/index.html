@@ -248,10 +248,13 @@
 
     /* === تخطيط الشاشات الكبيرة: الأدوات ثابتة يمينًا === */
     @media (min-width: 992px) {
+      .container { max-width: 1360px; }
+      .site-footer .footer-container { max-width: 1360px; }
+
       #main-content-area {
         display: grid;
-        grid-template-columns: 280px minmax(0, 1fr);
-        column-gap: 28px;
+        grid-template-columns: 260px minmax(0, 1fr);
+        column-gap: 32px;
         grid-template-areas:
           "anniversary anniversary"
           "tools main";
@@ -264,15 +267,15 @@
         grid-area: tools;
         position: sticky;
         top: calc(var(--nav-height) + 16px);
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        padding: 18px;
-        box-shadow: var(--card-shadow);
       }
 
-      #tools .tools-grid { flex-direction: column; align-items: stretch; gap: 8px; }
-      #tools .tool-card { width: 100%; justify-content: flex-start; }
+      #tools .section-head { margin-bottom: 10px; gap: 8px; flex-wrap: nowrap; }
+      #tools .view-more-btn { padding: 6px 12px; font-size: 0.75rem; gap: 5px; }
+
+      #tools .tools-grid { flex-direction: column; align-items: stretch; gap: 6px; }
+      #tools .tool-card { width: 100%; justify-content: flex-start; padding: 6px 12px; gap: 8px; border-radius: 12px; }
+      #tools .tool-card .tool-card-icon { width: 26px; height: 26px; font-size: 0.75rem; border-radius: 50%; }
+      #tools .tool-card-name { font-size: 0.78rem; }
 
       .home-main { grid-area: main; min-width: 0; }
 
