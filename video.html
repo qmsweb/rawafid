@@ -1,262 +1,245 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/fonts/fonts.css" />
-  <title>مشغل الفيديو - روافد</title>
+---
+layout: documentary
+title: مشغل الأفلام - رواند الوثائقي
+description: مشاهدة أفلام رواند الوثائقية عبر مشغل OK.ru المدمج.
+permalink: /video.html
+---
 
-  <!-- الخطوط -->
-  <link rel="icon" href="images/favicon.png" type="image/jpg">
+<section
+  class="video-page"
+  data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
+  data-doc-url="{{ '/doc.html' | relative_url }}"
+  data-video-url="{{ '/video.html' | relative_url }}"
+>
+  <a class="video-breadcrumb" href="{{ '/doc.html' | relative_url }}">
+    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    العودة إلى الأفلام
+  </a>
 
-  <!-- أيقونات -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" />
-
-  <style>
-    :root {
-      --primary-color: #1a2ac6;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Noto Kufi Arabic", sans-serif;
-    }
-
-    body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
-      min-height: 100vh;
-      padding-top: 80px;
-      overflow-x: hidden;
-    }
-
-    /* ======= مشغل الفيديو ======= */
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .video-container {
-      position: relative;
-      width: 100%;
-      max-width: 1000px;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      overflow: hidden;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border: none;
-      outline: none;
-    }
-
-    /* ======= معلومات الفيلم ======= */
-    .movie-info {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      gap: 20px;
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 0 20px;
-      flex-wrap: wrap;
-    }
-
-    .movie-info img {
-      width: 160px;
-      border-radius: 12px;
-      filter: brightness(0) saturate(100%); /* اللون الأسود للشعار */     
-      padding: 10px;
-    }
-
-    .movie-text {
-      flex: 1;
-      text-align: right;
-    }
-
-    .movie-text h2 {
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-      color: #111;
-    }
-
-    .movie-text p {
-      font-size: 1rem;
-      line-height: 1.8;
-      color: #444;
-    }
-
-    /* ======= زر المشاركة ======= */
-    .share-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 20px;
-    }
-
-    .share-btn:hover {
-      background: #1422a5;
-    }
-
-    @media (max-width: 768px) {
-      .movie-info img { width: 120px; }
-      .movie-text h2 { font-size: 1.3rem; }
-      .movie-text p { font-size: 0.9rem; }
-    }
-
-    #rawafid-loading-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-      background: #fff; transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-    #rawafid-loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    .rawafid-loader-spinner {
-      width: 44px; height: 44px;
-      border: 3.5px solid #e0e3f0; border-top-color: #1a2ac6;
-      border-radius: 50%; animation: rawafid-spin 0.75s linear infinite;
-    }
-    .rawafid-loader-text {
-      font-family: "Noto Kufi Arabic", sans-serif; font-size: 0.9rem; font-weight: 600; color: #666;
-    }
-    .rawafid-loader-dots { display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px; }
-    .rawafid-loader-dots span {
-      width: 5px; height: 5px; background: #1a2ac6; border-radius: 50%;
-      animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
-    }
-    .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
-    .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes rawafid-spin { to { transform: rotate(360deg); } }
-    @keyframes rawafid-dot-pulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
-  </style>
-</head>
-<body>
-
-  <div id="topbar-container"></div>
-
-  <!-- overlay التحميل -->
-  <div id="rawafid-loading-overlay">
-    <div class="rawafid-loader-spinner"></div>
-    <div class="rawafid-loader-text">
-      جاري التحميل
-      <span class="rawafid-loader-dots"><span></span><span></span><span></span></span>
+  <div class="video-stage" id="video-stage">
+    <div class="video-frame">
+      <div class="player-loading" id="player-loading" aria-label="جارٍ تحميل المشغل">
+        <span aria-hidden="true"></span>
+      </div>
+      <video id="native-player" controls playsinline preload="metadata" hidden></video>
+      <iframe
+        id="ok-player"
+        title="مشغل فيديو OK.ru"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        allowfullscreen
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+        hidden
+      ></iframe>
     </div>
   </div>
 
-  <!-- مشغل الفيديو -->
-  <div class="video-wrapper" id="video-wrapper">
-    <div class="video-container">
-      <video id="movie-player" controls poster="">
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
+  <section class="movie-info-card" id="movie-info" aria-labelledby="movie-title" hidden>
+    <div class="movie-logo-frame">
+      <img class="movie-info-logo" id="movie-logo" alt="شعار الفيلم">
     </div>
-  </div>
-
-  <!-- معلومات الفيلم -->
-  <section class="movie-info">
-    <img id="movie-logo" alt="شعار الفيلم">
-    <div class="movie-text">
-      <h2 id="movie-title"></h2>
-      <p id="movie-desc"></p>
-      <button class="share-btn" id="share-btn">
-        <i class="fas fa-share"></i> مشاركة
-      </button>
+    <div class="movie-copy">
+      <p class="movie-eyebrow">
+        <i class="fas fa-circle-play" aria-hidden="true"></i>
+        من رواند الوثائقي
+      </p>
+      <h1 class="movie-title" id="movie-title"></h1>
+      <p class="movie-description" id="movie-description"></p>
+      <div class="video-actions">
+        <button class="button" id="share-button" type="button">
+          <i class="fas fa-share-nodes" aria-hidden="true"></i>
+          <span id="share-button-text">مشاركة الفيلم</span>
+        </button>
+        <a class="button button-secondary" id="ok-link" href="https://ok.ru/video/17039776156295" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-circle-up-right" aria-hidden="true"></i>
+          عرض على OK.ru
+        </a>
+        <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
+      </div>
     </div>
   </section>
 
-  <div id="footer-placeholder"></div>
+  <section class="video-error" id="video-error" role="alert" hidden>
+    <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+    <h1 id="video-error-title">تعذر عرض الفيلم</h1>
+    <p id="video-error-message">الفيلم المطلوب غير متاح حاليًا.</p>
+    <a class="button" href="{{ '/doc.html' | relative_url }}">
+      <i class="fas fa-film" aria-hidden="true"></i>
+      العودة إلى الأفلام
+    </a>
+  </section>
+</section>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const movieId = params.get("id");
+<script>
+  (() => {
+    const root = document.querySelector('.video-page');
+    if (!root) return;
 
-    const wrapper = document.getElementById("video-wrapper");
-    const player = document.getElementById("movie-player");
-    const logo = document.getElementById("movie-logo");
-    const title = document.getElementById("movie-title");
-    const desc = document.getElementById("movie-desc");
-    const shareBtn = document.getElementById("share-btn");
+    const playerFrame = document.getElementById('video-stage');
+    const playerLoading = document.getElementById('player-loading');
+    const okPlayer = document.getElementById('ok-player');
+    const nativePlayer = document.getElementById('native-player');
+    const movieInfo = document.getElementById('movie-info');
+    const movieLogo = document.getElementById('movie-logo');
+    const movieTitle = document.getElementById('movie-title');
+    const movieDescription = document.getElementById('movie-description');
+    const okLink = document.getElementById('ok-link');
+    const shareButton = document.getElementById('share-button');
+    const shareButtonText = document.getElementById('share-button-text');
+    const shareStatus = document.getElementById('share-status');
+    const errorState = document.getElementById('video-error');
+    const errorTitle = document.getElementById('video-error-title');
+    const errorMessage = document.getElementById('video-error-message');
+    const movieId = new URLSearchParams(window.location.search).get('id') || 'ameen';
+    let shareResetTimer;
 
-    if (!movieId) {
-      var ov = document.getElementById('rawafid-loading-overlay');
-      if (ov) ov.classList.add('hidden');
-      document.body.innerHTML = "<h2 style='text-align:center;margin-top:150px;'>⚠️ لم يتم العثور على الفيلم المطلوب.</h2>";
-    } else {
-      fetch("/assets/doc/movies.json")
-        .then(res => res.json())
-        .then(movies => {
-          var ov = document.getElementById('rawafid-loading-overlay');
-          if (ov) ov.classList.add('hidden');
-          const movie = movies.find(m => m.id === movieId);
-          if (movie) {
-            wrapper.style.backgroundImage = `url('${movie.bg}')`;
-            player.src = movie.url;
-            logo.src = movie.logo;
-            title.textContent = movie.title;
-            desc.textContent = movie.desc;
+    const hideLoader = () => {
+      if (typeof rawafidHideLoader === 'function') {
+        rawafidHideLoader();
+      } else {
+        document.getElementById('rawafid-loading-overlay')?.classList.add('hidden');
+      }
+    };
 
-            shareBtn.onclick = () => {
-              if (navigator.share) {
-                navigator.share({
-                  title: movie.title,
-                  text: movie.desc,
-                  url: movie["share-url"]
-                }).catch(() => {});
-              } else {
-                window.open(movie["share-url"], "_blank");
-              }
-            };
-          } else {
-            document.body.innerHTML = "<h2 style='text-align:center;margin-top:150px;'>⚠️ لم يتم العثور على هذا الفيلم في البيانات.</h2>";
-          }
-        })
-        .catch(err => {
-          console.error("فشل تحميل movies.json:", err);
-          var ov = document.getElementById('rawafid-loading-overlay');
-          if (ov) ov.classList.add('hidden');
-        });
-    }
+    const loadJson = async (url) => {
+      const response = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error('Invalid data');
+      return data;
+    };
 
-    // تحميل التوب بار والفوتر
-    fetch("topbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("topbar-container").innerHTML = html;
-        const script = document.createElement("script");
-        script.src = "topbar.js";
-        document.body.appendChild(script);
-      });
+    const getOkVideoId = (value) => {
+      if (!value) return '';
+      try {
+        const url = new URL(value, window.location.origin);
+        const hostname = url.hostname.toLowerCase();
+        if (hostname !== 'ok.ru' && !hostname.endsWith('.ok.ru')) return '';
+        const match = url.pathname.match(/^\/(?:video|videoembed)\/(\d+)\/?$/);
+        return match ? match[1] : '';
+      } catch (error) {
+        return '';
+      }
+    };
 
-    fetch("/footer.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
-      });
-  </script>
+    const getOkEmbedUrl = (movie) => {
+      const videoId = getOkVideoId(movie['embed-url']) || getOkVideoId(movie['source-url']);
+      return videoId ? `https://ok.ru/videoembed/${videoId}` : '';
+    };
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.error(err));
-    }
-  </script>
-</body>
-</html>
+    const configurePlayer = (movie) => {
+      const embedUrl = getOkEmbedUrl(movie);
+      if (embedUrl) {
+        okPlayer.title = `مشغل ${movie.title || 'الفيلم'} على OK.ru`;
+        okPlayer.addEventListener('load', () => {
+          playerLoading.hidden = true;
+        }, { once: true });
+        okPlayer.src = embedUrl;
+        okPlayer.hidden = false;
+        nativePlayer.hidden = true;
+        window.setTimeout(() => {
+          playerLoading.hidden = true;
+        }, 1500);
+        return;
+      }
+
+      if (movie.url) {
+        nativePlayer.poster = movie.bg || '';
+        nativePlayer.src = movie.url;
+        nativePlayer.addEventListener('loadedmetadata', () => {
+          playerLoading.hidden = true;
+        }, { once: true });
+        nativePlayer.hidden = false;
+        okPlayer.hidden = true;
+        return;
+      }
+
+      throw new Error('Unsupported video source');
+    };
+
+    const copyText = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.append(field);
+      field.select();
+      const copied = document.execCommand('copy');
+      field.remove();
+      if (!copied) throw new Error('Copy failed');
+    };
+
+    const showShareStatus = (message) => {
+      window.clearTimeout(shareResetTimer);
+      shareStatus.textContent = message;
+      shareResetTimer = window.setTimeout(() => {
+        shareStatus.textContent = '';
+      }, 3000);
+    };
+
+    const shareMovie = async (movie) => {
+      const url = new URL(root.dataset.videoUrl, window.location.origin);
+      url.searchParams.set('id', movie.id);
+      const shareData = {
+        title: movie.title,
+        text: movie.desc,
+        url: url.href
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          showShareStatus('تمت المشاركة.');
+          return;
+        }
+        await copyText(url.href);
+        showShareStatus('تم نسخ رابط الفيلم.');
+      } catch (error) {
+        if (error.name !== 'AbortError') showShareStatus('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
+      }
+    };
+
+    const showError = (message) => {
+      playerFrame.hidden = true;
+      movieInfo.hidden = true;
+      errorTitle.textContent = 'تعذر عرض الفيلم';
+      errorMessage.textContent = message;
+      errorState.hidden = false;
+    };
+
+    loadJson(root.dataset.moviesUrl).then((movies) => {
+      const movie = movies.find((item) => item.id === movieId);
+      if (!movie) {
+        showError('الفيلم المطلوب غير موجود في قائمة الأفلام.');
+        return;
+      }
+
+      configurePlayer(movie);
+      movieLogo.src = movie.logo || '';
+      movieLogo.alt = `شعار ${movie.title || ''}`;
+      movieTitle.textContent = movie.title || 'فيلم بلا عنوان';
+      movieDescription.textContent = movie.desc || '';
+      document.title = `${movie.title || 'فيلم'} | رواند الوثائقي`;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', movie.desc || '');
+
+      const sourceVideoId = getOkVideoId(movie['source-url']);
+      if (sourceVideoId) {
+        okLink.href = `https://ok.ru/video/${sourceVideoId}`;
+        okLink.hidden = false;
+      } else {
+        okLink.hidden = true;
+      }
+
+      shareButton.addEventListener('click', () => shareMovie(movie));
+      movieInfo.hidden = false;
+    }).catch((error) => {
+      console.error('تعذر تحميل بيانات الفيلم:', error);
+      showError('حدث خطأ أثناء تحميل بيانات الفيلم. حاول تحديث الصفحة.');
+    }).finally(hideLoader);
+  })();
+</script>

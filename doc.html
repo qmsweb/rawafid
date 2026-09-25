@@ -1,294 +1,290 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/fonts/fonts.css" />
-  <title>روافد وثائقي</title>
+---
+layout: documentary
+title: رواند الوثائقي - روافد
+description: تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.
+permalink: /doc.html
+---
 
-  <!-- خطوط -->
-  <link rel="icon" href="images/favicon.png" type="image/jpg">
-
-  <!-- أيقونات -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="topbar.css" />
-
-  <style>
-    :root {
-      --primary-color: #1a2ac6;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Noto Kufi Arabic", sans-serif;
-    }
-
-    body {
-      background-color: #f4f6fb;
-      color: #2d2d2d;
-      min-height: 100vh;
-      padding-top: 80px;
-      overflow-x: hidden;
-    }
-
-    /* ======= السلايدر ======= */
-    .hero-slider {
-      position: relative;
-      width: 100%;
-      height: 70vh;
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      transition: background-image 0.8s ease-in-out;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      max-width: 700px;
-      padding: 20px;
-    }
-
-    .hero-content img {
-      width: 180px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-    }
-
-    .hero-description {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: #f1f1f1;
-      margin-bottom: 20px;
-    }
-
-    .watch-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .watch-btn:hover {
-      background: #1422a5;
-    }
-
-    /* ======= قائمة الأفلام ======= */
-    .movies-section {
-      max-width: 1200px;
-      margin: 50px auto;
-      padding: 0 20px;
-      direction: rtl;
-    }
-
-    .movies-list {
-      display: flex;
-      flex-direction: row;
-      gap: 18px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      padding-bottom: 10px;
-    }
-
-    .movie-item {
-      flex: 0 0 auto;
-      width: 300px;
-      aspect-ratio: 16 / 9;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      background-color: #000;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .movie-item:hover {
-      transform: translateY(-5px);
-    }
-
-    .movie-bg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.75);
-    }
-
-    .movie-logo {
-      position: absolute;
-      bottom: 10px;
-      right: 50%;
-      transform: translateX(50%);
-      width: 40%;
-      border-radius: 6px;
-    }
-
-    @media (max-width: 768px) {
-      .hero-slider { height: 55vh; }
-      .hero-content img { width: 130px; }
-      .movies-list { gap: 12px; }
-      .movie-item { width: 220px; }
-    }
-
-    #rawafid-loading-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-      background: #fff; transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-    #rawafid-loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    .rawafid-loader-spinner {
-      width: 44px; height: 44px;
-      border: 3.5px solid #e0e3f0; border-top-color: #1a2ac6;
-      border-radius: 50%; animation: rawafid-spin 0.75s linear infinite;
-    }
-    .rawafid-loader-text {
-      font-family: "Noto Kufi Arabic", sans-serif; font-size: 0.9rem; font-weight: 600; color: #666;
-    }
-    .rawafid-loader-dots { display: inline-flex; gap: 4px; direction: ltr; margin-inline-start: 4px; }
-    .rawafid-loader-dots span {
-      width: 5px; height: 5px; background: #1a2ac6; border-radius: 50%;
-      animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
-    }
-    .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
-    .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes rawafid-spin { to { transform: rotate(360deg); } }
-    @keyframes rawafid-dot-pulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
-  </style>
-</head>
-<body>
-
-  <div id="topbar-container"></div>
-
-  <!-- overlay التحميل -->
-  <div id="rawafid-loading-overlay">
-    <div class="rawafid-loader-spinner"></div>
-    <div class="rawafid-loader-text">
-      جاري التحميل
-      <span class="rawafid-loader-dots"><span></span><span></span><span></span></span>
-    </div>
-  </div>
-
-  <!-- السلايدر -->
-  <div class="hero-slider" id="hero-slider">
+<section
+  class="doc-page"
+  aria-label="روافد الوثائقي"
+  data-slider-url="{{ '/assets/doc/slider.json' | relative_url }}"
+  data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
+  data-video-url="{{ '/video.html' | relative_url }}"
+>
+  <div class="doc-hero" id="doc-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
+    <img class="hero-backdrop" id="hero-backdrop" alt="">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <img id="hero-logo" >
-      <p class="hero-description" id="hero-description"></p>
-      <button class="watch-btn" id="watch-btn">
-        <i class="fas fa-play"></i> شاهد
-      </button>
+      <span class="hero-kicker">روافد الوثائقي</span>
+      <img class="hero-logo" id="hero-logo" alt="شعار الفيلم" hidden>
+      <h1 class="hero-title" id="hero-title">جارٍ تحميل الأفلام</h1>
+      <p class="hero-description" id="hero-description">يتم الآن تحميل بيانات الأفلام.</p>
+      <div class="hero-actions">
+        <a class="button" id="hero-watch" href="#" hidden>
+          <i class="fas fa-play" aria-hidden="true"></i>
+          مشاهدة الفيلم
+        </a>
+        <a class="button button-secondary" href="#movies">
+          تصفح الأفلام
+        </a>
+      </div>
     </div>
+    <button class="hero-arrow hero-prev" id="hero-prev" type="button" aria-label="الشريحة السابقة" hidden>
+      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    </button>
+    <button class="hero-arrow hero-next" id="hero-next" type="button" aria-label="الشريحة التالية" hidden>
+      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <div class="hero-dots" id="hero-dots" role="group" aria-label="اختيار الفيلم" hidden></div>
   </div>
 
-  <!-- قسم الأفلام -->
-  <section class="movies-section">
-    <div class="movies-list" id="movies-list"></div>
+  <section class="movies-section" id="movies" aria-labelledby="movies-title">
+    <div class="section-heading">
+      <div>
+        <h2 id="movies-title">الأفلام المتاحة</h2>
+        <p>اختر فيلمًا للبدء في المشاهدة.</p>
+      </div>
+    </div>
+    <div class="movies-track" id="movies-track" aria-busy="true"></div>
+    <div class="doc-state" id="movies-empty" hidden>
+      <i class="fas fa-film" aria-hidden="true"></i>
+      <span id="movies-empty-text">لا توجد أفلام متاحة حاليًا.</span>
+    </div>
+    <div class="doc-state" id="doc-error" role="alert" hidden>
+      <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+      <span id="doc-error-text">تعذر تحميل الأفلام. حاول تحديث الصفحة.</span>
+    </div>
   </section>
+</section>
 
-  <div id="footer-placeholder"></div>
+<script>
+  (() => {
+    const root = document.querySelector('.doc-page');
+    if (!root) return;
 
-  <script>
-    const heroSlider = document.getElementById("hero-slider");
-    const heroLogo = document.getElementById("hero-logo");
-    const heroDesc = document.getElementById("hero-description");
-    const watchBtn = document.getElementById("watch-btn");
-    const moviesList = document.getElementById("movies-list");
-    let currentMovie = null;
+    const hero = document.getElementById('doc-hero');
+    const backdrop = document.getElementById('hero-backdrop');
+    const logo = document.getElementById('hero-logo');
+    const title = document.getElementById('hero-title');
+    const description = document.getElementById('hero-description');
+    const watch = document.getElementById('hero-watch');
+    const previous = document.getElementById('hero-prev');
+    const next = document.getElementById('hero-next');
+    const dots = document.getElementById('hero-dots');
+    const moviesTrack = document.getElementById('movies-track');
+    const moviesEmpty = document.getElementById('movies-empty');
+    const moviesEmptyText = document.getElementById('movies-empty-text');
+    const videoPageUrl = new URL(root.dataset.videoUrl, window.location.origin);
+    const errorState = document.getElementById('doc-error');
+    const errorText = document.getElementById('doc-error-text');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let slides = [];
+    let activeIndex = 0;
+    let autoplayTimer;
+    let transitionId = 0;
+    let paused = false;
+    let touchStartX = null;
 
-    // تحميل بيانات السلايدر
-    fetch("/assets/doc/slider.json")
-      .then(res => res.json())
-      .then(slides => {
-        if (slides.length > 0) {
-          setHero(slides[0]);
-          // يمكن جعل السلايدر يدور تلقائيًا لاحقًا
-        }
-        var ov = document.getElementById('rawafid-loading-overlay');
-        if (ov) ov.classList.add('hidden');
-        // عند النقر على زر عرض الفيلم
-        watchBtn.addEventListener("click", () => {
-          if (currentMovie && currentMovie.link) {
-            window.location.href = currentMovie.link;
-          }
-        });
-      })
-      .catch(err => {
-        console.error("فشل تحميل slider.json:", err);
-        var ov = document.getElementById('rawafid-loading-overlay');
-        if (ov) ov.classList.add('hidden');
-      });
-    function setHero(movie) {
-      currentMovie = movie;
-      heroSlider.style.backgroundImage = `url('${movie.bg}')`;
-      heroLogo.src = movie.logo;
-      heroDesc.textContent = movie.desc;
-      watchBtn.onclick = () => window.location.href = movie.link;
-    }
+    const hideLoader = () => {
+      if (typeof rawafidHideLoader === 'function') {
+        rawafidHideLoader();
+      } else {
+        document.getElementById('rawafid-loading-overlay')?.classList.add('hidden');
+      }
+    };
 
-    // تحميل قائمة الأفلام
-fetch("/assets/doc/movies.json")
-  .then(res => res.json())
-  .then(movies => {
-    movies.forEach(movie => {
-      const item = document.createElement("div");
-      item.className = "movie-item";
-      item.innerHTML = `
-        <img class="movie-bg" src="${movie.bg}" alt="${movie.title}">
-        <img class="movie-logo" src="${movie.logo}" alt="${movie.title}">
-      `;
-      // عند النقر على الفيلم يفتح صفحة المشغل
-      item.addEventListener("click", () => {
-        window.location.href = `video.html?id=${encodeURIComponent(movie.id || movie.title)}`;
-      });
-      moviesList.appendChild(item);
+    const loadJson = async (url) => {
+      const response = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error('Invalid data');
+      return data;
+    };
+
+    const preload = (source) => new Promise((resolve) => {
+      if (!source) {
+        resolve(false);
+        return;
+      }
+      const image = new Image();
+      image.onload = () => resolve(true);
+      image.onerror = () => resolve(false);
+      image.src = source;
     });
-  })
-      .catch(err => {
-        console.error("فشل تحميل movies.json:", err);
-        var ov = document.getElementById('rawafid-loading-overlay');
-        if (ov) ov.classList.add('hidden');
-      });
 
-    // تحميل التوب بار والفوتر
-    fetch("topbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("topbar-container").innerHTML = html;
-        const script = document.createElement("script");
-        script.src = "topbar.js";
-        document.body.appendChild(script);
+    const updateDots = () => {
+      dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
+        const active = index === activeIndex;
+        dot.classList.toggle('active', active);
+        dot.setAttribute('aria-selected', String(active));
+        dot.tabIndex = active ? 0 : -1;
       });
+    };
 
-    fetch("/footer.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
+    const applySlide = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      const slide = slides[activeIndex];
+      const currentTransition = ++transitionId;
+      hero.classList.add('is-changing');
+      window.setTimeout(() => {
+        if (currentTransition !== transitionId) return;
+        backdrop.src = slide.bg || '';
+        logo.src = slide.logo || '';
+        logo.alt = `شعار ${slide.title || ''}`;
+        logo.hidden = !slide.logo;
+        title.textContent = slide.title || 'فيلم روافد';
+        description.textContent = slide.desc || '';
+        watch.href = slide.link || '#movies';
+        watch.hidden = !slide.link;
+        hero.classList.remove('is-changing');
+        updateDots();
+        const nextSlide = slides[(activeIndex + 1) % slides.length];
+        if (nextSlide?.bg) preload(nextSlide.bg);
+      }, reduceMotion.matches ? 0 : 180);
+    };
+
+    const goTo = (index) => {
+      if (!slides.length) return;
+      applySlide(index);
+      startAutoplay();
+    };
+
+    const startAutoplay = () => {
+      window.clearInterval(autoplayTimer);
+      if (slides.length < 2 || reduceMotion.matches || paused || document.hidden) return;
+      autoplayTimer = window.setInterval(() => applySlide(activeIndex + 1), 6500);
+    };
+
+    const pauseAutoplay = () => {
+      paused = true;
+      window.clearInterval(autoplayTimer);
+    };
+
+    const resumeAutoplay = () => {
+      paused = false;
+      startAutoplay();
+    };
+
+    const createMovieCard = (movie) => {
+      const card = document.createElement('a');
+      card.className = 'movie-card';
+      card.href = `/video.html?id=${encodeURIComponent(movie.id || movie.title || '')}`;
+      card.setAttribute('aria-label', `مشاهدة ${movie.title || 'الفيلم'}`);
+
+      const cardBackdrop = document.createElement('img');
+      cardBackdrop.className = 'movie-card-backdrop';
+      cardBackdrop.src = movie.bg || '';
+      cardBackdrop.alt = '';
+      cardBackdrop.loading = 'lazy';
+
+      const cardLogo = document.createElement('img');
+      cardLogo.className = 'movie-card-logo';
+      cardLogo.src = movie.logo || '';
+      cardLogo.alt = `شعار ${movie.title || ''}`;
+
+      const content = document.createElement('div');
+      content.className = 'movie-card-content';
+
+      const cardTitle = document.createElement('h3');
+      cardTitle.className = 'movie-card-title';
+      cardTitle.textContent = movie.title || 'فيلم بلا عنوان';
+
+      const cardDescription = document.createElement('p');
+      cardDescription.className = 'movie-card-description';
+      cardDescription.textContent = movie.desc || '';
+
+      const action = document.createElement('span');
+      action.className = 'movie-card-action';
+      action.innerHTML = '<i class="fas fa-circle-play" aria-hidden="true"></i><span>مشاهدة الآن</span>';
+
+      content.append(cardTitle, cardDescription, action);
+      card.append(cardBackdrop, cardLogo, content);
+      cardBackdrop.addEventListener('error', () => cardBackdrop.remove());
+      cardLogo.addEventListener('error', () => cardLogo.remove());
+      return card;
+    };
+
+    const renderMovies = (movies) => {
+      const fragment = document.createDocumentFragment();
+      movies.forEach((movie) => fragment.append(createMovieCard(movie)));
+      moviesTrack.replaceChildren(fragment);
+      moviesEmpty.hidden = movies.length > 0;
+    };
+
+    const buildDots = () => {
+      const fragment = document.createDocumentFragment();
+      slides.forEach((slide, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot';
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `عرض ${slide.title || `الشريحة ${index + 1}`}`);
+        dot.addEventListener('click', () => goTo(index));
+        fragment.append(dot);
       });
-  </script>
+      dots.replaceChildren(fragment);
+      previous.hidden = next.hidden = dots.hidden = slides.length < 2;
+    };
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.error(err));
-    }
-  </script>
-</body>
-</html>
+    const showError = () => {
+      errorText.textContent = 'تعذر تحميل بيانات الأفلام. حاول تحديث الصفحة.';
+      errorState.hidden = false;
+    };
+
+    previous.addEventListener('click', () => goTo(activeIndex - 1));
+    next.addEventListener('click', () => goTo(activeIndex + 1));
+    hero.addEventListener('mouseenter', pauseAutoplay);
+    hero.addEventListener('mouseleave', resumeAutoplay);
+    hero.addEventListener('focusin', pauseAutoplay);
+    hero.addEventListener('focusout', (event) => {
+      if (!hero.contains(event.relatedTarget)) resumeAutoplay();
+    });
+    hero.addEventListener('keydown', (event) => {
+      if (event.target !== hero || slides.length < 2) return;
+      if (event.key === 'ArrowRight') goTo(activeIndex - 1);
+      if (event.key === 'ArrowLeft') goTo(activeIndex + 1);
+    });
+    hero.addEventListener('touchstart', (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+      pauseAutoplay();
+    }, { passive: true });
+    hero.addEventListener('touchend', (event) => {
+      if (touchStartX === null) return;
+      const distance = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(distance) > 50) goTo(activeIndex + (distance > 0 ? -1 : 1));
+      touchStartX = null;
+      resumeAutoplay();
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) window.clearInterval(autoplayTimer);
+      else startAutoplay();
+    });
+
+    Promise.allSettled([
+      loadJson(root.dataset.sliderUrl),
+      loadJson(root.dataset.moviesUrl)
+    ]).then(([slidesResult, moviesResult]) => {
+      if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
+        slides = slidesResult.value;
+      } else if (moviesResult.status === 'fulfilled') {
+        slides = moviesResult.value;
+      } else {
+        throw slidesResult.reason || moviesResult.reason;
+      }
+
+      buildDots();
+      applySlide(0);
+      startAutoplay();
+      if (moviesResult.status === 'fulfilled') {
+        renderMovies(moviesResult.value);
+      } else {
+        moviesEmpty.hidden = false;
+        moviesEmpty.textContent = 'تعذر تحميل قائمة الأفلام.';
+      }
+    }).catch(showError).finally(() => {
+      moviesTrack.setAttribute('aria-busy', 'false');
+      hideLoader();
+    });
+  })();
+</script>
