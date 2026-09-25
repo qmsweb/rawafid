@@ -16,19 +16,19 @@ permalink: /doc
     <img class="hero-backdrop" id="hero-backdrop" alt="">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <span class="hero-kicker">روافد الوثائقي</span>
+      <span class="hero-kicker" id="hero-kicker" hidden></span>
       <img class="hero-logo" id="hero-logo" alt="شعار الفيلم" hidden>
       <h1 class="hero-title" id="hero-title">جارٍ تحميل الأفلام</h1>
       <p class="hero-description" id="hero-description">يتم الآن تحميل بيانات الأفلام.</p>
       <div class="hero-actions">
-        <a class="button" id="hero-watch" href="#" hidden>
-          <i class="fas fa-play" aria-hidden="true"></i>
-          مشاهدة الفيلم
-        </a>
         <button class="button button-secondary hero-share" id="hero-share" type="button" hidden>
           <i class="fas fa-share-nodes" aria-hidden="true"></i>
           <span class="hero-share-label">مشاركة</span>
         </button>
+        <a class="button hero-watch" id="hero-watch" href="#" hidden>
+          <i class="fas fa-play" aria-hidden="true"></i>
+          مشاهدة الفيلم
+        </a>
       </div>
       <p class="hero-share-status" id="hero-share-status" role="status" aria-live="polite"></p>
     </div>
@@ -67,6 +67,7 @@ permalink: /doc
     const logo = document.getElementById('hero-logo');
     const title = document.getElementById('hero-title');
     const description = document.getElementById('hero-description');
+    const kicker = document.getElementById('hero-kicker');
     const watch = document.getElementById('hero-watch');
     const share = document.getElementById('hero-share');
     const shareStatus = document.getElementById('hero-share-status');
@@ -166,6 +167,9 @@ permalink: /doc
           title.textContent = slide.title || 'فيلم روافد';
           title.classList.remove('is-visible');
           description.textContent = slide.desc || '';
+          const movieType = typeof slide.type === 'string' ? slide.type.trim() : '';
+          kicker.textContent = movieType;
+          kicker.hidden = !movieType;
           const movieUrl = getMovieUrl(slide);
           const hasMovie = Boolean(slide.link || slide.id);
           watch.href = movieUrl.href;
@@ -317,6 +321,7 @@ permalink: /doc
       title.textContent = 'تعذر تحميل الأفلام';
       title.classList.add('is-visible');
       description.textContent = 'حدث خطأ أثناء جلب البيانات. يمكنك تحديث الصفحة والمحاولة مرة أخرى.';
+      kicker.hidden = true;
       watch.hidden = true;
       share.hidden = true;
       errorText.textContent = 'تعذر تحميل بيانات الأفلام. حاول تحديث الصفحة.';

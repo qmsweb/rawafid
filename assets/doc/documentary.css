@@ -142,8 +142,9 @@ body.documentary-body {
 }
 
 .hero-kicker {
+  display: block;
   width: fit-content;
-  margin: 0 auto 18px;
+  margin: 0 0 18px;
   padding: 7px 14px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
@@ -657,6 +658,10 @@ body.documentary-body {
 
   .hero-actions .button {
     width: 100%;
+  }
+
+  .hero-actions .hero-watch {
+    order: -1;
   }
 
   .hero-actions .hero-share {
