@@ -309,8 +309,8 @@
       .blog-card-title { font-size: 0.86rem; }
       .blog-card-meta { font-size: 0.7rem; gap: 8px; }
 
-      /* المقررات: عمود واحد لإفساح أوسع مساحة */
-      .courses-container.grid-view { grid-template-columns: 1fr; gap: 10px; }
+      /* المقررات: شبكات على الجوال */
+      .courses-container.grid-view { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .course-card { padding: 14px 12px; }
     }
   </style>
@@ -1352,8 +1352,8 @@
         else { container.classList.remove('grid-view'); listBtn.classList.add('active'); gridBtn.classList.remove('active'); }
         if (save) localStorage.setItem('rawafed-courses-view', mode);
       }
-      gridBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setView('grid'); });
-      listBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setView('list'); });
+      gridBtn.addEventListener('click', () => setView('grid'));
+      listBtn.addEventListener('click', () => setView('list'));
       const savedMode = localStorage.getItem('rawafed-courses-view');
       setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
     }
