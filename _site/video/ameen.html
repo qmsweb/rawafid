@@ -11,7 +11,7 @@
   <meta property="og:title" content="الأمين على الكلمة | روافد الوثائقي">
   <meta property="og:description" content="سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
-  <meta property="og:url" content="https://rawafid.jassim.one/video.html">
+  <meta property="og:url" content="https://rawafid.jassim.one/video/ameen">
   <meta property="og:type" content="website">
   <script>
     (function () {
@@ -24,7 +24,7 @@
 
 
 
-<link rel="canonical" href="https://rawafid.jassim.one/video.html">
+<link rel="canonical" href="https://rawafid.jassim.one/video/ameen">
 <meta name="robots" content="index, follow">
 
 
@@ -60,7 +60,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
-    { "@type": "ListItem", "position": 2, "name": "الأمين على الكلمة | روافد الوثائقي", "item": "https://rawafid.jassim.one/video.html" }
+    { "@type": "ListItem", "position": 2, "name": "الأمين على الكلمة | روافد الوثائقي", "item": "https://rawafid.jassim.one/video/ameen" }
   ]
 }
 </script>
@@ -627,9 +627,10 @@
 <section
   class="video-page"
   data-movies-url="/assets/doc/movies.json"
-  data-video-url="/video.html"
+  data-movie-id="ameen"
+  data-video-url="/video/ameen"
 >
-  <a class="video-breadcrumb" href="/doc.html">
+  <a class="video-breadcrumb" href="/doc">
     <i class="fas fa-arrow-right" aria-hidden="true"></i>
     العودة إلى الأفلام
   </a>
@@ -677,7 +678,7 @@
     <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
     <h1 id="video-error-title">تعذر عرض الفيلم</h1>
     <p id="video-error-message">الفيلم المطلوب غير متاح حاليًا.</p>
-    <a class="button" href="/doc.html">
+    <a class="button" href="/doc">
       <i class="fas fa-film" aria-hidden="true"></i>
       العودة إلى الأفلام
     </a>
@@ -702,7 +703,7 @@
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
     const errorMessage = document.getElementById('video-error-message');
-    const movieId = new URLSearchParams(window.location.search).get('id') || 'ameen';
+    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || 'ameen';
     let shareResetTimer;
 
     const hideLoader = () => {
@@ -802,8 +803,9 @@
     };
 
     const shareMovie = async (movie) => {
-      const url = new URL(root.dataset.videoUrl, window.location.origin);
-      url.searchParams.set('id', movie.id);
+      const url = new URL(root.dataset.videoUrl || window.location.href, window.location.origin);
+      url.search = '';
+      url.hash = '';
       const shareData = {
         title: movie.title,
         text: movie.desc,

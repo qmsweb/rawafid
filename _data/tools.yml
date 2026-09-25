@@ -10,6 +10,11 @@ tools:
     icon: "fas fa-calculator"
     show_on_home: true
 
+  - name: "التقويم الأكاديمي"
+    url: "/tools/calendar"
+    icon: "fas fa-calendar-alt"
+    show_on_home: true
+
   - name: "توثيق المراجع"
     url: "/tools/tawtheeq-tool"
     icon: "fas fa-quote-right"
@@ -18,11 +23,6 @@ tools:
   - name: "الخطة الدراسية"
     url: "/tools/study-plan"
     icon: "fas fa-book-open"
-    show_on_home: true
-
-  - name: "التقويم الأكاديمي"
-    url: "/tools/calendar"
-    icon: "fas fa-calendar-alt"
     show_on_home: true
 
   - name: "العجلة الدوارة"

@@ -2,7 +2,8 @@
 layout: documentary
 title: الأمين على الكلمة | روافد الوثائقي
 description: سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.
-permalink: /video.html
+movie_id: ameen
+permalink: /video/ameen
 ---
 
 <style>
@@ -35,9 +36,10 @@ permalink: /video.html
 <section
   class="video-page"
   data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
-  data-video-url="{{ '/video.html' | relative_url }}"
+  data-movie-id="{{ page.movie_id | default: 'ameen' }}"
+  data-video-url="{{ page.url | relative_url }}"
 >
-  <a class="video-breadcrumb" href="{{ '/doc.html' | relative_url }}">
+  <a class="video-breadcrumb" href="{{ '/doc' | relative_url }}">
     <i class="fas fa-arrow-right" aria-hidden="true"></i>
     العودة إلى الأفلام
   </a>
@@ -85,7 +87,7 @@ permalink: /video.html
     <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
     <h1 id="video-error-title">تعذر عرض الفيلم</h1>
     <p id="video-error-message">الفيلم المطلوب غير متاح حاليًا.</p>
-    <a class="button" href="{{ '/doc.html' | relative_url }}">
+    <a class="button" href="{{ '/doc' | relative_url }}">
       <i class="fas fa-film" aria-hidden="true"></i>
       العودة إلى الأفلام
     </a>
@@ -110,7 +112,7 @@ permalink: /video.html
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
     const errorMessage = document.getElementById('video-error-message');
-    const movieId = new URLSearchParams(window.location.search).get('id') || 'ameen';
+    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || 'ameen';
     let shareResetTimer;
 
     const hideLoader = () => {
@@ -210,8 +212,9 @@ permalink: /video.html
     };
 
     const shareMovie = async (movie) => {
-      const url = new URL(root.dataset.videoUrl, window.location.origin);
-      url.searchParams.set('id', movie.id);
+      const url = new URL(root.dataset.videoUrl || window.location.href, window.location.origin);
+      url.search = '';
+      url.hash = '';
       const shareData = {
         title: movie.title,
         text: movie.desc,

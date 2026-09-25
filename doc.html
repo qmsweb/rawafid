@@ -2,7 +2,7 @@
 layout: documentary
 title: روافد الوثائقي
 description: تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.
-permalink: /doc.html
+permalink: /doc
 ---
 
 <section
@@ -10,7 +10,7 @@ permalink: /doc.html
   aria-label="روافد الوثائقي"
   data-slider-url="{{ '/assets/doc/slider.json' | relative_url }}"
   data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
-  data-video-url="{{ '/video.html' | relative_url }}"
+  data-video-url="{{ '/video' | relative_url }}"
 >
   <div class="doc-hero" id="doc-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
     <img class="hero-backdrop" id="hero-backdrop" alt="">
@@ -163,8 +163,9 @@ permalink: /doc.html
           logo.hidden = !slide.logo;
           title.textContent = slide.title || 'فيلم روافد';
           description.textContent = slide.desc || '';
-          watch.href = slide.link || '#movies';
-          watch.hidden = !slide.link;
+          const movieUrl = getMovieUrl(slide);
+          watch.href = movieUrl.href;
+          watch.hidden = !slide.link && !slide.id;
           hero.classList.remove('is-changing');
           updateDots();
           const nextSlide = slides[(activeIndex + 1) % slides.length];
@@ -196,12 +197,19 @@ permalink: /doc.html
       startAutoplay();
     };
 
+    const getMovieUrl = (movie) => {
+      if (movie.link) return new URL(movie.link, window.location.origin);
+      const url = new URL(videoPageUrl);
+      url.pathname = `${url.pathname.replace(/\/$/, '')}/${encodeURIComponent(movie.id || movie.title || '')}`;
+      url.search = '';
+      url.hash = '';
+      return url;
+    };
+
     const createMovieCard = (movie) => {
       const card = document.createElement('a');
-      const movieUrl = new URL(videoPageUrl);
-      movieUrl.searchParams.set('id', movie.id || movie.title || '');
       card.className = 'movie-card';
-      card.href = movieUrl.href;
+      card.href = getMovieUrl(movie).href;
       card.setAttribute('aria-label', `مشاهدة ${movie.title || 'الفيلم'}`);
 
       const cardBackdrop = document.createElement('img');

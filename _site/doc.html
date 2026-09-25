@@ -11,7 +11,7 @@
   <meta property="og:title" content="روافد الوثائقي">
   <meta property="og:description" content="تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
-  <meta property="og:url" content="https://rawafid.jassim.one/doc.html">
+  <meta property="og:url" content="https://rawafid.jassim.one/doc">
   <meta property="og:type" content="website">
   <script>
     (function () {
@@ -24,7 +24,7 @@
 
 
 
-<link rel="canonical" href="https://rawafid.jassim.one/doc.html">
+<link rel="canonical" href="https://rawafid.jassim.one/doc">
 <meta name="robots" content="index, follow">
 
 
@@ -60,7 +60,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
-    { "@type": "ListItem", "position": 2, "name": "روافد الوثائقي", "item": "https://rawafid.jassim.one/doc.html" }
+    { "@type": "ListItem", "position": 2, "name": "روافد الوثائقي", "item": "https://rawafid.jassim.one/doc" }
   ]
 }
 </script>
@@ -602,7 +602,7 @@
   aria-label="روافد الوثائقي"
   data-slider-url="/assets/doc/slider.json"
   data-movies-url="/assets/doc/movies.json"
-  data-video-url="/video.html"
+  data-video-url="/video"
 >
   <div class="doc-hero" id="doc-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
     <img class="hero-backdrop" id="hero-backdrop" alt="">
@@ -755,8 +755,9 @@
           logo.hidden = !slide.logo;
           title.textContent = slide.title || 'فيلم روافد';
           description.textContent = slide.desc || '';
-          watch.href = slide.link || '#movies';
-          watch.hidden = !slide.link;
+          const movieUrl = getMovieUrl(slide);
+          watch.href = movieUrl.href;
+          watch.hidden = !slide.link && !slide.id;
           hero.classList.remove('is-changing');
           updateDots();
           const nextSlide = slides[(activeIndex + 1) % slides.length];
@@ -788,12 +789,19 @@
       startAutoplay();
     };
 
+    const getMovieUrl = (movie) => {
+      if (movie.link) return new URL(movie.link, window.location.origin);
+      const url = new URL(videoPageUrl);
+      url.pathname = `${url.pathname.replace(/\/$/, '')}/${encodeURIComponent(movie.id || movie.title || '')}`;
+      url.search = '';
+      url.hash = '';
+      return url;
+    };
+
     const createMovieCard = (movie) => {
       const card = document.createElement('a');
-      const movieUrl = new URL(videoPageUrl);
-      movieUrl.searchParams.set('id', movie.id || movie.title || '');
       card.className = 'movie-card';
-      card.href = movieUrl.href;
+      card.href = getMovieUrl(movie).href;
       card.setAttribute('aria-label', `مشاهدة ${movie.title || 'الفيلم'}`);
 
       const cardBackdrop = document.createElement('img');
