@@ -1,6 +1,6 @@
 ---
 layout: documentary
-title: رواند الوثائقي - روافد
+title: روافد الوثائقي
 description: تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.
 permalink: /doc.html
 ---
@@ -102,16 +102,41 @@ permalink: /doc.html
       return data;
     };
 
-    const preload = (source) => new Promise((resolve) => {
-      if (!source) {
-        resolve(false);
-        return;
-      }
+    const waitForImage = (image) => {
+      if (!image) return Promise.resolve(false);
+      if (image.complete) return Promise.resolve(image.naturalWidth > 0);
+      return new Promise((resolve) => {
+        const settle = () => {
+          image.removeEventListener('load', settle);
+          image.removeEventListener('error', settle);
+          resolve(image.naturalWidth > 0);
+        };
+        image.addEventListener('load', settle);
+        image.addEventListener('error', settle);
+      });
+    };
+
+    const waitForImages = () => {
+      const images = [...document.querySelectorAll('img')];
+      images.forEach((image) => {
+        if (image.loading === 'lazy') image.loading = 'eager';
+      });
+      return Promise.all(images.map(waitForImage));
+    };
+
+    const waitForWindowLoad = () => {
+      if (document.readyState === 'complete') return Promise.resolve();
+      return new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+    };
+
+    const waitForFonts = () => document.fonts?.ready || Promise.resolve();
+
+    const preload = (source) => {
+      if (!source) return Promise.resolve(false);
       const image = new Image();
-      image.onload = () => resolve(true);
-      image.onerror = () => resolve(false);
       image.src = source;
-    });
+      return waitForImage(image);
+    };
 
     const updateDots = () => {
       dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
@@ -126,21 +151,27 @@ permalink: /doc.html
       const slide = slides[activeIndex];
       const currentTransition = ++transitionId;
       hero.classList.add('is-changing');
-      window.setTimeout(() => {
-        if (currentTransition !== transitionId) return;
-        backdrop.src = slide.bg || '';
-        logo.src = slide.logo || '';
-        logo.alt = `شعار ${slide.title || ''}`;
-        logo.hidden = !slide.logo;
-        title.textContent = slide.title || 'فيلم روافد';
-        description.textContent = slide.desc || '';
-        watch.href = slide.link || '#movies';
-        watch.hidden = !slide.link;
-        hero.classList.remove('is-changing');
-        updateDots();
-        const nextSlide = slides[(activeIndex + 1) % slides.length];
-        if (nextSlide?.bg) preload(nextSlide.bg);
-      }, reduceMotion.matches ? 0 : 180);
+      return new Promise((resolve) => {
+        window.setTimeout(() => {
+          if (currentTransition !== transitionId) {
+            resolve(false);
+            return;
+          }
+          backdrop.src = slide.bg || '';
+          logo.src = slide.logo || '';
+          logo.alt = `شعار ${slide.title || ''}`;
+          logo.hidden = !slide.logo;
+          title.textContent = slide.title || 'فيلم روافد';
+          description.textContent = slide.desc || '';
+          watch.href = slide.link || '#movies';
+          watch.hidden = !slide.link;
+          hero.classList.remove('is-changing');
+          updateDots();
+          const nextSlide = slides[(activeIndex + 1) % slides.length];
+          if (nextSlide?.bg) preload(nextSlide.bg);
+          resolve(true);
+        }, reduceMotion.matches ? 0 : 180);
+      });
     };
 
     const goTo = (index) => {
@@ -277,28 +308,41 @@ permalink: /doc.html
       else startAutoplay();
     });
 
-    Promise.allSettled([
-      loadJson(root.dataset.sliderUrl),
-      loadJson(root.dataset.moviesUrl)
-    ]).then(([slidesResult, moviesResult]) => {
-      if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
-        slides = slidesResult.value;
-      } else if (moviesResult.status === 'fulfilled') {
-        slides = moviesResult.value;
-      } else {
-        throw slidesResult.reason || moviesResult.reason;
-      }
+    const initializePage = async () => {
+      try {
+        const [slidesResult, moviesResult] = await Promise.allSettled([
+          loadJson(root.dataset.sliderUrl),
+          loadJson(root.dataset.moviesUrl)
+        ]);
 
-      buildDots();
-      applySlide(0);
-      startAutoplay();
-      if (moviesResult.status === 'fulfilled') {
-        renderMovies(moviesResult.value);
-      } else {
-        moviesEmpty.hidden = false;
-        moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
+        if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
+          slides = slidesResult.value;
+        } else if (moviesResult.status === 'fulfilled') {
+          slides = moviesResult.value;
+        } else {
+          throw slidesResult.reason || moviesResult.reason;
+        }
+
+        buildDots();
+        await applySlide(0);
+        if (moviesResult.status === 'fulfilled') {
+          renderMovies(moviesResult.value);
+        } else {
+          moviesEmpty.hidden = false;
+          moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
+        }
+        await waitForImages();
+        await waitForFonts();
+        startAutoplay();
+      } catch (error) {
+        showError();
       }
-    }).catch(showError).finally(() => {
+    };
+
+    Promise.allSettled([
+      initializePage(),
+      waitForWindowLoad()
+    ]).finally(() => {
       moviesTrack.setAttribute('aria-busy', 'false');
       hideLoader();
     });

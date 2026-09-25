@@ -1,9 +1,36 @@
 ---
 layout: documentary
-title: الأمين على الكلمة | رواند الوثائقي
+title: الأمين على الكلمة | روافد الوثائقي
 description: سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.
 permalink: /video.html
 ---
+
+<style>
+  .video-page .video-frame {
+    aspect-ratio: 16 / 9;
+    contain: layout paint;
+  }
+
+  .video-page .video-frame video {
+    object-fit: contain;
+  }
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    .video-page {
+      padding-top: 14px;
+    }
+
+    .video-page .video-breadcrumb {
+      margin-bottom: 10px;
+    }
+
+    .video-page .video-stage {
+      width: min(100%, calc(177.7778vh - 215.5556px));
+      width: min(100%, calc(177.7778dvh - 215.5556px));
+      margin-inline: auto;
+    }
+  }
+</style>
 
 <section
   class="video-page"
@@ -23,7 +50,7 @@ permalink: /video.html
       <video id="native-player" controls playsinline preload="metadata" hidden></video>
       <iframe
         id="ok-player"
-        title="مشغل فيديو OK.ru"
+        title="مشغل الفيلم"
         allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
         allowfullscreen
         loading="eager"
@@ -40,7 +67,7 @@ permalink: /video.html
     <div class="movie-copy">
       <p class="movie-eyebrow">
         <i class="fas fa-circle-play" aria-hidden="true"></i>
-        من رواند الوثائقي
+        من روافد الوثائقي
       </p>
       <h1 class="movie-title" id="movie-title"></h1>
       <p class="movie-description" id="movie-description"></p>
@@ -49,10 +76,6 @@ permalink: /video.html
           <i class="fas fa-share-nodes" aria-hidden="true"></i>
           <span id="share-button-text">مشاركة الفيلم</span>
         </button>
-        <a class="button button-secondary" id="ok-link" href="https://ok.ru/video/17039776156295" target="_blank" rel="noopener noreferrer">
-          <i class="fas fa-circle-up-right" aria-hidden="true"></i>
-          عرض على OK.ru
-        </a>
         <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
       </div>
     </div>
@@ -82,7 +105,6 @@ permalink: /video.html
     const movieLogo = document.getElementById('movie-logo');
     const movieTitle = document.getElementById('movie-title');
     const movieDescription = document.getElementById('movie-description');
-    const okLink = document.getElementById('ok-link');
     const shareButton = document.getElementById('share-button');
     const shareStatus = document.getElementById('share-status');
     const errorState = document.getElementById('video-error');
@@ -132,7 +154,7 @@ permalink: /video.html
     const configurePlayer = (movie) => {
       const embedUrl = getOkEmbedUrl(movie);
       if (embedUrl) {
-        okPlayer.title = `مشغل ${movie.title || 'الفيلم'} على OK.ru`;
+        okPlayer.title = `مشغل ${movie.title || 'الفيلم'}`;
         okPlayer.addEventListener('load', () => {
           playerLoading.hidden = true;
         }, { once: true });
@@ -229,20 +251,12 @@ permalink: /video.html
       movieLogo.alt = `شعار ${movie.title || ''}`;
       movieTitle.textContent = movie.title || 'فيلم بلا عنوان';
       movieDescription.textContent = movie.desc || '';
-      const pageTitle = `${movie.title || 'فيلم'} | رواند الوثائقي`;
+      const pageTitle = `${movie.title || 'فيلم'} | روافد الوثائقي`;
       const pageDescription = movie.desc || '';
       document.title = pageTitle;
       updateMeta('meta[name="description"]', pageDescription);
       updateMeta('meta[property="og:title"]', pageTitle);
       updateMeta('meta[property="og:description"]', pageDescription);
-
-      const sourceVideoId = getOkVideoId(movie['source-url']);
-      if (sourceVideoId) {
-        okLink.href = `https://ok.ru/video/${sourceVideoId}`;
-        okLink.hidden = false;
-      } else {
-        okLink.hidden = true;
-      }
 
       shareButton.addEventListener('click', () => shareMovie(movie));
       movieInfo.hidden = false;

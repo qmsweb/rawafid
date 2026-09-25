@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>روافد الوثائقي</title>
+  <title>الأمين على الكلمة | رواند الوثائقي</title>
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="/images/favicon.png" type="image/png">
   <link rel="stylesheet" href="/assets/doc/documentary.css">
-  <meta property="og:title" content="روافد الوثائقي">
-  <meta property="og:description" content="تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.">
+  <meta property="og:title" content="الأمين على الكلمة | رواند الوثائقي">
+  <meta property="og:description" content="سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
-  <meta property="og:url" content="https://rawafid.jassim.one/doc.html">
+  <meta property="og:url" content="https://rawafid.jassim.one/video.html">
   <meta property="og:type" content="website">
   <script>
     (function () {
@@ -24,11 +24,11 @@
 
 
 
-<link rel="canonical" href="https://rawafid.jassim.one/doc.html">
+<link rel="canonical" href="https://rawafid.jassim.one/video.html">
 <meta name="robots" content="index, follow">
 
 
-<meta name="description" content="تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.">
+<meta name="description" content="سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.">
 
 
 <script type="application/ld+json">
@@ -60,7 +60,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
-    { "@type": "ListItem", "position": 2, "name": "روافد الوثائقي", "item": "https://rawafid.jassim.one/doc.html" }
+    { "@type": "ListItem", "position": 2, "name": "الأمين على الكلمة | رواند الوثائقي", "item": "https://rawafid.jassim.one/video.html" }
   ]
 }
 </script>
@@ -598,85 +598,90 @@
 
   <main id="main-content-area" class="documentary-main">
     <section
-  class="doc-page"
-  aria-label="روافد الوثائقي"
-  data-slider-url="/assets/doc/slider.json"
+  class="video-page"
   data-movies-url="/assets/doc/movies.json"
   data-video-url="/video.html"
 >
-  <div class="doc-hero" id="doc-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
-    <img class="hero-backdrop" id="hero-backdrop" alt="">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span class="hero-kicker">روافد الوثائقي</span>
-      <img class="hero-logo" id="hero-logo" alt="شعار الفيلم" hidden>
-      <h1 class="hero-title" id="hero-title">جارٍ تحميل الأفلام</h1>
-      <p class="hero-description" id="hero-description">يتم الآن تحميل بيانات الأفلام.</p>
-      <div class="hero-actions">
-        <a class="button" id="hero-watch" href="#" hidden>
-          <i class="fas fa-play" aria-hidden="true"></i>
-          مشاهدة الفيلم
-        </a>
-        <a class="button button-secondary" href="#movies">
-          تصفح الأفلام
-        </a>
+  <a class="video-breadcrumb" href="/doc.html">
+    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    العودة إلى الأفلام
+  </a>
+
+  <div class="video-stage" id="video-stage">
+    <div class="video-frame">
+      <div class="player-loading" id="player-loading" aria-label="جارٍ تحميل المشغل">
+        <span aria-hidden="true"></span>
       </div>
+      <video id="native-player" controls playsinline preload="metadata" hidden></video>
+      <iframe
+        id="ok-player"
+        title="مشغل فيديو OK.ru"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        allowfullscreen
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+        hidden
+      ></iframe>
     </div>
-    <button class="hero-arrow hero-prev" id="hero-prev" type="button" aria-label="الشريحة السابقة" hidden>
-      <i class="fas fa-chevron-right" aria-hidden="true"></i>
-    </button>
-    <button class="hero-arrow hero-next" id="hero-next" type="button" aria-label="الشريحة التالية" hidden>
-      <i class="fas fa-chevron-left" aria-hidden="true"></i>
-    </button>
-    <div class="hero-dots" id="hero-dots" role="group" aria-label="اختيار الفيلم" hidden></div>
   </div>
 
-  <section class="movies-section" id="movies" aria-labelledby="movies-title">
-    <div class="section-heading">
-      <div>
-        <h2 id="movies-title">الأفلام المتاحة</h2>
-        <p>اختر فيلمًا للبدء في المشاهدة.</p>
+  <section class="movie-info-card" id="movie-info" aria-labelledby="movie-title" hidden>
+    <div class="movie-logo-frame">
+      <img class="movie-info-logo" id="movie-logo" alt="شعار الفيلم">
+    </div>
+    <div class="movie-copy">
+      <p class="movie-eyebrow">
+        <i class="fas fa-circle-play" aria-hidden="true"></i>
+        من رواند الوثائقي
+      </p>
+      <h1 class="movie-title" id="movie-title"></h1>
+      <p class="movie-description" id="movie-description"></p>
+      <div class="video-actions">
+        <button class="button" id="share-button" type="button">
+          <i class="fas fa-share-nodes" aria-hidden="true"></i>
+          <span id="share-button-text">مشاركة الفيلم</span>
+        </button>
+        <a class="button button-secondary" id="ok-link" href="https://ok.ru/video/17039776156295" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-circle-up-right" aria-hidden="true"></i>
+          عرض على OK.ru
+        </a>
+        <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
       </div>
     </div>
-    <div class="movies-track" id="movies-track" aria-busy="true"></div>
-    <div class="doc-state" id="movies-empty" hidden>
+  </section>
+
+  <section class="video-error" id="video-error" role="alert" hidden>
+    <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+    <h1 id="video-error-title">تعذر عرض الفيلم</h1>
+    <p id="video-error-message">الفيلم المطلوب غير متاح حاليًا.</p>
+    <a class="button" href="/doc.html">
       <i class="fas fa-film" aria-hidden="true"></i>
-      <span id="movies-empty-text">لا توجد أفلام متاحة حاليًا.</span>
-    </div>
-    <div class="doc-state" id="doc-error" role="alert" hidden>
-      <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
-      <span id="doc-error-text">تعذر تحميل الأفلام. حاول تحديث الصفحة.</span>
-    </div>
+      العودة إلى الأفلام
+    </a>
   </section>
 </section>
 
 <script>
   (() => {
-    const root = document.querySelector('.doc-page');
+    const root = document.querySelector('.video-page');
     if (!root) return;
 
-    const hero = document.getElementById('doc-hero');
-    const backdrop = document.getElementById('hero-backdrop');
-    const logo = document.getElementById('hero-logo');
-    const title = document.getElementById('hero-title');
-    const description = document.getElementById('hero-description');
-    const watch = document.getElementById('hero-watch');
-    const previous = document.getElementById('hero-prev');
-    const next = document.getElementById('hero-next');
-    const dots = document.getElementById('hero-dots');
-    const moviesTrack = document.getElementById('movies-track');
-    const moviesEmpty = document.getElementById('movies-empty');
-    const moviesEmptyText = document.getElementById('movies-empty-text');
-    const videoPageUrl = new URL(root.dataset.videoUrl, window.location.origin);
-    const errorState = document.getElementById('doc-error');
-    const errorText = document.getElementById('doc-error-text');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let slides = [];
-    let activeIndex = 0;
-    let autoplayTimer;
-    let transitionId = 0;
-    let paused = false;
-    let touchStartX = null;
+    const playerFrame = document.getElementById('video-stage');
+    const playerLoading = document.getElementById('player-loading');
+    const okPlayer = document.getElementById('ok-player');
+    const nativePlayer = document.getElementById('native-player');
+    const movieInfo = document.getElementById('movie-info');
+    const movieLogo = document.getElementById('movie-logo');
+    const movieTitle = document.getElementById('movie-title');
+    const movieDescription = document.getElementById('movie-description');
+    const okLink = document.getElementById('ok-link');
+    const shareButton = document.getElementById('share-button');
+    const shareStatus = document.getElementById('share-status');
+    const errorState = document.getElementById('video-error');
+    const errorTitle = document.getElementById('video-error-title');
+    const errorMessage = document.getElementById('video-error-message');
+    const movieId = new URLSearchParams(window.location.search).get('id') || 'ameen';
+    let shareResetTimer;
 
     const hideLoader = () => {
       if (typeof rawafidHideLoader === 'function') {
@@ -694,250 +699,149 @@
       return data;
     };
 
-    const waitForImage = (image) => {
-      if (!image) return Promise.resolve(false);
-      if (image.complete) return Promise.resolve(image.naturalWidth > 0);
-      return new Promise((resolve) => {
-        const settle = () => {
-          image.removeEventListener('load', settle);
-          image.removeEventListener('error', settle);
-          resolve(image.naturalWidth > 0);
-        };
-        image.addEventListener('load', settle);
-        image.addEventListener('error', settle);
-      });
+    const updateMeta = (selector, content) => {
+      document.querySelector(selector)?.setAttribute('content', content);
     };
 
-    const waitForImages = () => {
-      const images = [...document.querySelectorAll('img')];
-      images.forEach((image) => {
-        if (image.loading === 'lazy') image.loading = 'eager';
-      });
-      return Promise.all(images.map(waitForImage));
-    };
-
-    const waitForWindowLoad = () => {
-      if (document.readyState === 'complete') return Promise.resolve();
-      return new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
-    };
-
-    const waitForFonts = () => document.fonts?.ready || Promise.resolve();
-
-    const preload = (source) => {
-      if (!source) return Promise.resolve(false);
-      const image = new Image();
-      image.src = source;
-      return waitForImage(image);
-    };
-
-    const updateDots = () => {
-      dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
-        const active = index === activeIndex;
-        dot.classList.toggle('active', active);
-        dot.setAttribute('aria-pressed', String(active));
-      });
-    };
-
-    const applySlide = (index) => {
-      activeIndex = (index + slides.length) % slides.length;
-      const slide = slides[activeIndex];
-      const currentTransition = ++transitionId;
-      hero.classList.add('is-changing');
-      return new Promise((resolve) => {
-        window.setTimeout(() => {
-          if (currentTransition !== transitionId) {
-            resolve(false);
-            return;
-          }
-          backdrop.src = slide.bg || '';
-          logo.src = slide.logo || '';
-          logo.alt = `شعار ${slide.title || ''}`;
-          logo.hidden = !slide.logo;
-          title.textContent = slide.title || 'فيلم روافد';
-          description.textContent = slide.desc || '';
-          watch.href = slide.link || '#movies';
-          watch.hidden = !slide.link;
-          hero.classList.remove('is-changing');
-          updateDots();
-          const nextSlide = slides[(activeIndex + 1) % slides.length];
-          if (nextSlide?.bg) preload(nextSlide.bg);
-          resolve(true);
-        }, reduceMotion.matches ? 0 : 180);
-      });
-    };
-
-    const goTo = (index) => {
-      if (!slides.length) return;
-      applySlide(index);
-      startAutoplay();
-    };
-
-    const startAutoplay = () => {
-      window.clearInterval(autoplayTimer);
-      if (slides.length < 2 || reduceMotion.matches || paused || document.hidden) return;
-      autoplayTimer = window.setInterval(() => applySlide(activeIndex + 1), 6500);
-    };
-
-    const pauseAutoplay = () => {
-      paused = true;
-      window.clearInterval(autoplayTimer);
-    };
-
-    const resumeAutoplay = () => {
-      paused = false;
-      startAutoplay();
-    };
-
-    const createMovieCard = (movie) => {
-      const card = document.createElement('a');
-      const movieUrl = new URL(videoPageUrl);
-      movieUrl.searchParams.set('id', movie.id || movie.title || '');
-      card.className = 'movie-card';
-      card.href = movieUrl.href;
-      card.setAttribute('aria-label', `مشاهدة ${movie.title || 'الفيلم'}`);
-
-      const cardBackdrop = document.createElement('img');
-      cardBackdrop.className = 'movie-card-backdrop';
-      cardBackdrop.src = movie.bg || '';
-      cardBackdrop.alt = '';
-      cardBackdrop.loading = 'lazy';
-
-      const cardLogo = document.createElement('img');
-      cardLogo.className = 'movie-card-logo';
-      cardLogo.src = movie.logo || '';
-      cardLogo.alt = `شعار ${movie.title || ''}`;
-
-      const content = document.createElement('div');
-      content.className = 'movie-card-content';
-
-      const cardTitle = document.createElement('h3');
-      cardTitle.className = 'movie-card-title';
-      cardTitle.textContent = movie.title || 'فيلم بلا عنوان';
-
-      const cardDescription = document.createElement('p');
-      cardDescription.className = 'movie-card-description';
-      cardDescription.textContent = movie.desc || '';
-
-      const action = document.createElement('span');
-      const actionIcon = document.createElement('i');
-      const actionText = document.createElement('span');
-      action.className = 'movie-card-action';
-      actionIcon.className = 'fas fa-circle-play';
-      actionIcon.setAttribute('aria-hidden', 'true');
-      actionText.textContent = 'مشاهدة الآن';
-      action.append(actionIcon, actionText);
-
-      content.append(cardTitle, cardDescription, action);
-      card.append(cardBackdrop, cardLogo, content);
-      cardBackdrop.addEventListener('error', () => cardBackdrop.remove());
-      cardLogo.addEventListener('error', () => cardLogo.remove());
-      return card;
-    };
-
-    const renderMovies = (movies) => {
-      const fragment = document.createDocumentFragment();
-      movies.forEach((movie) => fragment.append(createMovieCard(movie)));
-      moviesTrack.replaceChildren(fragment);
-      moviesEmpty.hidden = movies.length > 0;
-    };
-
-    const buildDots = () => {
-      const fragment = document.createDocumentFragment();
-      slides.forEach((slide, index) => {
-        const dot = document.createElement('button');
-        dot.className = 'hero-dot';
-        dot.type = 'button';
-        dot.setAttribute('aria-label', `عرض ${slide.title || `الشريحة ${index + 1}`}`);
-        dot.addEventListener('click', () => goTo(index));
-        fragment.append(dot);
-      });
-      dots.replaceChildren(fragment);
-      previous.hidden = next.hidden = dots.hidden = slides.length < 2;
-    };
-
-    const showError = () => {
-      title.textContent = 'تعذر تحميل الأفلام';
-      description.textContent = 'حدث خطأ أثناء جلب البيانات. يمكنك تحديث الصفحة والمحاولة مرة أخرى.';
-      watch.hidden = true;
-      errorText.textContent = 'تعذر تحميل بيانات الأفلام. حاول تحديث الصفحة.';
-      errorState.hidden = false;
-    };
-
-    previous.addEventListener('click', () => goTo(activeIndex - 1));
-    next.addEventListener('click', () => goTo(activeIndex + 1));
-    hero.addEventListener('mouseenter', pauseAutoplay);
-    hero.addEventListener('mouseleave', resumeAutoplay);
-    hero.addEventListener('focusin', pauseAutoplay);
-    hero.addEventListener('focusout', (event) => {
-      if (!hero.contains(event.relatedTarget)) resumeAutoplay();
-    });
-    hero.addEventListener('keydown', (event) => {
-      if (event.target !== hero || slides.length < 2) return;
-      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') event.preventDefault();
-      if (event.key === 'ArrowRight') goTo(activeIndex - 1);
-      if (event.key === 'ArrowLeft') goTo(activeIndex + 1);
-    });
-    dots.addEventListener('keydown', (event) => {
-      if (slides.length < 2 || !['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
-      event.preventDefault();
-      const direction = event.key === 'ArrowRight' ? -1 : 1;
-      const nextIndex = (activeIndex + direction + slides.length) % slides.length;
-      goTo(nextIndex);
-      dots.children[nextIndex]?.focus();
-    });
-    hero.addEventListener('touchstart', (event) => {
-      touchStartX = event.changedTouches[0].clientX;
-      pauseAutoplay();
-    }, { passive: true });
-    hero.addEventListener('touchend', (event) => {
-      if (touchStartX === null) return;
-      const distance = event.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(distance) > 50) goTo(activeIndex + (distance > 0 ? -1 : 1));
-      touchStartX = null;
-    }, { passive: true });
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) window.clearInterval(autoplayTimer);
-      else startAutoplay();
-    });
-
-    const initializePage = async () => {
+    const getOkVideoId = (value) => {
+      if (!value) return '';
       try {
-        const [slidesResult, moviesResult] = await Promise.allSettled([
-          loadJson(root.dataset.sliderUrl),
-          loadJson(root.dataset.moviesUrl)
-        ]);
-
-        if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
-          slides = slidesResult.value;
-        } else if (moviesResult.status === 'fulfilled') {
-          slides = moviesResult.value;
-        } else {
-          throw slidesResult.reason || moviesResult.reason;
-        }
-
-        buildDots();
-        await applySlide(0);
-        if (moviesResult.status === 'fulfilled') {
-          renderMovies(moviesResult.value);
-        } else {
-          moviesEmpty.hidden = false;
-          moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
-        }
-        await waitForImages();
-        await waitForFonts();
-        startAutoplay();
+        const url = new URL(value, window.location.origin);
+        const hostname = url.hostname.toLowerCase();
+        if (hostname !== 'ok.ru' && !hostname.endsWith('.ok.ru')) return '';
+        const match = url.pathname.match(/^\/(?:video|videoembed)\/(\d+)(?:\/|$)/);
+        return match ? match[1] : '';
       } catch (error) {
-        showError();
+        return '';
       }
     };
 
-    Promise.allSettled([
-      initializePage(),
-      waitForWindowLoad()
-    ]).finally(() => {
-      moviesTrack.setAttribute('aria-busy', 'false');
-      hideLoader();
-    });
+    const getOkEmbedUrl = (movie) => {
+      const videoId = getOkVideoId(movie['embed-url']) || getOkVideoId(movie['source-url']);
+      return videoId ? `https://ok.ru/videoembed/${videoId}` : '';
+    };
+
+    const configurePlayer = (movie) => {
+      const embedUrl = getOkEmbedUrl(movie);
+      if (embedUrl) {
+        okPlayer.title = `مشغل ${movie.title || 'الفيلم'} على OK.ru`;
+        okPlayer.addEventListener('load', () => {
+          playerLoading.hidden = true;
+        }, { once: true });
+        okPlayer.src = embedUrl;
+        okPlayer.hidden = false;
+        nativePlayer.hidden = true;
+        window.setTimeout(() => {
+          playerLoading.hidden = true;
+        }, 1500);
+        return;
+      }
+
+      if (movie.url) {
+        nativePlayer.poster = movie.bg || '';
+        nativePlayer.src = movie.url;
+        nativePlayer.addEventListener('loadedmetadata', () => {
+          playerLoading.hidden = true;
+        }, { once: true });
+        nativePlayer.hidden = false;
+        okPlayer.hidden = true;
+        window.setTimeout(() => {
+          playerLoading.hidden = true;
+        }, 2500);
+        return;
+      }
+
+      throw new Error('Unsupported video source');
+    };
+
+    const copyText = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.append(field);
+      field.select();
+      const copied = document.execCommand('copy');
+      field.remove();
+      if (!copied) throw new Error('Copy failed');
+    };
+
+    const showShareStatus = (message) => {
+      window.clearTimeout(shareResetTimer);
+      shareStatus.textContent = message;
+      shareResetTimer = window.setTimeout(() => {
+        shareStatus.textContent = '';
+      }, 3000);
+    };
+
+    const shareMovie = async (movie) => {
+      const url = new URL(root.dataset.videoUrl, window.location.origin);
+      url.searchParams.set('id', movie.id);
+      const shareData = {
+        title: movie.title,
+        text: movie.desc,
+        url: url.href
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          showShareStatus('تمت المشاركة.');
+          return;
+        }
+        await copyText(url.href);
+        showShareStatus('تم نسخ رابط الفيلم.');
+      } catch (error) {
+        if (error.name !== 'AbortError') showShareStatus('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
+      }
+    };
+
+    const showError = (message) => {
+      playerFrame.hidden = true;
+      movieInfo.hidden = true;
+      errorTitle.textContent = 'تعذر عرض الفيلم';
+      errorMessage.textContent = message;
+      errorState.hidden = false;
+    };
+
+    loadJson(root.dataset.moviesUrl).then((movies) => {
+      const movie = movies.find((item) => item.id === movieId);
+      if (!movie) {
+        showError('الفيلم المطلوب غير موجود في قائمة الأفلام.');
+        return;
+      }
+
+      configurePlayer(movie);
+      movieLogo.src = movie.logo || '';
+      movieLogo.alt = `شعار ${movie.title || ''}`;
+      movieTitle.textContent = movie.title || 'فيلم بلا عنوان';
+      movieDescription.textContent = movie.desc || '';
+      const pageTitle = `${movie.title || 'فيلم'} | رواند الوثائقي`;
+      const pageDescription = movie.desc || '';
+      document.title = pageTitle;
+      updateMeta('meta[name="description"]', pageDescription);
+      updateMeta('meta[property="og:title"]', pageTitle);
+      updateMeta('meta[property="og:description"]', pageDescription);
+
+      const sourceVideoId = getOkVideoId(movie['source-url']);
+      if (sourceVideoId) {
+        okLink.href = `https://ok.ru/video/${sourceVideoId}`;
+        okLink.hidden = false;
+      } else {
+        okLink.hidden = true;
+      }
+
+      shareButton.addEventListener('click', () => shareMovie(movie));
+      movieInfo.hidden = false;
+    }).catch((error) => {
+      console.error('تعذر تحميل بيانات الفيلم:', error);
+      showError('حدث خطأ أثناء تحميل بيانات الفيلم. حاول تحديث الصفحة.');
+    }).finally(hideLoader);
   })();
 </script>
 
