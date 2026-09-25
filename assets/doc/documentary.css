@@ -156,18 +156,36 @@ body.documentary-body {
 
 .hero-logo {
   display: block;
-  width: min(210px, 48vw);
-  max-height: 150px;
+  width: min(260px, 56vw);
+  max-height: 180px;
   margin: 0 auto 14px;
   object-fit: contain;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
 }
 
 .hero-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+.hero-title.is-visible {
+  position: static;
+  width: auto;
+  height: auto;
   margin: 0;
+  overflow: visible;
+  white-space: normal;
+  clip-path: none;
   color: #fff;
   font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
-  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
   font-weight: 900;
   line-height: 1.35;
   text-wrap: balance;
@@ -187,6 +205,14 @@ body.documentary-body {
   justify-content: center;
   gap: 12px;
   margin-top: 28px;
+}
+
+.hero-share-status {
+  min-height: 1.5em;
+  margin: 14px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.84rem;
+  font-weight: 700;
 }
 
 .hero-arrow {
@@ -256,10 +282,6 @@ body.documentary-body {
 }
 
 .section-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 20px;
   margin-bottom: 24px;
 }
 
@@ -270,23 +292,16 @@ body.documentary-body {
   line-height: 1.4;
 }
 
-.section-heading p {
-  margin: 6px 0 0;
-  color: var(--doc-muted);
-  font-size: 0.95rem;
-}
-
 .movies-track {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 380px));
-  justify-content: center;
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 20px;
 }
 
 .movie-card {
   position: relative;
   isolation: isolate;
-  min-height: 260px;
+  aspect-ratio: 16 / 9;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -327,34 +342,19 @@ body.documentary-body {
   background: linear-gradient(0deg, rgba(7, 9, 18, 0.94), rgba(7, 9, 18, 0.1) 75%);
 }
 
-.movie-card-logo {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 92px;
-  max-height: 72px;
-  object-fit: contain;
-  filter: drop-shadow(0 7px 14px rgba(0, 0, 0, 0.4));
-}
-
 .movie-card-content {
   width: 100%;
-  padding: 24px;
+  padding: clamp(12px, 4%, 22px);
 }
 
 .movie-card-title {
-  margin: 0;
-  color: #fff;
-  font-size: 1.2rem;
-}
-
-.movie-card-description {
   display: -webkit-box;
-  margin: 8px 0 0;
+  margin: 0;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.76);
-  font-size: 0.88rem;
-  line-height: 1.75;
+  color: #fff;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  line-height: 1.5;
+  text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -363,9 +363,9 @@ body.documentary-body {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: 15px;
+  margin-top: 8px;
   color: #ffcc00;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
@@ -592,12 +592,27 @@ body.documentary-body {
     bottom: 38px;
   }
 
-  .movies-section {
-    padding-top: 46px;
+  .hero-share {
+    width: 46px;
+    min-height: 46px;
+    padding: 10px;
+    border-radius: 50%;
   }
 
-  .section-heading {
-    display: block;
+  .hero-share-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip-path: inset(50%);
+  }
+
+  .movies-section {
+    padding-top: 46px;
   }
 
   .video-page {
@@ -644,12 +659,13 @@ body.documentary-body {
     width: 100%;
   }
 
-  .movies-section {
-    width: min(100% - 24px, 1180px);
+  .hero-actions .hero-share {
+    width: 46px;
+    align-self: center;
   }
 
-  .movie-card {
-    min-height: 230px;
+  .movies-section {
+    width: min(100% - 24px, 1180px);
   }
 }
 

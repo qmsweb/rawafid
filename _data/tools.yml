@@ -15,15 +15,16 @@ tools:
     icon: "fas fa-calendar-alt"
     show_on_home: true
 
+- name: "الخطة الدراسية"
+    url: "/tools/study-plan"
+    icon: "fas fa-book-open"
+    show_on_home: true
+
   - name: "توثيق المراجع"
     url: "/tools/tawtheeq-tool"
     icon: "fas fa-quote-right"
     show_on_home: true
 
-  - name: "الخطة الدراسية"
-    url: "/tools/study-plan"
-    icon: "fas fa-book-open"
-    show_on_home: true
 
   - name: "العجلة الدوارة"
     url: "/tools/wheel"
