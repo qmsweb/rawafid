@@ -1,14 +1,13 @@
 ---
 layout: documentary
-title: مشغل الأفلام - رواند الوثائقي
-description: مشاهدة أفلام رواند الوثائقية عبر مشغل OK.ru المدمج.
+title: الأمين على الكلمة | رواند الوثائقي
+description: سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.
 permalink: /video.html
 ---
 
 <section
   class="video-page"
   data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
-  data-doc-url="{{ '/doc.html' | relative_url }}"
   data-video-url="{{ '/video.html' | relative_url }}"
 >
   <a class="video-breadcrumb" href="{{ '/doc.html' | relative_url }}">
@@ -85,7 +84,6 @@ permalink: /video.html
     const movieDescription = document.getElementById('movie-description');
     const okLink = document.getElementById('ok-link');
     const shareButton = document.getElementById('share-button');
-    const shareButtonText = document.getElementById('share-button-text');
     const shareStatus = document.getElementById('share-status');
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
@@ -109,13 +107,17 @@ permalink: /video.html
       return data;
     };
 
+    const updateMeta = (selector, content) => {
+      document.querySelector(selector)?.setAttribute('content', content);
+    };
+
     const getOkVideoId = (value) => {
       if (!value) return '';
       try {
         const url = new URL(value, window.location.origin);
         const hostname = url.hostname.toLowerCase();
         if (hostname !== 'ok.ru' && !hostname.endsWith('.ok.ru')) return '';
-        const match = url.pathname.match(/^\/(?:video|videoembed)\/(\d+)\/?$/);
+        const match = url.pathname.match(/^\/(?:video|videoembed)\/(\d+)(?:\/|$)/);
         return match ? match[1] : '';
       } catch (error) {
         return '';
@@ -151,6 +153,9 @@ permalink: /video.html
         }, { once: true });
         nativePlayer.hidden = false;
         okPlayer.hidden = true;
+        window.setTimeout(() => {
+          playerLoading.hidden = true;
+        }, 2500);
         return;
       }
 
@@ -224,8 +229,12 @@ permalink: /video.html
       movieLogo.alt = `شعار ${movie.title || ''}`;
       movieTitle.textContent = movie.title || 'فيلم بلا عنوان';
       movieDescription.textContent = movie.desc || '';
-      document.title = `${movie.title || 'فيلم'} | رواند الوثائقي`;
-      document.querySelector('meta[name="description"]')?.setAttribute('content', movie.desc || '');
+      const pageTitle = `${movie.title || 'فيلم'} | رواند الوثائقي`;
+      const pageDescription = movie.desc || '';
+      document.title = pageTitle;
+      updateMeta('meta[name="description"]', pageDescription);
+      updateMeta('meta[property="og:title"]', pageTitle);
+      updateMeta('meta[property="og:description"]', pageDescription);
 
       const sourceVideoId = getOkVideoId(movie['source-url']);
       if (sourceVideoId) {

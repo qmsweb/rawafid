@@ -117,8 +117,7 @@ permalink: /doc.html
       dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
         const active = index === activeIndex;
         dot.classList.toggle('active', active);
-        dot.setAttribute('aria-selected', String(active));
-        dot.tabIndex = active ? 0 : -1;
+        dot.setAttribute('aria-pressed', String(active));
       });
     };
 
@@ -168,8 +167,10 @@ permalink: /doc.html
 
     const createMovieCard = (movie) => {
       const card = document.createElement('a');
+      const movieUrl = new URL(videoPageUrl);
+      movieUrl.searchParams.set('id', movie.id || movie.title || '');
       card.className = 'movie-card';
-      card.href = `/video.html?id=${encodeURIComponent(movie.id || movie.title || '')}`;
+      card.href = movieUrl.href;
       card.setAttribute('aria-label', `مشاهدة ${movie.title || 'الفيلم'}`);
 
       const cardBackdrop = document.createElement('img');
@@ -195,8 +196,13 @@ permalink: /doc.html
       cardDescription.textContent = movie.desc || '';
 
       const action = document.createElement('span');
+      const actionIcon = document.createElement('i');
+      const actionText = document.createElement('span');
       action.className = 'movie-card-action';
-      action.innerHTML = '<i class="fas fa-circle-play" aria-hidden="true"></i><span>مشاهدة الآن</span>';
+      actionIcon.className = 'fas fa-circle-play';
+      actionIcon.setAttribute('aria-hidden', 'true');
+      actionText.textContent = 'مشاهدة الآن';
+      action.append(actionIcon, actionText);
 
       content.append(cardTitle, cardDescription, action);
       card.append(cardBackdrop, cardLogo, content);
@@ -218,7 +224,6 @@ permalink: /doc.html
         const dot = document.createElement('button');
         dot.className = 'hero-dot';
         dot.type = 'button';
-        dot.setAttribute('role', 'tab');
         dot.setAttribute('aria-label', `عرض ${slide.title || `الشريحة ${index + 1}`}`);
         dot.addEventListener('click', () => goTo(index));
         fragment.append(dot);
@@ -228,6 +233,9 @@ permalink: /doc.html
     };
 
     const showError = () => {
+      title.textContent = 'تعذر تحميل الأفلام';
+      description.textContent = 'حدث خطأ أثناء جلب البيانات. يمكنك تحديث الصفحة والمحاولة مرة أخرى.';
+      watch.hidden = true;
       errorText.textContent = 'تعذر تحميل بيانات الأفلام. حاول تحديث الصفحة.';
       errorState.hidden = false;
     };
@@ -242,8 +250,17 @@ permalink: /doc.html
     });
     hero.addEventListener('keydown', (event) => {
       if (event.target !== hero || slides.length < 2) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') event.preventDefault();
       if (event.key === 'ArrowRight') goTo(activeIndex - 1);
       if (event.key === 'ArrowLeft') goTo(activeIndex + 1);
+    });
+    dots.addEventListener('keydown', (event) => {
+      if (slides.length < 2 || !['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? -1 : 1;
+      const nextIndex = (activeIndex + direction + slides.length) % slides.length;
+      goTo(nextIndex);
+      dots.children[nextIndex]?.focus();
     });
     hero.addEventListener('touchstart', (event) => {
       touchStartX = event.changedTouches[0].clientX;
@@ -254,7 +271,6 @@ permalink: /doc.html
       const distance = event.changedTouches[0].clientX - touchStartX;
       if (Math.abs(distance) > 50) goTo(activeIndex + (distance > 0 ? -1 : 1));
       touchStartX = null;
-      resumeAutoplay();
     }, { passive: true });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) window.clearInterval(autoplayTimer);
@@ -280,7 +296,7 @@ permalink: /doc.html
         renderMovies(moviesResult.value);
       } else {
         moviesEmpty.hidden = false;
-        moviesEmpty.textContent = 'تعذر تحميل قائمة الأفلام.';
+        moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
       }
     }).catch(showError).finally(() => {
       moviesTrack.setAttribute('aria-busy', 'false');
