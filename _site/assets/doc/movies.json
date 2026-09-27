@@ -1,12 +1,15 @@
-﻿[
+[
   {
     "title": "الأمين على الكلمة",
-    "logo": "/images/movies/ameen-logo.PNG",
-    "bg": "/images/movies/ameen-back.PNG",
+    "logo": "/images/movies/ameen-logo-512.webp",
+    "bg": "/images/movies/ameen-back-1600.webp",
     "desc": "سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.",
     "id": "ameen",
+    "type": "سيرة",
     "link": "/video/ameen",
     "embed-url": "https://ok.ru/videoembed/17039776156295",
-    "source-url": "https://ok.ru/video/17039776156295"
+    "source-url": "https://ok.ru/video/17039776156295",
+    "bgSrcset": "/images/movies/ameen-back-640.webp 640w, /images/movies/ameen-back-960.webp 960w, /images/movies/ameen-back-1600.webp 1600w",
+    "logoSrcset": "/images/movies/ameen-logo-256.webp 256w, /images/movies/ameen-logo-512.webp 512w"
   }
 ]

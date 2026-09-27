@@ -3,6 +3,14 @@ layout: documentary
 title: روافد الوثائقي
 description: تعرّف على أفلام روافد الوثائقية التي تروي قصصًا علمية وتاريخية ملهمة.
 permalink: /doc
+preload:
+  - as: fetch
+    href: /assets/doc/slider.json
+    type: application/json
+    fetchpriority: high
+  - as: fetch
+    href: /assets/doc/movies.json
+    type: application/json
 ---
 
 <section
@@ -13,7 +21,7 @@ permalink: /doc
   data-video-url="{{ '/video' | relative_url }}"
 >
   <div class="doc-hero" id="doc-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
-    <img class="hero-backdrop" id="hero-backdrop" alt="">
+    <img class="hero-backdrop" id="hero-backdrop" alt="" decoding="async" fetchpriority="high">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <span class="hero-kicker" id="hero-kicker" hidden></span>
@@ -81,10 +89,17 @@ permalink: /doc
     const errorState = document.getElementById('doc-error');
     const errorText = document.getElementById('doc-error-text');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const JSON_TIMEOUT = 8000;
+    const IMAGE_TIMEOUT = 2500;
+    const MAX_LOADER_WAIT = 4000;
+    const HERO_SIZES = '100vw';
+    const CARD_SIZES = '(max-width: 700px) 92vw, (max-width: 1180px) 45vw, 300px';
+    const imageCache = new Map();
     let slides = [];
     let activeIndex = 0;
     let autoplayTimer;
     let transitionId = 0;
+    let backdropToken = 0;
     let paused = false;
     let touchStartX = null;
     let shareResetTimer;
@@ -97,48 +112,77 @@ permalink: /doc
       }
     };
 
-    const loadJson = async (url) => {
-      const response = await fetch(url, { headers: { Accept: 'application/json' } });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
-      if (!Array.isArray(data)) throw new Error('Invalid data');
-      return data;
+    const withTimeout = (promise, ms, label) => {
+      let timer;
+      return Promise.race([
+        promise.finally(() => window.clearTimeout(timer)),
+        new Promise((_, reject) => {
+          timer = window.setTimeout(() => reject(new Error(`Timeout: ${label}`)), ms);
+        })
+      ]);
     };
 
-    const waitForImage = (image) => {
-      if (!image) return Promise.resolve(false);
-      if (image.complete) return Promise.resolve(image.naturalWidth > 0);
-      return new Promise((resolve) => {
+    const loadJson = async (url) => {
+      let failure;
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const response = await withTimeout(
+            fetch(url, { headers: { Accept: 'application/json' } }),
+            JSON_TIMEOUT,
+            url
+          );
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          if (!Array.isArray(data)) throw new Error('Invalid data');
+          return data;
+        } catch (error) {
+          failure = error;
+        }
+      }
+      throw failure;
+    };
+
+    const applyImageSources = (image, source) => {
+      if (!image || !source?.src) return;
+      image.sizes = source.sizes || '';
+      if (source.srcset) image.srcset = source.srcset;
+      else image.removeAttribute('srcset');
+      image.src = source.src;
+    };
+
+    const loadImage = (source) => {
+      const url = source?.src;
+      if (!url) return Promise.resolve(false);
+      const key = `${source.sizes || ''}|${url}`;
+      if (imageCache.has(key)) return imageCache.get(key);
+
+      const pending = new Promise((resolve) => {
+        const image = new Image();
         const settle = () => {
           image.removeEventListener('load', settle);
           image.removeEventListener('error', settle);
           resolve(image.naturalWidth > 0);
         };
+        image.sizes = source.sizes || '';
+        if (source.srcset) image.srcset = source.srcset;
         image.addEventListener('load', settle);
         image.addEventListener('error', settle);
+        image.src = url;
+        if (image.complete) settle();
+      }).then((loaded) => {
+        if (!loaded) imageCache.delete(key);
+        return loaded;
       });
+
+      imageCache.set(key, pending);
+      return pending;
     };
 
-    const waitForImages = () => {
-      const images = [...document.querySelectorAll('img')];
-      images.forEach((image) => {
-        if (image.loading === 'lazy') image.loading = 'eager';
-      });
-      return Promise.all(images.map(waitForImage));
-    };
+    const primeImage = (source) => withTimeout(loadImage(source), IMAGE_TIMEOUT, 'image').catch(() => false);
 
-    const waitForWindowLoad = () => {
-      if (document.readyState === 'complete') return Promise.resolve();
-      return new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
-    };
-
-    const waitForFonts = () => document.fonts?.ready || Promise.resolve();
-
-    const preload = (source) => {
-      if (!source) return Promise.resolve(false);
-      const image = new Image();
-      image.src = source;
-      return waitForImage(image);
+    const backdropSource = (movie, sizes) => {
+      if (!movie?.bg) return null;
+      return { src: movie.bg, srcset: movie.bgSrcset, sizes };
     };
 
     const updateDots = () => {
@@ -146,6 +190,21 @@ permalink: /doc
         const active = index === activeIndex;
         dot.classList.toggle('active', active);
         dot.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    const showBackdrop = (movie) => {
+      const source = backdropSource(movie, HERO_SIZES);
+      const token = ++backdropToken;
+      hero.classList.remove('is-ready');
+      if (!source) {
+        backdrop.removeAttribute('src');
+        backdrop.removeAttribute('srcset');
+        return;
+      }
+      applyImageSources(backdrop, source);
+      primeImage(source).then((loaded) => {
+        if (loaded && token === backdropToken) hero.classList.add('is-ready');
       });
     };
 
@@ -160,12 +219,14 @@ permalink: /doc
             resolve(false);
             return;
           }
-          backdrop.src = slide.bg || '';
+          showBackdrop(slide);
+          if (slide.logoSrcset) logo.srcset = slide.logoSrcset;
+          else logo.removeAttribute('srcset');
           logo.src = slide.logo || '';
           logo.alt = `شعار ${slide.title || ''}`;
           logo.hidden = !slide.logo;
           title.textContent = slide.title || 'فيلم روافد';
-          title.classList.remove('is-visible');
+          title.classList.add('is-visible');
           description.textContent = slide.desc || '';
           const movieType = typeof slide.type === 'string' ? slide.type.trim() : '';
           kicker.textContent = movieType;
@@ -178,7 +239,7 @@ permalink: /doc
           hero.classList.remove('is-changing');
           updateDots();
           const nextSlide = slides[(activeIndex + 1) % slides.length];
-          if (nextSlide?.bg) preload(nextSlide.bg);
+          primeImage(backdropSource(nextSlide, CARD_SIZES));
           resolve(true);
         }, reduceMotion.matches ? 0 : 180);
       });
@@ -270,9 +331,12 @@ permalink: /doc
 
       const cardBackdrop = document.createElement('img');
       cardBackdrop.className = 'movie-card-backdrop';
-      cardBackdrop.src = movie.bg || '';
       cardBackdrop.alt = '';
       cardBackdrop.loading = 'lazy';
+      cardBackdrop.decoding = 'async';
+      if (movie.bgSrcset) cardBackdrop.srcset = movie.bgSrcset;
+      cardBackdrop.sizes = CARD_SIZES;
+      cardBackdrop.src = movie.bg || '';
 
       const content = document.createElement('div');
       content.className = 'movie-card-content';
@@ -367,42 +431,42 @@ permalink: /doc
     });
 
     const initializePage = async () => {
-      try {
-        const [slidesResult, moviesResult] = await Promise.allSettled([
-          loadJson(root.dataset.sliderUrl),
-          loadJson(root.dataset.moviesUrl)
-        ]);
+      const [slidesResult, moviesResult] = await Promise.allSettled([
+        loadJson(root.dataset.sliderUrl),
+        loadJson(root.dataset.moviesUrl)
+      ]);
 
-        if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
-          slides = slidesResult.value;
-        } else if (moviesResult.status === 'fulfilled') {
-          slides = moviesResult.value;
-        } else {
-          throw slidesResult.reason || moviesResult.reason;
-        }
-
-        buildDots();
-        await applySlide(0);
-        if (moviesResult.status === 'fulfilled') {
-          renderMovies(moviesResult.value);
-        } else {
-          moviesEmpty.hidden = false;
-          moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
-        }
-        await waitForImages();
-        await waitForFonts();
-        startAutoplay();
-      } catch (error) {
+      if (slidesResult.status === 'fulfilled' && slidesResult.value.length) {
+        slides = slidesResult.value;
+      } else if (moviesResult.status === 'fulfilled' && moviesResult.value.length) {
+        slides = moviesResult.value;
+      } else {
         showError();
+        return;
       }
+
+      buildDots();
+      applySlide(0);
+      if (moviesResult.status === 'fulfilled') {
+        renderMovies(moviesResult.value);
+      } else {
+        moviesEmpty.hidden = false;
+        moviesEmptyText.textContent = 'تعذر تحميل قائمة الأفلام.';
+      }
+      startAutoplay();
     };
 
-    Promise.allSettled([
-      initializePage(),
-      waitForWindowLoad()
-    ]).finally(() => {
+    const revealPage = () => {
       moviesTrack.setAttribute('aria-busy', 'false');
       hideLoader();
-    });
+    };
+
+    const loaderWatchdog = window.setTimeout(revealPage, MAX_LOADER_WAIT);
+    initializePage()
+      .catch(() => showError())
+      .finally(() => {
+        window.clearTimeout(loaderWatchdog);
+        revealPage();
+      });
   })();
 </script>

@@ -2,8 +2,10 @@
   {
     "id": "ameen",
     "title": "الأمين على الكلمة",
-    "logo": "/images/movies/ameen-logo.PNG",
-    "bg": "/images/movies/ameen-back.PNG",
+    "logo": "/images/movies/ameen-logo-512.webp",
+    "logoSrcset": "/images/movies/ameen-logo-256.webp 256w, /images/movies/ameen-logo-512.webp 512w",
+    "bg": "/images/movies/ameen-back-1600.webp",
+    "bgSrcset": "/images/movies/ameen-back-640.webp 640w, /images/movies/ameen-back-960.webp 960w, /images/movies/ameen-back-1600.webp 1600w",
     "desc": "سيرة أحمد أمين إبراهيم، الكاتب والمفكر المصري الذي أسهم في النهضة الأدبية والفكرية.",
     "type": "سيرة",
     "link": "/video/ameen"

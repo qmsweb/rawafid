@@ -116,8 +116,13 @@ body.documentary-body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
   transform: scale(1.015);
   transition: opacity 0.45s ease, transform 7s ease;
+}
+
+.doc-hero.is-ready .hero-backdrop {
+  opacity: 1;
 }
 
 .doc-hero.is-changing .hero-backdrop {

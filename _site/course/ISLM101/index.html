@@ -1237,6 +1237,20 @@ function getIconStyles(type) {
   }
 }
 
+// الفيديو الذي يشير رابطه إلى صفحة داخل الموقع (مثل /video/ameen) يُفتح مباشرة
+// أما الفيديوهات ذات الروابط الخارجية (يوتيوب مثلاً) فتبقى عبر صفحة التفاصيل
+function isInternalVideoUrl(url) {
+    if (!url) return false;
+    const value = String(url).trim();
+    if (value === '' || value.startsWith('//')) return false;
+    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(value)) return true;
+    try {
+        return new URL(value).origin === window.location.origin;
+    } catch (e) {
+        return false;
+    }
+}
+
 /* ======= 4. ضبط العرض (شبكة/قائمة) ======= */
 function setView(view, save = true) {
   if (view === 'grid') {
@@ -1346,6 +1360,8 @@ function renderMaterials(filter = 'all') {
         const targetUrl = item.preview_url || item.url;
         if ((item.type === 'quizzes' || item.type === 'cards' || item.type === 'links') && targetUrl) {
             window.location.href = targetUrl;
+        } else if (item.type === 'videos' && isInternalVideoUrl(item.preview_url)) {
+            window.location.href = item.preview_url;
         } else {
             window.location.href = detailsUrl;
         }

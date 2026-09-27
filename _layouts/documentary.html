@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
   <link rel="stylesheet" href="{{ '/assets/doc/documentary.css' | relative_url }}">
+  {%- comment -%}
+    موارد حرجة تُطلب مسبقًا في head عبر قائمة preload في الـ front matter،
+    فتبدأ بالتوازي مع HTML بدل انتظار تنفيذ سكربت الصفحة.
+  {%- endcomment -%}
+  {%- for resource in page.preload -%}
+  <link rel="preload" as="{{ resource.as }}" href="{{ resource.href | relative_url }}"{% if resource.type %} type="{{ resource.type }}"{% endif %}{% if resource.media %} media="{{ resource.media }}"{% endif %}{% if resource.fetchpriority %} fetchpriority="{{ resource.fetchpriority }}"{% endif %}>
+  {%- endfor -%}
   <meta property="og:title" content="{{ page.title | default: 'روافد الوثائقي' }}">
   <meta property="og:description" content="{{ page.description | default: site.description }}">
   <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
