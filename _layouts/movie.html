@@ -1,9 +1,6 @@
 ---
 layout: documentary
-title: الأمين على الكلمة | روافد الوثائقي
-description: سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.
 movie_id: ameen
-permalink: /video/ameen
 ---
 
 <style>
@@ -36,7 +33,7 @@ permalink: /video/ameen
 <section
   class="video-page"
   data-movies-url="{{ '/assets/doc/movies.json' | relative_url }}"
-  data-movie-id="{{ page.movie_id | default: 'ameen' }}"
+  data-movie-id="{{ page.movie_id }}"
   data-video-url="{{ page.url | relative_url }}"
 >
   <a class="video-breadcrumb" href="{{ '/doc' | relative_url }}">
@@ -112,7 +109,7 @@ permalink: /video/ameen
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
     const errorMessage = document.getElementById('video-error-message');
-    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || 'ameen';
+    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || '';
     let shareResetTimer;
 
     const hideLoader = () => {
