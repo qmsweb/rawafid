@@ -103,7 +103,7 @@ body.documentary-body {
   isolation: isolate;
   min-height: clamp(430px, 68vh, 690px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   overflow: hidden;
   background: #10131f;
   color: #fff;
@@ -137,7 +137,7 @@ body.documentary-body {
 .hero-content {
   width: min(1160px, calc(100% - 40px));
   margin-inline: auto;
-  padding: 70px 0 84px;
+  padding: 30px 0 84px;
   text-align: center;
 }
 
@@ -570,7 +570,7 @@ body.documentary-body {
 @media (max-width: 700px) {
   .hero-content {
     width: min(100% - 28px, 1160px);
-    padding: 54px 0 72px;
+    padding: 26px 0 78px;
   }
 
   .hero-description {
@@ -653,20 +653,18 @@ body.documentary-body {
   }
 
   .hero-actions {
-    flex-direction: column;
-  }
-
-  .hero-actions .button {
-    width: 100%;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .hero-actions .hero-watch {
-    order: -1;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .hero-actions .hero-share {
+    flex: 0 0 46px;
     width: 46px;
-    align-self: center;
   }
 
   .movies-section {
