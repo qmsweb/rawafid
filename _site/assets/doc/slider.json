@@ -9,5 +9,16 @@
     "desc": "سيرة أحمد أمين إبراهيم، الكاتب والمفكر المصري الذي أسهم في النهضة الأدبية والفكرية.",
     "type": "سيرة",
     "link": "/video/ameen"
+  },
+  {
+    "id": "saussure",
+    "title": "نشأة اللسانيات",
+    "logo": "/images/movies/saussure-logo-512.webp",
+    "logoSrcset": "/images/movies/saussure-logo-256.webp 256w, /images/movies/saussure-logo-512.webp 512w",
+    "bg": "/images/movies/saussure-back-640.webp",
+    "bgSrcset": "/images/movies/saussure-back-640.webp 640w",
+    "desc": "كيف ولدت اللسانيات كعلم مستقل، ودور فيرinand دو سوسور في تأسيسها وربطها بالدراسة المنظّمة للغة.",
+    "type": "تاريخ",
+    "link": "/video/saussure"
   }
 ]

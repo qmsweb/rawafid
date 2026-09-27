@@ -809,7 +809,7 @@
           logo.alt = `شعار ${slide.title || ''}`;
           logo.hidden = !slide.logo;
           title.textContent = slide.title || 'فيلم روافد';
-          title.classList.add('is-visible');
+          title.classList.toggle('is-visible', !slide.logo);
           description.textContent = slide.desc || '';
           const movieType = typeof slide.type === 'string' ? slide.type.trim() : '';
           kicker.textContent = movieType;

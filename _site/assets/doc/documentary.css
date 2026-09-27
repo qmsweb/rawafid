@@ -205,6 +205,10 @@ body.documentary-body {
   line-height: 1.9;
 }
 
+.hero-content:not(:has(.hero-title.is-visible)) .hero-description {
+  margin-top: 6px;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;

@@ -602,6 +602,13 @@
     contain: layout paint;
   }
 
+  .video-page .video-stage,
+  .video-page .movie-info-card,
+  .video-page .button,
+  .video-page .button:hover {
+    box-shadow: none;
+  }
+
   .video-page .video-frame video {
     object-fit: contain;
   }
@@ -702,7 +709,7 @@
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
     const errorMessage = document.getElementById('video-error-message');
-    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || 'ameen';
+    const movieId = root.dataset.movieId || new URLSearchParams(window.location.search).get('id') || '';
     let shareResetTimer;
 
     const hideLoader = () => {
