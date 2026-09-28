@@ -6,7 +6,7 @@
     "logoSrcset": "/images/movies/ameen-logo-256.webp 256w, /images/movies/ameen-logo-512.webp 512w",
     "bg": "/images/movies/ameen-back-1600.webp",
     "bgSrcset": "/images/movies/ameen-back-640.webp 640w, /images/movies/ameen-back-960.webp 960w, /images/movies/ameen-back-1600.webp 1600w",
-    "desc": "سيرة أحمد أمين إبراهيم، الكاتب والمفكر المصري الذي أسهم في النهضة الأدبية والفكرية.",
+    "desc": "سيرة أحمد أمين، الكاتب والمفكر المصري الذي ساهم في النهضة الأدبية والفكرية في القرن العشرين.",
     "type": "سيرة",
     "link": "/video/ameen"
   },
@@ -17,7 +17,7 @@
     "logoSrcset": "/images/movies/saussure-logo-256.webp 256w, /images/movies/saussure-logo-512.webp 512w",
     "bg": "/images/movies/saussure-back-640.webp",
     "bgSrcset": "/images/movies/saussure-back-640.webp 640w",
-    "desc": "كيف ولدت اللسانيات كعلم مستقل، ودور فيرinand دو سوسور في تأسيسها وربطها بالدراسة المنظّمة للغة.",
+    "desc": "من نقوش الحضارات القديمة وحلقات الدرس العربية إلى ثورات الفكر الحديث؛ رحلة استثنائية تتبع ولادة «علم اللسانيات»، وتكشف كيف فكّ العلماء شفرة اللغة وأسرار العقل البشري.",
     "type": "تاريخ",
     "link": "/video/saussure"
   }

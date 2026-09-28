@@ -1,7 +1,12 @@
-"""توليد نسخ WebP خفيفة لصور الأفلام الوثائقية.
+"""توليد نسخ WebP خفيفة وصيانة بيانات الأفلام الوثائقية.
 
-يقرأ assets/doc/movies.json، ويحوّل كل bg / logo إلى عدة نسخ WebP متجاوبة
-ثم يكتب مسارات bgSrcset / logoSrcset داخل ملف JSON نفسه.
+`assets/doc/movies.json` هو المصدر الوحيد للحقيقة. يقرأ هذا السكربت منه ويقوم بـ:
+
+1. تحويل كل bg / logo إلى عدة نسخ WebP متجاوبة وكتابة bgSrcset / logoSrcset
+   (مع حفظ مسار الصورة الأصلية في bgSource / logoSource حتى يبقى السكربت
+   قابلًا لإعادة التشغيل دون تدهور جودة الصور).
+2. توليد `assets/doc/slider.json` المشتق من movies.json حتى لا يتكرر المحتوى
+   بين الملفين ولا يتناقص.
 
 الاستخدام:  python generate-doc-images.py
 """
@@ -17,6 +22,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent
 MOVIES_JSON = ROOT / "assets" / "doc" / "movies.json"
+SLIDER_JSON = ROOT / "assets" / "doc" / "slider.json"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -25,6 +31,9 @@ BACK_WIDTHS = (640, 960, 1600)
 LOGO_WIDTHS = (256, 512)
 BACK_QUALITY = 72
 LOGO_QUALITY = 85
+
+# الحقول التي ينسخها slider.json من movies.json (القائمة الرمفية للواجهة الرئيسية).
+SLIDER_FIELDS = ("id", "title", "logo", "logoSrcset", "bg", "bgSrcset", "desc", "type", "link")
 
 
 def build_variants(source: Path, widths, quality: int) -> dict:
@@ -71,8 +80,47 @@ def to_site_path(value: str) -> Path:
     return ROOT / value.lstrip("/")
 
 
+def load_movies() -> list:
+    """يحمّل movies.json مع رسالة خطأ واضحة بدل استثناء JSON الخام."""
+    try:
+        data = json.loads(MOVIES_JSON.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as error:
+        sys.exit(
+            f"movies.json غير صالح كملف JSON (سطر {error.lineno}، عمود {error.colno}): {error.msg}\n"
+            f"راجع {MOVIES_JSON.relative_to(ROOT)}"
+        )
+
+    if not isinstance(data, list):
+        sys.exit("movies.json يجب أن يحتوي على قائمة (Array) من الأفلام.")
+
+    for index, movie in enumerate(data):
+        if not isinstance(movie, dict):
+            sys.exit(f"العنصر رقم {index + 1} في movies.json ليس كائنًا (Object).")
+        if not movie.get("id") or not movie.get("title"):
+            sys.exit(f"العنصر رقم {index + 1} في movies.json ينقصه الحقل id أو title.")
+
+    return data
+
+
+def write_json(path: Path, data) -> None:
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def build_slider(movies: list) -> list:
+    """يبني محتوى slider.json من movies.json دون تكرار البيانات يدويًا."""
+    slider = []
+    for movie in movies:
+        entry = {field: movie[field] for field in SLIDER_FIELDS if movie.get(field)}
+        if not entry.get("link") and movie.get("id"):
+            entry["link"] = f"/video/{movie['id']}"
+        slider.append(entry)
+    return slider
+
+
 def main() -> None:
-    data = json.loads(MOVIES_JSON.read_text(encoding="utf-8-sig"))
+    data = load_movies()
     total_before = 0
     total_after = 0
 
@@ -83,32 +131,44 @@ def main() -> None:
             ("bg", BACK_WIDTHS, BACK_QUALITY),
             ("logo", LOGO_WIDTHS, LOGO_QUALITY),
         ):
-            original = movie.get(field)
+            # نقرأ من الصورة الأصلية المحفوظة (bgSource) لا من نسخة WebP
+            # الناتجة سابقًا، وإلا تدهورت الصور مع كل إعادة تشغيل.
+            original = movie.get(f"{field}Source") or movie.get(field)
             if not original:
                 continue
 
             source = to_site_path(original)
-            total_before += source.stat().st_size
+            if not source.is_file():
+                sys.exit(
+                    f"صورة '{field}' غير موجودة للأفلام '{movie.get('id')}': "
+                    f"{source.relative_to(ROOT)}"
+                )
+
+            source_size = source.stat().st_size
+            total_before += source_size
 
             result = build_variants(source, widths, quality)
             movie[field] = result["src"]
             movie[f"{field}Srcset"] = result["srcset"]
+            movie[f"{field}Source"] = original
             total_after += result["bytes"]
 
             details = " ".join(
                 f"{path.name}={size // 1024}KB" for _, path, size in result["files"]
             )
-            print(f"[{name}] {field}: {source.name} ({source.stat().st_size // 1024}KB)")
+            print(f"[{name}] {field}: {source.name} ({source_size // 1024}KB)")
             print(f"    -> {details}")
 
-    MOVIES_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(MOVIES_JSON, data)
+
+    slider = build_slider(data)
+    write_json(SLIDER_JSON, slider)
 
     print(
         f"\nتم التحديث: {MOVIES_JSON.relative_to(ROOT)} "
         f"({total_before // 1024}KB -> {total_after // 1024}KB للنسخ الأساسية)"
     )
+    print(f"تمت مزامنة {SLIDER_JSON.relative_to(ROOT)} ({len(slider)} فيلم).")
 
 
 if __name__ == "__main__":

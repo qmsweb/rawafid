@@ -9,6 +9,8 @@
     "link": "/video/ameen",
     "embed-url": "https://ok.ru/videoembed/17039776156295",
     "source-url": "https://ok.ru/video/17039776156295",
+    "bgSource": "/images/movies/ameen-back.PNG",
+    "logoSource": "/images/movies/ameen-logo.png",
     "bgSrcset": "/images/movies/ameen-back-640.webp 640w, /images/movies/ameen-back-960.webp 960w, /images/movies/ameen-back-1600.webp 1600w",
     "logoSrcset": "/images/movies/ameen-logo-256.webp 256w, /images/movies/ameen-logo-512.webp 512w"
   },
@@ -16,12 +18,14 @@
     "title": "نشأة اللسانيات",
     "logo": "/images/movies/saussure-logo-512.webp",
     "bg": "/images/movies/saussure-back-640.webp",
-    "desc": "من نقوش الحضارات القديمة وحلقات الدرس العربية إلى ثورات الفكر الحديث؛ رحلة استثنائية تتبع ولادة "علم اللسانيات"، وتكشف كيف فكّ العلماء شفرة اللغة وأسرار العقل البشري.",
+    "desc": "من نقوش الحضارات القديمة وحلقات الدرس العربية إلى ثورات الفكر الحديث؛ رحلة استثنائية تتبع ولادة «علم اللسانيات»، وتكشف كيف فكّ العلماء شفرة اللغة وأسرار العقل البشري.",
     "id": "saussure",
     "type": "تاريخ",
     "link": "/video/saussure",
     "embed-url": "https://ok.ru/videoembed/17078865103495",
     "source-url": "https://ok.ru/video/17078865103495",
+    "bgSource": "/images/movies/saussure-back.jpg",
+    "logoSource": "/images/movies/saussure-logo.png",
     "bgSrcset": "/images/movies/saussure-back-640.webp 640w",
     "logoSrcset": "/images/movies/saussure-logo-256.webp 256w, /images/movies/saussure-logo-512.webp 512w"
   }
