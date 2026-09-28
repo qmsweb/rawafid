@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title | default: "روافد الوثائقي" }}</title>
+  <title>{{ page.title | default: "روافد وثائقي" }}</title>
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
@@ -15,7 +15,7 @@
   {%- for resource in page.preload -%}
   <link rel="preload" as="{{ resource.as }}" href="{{ resource.href | relative_url }}"{% if resource.type %} type="{{ resource.type }}"{% endif %}{% if resource.media %} media="{{ resource.media }}"{% endif %}{% if resource.fetchpriority %} fetchpriority="{{ resource.fetchpriority }}"{% endif %}>
   {%- endfor -%}
-  <meta property="og:title" content="{{ page.title | default: 'روافد الوثائقي' }}">
+  <meta property="og:title" content="{{ page.title | default: 'روافد وثائقي' }}">
   <meta property="og:description" content="{{ page.description | default: site.description }}">
   <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
