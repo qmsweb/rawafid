@@ -10,6 +10,9 @@
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+  <link rel="preload" as="fetch" href="{{ '/assets/data/materials.json' | relative_url }}" crossorigin>
+  <link rel="preload" as="fetch" href="{{ '/assets/blogdata/authors.json' | relative_url }}" crossorigin>
+
   <meta property="og:title" content="{{ page.title | default: 'منصة روافد التعليمية' }}">
   <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
   <meta property="og:image" content="{{ '/images/cover.png' | absolute_url }}">
@@ -381,13 +384,31 @@
       margin-inline-end: 3px;
     }
 
-    /* التحميل */
-    #main-content-area {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+    /* === التحميل === */
+    /* المحتوى الأساسي يظهر فوراً، وحالة التحميل موضعية داخل قسم المقررات فقط */
+    .courses-loading-state {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: var(--space-xl);
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
     }
 
-    #main-content-area.loaded { opacity: 1; }
+    .courses-loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--rawafid-border);
+      border-top-color: var(--rawafid-primary);
+      border-radius: 50%;
+      animation: courses-spin 0.75s linear infinite;
+    }
+
+    @keyframes courses-spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* تخطيط الشاشات الكبيرة: الأدوات في الشريط الجانبي */
     @media (min-width: 992px) {
@@ -539,7 +560,10 @@
                 <div class="filter-bar" id="filter-bar"></div>
               </div>
               <div class="courses-container" id="courses-container">
-                <p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">جاري تحميل المقررات...</p>
+                <div class="courses-loading-state">
+                  <div class="courses-loading-spinner"></div>
+                  <span>جاري تحميل المقررات...</span>
+                </div>
               </div>
             </section>
 
@@ -608,74 +632,131 @@
 
   <script>
     /* === المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
-    let allCourses = [];
-    let currentFilter = 'all';
+    var allCourses = [];
+    var currentFilter = 'all';
 
-    function renderCourses() {
-      const container = document.getElementById('courses-container');
-      if (!container) return;
+    var MATERIALS_URL = "{{ '/assets/data/materials.json' | relative_url }}";
+    var AUTHORS_URL = "{{ '/assets/blogdata/authors.json' | relative_url }}";
+    var COURSE_BASE = "{{ '/course' | relative_url }}";
 
-      const filtered = currentFilter === 'all' ? allCourses : allCourses.filter(c => c.type === currentFilter);
-
-      container.innerHTML = '';
-      if (filtered.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">لا توجد مقررات في هذا التصنيف.</p>';
-        return;
+    /* جلب JSON بشكل موثوق: يتحقق من نجاح الاستجابة، ويعيد المحاولة من ذاكرة التخزين عند فشل الشبكة */
+    function fetchJSON(url) {
+      function parse(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+        return res.json();
       }
-
-      filtered.forEach(item => {
-        const card = document.createElement('a');
-        card.className = 'course-card';
-        card.href = "{{ '/course' | relative_url }}/" + encodeURIComponent(item.code);
-        const iconColor = item.color || '#1a2ac6';
-        const iconClass = item.icon || 'fa-book';
-        const iconBg = iconColor + '15';
-        card.innerHTML = `
-          <div class="course-card-icon" style="color: ${iconColor}; background-color: ${iconBg};">
-            <i class="fas ${iconClass}"></i>
-          </div>
-          <div class="course-card-info">
-            <div class="course-card-name">${item.name}</div>
-            <span class="course-card-code">${item.code}</span>
-          </div>
-        `;
-        container.appendChild(card);
+      return fetch(url, { cache: 'no-cache' }).then(parse).catch(function () {
+        return fetch(url, { cache: 'force-cache' }).then(parse);
       });
     }
 
+    function normalizeCourses(data) {
+      if (Array.isArray(data)) return data;
+      if (data && Array.isArray(data.courses)) return data.courses;
+      if (data && Array.isArray(data.materials)) return data.materials;
+      return [];
+    }
+
+    function escapeHTML(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function showCoursesMessage(text, withRetry) {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+      container.innerHTML = '';
+      var box = document.createElement('div');
+      box.className = 'courses-loading-state';
+      var msg = document.createElement('span');
+      msg.textContent = text;
+      box.appendChild(msg);
+      if (withRetry) {
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.type = 'button';
+        btn.textContent = 'إعادة المحاولة';
+        btn.addEventListener('click', loadCourses);
+        box.appendChild(btn);
+      }
+      container.appendChild(box);
+    }
+
+    function renderCourses() {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+
+      var filtered = currentFilter === 'all'
+        ? allCourses
+        : allCourses.filter(function (c) { return c.type === currentFilter; });
+
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        showCoursesMessage('لا توجد مقررات في هذا التصنيف.', false);
+        return;
+      }
+
+      /* بناء البطاقات دفعة واحدة عبر Fragment لسرعة العرض */
+      var fragment = document.createDocumentFragment();
+      filtered.forEach(function (item) {
+        var card = document.createElement('a');
+        card.className = 'course-card';
+        card.href = COURSE_BASE + '/' + encodeURIComponent(item.code);
+        var iconColor = item.color || '#1a2ac6';
+        var iconClass = item.icon || 'fa-book';
+        var iconBg = iconColor + '15';
+        card.innerHTML =
+          '<div class="course-card-icon" style="color: ' + iconColor + '; background-color: ' + iconBg + ';">' +
+            '<i class="fas ' + escapeHTML(iconClass) + '"></i>' +
+          '</div>' +
+          '<div class="course-card-info">' +
+            '<div class="course-card-name">' + escapeHTML(item.name) + '</div>' +
+            '<span class="course-card-code">' + escapeHTML(item.code) + '</span>' +
+          '</div>';
+        fragment.appendChild(card);
+      });
+      container.appendChild(fragment);
+    }
+
     function createFilters(courses) {
-      const filterBar = document.getElementById('filter-bar');
+      var filterBar = document.getElementById('filter-bar');
       if (!filterBar) return;
       filterBar.innerHTML = '';
 
-      const viewToggle = document.createElement('div');
+      var viewToggle = document.createElement('div');
       viewToggle.className = 'view-toggle';
-      viewToggle.innerHTML = `<i class="fas fa-list" id="list-view" title="قائمة"></i><i class="fas fa-th-large" id="grid-view" title="شبكة"></i>`;
+      viewToggle.innerHTML = '<i class="fas fa-list" id="list-view" title="قائمة" role="button" tabindex="0"></i><i class="fas fa-th-large" id="grid-view" title="شبكة" role="button" tabindex="0"></i>';
       filterBar.appendChild(viewToggle);
 
-      const divider = document.createElement('div');
+      var divider = document.createElement('div');
       divider.className = 'filter-divider';
       filterBar.appendChild(divider);
 
-      const types = [...new Set(courses.map(c => c.type))];
+      var types = [];
+      courses.forEach(function (c) {
+        if (c.type && types.indexOf(c.type) === -1) types.push(c.type);
+      });
       types.unshift('all');
-      types.forEach(type => {
-        const filterBtn = document.createElement('div');
+
+      types.forEach(function (type) {
+        var filterBtn = document.createElement('div');
         filterBtn.className = 'filter-item';
         filterBtn.textContent = type === 'all' ? 'الكل' : type;
         filterBtn.setAttribute('role', 'button');
         filterBtn.setAttribute('tabindex', '0');
-        if (type === 'all') filterBtn.classList.add('active');
+        if (type === currentFilter) filterBtn.classList.add('active');
 
         function activate() {
-          document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+          filterBar.querySelectorAll('.filter-item').forEach(function (btn) { btn.classList.remove('active'); });
           filterBtn.classList.add('active');
           currentFilter = type;
           renderCourses();
         }
 
         filterBtn.addEventListener('click', activate);
-        filterBtn.addEventListener('keydown', function(e) {
+        filterBtn.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             activate();
@@ -684,11 +765,11 @@
         filterBar.appendChild(filterBtn);
       });
 
-      const container = document.getElementById('courses-container');
-      const gridBtn = viewToggle.querySelector('#grid-view');
-      const listBtn = viewToggle.querySelector('#list-view');
+      var container = document.getElementById('courses-container');
+      var gridBtn = viewToggle.querySelector('#grid-view');
+      var listBtn = viewToggle.querySelector('#list-view');
 
-      function setView(mode, save = true) {
+      function setView(mode, save) {
         if (mode === 'grid') {
           container.classList.add('grid-view');
           gridBtn.classList.add('active');
@@ -698,49 +779,55 @@
           listBtn.classList.add('active');
           gridBtn.classList.remove('active');
         }
-        if (save) localStorage.setItem('rawafed-courses-view', mode);
+        if (save) {
+          try { localStorage.setItem('rawafed-courses-view', mode); } catch (e) {}
+        }
       }
 
-      gridBtn.addEventListener('click', () => setView('grid'));
-      listBtn.addEventListener('click', () => setView('list'));
-      const savedMode = localStorage.getItem('rawafed-courses-view');
+      gridBtn.addEventListener('click', function () { setView('grid', true); });
+      listBtn.addEventListener('click', function () { setView('list', true); });
+
+      var savedMode = null;
+      try { savedMode = localStorage.getItem('rawafed-courses-view'); } catch (e) {}
       setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
     }
 
-    /* === أسماء المؤلفين في بطاقات المدونة === */
+    function loadCourses() {
+      showCoursesMessage('جاري تحميل المقررات...', false);
+      return fetchJSON(MATERIALS_URL)
+        .then(function (data) {
+          allCourses = normalizeCourses(data);
+          renderCourses();
+          createFilters(allCourses);
+        })
+        .catch(function (err) {
+          console.error('Courses load error:', err);
+          showCoursesMessage('تعذر تحميل المقررات. تحقق من الاتصال بالإنترنت.', true);
+        });
+    }
+
+    /* === أسماء المؤلفين في بطاقات المدونة (مستقل عن تحميل المقررات) === */
     function resolveAuthors(authorData) {
-      const authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
+      var authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
       if (!authors.length) return;
-      document.querySelectorAll('[data-author-uid]').forEach(span => {
-        const uid = span.getAttribute('data-author-uid');
-        const author = authors.find(a => a.uid === uid);
-        const nameEl = span.querySelector('.author-name');
+      document.querySelectorAll('[data-author-uid]').forEach(function (span) {
+        var uid = span.getAttribute('data-author-uid');
+        var author = authors.find(function (a) { return a.uid === uid; });
+        var nameEl = span.querySelector('.author-name');
         if (author && nameEl) nameEl.textContent = author.name;
       });
     }
 
-    /* === التحميل المتزامن === */
-    document.addEventListener('DOMContentLoaded', () => {
-      const mainArea = document.getElementById('main-content-area');
+    function loadAuthors() {
+      fetchJSON(AUTHORS_URL).then(resolveAuthors).catch(function () { /* غير حرج */ });
+    }
 
-      Promise.all([
-        fetch("{{ '/assets/data/materials.json' | relative_url }}").then(res => res.json()),
-        fetch("{{ '/assets/blogdata/authors.json' | relative_url }}", { cache: 'no-store' }).then(res => res.json()).catch(() => null)
-      ])
-      .then(([materialsData, authorData]) => {
-        allCourses = materialsData || [];
-        renderCourses();
-        createFilters(allCourses);
-        resolveAuthors(authorData);
-        mainArea.classList.add('loaded');
-        rawafidHideLoader();
-      })
-      .catch(err => {
-        console.error("Critical Load Error:", err);
-        renderCourses();
-        mainArea.classList.add('loaded');
-        rawafidHideLoader();
-      });
+    /* === التشغيل === */
+    document.addEventListener('DOMContentLoaded', function () {
+      /* إخفاء شاشة التحميل العامة فوراً: الترويسة والمحتوى الثابت مرئية، والتحميل موضعي داخل قسم المقررات */
+      if (typeof rawafidHideLoader === 'function') rawafidHideLoader();
+      loadCourses();
+      loadAuthors();
     });
   </script>
 

@@ -1,18 +1,18 @@
-<!-- === مكون التحميل الموحد === -->
+<!-- === مكون التحميل الموحد (يغطي المحتوى فقط ويبقي الترويسة مرئية) === -->
 <style>
   #rawafid-loading-overlay {
     position: fixed;
-    top: 0;
+    top: var(--nav-height, 70px);
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 99999;
+    z-index: 900;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    background: var(--rawafid-bg, #f4f6fb);
+    gap: 16px;
+    background: var(--rawafid-surface, #ffffff);
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
 
@@ -22,14 +22,10 @@
     pointer-events: none;
   }
 
-  [data-theme="dark"] #rawafid-loading-overlay {
-    background: var(--rawafid-bg, #121212);
-  }
-
   .rawafid-loader-spinner {
-    width: 44px;
-    height: 44px;
-    border: 3.5px solid var(--rawafid-border, #ccd1e0);
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--rawafid-border, #ccd1e0);
     border-top-color: var(--rawafid-primary, #1a2ac6);
     border-radius: 50%;
     animation: rawafid-spin 0.75s linear infinite;
@@ -68,9 +64,15 @@
     0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
     40% { transform: scale(1); opacity: 1; }
   }
+
+  @media (max-width: 768px) {
+    #rawafid-loading-overlay {
+      top: var(--nav-height, 60px);
+    }
+  }
 </style>
 
-<div id="rawafid-loading-overlay">
+<div id="rawafid-loading-overlay" role="status" aria-live="polite" aria-label="جاري التحميل">
   <div class="rawafid-loader-spinner"></div>
   <div class="rawafid-loader-text">
     جاري التحميل
@@ -90,4 +92,12 @@
     var overlay = document.getElementById('rawafid-loading-overlay');
     if (overlay) overlay.classList.remove('hidden');
   }
+
+  /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
+  setTimeout(rawafidHideLoader, 6000);
+
+  /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) rawafidHideLoader();
+  });
 </script>

@@ -255,7 +255,7 @@ ol {
 }
 
 /* ------------------------------------------------------------
-   5. الترويسة
+   5. الترويسة (تصميم مسطح - خلفية بيضاء)
    ------------------------------------------------------------ */
 .site-header {
   position: fixed;
@@ -264,16 +264,19 @@ ol {
   left: 0;
   z-index: 1000;
   height: var(--nav-height);
-  background-color: var(--rawafid-primary);
-  color: var(--rawafid-white);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--rawafid-surface);
+  color: var(--rawafid-text);
+  border-bottom: 1px solid var(--rawafid-border);
 }
 
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-md);
   height: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
   padding: 0 var(--space-lg);
 }
 
@@ -281,57 +284,67 @@ ol {
   display: flex;
   align-items: center;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .logo img {
-  height: 36px;
+  height: 34px;
   width: auto;
-  opacity: 1;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-xs);
 }
 
 .nav-links a {
   display: block;
-  color: var(--rawafid-white);
-  font-size: var(--text-base);
-  font-weight: var(--font-medium);
-  padding: var(--space-sm);
+  color: var(--rawafid-text);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
   border-bottom: 2px solid transparent;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-links a:hover,
 .nav-links a:focus-visible {
-  color: var(--rawafid-accent);
-  border-bottom-color: var(--rawafid-accent);
+  color: var(--rawafid-primary);
+  background-color: var(--rawafid-primary-soft);
+}
+
+.nav-links a.active {
+  color: var(--rawafid-primary);
+  border-bottom-color: var(--rawafid-primary);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
+  flex-shrink: 0;
 }
 
 .icon-btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 42px;
   height: 42px;
-  color: var(--rawafid-white);
-  border-radius: 50%;
+  color: var(--rawafid-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .icon-btn:hover,
 .icon-btn:focus-visible {
-  background-color: rgba(255, 255, 255, 0.12);
-  color: var(--rawafid-accent);
+  background-color: var(--rawafid-primary-soft);
+  color: var(--rawafid-primary);
 }
 
 .icon-btn svg {
@@ -344,36 +357,35 @@ ol {
   stroke-linejoin: round;
 }
 
-/* زر تبديل المظهر */
-.theme-toggle .icon-moon,
+/* زر تبديل المظهر (أيقونة واحدة ظاهرة دائماً) */
 .theme-toggle .icon-sun {
-  transition: opacity 0.2s ease;
+  display: none;
 }
 
-.theme-toggle .icon-sun,
 [data-theme="dark"] .theme-toggle .icon-moon {
-  opacity: 0;
+  display: none;
 }
 
 [data-theme="dark"] .theme-toggle .icon-sun {
-  opacity: 1;
+  display: block;
 }
 
 /* زر القائمة في الجوال */
 .menu-toggle {
   display: none;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 42px;
   height: 42px;
-  color: var(--rawafid-white);
-  border-radius: 50%;
+  color: var(--rawafid-text);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .menu-toggle:hover,
 .menu-toggle:focus-visible {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--rawafid-primary-soft);
+  color: var(--rawafid-primary);
 }
 
 .menu-toggle svg {
@@ -390,6 +402,11 @@ ol {
   display: none;
 }
 
+.menu-toggle[aria-expanded="true"] {
+  color: var(--rawafid-primary);
+  background-color: var(--rawafid-primary-soft);
+}
+
 .menu-toggle[aria-expanded="true"] .icon-menu {
   display: none;
 }
@@ -400,7 +417,6 @@ ol {
 
 /* طبقة التعتيم */
 .nav-overlay {
-  display: none;
   position: fixed;
   top: var(--nav-height);
   right: 0;
@@ -408,75 +424,83 @@ ol {
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 /* ------------------------------------------------------------
-   6. التذييل
+   6. التذييل (تصميم مسطح - شبكة روابط نظيفة)
    ------------------------------------------------------------ */
 .site-footer {
   width: 100%;
-  padding: var(--space-md) 0;
-  margin-top: var(--space-xl);
+  margin-top: var(--space-2xl);
   color: var(--rawafid-text);
   background-color: var(--rawafid-surface);
   border-top: 1px solid var(--rawafid-border);
 }
 
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-md);
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl) 0 var(--space-lg);
 }
 
-.footer-brand {
+.footer-col {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-sm);
+  min-width: 0;
 }
 
 .footer-logo {
-  height: 28px;
+  height: 32px;
   width: auto;
+  margin-bottom: var(--space-xs);
 }
 
-.footer-copy {
+.footer-desc {
   font-size: var(--text-sm);
   color: var(--rawafid-text-muted);
+  line-height: 1.8;
+  max-width: 340px;
 }
 
-.footer-links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.footer-links a {
+.footer-col-title {
   font-size: var(--text-sm);
-  font-weight: var(--font-bold);
+  font-weight: var(--font-black);
   color: var(--rawafid-text);
-  padding: 6px 12px;
-  border-radius: 50px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--rawafid-primary);
+  margin-bottom: var(--space-xs);
+  align-self: flex-start;
 }
 
-.footer-links a:hover,
-.footer-links a:focus-visible {
+.footer-col a:not(.whatsapp-btn) {
+  font-size: var(--text-sm);
+  color: var(--rawafid-text-muted);
+  padding: 3px 0;
+  transition: color 0.2s ease;
+}
+
+.footer-col a:not(.whatsapp-btn):hover,
+.footer-col a:not(.whatsapp-btn):focus-visible {
   color: var(--rawafid-primary);
-  background-color: var(--rawafid-primary-soft);
 }
 
 .whatsapp-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   background-color: var(--rawafid-success);
   color: var(--rawafid-white);
-  padding: 8px 14px;
-  border-radius: 50px;
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
   font-weight: var(--font-bold);
+  align-self: flex-start;
   transition: background-color 0.2s ease;
 }
 
@@ -491,16 +515,43 @@ ol {
   fill: currentColor;
 }
 
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--rawafid-border);
+  font-size: var(--text-xs);
+  color: var(--rawafid-text-muted);
+}
+
+.footer-bottom a {
+  color: var(--rawafid-text-muted);
+  font-weight: var(--font-bold);
+  transition: color 0.2s ease;
+}
+
+.footer-bottom a:hover,
+.footer-bottom a:focus-visible {
+  color: var(--rawafid-primary);
+}
+
 /* ------------------------------------------------------------
-   7. تصميم الجوال
+   7. تصميم الجوال (قائمة جانبية مسطحة)
    ------------------------------------------------------------ */
 @media (max-width: 768px) {
   :root {
-    --nav-height: 64px;
+    --nav-height: 60px;
   }
 
   .navbar {
     padding: 0 var(--space-md);
+  }
+
+  .logo img {
+    height: 30px;
   }
 
   .menu-toggle {
@@ -515,37 +566,52 @@ ol {
     position: fixed;
     top: var(--nav-height);
     right: 0;
-    width: min(80%, 300px);
+    width: min(78%, 290px);
     height: calc(100vh - var(--nav-height));
-    background-color: var(--rawafid-primary);
+    height: calc(100dvh - var(--nav-height));
+    background-color: var(--rawafid-surface);
+    border-left: 1px solid var(--rawafid-border);
     flex-direction: column;
     align-items: stretch;
-    padding: var(--space-md);
-    gap: 0;
+    padding: var(--space-md) var(--space-sm);
+    gap: var(--space-xs);
+    overflow-y: auto;
     transform: translateX(100%);
-    transition: transform 0.25s ease;
+    visibility: hidden;
+    transition: transform 0.28s ease, visibility 0.28s ease;
     z-index: 999;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .nav-links.is-open {
     transform: translateX(0);
+    visibility: visible;
   }
 
   .nav-links li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--rawafid-border);
+  }
+
+  .nav-links li:last-child {
+    border-bottom: none;
   }
 
   .nav-links a {
-    padding: var(--space-md) var(--space-sm);
+    padding: 14px 12px;
+    font-size: var(--text-base);
     border-bottom: none;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-links a.active {
+    color: var(--rawafid-primary);
+    background-color: var(--rawafid-primary-soft);
+    border-radius: var(--radius-sm);
   }
 
   .nav-links a:hover,
   .nav-links a:focus-visible {
-    color: var(--rawafid-accent);
-    background-color: rgba(255, 255, 255, 0.06);
-    border-bottom-color: transparent;
+    color: var(--rawafid-primary);
+    background-color: var(--rawafid-primary-soft);
   }
 
   .nav-links .theme-toggle-mobile {
@@ -553,26 +619,51 @@ ol {
     align-items: center;
     gap: var(--space-sm);
     width: 100%;
-    padding: var(--space-md) var(--space-sm);
-    color: var(--rawafid-white);
+    padding: 14px 12px;
+    color: var(--rawafid-text);
+    font-family: inherit;
     font-size: var(--text-base);
-    font-weight: var(--font-medium);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  .nav-overlay.is-visible {
+  .nav-links .theme-toggle-mobile:hover,
+  .nav-links .theme-toggle-mobile:focus-visible {
+    color: var(--rawafid-primary);
+    background-color: var(--rawafid-primary-soft);
+  }
+
+  .theme-toggle-mobile .icon-sun {
+    display: none;
+  }
+
+  [data-theme="dark"] .theme-toggle-mobile .icon-moon {
+    display: none;
+  }
+
+  [data-theme="dark"] .theme-toggle-mobile .icon-sun {
     display: block;
   }
 
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--space-md);
+  .nav-overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
   }
 
-  .footer-brand {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg) 0 var(--space-md);
+  }
+
+  .footer-desc {
+    max-width: none;
+  }
+
+  .footer-bottom {
     flex-direction: column;
-    gap: var(--space-xs);
+    text-align: center;
   }
 }
 

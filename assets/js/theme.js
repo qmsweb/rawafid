@@ -93,7 +93,20 @@
   }
 
   /* ==========================================================
-     3. التهيئة
+     3. تمييز الرابط النشط في القائمة
+     ========================================================== */
+  function markActiveLink() {
+    var path = window.location.pathname.replace(/\/+$/, '') || '/';
+    document.querySelectorAll('.nav-links a').forEach(function (link) {
+      var href = (link.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+      var isActive = href === path || (href !== '/' && path.indexOf(href + '/') === 0);
+      link.classList.toggle('active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'page');
+    });
+  }
+
+  /* ==========================================================
+     4. التهيئة
      ========================================================== */
   function init() {
     var saved = null;
@@ -106,6 +119,7 @@
     });
 
     initMobileMenu();
+    markActiveLink();
   }
 
   if (document.readyState === 'loading') {

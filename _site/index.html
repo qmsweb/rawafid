@@ -10,6 +10,9 @@
   <link rel="icon" href="/images/favicon.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+  <link rel="preload" as="fetch" href="/assets/data/materials.json" crossorigin>
+  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin>
+
   <meta property="og:title" content="روافد - الذكرى السنوية الأولى">
   <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
@@ -381,13 +384,31 @@
       margin-inline-end: 3px;
     }
 
-    /* التحميل */
-    #main-content-area {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+    /* === التحميل === */
+    /* المحتوى الأساسي يظهر فوراً، وحالة التحميل موضعية داخل قسم المقررات فقط */
+    .courses-loading-state {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: var(--space-xl);
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
     }
 
-    #main-content-area.loaded { opacity: 1; }
+    .courses-loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--rawafid-border);
+      border-top-color: var(--rawafid-primary);
+      border-radius: 50%;
+      animation: courses-spin 0.75s linear infinite;
+    }
+
+    @keyframes courses-spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* تخطيط الشاشات الكبيرة: الأدوات في الشريط الجانبي */
     @media (min-width: 992px) {
@@ -534,21 +555,21 @@
 </head>
 <body>
 
-  <!-- === مكون التحميل الموحد === -->
+  <!-- === مكون التحميل الموحد (يغطي المحتوى فقط ويبقي الترويسة مرئية) === -->
 <style>
   #rawafid-loading-overlay {
     position: fixed;
-    top: 0;
+    top: var(--nav-height, 70px);
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 99999;
+    z-index: 900;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    background: var(--rawafid-bg, #f4f6fb);
+    gap: 16px;
+    background: var(--rawafid-surface, #ffffff);
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
 
@@ -558,14 +579,10 @@
     pointer-events: none;
   }
 
-  [data-theme="dark"] #rawafid-loading-overlay {
-    background: var(--rawafid-bg, #121212);
-  }
-
   .rawafid-loader-spinner {
-    width: 44px;
-    height: 44px;
-    border: 3.5px solid var(--rawafid-border, #ccd1e0);
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--rawafid-border, #ccd1e0);
     border-top-color: var(--rawafid-primary, #1a2ac6);
     border-radius: 50%;
     animation: rawafid-spin 0.75s linear infinite;
@@ -604,9 +621,15 @@
     0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
     40% { transform: scale(1); opacity: 1; }
   }
+
+  @media (max-width: 768px) {
+    #rawafid-loading-overlay {
+      top: var(--nav-height, 60px);
+    }
+  }
 </style>
 
-<div id="rawafid-loading-overlay">
+<div id="rawafid-loading-overlay" role="status" aria-live="polite" aria-label="جاري التحميل">
   <div class="rawafid-loader-spinner"></div>
   <div class="rawafid-loader-text">
     جاري التحميل
@@ -626,12 +649,20 @@
     var overlay = document.getElementById('rawafid-loading-overlay');
     if (overlay) overlay.classList.remove('hidden');
   }
+
+  /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
+  setTimeout(rawafidHideLoader, 6000);
+
+  /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) rawafidHideLoader();
+  });
 </script>
 
   <header class="site-header">
   <nav class="navbar" aria-label="التنقل الرئيسي">
-    <a href="/" class="logo">
-      <img src="/images/rawafid-1.png" alt="شعار روافد" width="120" height="36" loading="eager">
+    <a href="/" class="logo" aria-label="روافد - الصفحة الرئيسية">
+      <img src="/images/rawafid-blue.png" alt="شعار روافد" width="120" height="36" loading="eager">
     </a>
 
     <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
@@ -795,7 +826,10 @@
                 <div class="filter-bar" id="filter-bar"></div>
               </div>
               <div class="courses-container" id="courses-container">
-                <p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">جاري تحميل المقررات...</p>
+                <div class="courses-loading-state">
+                  <div class="courses-loading-spinner"></div>
+                  <span>جاري تحميل المقررات...</span>
+                </div>
               </div>
             </section>
 
@@ -888,23 +922,39 @@
 
   <footer class="site-footer">
   <div class="container">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <img src="/images/jassim-logo.png" alt="" class="footer-logo" loading="lazy" width="40" height="40">
-        <span class="footer-copy">&copy; 2026 جاسم الفارسي · جميع الحقوق محفوظة</span>
+    <div class="footer-grid">
+
+      <div class="footer-col">
+        <img src="/images/rawafid-blue.png" alt="شعار روافد" class="footer-logo" width="120" height="32" loading="lazy">
+        <p class="footer-desc">منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية: مقررات دراسية، أدوات تعليمية، مدونة وتقويم أكاديمي.</p>
       </div>
 
-      <nav class="footer-links" aria-label="روابط التذييل">
+      <nav class="footer-col" aria-label="روابط سريعة">
+        <h3 class="footer-col-title">روابط سريعة</h3>
         <a href="/">الرئيسية</a>
-        <a href="/about">عن روافد</a>
+        <a href="/blog">المدونة</a>
+        <a href="/tools">الأدوات</a>
+        <a href="/search">البحث</a>
       </nav>
 
-      <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn" target="_blank" rel="noopener" aria-label="انضم لقناتنا على واتساب">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-        </svg>
-        <span>قناتنا</span>
-      </a>
+      <div class="footer-col">
+        <h3 class="footer-col-title">عن المنصة</h3>
+        <a href="/about">عن روافد</a>
+        <a href="/contact">تواصل معنا</a>
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" target="_blank" rel="noopener">قناة واتساب</a>
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn" target="_blank" rel="noopener" aria-label="انضم لقناتنا على واتساب">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          <span>انضم لقناتنا</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 روافد · جميع الحقوق محفوظة</span>
+      <span>تطوير <a href="/about">جاسم الفارسي</a></span>
     </div>
   </div>
 </footer>
@@ -914,74 +964,131 @@
 
   <script>
     /* === المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
-    let allCourses = [];
-    let currentFilter = 'all';
+    var allCourses = [];
+    var currentFilter = 'all';
 
-    function renderCourses() {
-      const container = document.getElementById('courses-container');
-      if (!container) return;
+    var MATERIALS_URL = "/assets/data/materials.json";
+    var AUTHORS_URL = "/assets/blogdata/authors.json";
+    var COURSE_BASE = "/course";
 
-      const filtered = currentFilter === 'all' ? allCourses : allCourses.filter(c => c.type === currentFilter);
-
-      container.innerHTML = '';
-      if (filtered.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">لا توجد مقررات في هذا التصنيف.</p>';
-        return;
+    /* جلب JSON بشكل موثوق: يتحقق من نجاح الاستجابة، ويعيد المحاولة من ذاكرة التخزين عند فشل الشبكة */
+    function fetchJSON(url) {
+      function parse(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+        return res.json();
       }
-
-      filtered.forEach(item => {
-        const card = document.createElement('a');
-        card.className = 'course-card';
-        card.href = "/course/" + encodeURIComponent(item.code);
-        const iconColor = item.color || '#1a2ac6';
-        const iconClass = item.icon || 'fa-book';
-        const iconBg = iconColor + '15';
-        card.innerHTML = `
-          <div class="course-card-icon" style="color: ${iconColor}; background-color: ${iconBg};">
-            <i class="fas ${iconClass}"></i>
-          </div>
-          <div class="course-card-info">
-            <div class="course-card-name">${item.name}</div>
-            <span class="course-card-code">${item.code}</span>
-          </div>
-        `;
-        container.appendChild(card);
+      return fetch(url, { cache: 'no-cache' }).then(parse).catch(function () {
+        return fetch(url, { cache: 'force-cache' }).then(parse);
       });
     }
 
+    function normalizeCourses(data) {
+      if (Array.isArray(data)) return data;
+      if (data && Array.isArray(data.courses)) return data.courses;
+      if (data && Array.isArray(data.materials)) return data.materials;
+      return [];
+    }
+
+    function escapeHTML(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function showCoursesMessage(text, withRetry) {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+      container.innerHTML = '';
+      var box = document.createElement('div');
+      box.className = 'courses-loading-state';
+      var msg = document.createElement('span');
+      msg.textContent = text;
+      box.appendChild(msg);
+      if (withRetry) {
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.type = 'button';
+        btn.textContent = 'إعادة المحاولة';
+        btn.addEventListener('click', loadCourses);
+        box.appendChild(btn);
+      }
+      container.appendChild(box);
+    }
+
+    function renderCourses() {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+
+      var filtered = currentFilter === 'all'
+        ? allCourses
+        : allCourses.filter(function (c) { return c.type === currentFilter; });
+
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        showCoursesMessage('لا توجد مقررات في هذا التصنيف.', false);
+        return;
+      }
+
+      /* بناء البطاقات دفعة واحدة عبر Fragment لسرعة العرض */
+      var fragment = document.createDocumentFragment();
+      filtered.forEach(function (item) {
+        var card = document.createElement('a');
+        card.className = 'course-card';
+        card.href = COURSE_BASE + '/' + encodeURIComponent(item.code);
+        var iconColor = item.color || '#1a2ac6';
+        var iconClass = item.icon || 'fa-book';
+        var iconBg = iconColor + '15';
+        card.innerHTML =
+          '<div class="course-card-icon" style="color: ' + iconColor + '; background-color: ' + iconBg + ';">' +
+            '<i class="fas ' + escapeHTML(iconClass) + '"></i>' +
+          '</div>' +
+          '<div class="course-card-info">' +
+            '<div class="course-card-name">' + escapeHTML(item.name) + '</div>' +
+            '<span class="course-card-code">' + escapeHTML(item.code) + '</span>' +
+          '</div>';
+        fragment.appendChild(card);
+      });
+      container.appendChild(fragment);
+    }
+
     function createFilters(courses) {
-      const filterBar = document.getElementById('filter-bar');
+      var filterBar = document.getElementById('filter-bar');
       if (!filterBar) return;
       filterBar.innerHTML = '';
 
-      const viewToggle = document.createElement('div');
+      var viewToggle = document.createElement('div');
       viewToggle.className = 'view-toggle';
-      viewToggle.innerHTML = `<i class="fas fa-list" id="list-view" title="قائمة"></i><i class="fas fa-th-large" id="grid-view" title="شبكة"></i>`;
+      viewToggle.innerHTML = '<i class="fas fa-list" id="list-view" title="قائمة" role="button" tabindex="0"></i><i class="fas fa-th-large" id="grid-view" title="شبكة" role="button" tabindex="0"></i>';
       filterBar.appendChild(viewToggle);
 
-      const divider = document.createElement('div');
+      var divider = document.createElement('div');
       divider.className = 'filter-divider';
       filterBar.appendChild(divider);
 
-      const types = [...new Set(courses.map(c => c.type))];
+      var types = [];
+      courses.forEach(function (c) {
+        if (c.type && types.indexOf(c.type) === -1) types.push(c.type);
+      });
       types.unshift('all');
-      types.forEach(type => {
-        const filterBtn = document.createElement('div');
+
+      types.forEach(function (type) {
+        var filterBtn = document.createElement('div');
         filterBtn.className = 'filter-item';
         filterBtn.textContent = type === 'all' ? 'الكل' : type;
         filterBtn.setAttribute('role', 'button');
         filterBtn.setAttribute('tabindex', '0');
-        if (type === 'all') filterBtn.classList.add('active');
+        if (type === currentFilter) filterBtn.classList.add('active');
 
         function activate() {
-          document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
+          filterBar.querySelectorAll('.filter-item').forEach(function (btn) { btn.classList.remove('active'); });
           filterBtn.classList.add('active');
           currentFilter = type;
           renderCourses();
         }
 
         filterBtn.addEventListener('click', activate);
-        filterBtn.addEventListener('keydown', function(e) {
+        filterBtn.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             activate();
@@ -990,11 +1097,11 @@
         filterBar.appendChild(filterBtn);
       });
 
-      const container = document.getElementById('courses-container');
-      const gridBtn = viewToggle.querySelector('#grid-view');
-      const listBtn = viewToggle.querySelector('#list-view');
+      var container = document.getElementById('courses-container');
+      var gridBtn = viewToggle.querySelector('#grid-view');
+      var listBtn = viewToggle.querySelector('#list-view');
 
-      function setView(mode, save = true) {
+      function setView(mode, save) {
         if (mode === 'grid') {
           container.classList.add('grid-view');
           gridBtn.classList.add('active');
@@ -1004,49 +1111,55 @@
           listBtn.classList.add('active');
           gridBtn.classList.remove('active');
         }
-        if (save) localStorage.setItem('rawafed-courses-view', mode);
+        if (save) {
+          try { localStorage.setItem('rawafed-courses-view', mode); } catch (e) {}
+        }
       }
 
-      gridBtn.addEventListener('click', () => setView('grid'));
-      listBtn.addEventListener('click', () => setView('list'));
-      const savedMode = localStorage.getItem('rawafed-courses-view');
+      gridBtn.addEventListener('click', function () { setView('grid', true); });
+      listBtn.addEventListener('click', function () { setView('list', true); });
+
+      var savedMode = null;
+      try { savedMode = localStorage.getItem('rawafed-courses-view'); } catch (e) {}
       setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
     }
 
-    /* === أسماء المؤلفين في بطاقات المدونة === */
+    function loadCourses() {
+      showCoursesMessage('جاري تحميل المقررات...', false);
+      return fetchJSON(MATERIALS_URL)
+        .then(function (data) {
+          allCourses = normalizeCourses(data);
+          renderCourses();
+          createFilters(allCourses);
+        })
+        .catch(function (err) {
+          console.error('Courses load error:', err);
+          showCoursesMessage('تعذر تحميل المقررات. تحقق من الاتصال بالإنترنت.', true);
+        });
+    }
+
+    /* === أسماء المؤلفين في بطاقات المدونة (مستقل عن تحميل المقررات) === */
     function resolveAuthors(authorData) {
-      const authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
+      var authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
       if (!authors.length) return;
-      document.querySelectorAll('[data-author-uid]').forEach(span => {
-        const uid = span.getAttribute('data-author-uid');
-        const author = authors.find(a => a.uid === uid);
-        const nameEl = span.querySelector('.author-name');
+      document.querySelectorAll('[data-author-uid]').forEach(function (span) {
+        var uid = span.getAttribute('data-author-uid');
+        var author = authors.find(function (a) { return a.uid === uid; });
+        var nameEl = span.querySelector('.author-name');
         if (author && nameEl) nameEl.textContent = author.name;
       });
     }
 
-    /* === التحميل المتزامن === */
-    document.addEventListener('DOMContentLoaded', () => {
-      const mainArea = document.getElementById('main-content-area');
+    function loadAuthors() {
+      fetchJSON(AUTHORS_URL).then(resolveAuthors).catch(function () { /* غير حرج */ });
+    }
 
-      Promise.all([
-        fetch("/assets/data/materials.json").then(res => res.json()),
-        fetch("/assets/blogdata/authors.json", { cache: 'no-store' }).then(res => res.json()).catch(() => null)
-      ])
-      .then(([materialsData, authorData]) => {
-        allCourses = materialsData || [];
-        renderCourses();
-        createFilters(allCourses);
-        resolveAuthors(authorData);
-        mainArea.classList.add('loaded');
-        rawafidHideLoader();
-      })
-      .catch(err => {
-        console.error("Critical Load Error:", err);
-        renderCourses();
-        mainArea.classList.add('loaded');
-        rawafidHideLoader();
-      });
+    /* === التشغيل === */
+    document.addEventListener('DOMContentLoaded', function () {
+      /* إخفاء شاشة التحميل العامة فوراً: الترويسة والمحتوى الثابت مرئية، والتحميل موضعي داخل قسم المقررات */
+      if (typeof rawafidHideLoader === 'function') rawafidHideLoader();
+      loadCourses();
+      loadAuthors();
     });
   </script>
 
