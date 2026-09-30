@@ -163,10 +163,12 @@ body.documentary-body {
 }
 
 .hero-kicker {
+  position: absolute;
+  z-index: 3;
+  top: clamp(16px, 4cqh, 28px);
+  right: clamp(18px, 4vw, 54px);
   display: -webkit-box;
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 0 18px;
+  max-width: calc(100% - 36px);
   padding: 7px 14px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.28);
@@ -188,7 +190,7 @@ body.documentary-body {
   max-height: min(180px, 30cqh);
   margin: 0 auto 14px;
   object-fit: contain;
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
+  filter: brightness(0) invert(1) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.55));
 }
 
 .hero-title {
@@ -636,7 +638,8 @@ body.documentary-body {
 
 @container (max-height: 460px) {
   .hero-kicker {
-    margin-bottom: 10px;
+    top: 12px;
+    padding: 6px 12px;
   }
 
   .hero-description,
