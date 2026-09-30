@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/design-system.css' | relative_url }}" />
   <title>{{ page.title | default: "روافد" }}</title>
 
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
-  <link rel="stylesheet" href="{{ '/topbar.css' | relative_url }}">
-
-  <meta property="og:title" content="{{ page.og_title | default: 'المقررات - روافد' }}" id="og-title">
+<meta property="og:title" content="{{ page.og_title | default: 'المقررات - روافد' }}" id="og-title">
   <meta property="og:description" content="{{ page.og_description | default: 'تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.' }}" id="og-description">
   <meta property="og:image" content="{{ page.og_image | default: '/images/cover2.png' | absolute_url }}" id="og-image">
   <meta property="og:url" content="{{ page.url | absolute_url }}" id="og-url">
@@ -734,6 +732,8 @@ if (shareButton) {
   });
 }
 </script>
+
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
 
 </body>
 </html>

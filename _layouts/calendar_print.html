@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/design-system.css' | relative_url }}" />
   <title>{{ page.title | default: "التقويم الأكاديمي - نسخة الطباعة" }}</title>
 
   <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
@@ -288,5 +289,7 @@
 
     document.addEventListener('DOMContentLoaded', initPrint);
   </script>
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
+
 </body>
 </html>

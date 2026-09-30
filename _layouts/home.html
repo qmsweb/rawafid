@@ -6,7 +6,8 @@
   <title>{{ page.title | default: "منصة روافد التعليمية" }}</title>
 
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
-  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="{{ '/assets/css/design-system.css' | relative_url }}" />
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <meta property="og:title" content="{{ page.title | default: 'منصة روافد التعليمية' }}">
@@ -23,425 +24,590 @@
   </script>
 
   <style>
-    /* === المتغيرات === */
-    :root {
-      --primary-color: #1a2ac6;
-      --primary-dark: #14209e;
-      --primary-light-bg: #eff1ff;
-      --bg-body: #f4f6fb;
-      --bg-card: #ffffff;
-      --border-color: #ccd1e0;
-      --text-main: #2d2d2d;
-      --text-muted: #666666;
-      --bg-code: #f4f6fb;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-      --hover-shadow: 0 15px 30px -5px rgba(26, 42, 198, 0.12);
-      --radius-md: 16px;
-    }
+    /* === أنماط خاصة بالصفحة الرئيسية === */
 
-    [data-theme="dark"] {
-      --primary-color: #7986cb;
-      --primary-dark: #5c6bc0;
-      --primary-light-bg: #282a36;
-      --bg-body: #121212;
-      --bg-card: #1e1e1e;
-      --border-color: #333333;
-      --text-main: #e0e0e0;
-      --text-muted: #a0a0a0;
-      --bg-code: #2c2c2c;
-      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-      --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
-    }
+    /* بطاقة الذكرى السنوية */
+    .hero-section { margin-top: var(--space-lg); }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; -webkit-tap-highlight-color: transparent; }
-
-    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; padding-bottom: 0; transition: background-color 0.3s ease, color 0.3s ease; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-
-    /* === نظام التحميل الموحد === */
-    #main-content-area { opacity: 0; transition: opacity 0.5s ease-in-out; }
-    #main-content-area.loaded { opacity: 1; }
-
-    /* === بطاقة الذكرى السنوية === */
-    .anniversary-hero { margin-top: 20px; }
-    .anniversary-card {
+    .hero-card {
       position: relative;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-      color: #ffffff;
-      border-radius: 20px;
-      padding: 30px 32px;
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
       display: flex;
       align-items: center;
-      gap: 22px;
-      overflow: hidden;
-      box-shadow: var(--hover-shadow);
+      gap: var(--space-lg);
+      border: 1px solid var(--rawafid-primary-dark);
     }
-    .anniversary-card::before,
-    .anniversary-card::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .anniversary-card::before { width: 220px; height: 220px; top: -80px; left: -60px; }
-    .anniversary-card::after { width: 140px; height: 140px; bottom: -50px; right: 15%; }
 
-    .anniversary-icon {
+    .hero-icon {
       flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
     }
-    .anniversary-icon img {
-      width: 180px;
+
+    .hero-icon img {
+      width: 160px;
       height: auto;
-      max-width: 100%;
       object-fit: contain;
     }
 
-    .anniversary-content { flex: 1; min-width: 0; }
+    .hero-content { flex: 1; min-width: 0; }
 
-    .anniversary-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255, 255, 255, 0.16);
-      border-radius: 50px;
-      padding: 5px 14px;
-      font-size: 0.78rem; font-weight: 700;
-      margin-bottom: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-black);
+      line-height: 1.4;
+      margin-top: var(--space-sm);
+      margin-bottom: var(--space-sm);
     }
 
-    .anniversary-title {
-      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
-      font-weight: 900;
-      font-feature-settings: "ss01";
-      font-size: 1.45rem; margin-bottom: 8px; line-height: 1.5;
+    .hero-text {
+      font-size: var(--text-base);
+      line-height: 1.8;
+      opacity: 0.95;
+      max-width: 620px;
     }
 
-    .anniversary-text { font-size: 0.95rem; line-height: 1.9; opacity: 0.95; max-width: 620px; }
-
-    .anniversary-num {
-      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
-      font-size: 5.5rem; font-weight: 800;
-      opacity: 0.18;
+    .hero-num {
+      font-family: var(--font-heading);
+      font-size: 5rem;
+      font-weight: var(--font-black);
+      opacity: 0.15;
       line-height: 1;
       flex-shrink: 0;
       user-select: none;
     }
 
-    /* === الأقسام === */
-    .home-section { margin-top: 32px; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-    .section-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); border-right: 4px solid var(--primary-color); padding-right: 12px; display: flex; align-items: center; gap: 8px; }
-    .section-title i { color: var(--primary-color); }
+    /* تخطيط الصفحة الرئيسية */
+    .home-layout {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    /* الأدوات */
+    .tools-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .tool-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+      text-decoration: none;
+      text-align: center;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .tool-card:hover,
+    .tool-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .tool-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .tool-card:hover .tool-card-icon,
+    .tool-card:focus-visible .tool-card-icon {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+    }
+
+    .tool-card-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text);
+    }
+
+    /* المقررات */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+    }
 
     .view-more-btn {
-      display: inline-flex; align-items: center; gap: 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 700; font-size: 0.85rem;
-      padding: 8px 18px;
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
+      font-size: var(--text-sm);
+      padding: 8px 16px;
       border-radius: 50px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: all 0.3s ease;
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
-    .view-more-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
-    .view-more-btn i { font-size: 0.8rem; }
 
-    /* === الأدوات === */
-    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .tool-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 22px 14px;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-      text-decoration: none; text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
+    .view-more-btn:hover,
+    .view-more-btn:focus-visible {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
     }
-    .tool-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
-    @media (min-width: 769px) {
-      .tools-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-      .tool-card {
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        padding: 9px 16px;
-        border-radius: 23px;
-        text-align: right;
-      }
-      .tool-card:hover { transform: translateY(-2px); }
-      .tool-card .tool-card-icon { width: 32px; height: 32px; font-size: 0.9rem; border-radius: 50%; flex-shrink: 0; }
-      .tool-card-name { font-size: 0.85rem; white-space: nowrap; }
-    }
-    .tool-card .tool-card-icon {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: var(--primary-light-bg); color: var(--primary-color);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      transition: 0.3s ease;
-    }
-    .tool-card:hover .tool-card-icon { background: var(--primary-color); color: #fff; }
-    .tool-card-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 
-    /* === المدونة === */
-    .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .blog-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      text-decoration: none; color: var(--text-main);
-      display: flex; flex-direction: column;
-      transition: all 0.3s ease;
+    .sticky-filter-container {
+      position: sticky;
+      top: var(--nav-height);
+      z-index: 90;
+      margin-bottom: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--rawafid-border);
+      background: var(--rawafid-bg);
     }
-    .blog-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
-    .blog-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--bg-code); }
-    .blog-card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-    .blog-card-title { font-size: 0.98rem; font-weight: 800; line-height: 1.6; }
-    .blog-card:hover .blog-card-title { color: var(--primary-color); }
-    .blog-card-meta { margin-top: auto; font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
-    .blog-card-meta i { color: var(--primary-color); margin-inline-end: 3px; }
 
-    /* === المقررات === */
-    .course-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px 16px;
-      display: flex; align-items: center; gap: 14px;
-      text-decoration: none; color: var(--text-main);
-      transition: all 0.3s ease;
-      cursor: pointer;
+    .filter-bar {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
     }
-    .course-card:hover { transform: translateY(-4px); border-color: var(--primary-color); box-shadow: var(--hover-shadow); }
-    .course-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-    .course-card-info { min-width: 0; }
-    .course-card-name { font-size: 0.92rem; font-weight: 700; font-feature-settings: "ss01"; line-height: 1.4; }
-    .course-card-code { font-size: 0.78rem; color: var(--text-muted); background: var(--bg-code); display: inline-block; padding: 2px 8px; border-radius: 6px; margin-top: 5px; border: 1px solid var(--border-color); }
 
-    /* === شريط الفلاتر === */
-    .sticky-filter-container { position: sticky; top: 70px; z-index: 90; margin-bottom: 20px; padding: 10px 0; border-bottom: 1px solid var(--border-color); backdrop-filter: blur(5px); background: var(--bg-body); }
-    @media (min-width: 769px) {
-      .sticky-filter-container { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
-    }
-    .filter-bar { display: flex; gap: 10px; align-items: center; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; overscroll-behavior-x: contain; }
     .filter-bar::-webkit-scrollbar { display: none; }
 
-    .view-toggle { display: flex; gap: 5px; background: var(--bg-card); padding: 4px; border-radius: 50px; border: 1px solid var(--border-color); flex-shrink: 0; }
-    .view-toggle i { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1rem; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; touch-action: manipulation; }
-    .view-toggle i.active { background-color: var(--primary-light-bg); color: var(--primary-color); }
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--rawafid-surface);
+      padding: 4px;
+      border-radius: 50px;
+      border: 1px solid var(--rawafid-border);
+      flex-shrink: 0;
+    }
 
-    .filter-divider { width: 1px; height: 20px; background: var(--border-color); margin: 0 10px; flex-shrink: 0; }
+    .view-toggle i {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: var(--text-base);
+      color: var(--rawafid-text-muted);
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      touch-action: manipulation;
+    }
 
-    .filter-item { flex: 0 0 auto; padding: 8px 20px; border-radius: 50px; background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s ease; }
-    .filter-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
-    .filter-item.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-    .filter-item.active:hover { color: #fff; }
+    .view-toggle i.active {
+      background-color: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+    }
 
-    /* === حاوية المقررات مع دعم عرض الشبكة/القائمة === */
-    .courses-container { display: flex; flex-direction: column; gap: 14px; }
-    .courses-container.grid-view { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .filter-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--rawafid-border);
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
 
-    .courses-container .course-card { width: auto; }
+    .filter-item {
+      flex: 0 0 auto;
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: var(--rawafid-surface);
+      color: var(--rawafid-text-muted);
+      font-weight: var(--font-bold);
+      font-size: var(--text-sm);
+      border: 1px solid var(--rawafid-border);
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    }
 
-    /* === تخطيط الشاشات الكبيرة: الأدوات ثابتة يمينًا === */
+    .filter-item:hover,
+    .filter-item:focus-visible {
+      border-color: var(--rawafid-primary);
+      color: var(--rawafid-primary);
+    }
+
+    .filter-item.active {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .courses-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .courses-container.grid-view {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .course-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      text-decoration: none;
+      color: var(--rawafid-text);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .course-card:hover,
+    .course-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .course-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .course-card-info { min-width: 0; }
+
+    .course-card-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      line-height: 1.4;
+    }
+
+    .course-card-code {
+      font-size: var(--text-xs);
+      color: var(--rawafid-text-muted);
+      background: var(--rawafid-bg);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 5px;
+      border: 1px solid var(--rawafid-border);
+    }
+
+    /* المدونة */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .blog-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--rawafid-text);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .blog-card:hover,
+    .blog-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .blog-card:hover .blog-card-title,
+    .blog-card:focus-visible .blog-card-title {
+      color: var(--rawafid-primary);
+    }
+
+    .blog-card-cover {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: var(--rawafid-bg);
+    }
+
+    .blog-card-body {
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      flex: 1;
+    }
+
+    .blog-card-title {
+      font-size: var(--text-base);
+      font-weight: var(--font-bold);
+      line-height: 1.5;
+      transition: color 0.2s ease;
+    }
+
+    .blog-card-meta {
+      margin-top: auto;
+      font-size: var(--text-xs);
+      color: var(--rawafid-text-muted);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .blog-card-meta i {
+      color: var(--rawafid-primary);
+      margin-inline-end: 3px;
+    }
+
+    /* التحميل */
+    #main-content-area {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    #main-content-area.loaded { opacity: 1; }
+
+    /* تخطيط الشاشات الكبيرة: الأدوات في الشريط الجانبي */
     @media (min-width: 992px) {
-      .container { max-width: 1360px; }
-      .site-footer .footer-container { max-width: 1360px; }
+      .container { max-width: var(--container-wide); }
 
-      #main-content-area {
+      .home-layout {
         display: grid;
         grid-template-columns: 260px minmax(0, 1fr);
-        column-gap: 32px;
-        grid-template-areas:
-          "anniversary anniversary"
-          "tools main";
+        column-gap: var(--space-xl);
         align-items: start;
       }
 
-      .anniversary-hero { grid-area: anniversary; }
-
-      #tools {
-        grid-area: tools;
+      .home-sidebar {
         position: sticky;
-        top: calc(var(--nav-height) + 16px);
+        top: calc(var(--nav-height) + var(--space-md));
       }
 
-      #tools .section-head { margin-bottom: 10px; gap: 8px; flex-wrap: nowrap; }
-      #tools .view-more-btn { padding: 6px 12px; font-size: 0.75rem; gap: 5px; }
+      .home-sidebar .tools-list {
+        grid-template-columns: 1fr;
+      }
 
-      #tools .tools-grid { flex-direction: column; align-items: stretch; gap: 6px; }
-      #tools .tool-card { width: 100%; justify-content: flex-start; padding: 6px 12px; gap: 8px; border-radius: 12px; }
-      #tools .tool-card .tool-card-icon { width: 26px; height: 26px; font-size: 0.75rem; border-radius: 50%; }
-      #tools .tool-card-name { font-size: 0.78rem; }
+      .home-sidebar .tool-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 10px 12px;
+        gap: 10px;
+        text-align: right;
+      }
 
-      .home-main { grid-area: main; min-width: 0; }
+      .home-sidebar .tool-card-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
 
-      .sticky-filter-container { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+      .home-sidebar .tool-card-name {
+        font-size: var(--text-sm);
+      }
     }
 
-    /* === الاستجابة === */
+    /* الاستجابة */
     @media (max-width: 820px) {
-      .tools-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
+      .tools-list,
+      .blog-grid { grid-template-columns: repeat(2, 1fr); }
+
       .courses-container.grid-view { grid-template-columns: repeat(2, 1fr); }
     }
+
     @media (max-width: 600px) {
-      .anniversary-card { flex-direction: column; text-align: center; gap: 16px; padding: 26px 18px; }
-      .anniversary-icon { font-size: 1.3rem; }
-      .anniversary-icon img { width: 150px; }
-      .anniversary-title { font-size: 1.2rem; }
-      .anniversary-text { font-size: 0.9rem; }
-      .anniversary-num { position: absolute; bottom: 8px; left: 14px; font-size: 4rem; }
-      .section-head { margin-bottom: 14px; }
+      .hero-card {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-md);
+      }
 
-      /* الأدوات: شبكة مصغّرة من 3 أعمدة */
-      .tools-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .tool-card { padding: 12px 6px; gap: 8px; }
-      .tool-card .tool-card-icon { width: 42px; height: 42px; font-size: 1rem; }
-      .tool-card-name { font-size: 0.72rem; }
+      .hero-icon img { width: 130px; }
+      .hero-title { font-size: var(--text-xl); }
+      .hero-num {
+        position: absolute;
+        bottom: 8px;
+        left: 14px;
+        font-size: 3.5rem;
+      }
 
-      /* المدونة: بطاقات شبكية صغيرة بدون غلاف */
-      .blog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .tools-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-sm);
+      }
+
+      .tool-card { padding: var(--space-sm) 4px; }
+      .tool-card-icon { width: 44px; height: 44px; font-size: 1.1rem; }
+      .tool-card-name { font-size: var(--text-xs); }
+
+      .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+      }
+
       .blog-card-cover { display: none; }
-      .blog-card-body { padding: 10px 12px; gap: 6px; }
-      .blog-card-title { font-size: 0.86rem; }
-      .blog-card-meta { font-size: 0.7rem; gap: 8px; }
+      .blog-card-body { padding: var(--space-sm); }
+      .blog-card-title { font-size: var(--text-sm); }
+      .blog-card-meta { font-size: var(--text-xs); }
 
-      /* المقررات: شبكات على الجوال */
-      .courses-container.grid-view { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-      .course-card { padding: 14px 12px; }
+      .courses-container.grid-view { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .course-card { padding: var(--space-sm); }
+      .course-card-icon { width: 40px; height: 40px; }
     }
   </style>
   {% include seo.html %}
 </head>
 <body>
 
-  {% include header.html %}
   {% include loading.html %}
+  {% include header.html %}
 
-  <div class="container">
+  <main class="page-main">
+    <div class="container">
 
-    {{ content }}
+      {{ content }}
 
-    <div id="main-content-area">
+      <div id="main-content-area">
 
-      <!-- === بطاقة الذكرى السنوية الأولى === -->
-      <section class="anniversary-hero">
-        <div class="anniversary-card">
-          <div class="anniversary-icon">
-            <img src="{{ 'images/rawafid-one.png' | relative_url }}" alt="شعار الذكرى السنوية الأولى">
+        <!-- بطاقة الذكرى السنوية -->
+        <section class="hero-section" aria-labelledby="hero-title">
+          <div class="hero-card">
+            <div class="hero-icon">
+              <img src="{{ '/images/rawafid-one.png' | relative_url }}" alt="">
+            </div>
+            <div class="hero-content">
+              <span class="badge"><i class="fas fa-trophy" aria-hidden="true"></i> عامنا الأول</span>
+              <h1 id="hero-title" class="hero-title">الذكرى السنوية الأولى لانطلاقة روافد</h1>
+              <p class="hero-text">عام من العطاء.. شكرًا لكل من ساهم في نموّنا، ونعدكم بمواصلة المسير.</p>
+            </div>
+            <div class="hero-num" aria-hidden="true">1</div>
           </div>
-          <div class="anniversary-content">
-            <span class="anniversary-badge"><i class="fas fa-trophy"></i> عامنا الأول</span>
-            <h2 class="anniversary-title">الذكرى السنوية الأولى لانطلاقة روافد</h2>
-            <p class="anniversary-text">عام من العطاء.. شكرًا لكل من ساهم في نموّنا، ونعدكم بمواصلة المسير.</p>
-          </div>
-          <div class="anniversary-num">1</div>
-        </div>
-      </section>
+        </section>
 
-      <!-- === الأدوات === -->
-      <section class="home-section" id="tools">
-        <div class="section-head">
-          <h3 class="section-title"><i class="fas fa-wrench"></i> الأدوات</h3>
-          <a href="{{ '/tools' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left"></i></a>
-        </div>
-        <div class="tools-grid">
-          {% for tool in site.data.tools.tools %}
-            {% if tool.show_on_home %}
-          <a class="tool-card" href="{{ tool.url | relative_url }}">
-            <div class="tool-card-icon"><i class="{{ tool.icon }}"></i></div>
-            <div class="tool-card-name">{{ tool.name }}</div>
-          </a>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </section>
+        <div class="home-layout">
 
-      <div class="home-main">
-
-      <!-- === المقررات === -->
-      <section class="home-section" id="courses">
-        <div class="section-head">
-          <h3 class="section-title"><i class="fas fa-book-open"></i> المقررات</h3>
-        </div>
-        <div class="sticky-filter-container">
-          <div class="filter-bar" id="filter-bar"></div>
-        </div>
-        <div class="courses-container" id="courses-container">
-          <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل المقررات...</div>
-        </div>
-      </section>
-
-      <!-- === المدونة === -->
-      {% assign blog_posts = site.posts | where: "visible", true | limit: 3 %}
-      <section class="home-section" id="blog">
-        <div class="section-head">
-          <h3 class="section-title"><i class="fas fa-newspaper"></i> المدونة</h3>
-          <a href="{{ '/blog' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left"></i></a>
-        </div>
-        <div class="blog-grid">
-          {% if blog_posts.size > 0 %}
-            {% for post in blog_posts %}
-              {% capture mini_cover %}
-                {% if post.cover_image %}
-                  {{ post.cover_image }}
-                {% else %}
-                  {% assign img_parts = post.content | split: '![' %}
-                  {% if img_parts.size > 1 %}
-                    {% assign img_part = img_parts[1] | split: '](' %}
-                    {% if img_part.size > 1 %}
-                      {{ img_part[1] | split: ')' | first | strip }}
-                    {% endif %}
+          <!-- الأدوات -->
+          <aside class="home-sidebar" aria-labelledby="tools-title">
+            <section class="section" id="tools">
+              <div class="section-head">
+                <h2 id="tools-title" class="section-title"><i class="fas fa-wrench" aria-hidden="true"></i> الأدوات</h2>
+                <a href="{{ '/tools' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+              </div>
+              <div class="tools-list">
+                {% for tool in site.data.tools.tools %}
+                  {% if tool.show_on_home %}
+                    <a class="tool-card" href="{{ tool.url | relative_url }}">
+                      <div class="tool-card-icon"><i class="{{ tool.icon }}"></i></div>
+                      <div class="tool-card-name">{{ tool.name }}</div>
+                    </a>
                   {% endif %}
-                {% endif %}
-              {% endcapture %}
+                {% endfor %}
+              </div>
+            </section>
+          </aside>
 
-              <a class="blog-card" href="{{ post.url | relative_url }}">
-                {% assign mini_cover_clean = mini_cover | strip %}
-                {% if mini_cover_clean != "" and mini_cover_clean != blank %}
-                  <img class="blog-card-cover" src="{{ mini_cover_clean }}" alt="{{ post.title }}" loading="lazy">
+          <!-- المحتوى الرئيسي -->
+          <div class="home-content">
+
+            <!-- المقررات -->
+            <section class="section" id="courses" aria-labelledby="courses-title">
+              <div class="section-head">
+                <h2 id="courses-title" class="section-title"><i class="fas fa-book-open" aria-hidden="true"></i> المقررات</h2>
+              </div>
+              <div class="sticky-filter-container">
+                <div class="filter-bar" id="filter-bar"></div>
+              </div>
+              <div class="courses-container" id="courses-container">
+                <p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">جاري تحميل المقررات...</p>
+              </div>
+            </section>
+
+            <!-- المدونة -->
+            {% assign blog_posts = site.posts | where: "visible", true | limit: 3 %}
+            <section class="section" id="blog" aria-labelledby="blog-title">
+              <div class="section-head">
+                <h2 id="blog-title" class="section-title"><i class="fas fa-newspaper" aria-hidden="true"></i> المدونة</h2>
+                <a href="{{ '/blog' | relative_url }}" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+              </div>
+              <div class="blog-grid">
+                {% if blog_posts.size > 0 %}
+                  {% for post in blog_posts %}
+                    {% capture mini_cover %}
+                      {% if post.cover_image %}
+                        {{ post.cover_image }}
+                      {% else %}
+                        {% assign img_parts = post.content | split: '![' %}
+                        {% if img_parts.size > 1 %}
+                          {% assign img_part = img_parts[1] | split: '](' %}
+                          {% if img_part.size > 1 %}
+                            {{ img_part[1] | split: ')' | first | strip }}
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endcapture %}
+
+                    <a class="blog-card" href="{{ post.url | relative_url }}">
+                      {% assign mini_cover_clean = mini_cover | strip %}
+                      {% if mini_cover_clean != "" and mini_cover_clean != blank %}
+                        <img class="blog-card-cover" src="{{ mini_cover_clean }}" alt="" loading="lazy">
+                      {% endif %}
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">{{ post.title }}</h3>
+                        <div class="blog-card-meta">
+                          {% if post.date %}
+                            {% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}
+                            {% assign month_index = post.date | date: "%-m" | minus: 1 %}
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%-d" }} {{ months[month_index] }} {{ post.date | date: "%Y" }}</span>
+                          {% endif %}
+                          {% if post.author %}
+                            <span data-author-uid="{{ post.author }}"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">{{ post.author }}</span></span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% else %}
+                  <p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">لا توجد تدوينات حالياً.</p>
                 {% endif %}
-                <div class="blog-card-body">
-                  <h4 class="blog-card-title">{{ post.title }}</h4>
-                  <div class="blog-card-meta">
-                    {% if post.date %}
-                      {% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}
-                      {% assign month_index = post.date | date: "%-m" | minus: 1 %}
-                      <span><i class="far fa-calendar"></i> {{ post.date | date: "%-d" }} {{ months[month_index] }} {{ post.date | date: "%Y" }}</span>
-                    {% endif %}
-                    {% if post.author %}
-                      <span data-author-uid="{{ post.author }}"><i class="far fa-user"></i> <span class="author-name">{{ post.author }}</span></span>
-                    {% endif %}
-                  </div>
-                </div>
-              </a>
-            {% endfor %}
-          {% else %}
-            <p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد تدوينات حالياً.</p>
-          {% endif %}
+              </div>
+            </section>
+
+          </div>
+
         </div>
-      </section>
 
       </div>
 
     </div>
+  </main>
 
-    {% include footer.html %}
-  </div>
+  {% include footer.html %}
+
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
 
   <script>
-    /* === 1. إعدادات الثيم === */
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('rawafed-theme', newTheme);
-    }
-
-    /* === 2. المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
+    /* === المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
     let allCourses = [];
     let currentFilter = 'all';
 
@@ -453,9 +619,10 @@
 
       container.innerHTML = '';
       if (filtered.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد مقررات في هذا التصنيف.</p>';
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--rawafid-text-muted); padding: var(--space-lg);">لا توجد مقررات في هذا التصنيف.</p>';
         return;
       }
+
       filtered.forEach(item => {
         const card = document.createElement('a');
         card.className = 'course-card';
@@ -496,12 +663,23 @@
         const filterBtn = document.createElement('div');
         filterBtn.className = 'filter-item';
         filterBtn.textContent = type === 'all' ? 'الكل' : type;
+        filterBtn.setAttribute('role', 'button');
+        filterBtn.setAttribute('tabindex', '0');
         if (type === 'all') filterBtn.classList.add('active');
-        filterBtn.addEventListener('click', () => {
+
+        function activate() {
           document.querySelectorAll('.filter-item').forEach(btn => btn.classList.remove('active'));
           filterBtn.classList.add('active');
           currentFilter = type;
           renderCourses();
+        }
+
+        filterBtn.addEventListener('click', activate);
+        filterBtn.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
         });
         filterBar.appendChild(filterBtn);
       });
@@ -509,18 +687,27 @@
       const container = document.getElementById('courses-container');
       const gridBtn = viewToggle.querySelector('#grid-view');
       const listBtn = viewToggle.querySelector('#list-view');
+
       function setView(mode, save = true) {
-        if (mode === 'grid') { container.classList.add('grid-view'); gridBtn.classList.add('active'); listBtn.classList.remove('active'); }
-        else { container.classList.remove('grid-view'); listBtn.classList.add('active'); gridBtn.classList.remove('active'); }
+        if (mode === 'grid') {
+          container.classList.add('grid-view');
+          gridBtn.classList.add('active');
+          listBtn.classList.remove('active');
+        } else {
+          container.classList.remove('grid-view');
+          listBtn.classList.add('active');
+          gridBtn.classList.remove('active');
+        }
         if (save) localStorage.setItem('rawafed-courses-view', mode);
       }
+
       gridBtn.addEventListener('click', () => setView('grid'));
       listBtn.addEventListener('click', () => setView('list'));
       const savedMode = localStorage.getItem('rawafed-courses-view');
       setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
     }
 
-    /* === 3. أسماء المؤلفين في بطاقات المدونة === */
+    /* === أسماء المؤلفين في بطاقات المدونة === */
     function resolveAuthors(authorData) {
       const authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
       if (!authors.length) return;
@@ -532,7 +719,7 @@
       });
     }
 
-    /* === 4. التحميل المتزامن === */
+    /* === التحميل المتزامن === */
     document.addEventListener('DOMContentLoaded', () => {
       const mainArea = document.getElementById('main-content-area');
 

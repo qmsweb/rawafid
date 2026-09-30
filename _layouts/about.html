@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>عن منصة روافد</title>
 
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
-  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/jpg">
+  <link rel="stylesheet" href="{{ '/assets/css/design-system.css' | relative_url }}" />
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-   
-  <link rel="stylesheet" href="{{ '/topbar.css' | relative_url }}" />
 
   <script>
     (function() {
@@ -19,164 +18,74 @@
   </script>
 
   <style>
-    /* === المتغيرات والأنماط الأساسية (نفس الهوية) === */
-    :root {
-      /* الوضع الفاتح */
-      --primary-color: #1a2ac6;
-      --primary-dark: #121e9ec4;
-      --text-color: #1d1d1d;
-      --text-muted: #444;
-      --bg-color: #f8f9fc;
-      --bg-card: #ffffff;
-      --border-color: #eee;
-      --feature-bg: #eff3ff;
-      --feature-border: #dbeafe;
-      --footer-text: #888;
-      --highlight-color: #1a2ac6;
-      --title-color: #000;
-    }
+    .page-content { padding-top: var(--space-lg); }
 
-    /* الوضع الداكن */
-    [data-theme="dark"] {
-      --primary-color: #7986cb;
-      --primary-dark: #5c6bc0;
-      --text-color: #e0e0e0;
-      --text-muted: #b0b0b0;
-      --bg-color: #121212;
-      --bg-card: #1e1e1e;
-      --border-color: #333;
-      --feature-bg: rgba(121, 134, 203, 0.1);
-      --feature-border: rgba(121, 134, 203, 0.2);
-      --footer-text: #666;
-      --highlight-color: #7986cb;
-      --title-color: #ffffff;
-    }
-
-    * { box-sizing: border-box; font-family: "IBM Plex Sans Arabic", sans-serif; }
-   
-    body {
-      margin: 0; padding: 0; 
-      background-color: var(--bg-color); 
-      color: var(--text-color);
-      padding-bottom: 50px; 
-      padding-top: 60px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* --- شريط التنقل والعودة --- */
-    .nav-header {
-      margin-top: 30px; 
-      padding: 0 20px;
-      margin-bottom: 15px;
-      display: flex; align-items: center; 
-      max-width: 900px; margin-left: auto; margin-right: auto;
-    }
-
-    .back-btn {
-      text-decoration: none; color: var(--primary-color); 
-      font-weight: 700; font-size: 0.9rem;
-      display: inline-flex; align-items: center; gap: 8px; 
-      padding: 8px 16px;
-      background: var(--bg-card); 
-      border-radius: 50px; transition: 0.3s;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-    }
-    .back-btn:hover { 
-      background: var(--primary-color); 
-      color: #ffffff; 
-      border-color: var(--primary-color); 
-    }
-
-    /* --- حاوية المحتوى --- */
-    .content-container { 
-      max-width: 800px; 
-      margin: 0 auto; 
-      padding: 0 20px; 
-    }
-
-    /* --- تنسيقات خاصة بصفحة "عن المنصة" --- */
     .about-header {
-      text-align: center; margin-bottom: 30px;
-    }
-   
-    .about-title {
-      font-size: 2rem; font-weight: 800; color: var(--primary-color);
-      margin-bottom: 10px;
+      text-align: center;
+      margin-bottom: var(--space-lg);
     }
 
-    /* البطاقات */
     .info-card {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-      border: 1px solid var(--border-color);
-      transition: background-color 0.3s, border-color 0.3s;
+      background: var(--rawafid-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+      border: 1px solid var(--rawafid-border);
     }
 
-    .info-card h3 {
-      margin-top: 0;
-      color: var(--title-color);
+    .info-card h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text);
+      margin-bottom: var(--space-sm);
     }
 
     .info-text {
-      font-size: 1.05rem;
+      font-size: var(--text-base);
       line-height: 1.8;
-      color: var(--text-muted);
-      margin: 0;
+      color: var(--rawafid-text-muted);
       text-align: justify;
     }
 
     .highlight {
-      color: var(--highlight-color);
-      font-weight: 700;
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
     }
 
-    /* شبكة المميزات */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-md);
     }
 
     .feature-item {
-      background: var(--feature-bg);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid var(--feature-border);
-      transition: background-color 0.3s;
+      background: var(--rawafid-primary-soft);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--rawafid-border);
     }
 
     .feature-icon {
-      color: var(--primary-color);
+      color: var(--rawafid-primary);
       font-size: 1.5rem;
-      margin-bottom: 10px;
+      margin-bottom: var(--space-sm);
       display: block;
     }
 
     .feature-title {
-      font-weight: 700;
-      margin-bottom: 5px;
-      color: var(--primary-dark);
+      font-weight: var(--font-bold);
+      margin-bottom: var(--space-xs);
+      color: var(--rawafid-text);
     }
 
-    .feature-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted); /* استخدام لون النص الهادئ */
-      margin: 0;
-    }
-
-    /* الفوتر البسيط للصفحة */
-    .page-footer {
+    .page-footer-note {
       text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-color);
-      color: var(--footer-text);
-      font-size: 0.85rem;
+      margin-top: var(--space-xl);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--rawafid-border);
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
     }
   </style>
   {% include seo.html %}
@@ -184,90 +93,64 @@
 <body>
 
   {% include loading.html %}
+  {% include header.html %}
 
-  <div id="topbar-container">
-     {% include header.html %} 
-  </div>
+  <main class="page-main">
+    <div class="container container--narrow">
 
-  <div class="nav-header">
-    <a href="{{ '/index.html' | relative_url }}" class="back-btn">
-      <i class="fas fa-home"></i> الصفحة الرئيسة
-    </a>
-  </div>
+      <div class="about-header">
+        <h1 class="page-title">عن روافد</h1>
+      </div>
 
-  <div class="content-container">
-   
-    <div class="about-header">
-      <h1 class="about-title">عن روافد</h1>
-    </div>
+      <div class="info-card">
+        <p class="info-text">
+          <span class="highlight">"روافد"</span> (بوابة الاختبارات سابقًا) هي منصة تعليمية مجانية أُنشئت خصيصًا لخدمة طلبة تخصصي <strong>اللغة العربية وآدابها</strong> و<strong>التربية في اللغة العربية</strong> بجامعة الشرقية. تهدف المنصة إلى توفير بيئة معرفية متكاملة تدعم العملية التعليمية وتُسهِم في تسهيل وصول الطلبة إلى مصادرهم العلمية بيسر وسهولة.
+        </p>
+      </div>
 
-    <div class="info-card">
-      <p class="info-text">
-        <span class="highlight">"روافد"</span> (بوابة الاختبارات سابقًا) هي منصة تعليمية مجانية أُنشئت خصيصًا لخدمة طلبة تخصصي <strong>اللغة العربية وآدابها</strong> و<strong>التربية في اللغة العربية</strong> بجامعة الشرقية. تهدف المنصة إلى توفير بيئة معرفية متكاملة تدعم العملية التعليمية وتُسهِم في تسهيل وصول الطلبة إلى مصادرهم العلمية بيسر وسهولة.
-      </p>
-    </div>
-
-    <div class="info-card">
-      <h3>ماذا تضم المنصة؟</h3>
-      <p class="info-text">
-        تضم المنصة مجموعة واسعة من المقررات المصنفة وفق مجالاتها لضمان سهولة الوصول:
-      </p>
-      <div class="features-grid">
-        <div class="feature-item">
-          <i class="fas fa-university feature-icon"></i>
-          <div class="feature-title">المقررات الجامعية</div>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-chalkboard-teacher feature-icon"></i>
-          <div class="feature-title">المقررات التربوية</div>
-        </div>
-        <div class="feature-item">
-          <i class="fas fa-book-open feature-icon"></i>
-          <div class="feature-title">المقررات التخصصية</div>
+      <div class="info-card">
+        <h2>ماذا تضم المنصة؟</h2>
+        <p class="info-text">
+          تضم المنصة مجموعة واسعة من المقررات المصنفة وفق مجالاتها لضمان سهولة الوصول:
+        </p>
+        <div class="features-grid">
+          <div class="feature-item">
+            <i class="fas fa-university feature-icon" aria-hidden="true"></i>
+            <div class="feature-title">المقررات الجامعية</div>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-chalkboard-teacher feature-icon" aria-hidden="true"></i>
+            <div class="feature-title">المقررات التربوية</div>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-book-open feature-icon" aria-hidden="true"></i>
+            <div class="feature-title">المقررات التخصصية</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="info-card">
-      <h3>الأدوات والتطوير</h3>
-      <p class="info-text">
-        وإلى جانب المقررات، توفر "روافد" عددًا من الأدوات التعليمية المبتكرة.
-        <br><br>
-        من أبرزها: <span class="highlight">حاسبة المعدل</span>، و<span class="highlight">توثيق المراجع</span>، و<span class="highlight">أداة التقويم الأكاديمي</span>، و<span class="highlight">أداة الخطة الدراسية</span>. كما نعمل على خطط مستقبلية لتطوير أدوات وخدمات جديدة تعزز من خبرة التعلم الإلكتروني وتواكب احتياجات الطلبة
+      <div class="info-card">
+        <h2>الأدوات والتطوير</h2>
+        <p class="info-text">
+          وإلى جانب المقررات، توفر "روافد" عددًا من الأدوات التعليمية المبتكرة.
+          <br><br>
+          من أبرزها: <span class="highlight">حاسبة المعدل</span>، و<span class="highlight">توثيق المراجع</span>، و<span class="highlight">أداة التقويم الأكاديمي</span>، و<span class="highlight">أداة الخطة الدراسية</span>. كما نعمل على خطط مستقبلية لتطوير أدوات وخدمات جديدة تعزز من خبرة التعلم الإلكتروني وتواكب احتياجات الطلبة.
+        </p>
+      </div>
+
+      <p class="page-footer-note">
+        جميع الحقوق محفوظة لجاسم الفارسي، تعود حقوق المحتوى لأصحابها الأصليين ما لم يتم ذكر اسم الجهة المالكة للمحتوى صراحة. &copy; {{ site.time | date: '%Y' }}
       </p>
+
     </div>
+  </main>
 
-    <div class="page-footer">
-      جميع الحقوق محفوظة لجاسم الفارسي، تعود حقوق المحتوى لأصحابها الأصليين ما لم يتم ذكر اسم الجهة المالكة للمحتوى صراحة. &copy; {{ site.time | date: '%Y' }}
-    </div>
+  {% include footer.html %}
 
-  </div>
-
-<script>
-  // دالة تغيير الوضع (ضرورية لتعمل مع زر الهيدر المضمن)
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('rawafed-theme', newTheme);
-  }
-
-  // سكريبت بسيط للمشاركة
-  function sharePage() {
-    if (navigator.share) {
-      navigator.share({
-        title: document.title,
-        url: window.location.href
-      }).catch(console.error);
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ رابط الصفحة');
-    }
-  }
-
-  // إخفاء شاشة التحميل بعد اكتمال تحميل الصفحة
-  window.addEventListener('load', rawafidHideLoader);
-</script>
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
+  <script>
+    window.addEventListener('load', rawafidHideLoader);
+  </script>
 
 </body>
 </html>
