@@ -32,7 +32,11 @@
 
     <div class="footer-bottom">
       <span>&copy; {{ site.time | date: '%Y' }} روافد · جميع الحقوق محفوظة</span>
-      <span>تطوير <a href="{{ '/about' | relative_url }}">جاسم الفارسي</a></span>
+      <span class="footer-dev">
+        تطوير
+        <a href="{{ '/about' | relative_url }}">جاسم الفارسي</a>
+        <img src="{{ '/images/jassim-logo.png' | relative_url }}" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
+      </span>
     </div>
   </div>
 </footer>

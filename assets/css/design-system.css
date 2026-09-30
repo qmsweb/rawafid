@@ -292,6 +292,68 @@ ol {
   width: auto;
 }
 
+/* الشعار: أبيض في الوضع النهاري، أزرق في الوضع الليلي */
+.logo-light {
+  display: block;
+}
+
+.logo-dark {
+  display: none;
+}
+
+[data-theme="dark"] .logo-light {
+  display: none;
+}
+
+[data-theme="dark"] .logo-dark {
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   5ب. الترويسة الزرقاء في الوضع النهاري
+   ------------------------------------------------------------ */
+html:not([data-theme="dark"]) .site-header {
+  background-color: var(--rawafid-primary);
+  border-bottom-color: var(--rawafid-primary-dark);
+  color: var(--rawafid-white);
+}
+
+html:not([data-theme="dark"]) .nav-links a {
+  color: var(--rawafid-white);
+}
+
+html:not([data-theme="dark"]) .nav-links a:hover,
+html:not([data-theme="dark"]) .nav-links a:focus-visible {
+  color: var(--rawafid-white);
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+html:not([data-theme="dark"]) .nav-links a.active {
+  color: var(--rawafid-white);
+  border-bottom-color: var(--rawafid-white);
+}
+
+html:not([data-theme="dark"]) .icon-btn {
+  color: var(--rawafid-white);
+}
+
+html:not([data-theme="dark"]) .icon-btn:hover,
+html:not([data-theme="dark"]) .icon-btn:focus-visible {
+  color: var(--rawafid-white);
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+html:not([data-theme="dark"]) .menu-toggle {
+  color: var(--rawafid-white);
+}
+
+html:not([data-theme="dark"]) .menu-toggle:hover,
+html:not([data-theme="dark"]) .menu-toggle:focus-visible,
+html:not([data-theme="dark"]) .menu-toggle[aria-expanded="true"] {
+  color: var(--rawafid-white);
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -455,8 +517,8 @@ ol {
 }
 
 .footer-logo {
-  height: 32px;
-  width: auto;
+  width: 160px;
+  height: auto;
   margin-bottom: var(--space-xs);
 }
 
@@ -538,6 +600,18 @@ ol {
   color: var(--rawafid-primary);
 }
 
+.footer-dev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-dev-logo {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* ------------------------------------------------------------
    7. تصميم الجوال (قائمة جانبية مسطحة)
    ------------------------------------------------------------ */
@@ -612,6 +686,22 @@ ol {
   .nav-links a:focus-visible {
     color: var(--rawafid-primary);
     background-color: var(--rawafid-primary-soft);
+  }
+
+  /* داخل القائمة الجانبية: نص داكن على خلفية فاتحة في الوضع النهاري */
+  html:not([data-theme="dark"]) .nav-links a {
+    color: var(--rawafid-text);
+  }
+
+  html:not([data-theme="dark"]) .nav-links a.active,
+  html:not([data-theme="dark"]) .nav-links a:hover,
+  html:not([data-theme="dark"]) .nav-links a:focus-visible {
+    color: var(--rawafid-primary);
+    background-color: var(--rawafid-primary-soft);
+  }
+
+  html:not([data-theme="dark"]) .nav-links a.active {
+    border-bottom-color: transparent;
   }
 
   .nav-links .theme-toggle-mobile {
