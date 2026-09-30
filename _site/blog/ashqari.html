@@ -525,7 +525,8 @@
   <header class="site-header">
   <nav class="navbar" aria-label="التنقل الرئيسي">
     <a href="/" class="logo" aria-label="روافد - الصفحة الرئيسية">
-      <img src="/images/rawafid-blue.png" alt="شعار روافد" width="120" height="36" loading="eager">
+      <img src="/images/Rawafid-white.png" alt="شعار روافد" class="logo-light" width="120" height="36" loading="eager">
+      <img src="/images/rawafid-blue.png" alt="شعار روافد" class="logo-dark" width="120" height="36" loading="eager">
     </a>
 
     <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
@@ -750,12 +751,18 @@
     </div>
   </main>
 
-  <footer class="site-footer">
+  <style>
+  html:not([data-theme="dark"]) .footer-dev-logo,
+  html[data-theme="light"] .footer-dev-logo {
+    filter: brightness(0) saturate(100%);
+  }
+</style>
+<footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
 
       <div class="footer-col">
-        <img src="/images/rawafid-blue.png" alt="شعار روافد" class="footer-logo" width="120" height="32" loading="lazy">
+        <img src="/images/rawafid-blue.png" alt="شعار روافد" class="footer-logo" width="100" height="27" style="width: 100px;" loading="lazy">
         <p class="footer-desc">منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية: مقررات دراسية، أدوات تعليمية، مدونة وتقويم أكاديمي.</p>
       </div>
 
@@ -784,7 +791,11 @@
 
     <div class="footer-bottom">
       <span>&copy; 2026 روافد · جميع الحقوق محفوظة</span>
-      <span>تطوير <a href="/about">جاسم الفارسي</a></span>
+      <span class="footer-dev">
+        تطوير
+        <a href="/about">جاسم الفارسي</a>
+        <img src="/images/jassim-logo.png" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
+      </span>
     </div>
   </div>
 </footer>

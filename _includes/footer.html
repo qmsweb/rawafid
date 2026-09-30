@@ -1,9 +1,15 @@
+<style>
+  html:not([data-theme="dark"]) .footer-dev-logo,
+  html[data-theme="light"] .footer-dev-logo {
+    filter: brightness(0) saturate(100%);
+  }
+</style>
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
 
       <div class="footer-col">
-        <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="شعار روافد" class="footer-logo" width="120" height="32" loading="lazy">
+        <img src="{{ '/images/rawafid-blue.png' | relative_url }}" alt="شعار روافد" class="footer-logo" width="100" height="27" style="width: 100px;" loading="lazy">
         <p class="footer-desc">منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية: مقررات دراسية، أدوات تعليمية، مدونة وتقويم أكاديمي.</p>
       </div>
 
