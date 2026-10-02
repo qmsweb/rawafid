@@ -283,7 +283,8 @@
   {% include header.html %}
   {% include loading.html %}
 
-  <div class="container">
+  <main class="page-main">
+    <div class="container">
     
     {{ content }}
 
@@ -341,8 +342,10 @@
             <div style="padding: 20px; text-align: center; color: var(--text-muted);">جاري تحميل المقررات...</div>
         </div>
 
-    </div> {% include footer.html %}
-  </div>
+    </div>
+  </main>
+
+  {% include footer.html %}
 
 <script>
   /* === 1. إعدادات الثيم === */

@@ -359,7 +359,8 @@
   {% include header.html %}
   {% include loading.html %}
 
-  <div class="container">
+  <main class="page-main">
+    <div class="container">
     
     <div class="course-header-card">
       <div class="header-content">
@@ -398,8 +399,10 @@
     
     {{ content }}
 
-    {% include footer.html %}
-  </div>
+    </div>
+  </main>
+
+  {% include footer.html %}
 
 <script>
 /* ======= 1. دالة تغيير الوضع (للربط مع الهيدر) ======= */
