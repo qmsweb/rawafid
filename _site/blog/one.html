@@ -53,7 +53,9 @@
     .back-btn,
     .share-btn-top,
     .print-btn-top,
-    .related-btn-top {
+    .related-btn-top,
+    .fontplus-btn-top,
+    .fontminus-btn-top {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -76,7 +78,11 @@
     .print-btn-top:hover,
     .print-btn-top:focus-visible,
     .related-btn-top:hover,
-    .related-btn-top:focus-visible {
+    .related-btn-top:focus-visible,
+    .fontplus-btn-top:hover,
+    .fontplus-btn-top:focus-visible,
+    .fontminus-btn-top:hover,
+    .fontminus-btn-top:focus-visible {
       background: var(--rawafid-primary);
       color: var(--rawafid-white);
       border-color: var(--rawafid-primary);
@@ -140,7 +146,11 @@
     }
 
     /* تنسيق محتوى المارك داون */
-    .page-content { color: var(--rawafid-text); }
+    .page-content {
+      color: var(--rawafid-text);
+      --fs: 1;
+      font-size: calc(var(--text-base) * var(--fs));
+    }
 
     .page-content h1,
     .page-content h2,
@@ -153,13 +163,13 @@
       line-height: 1.5;
     }
 
-    .page-content h1 { font-size: var(--text-2xl); }
-    .page-content h2 { font-size: var(--text-xl); border-right: 4px solid var(--rawafid-primary); padding-right: var(--space-md); }
-    .page-content h3 { font-size: var(--text-lg); }
-    .page-content h4 { font-size: var(--text-base); }
+    .page-content h1 { font-size: calc(var(--text-2xl) * var(--fs)); }
+    .page-content h2 { font-size: calc(var(--text-xl) * var(--fs)); border-right: 4px solid var(--rawafid-primary); padding-right: var(--space-md); }
+    .page-content h3 { font-size: calc(var(--text-lg) * var(--fs)); }
+    .page-content h4 { font-size: calc(var(--text-base) * var(--fs)); }
 
     .page-content p {
-      font-size: var(--text-base);
+      font-size: calc(var(--text-base) * var(--fs));
       line-height: 1.9;
       margin-bottom: var(--space-md);
     }
@@ -197,7 +207,7 @@
       padding: var(--space-md);
       margin: var(--space-lg) 0;
       color: var(--rawafid-text);
-      font-size: var(--text-base);
+      font-size: calc(var(--text-base) * var(--fs));
     }
 
     .page-content blockquote p { margin-bottom: 0; }
@@ -253,7 +263,7 @@
       margin: 0 auto;
       border-collapse: separate;
       border-spacing: 0;
-      font-size: var(--text-sm);
+      font-size: calc(var(--text-sm) * var(--fs));
       border: 1px solid var(--rawafid-border);
       border-radius: var(--radius-md);
       overflow: hidden;
@@ -268,7 +278,7 @@
       padding: 12px var(--space-md);
       border: 0;
       border-bottom: 1px solid var(--rawafid-border);
-      font-size: var(--text-base);
+      font-size: calc(var(--text-base) * var(--fs));
     }
 
     .page-content th,
@@ -311,16 +321,16 @@
 
     @media (max-width: 600px) {
       .blog-page { padding: var(--space-sm); }
-      .page-content p { font-size: var(--text-sm); }
+      .page-content p { font-size: calc(var(--text-sm) * var(--fs)); }
       .article-meta { gap: var(--space-sm); }
       .page-title { font-size: 1.7rem; }
       .page-content table,
       .page-content th,
-      .page-content td { font-size: var(--text-xs); padding: var(--space-sm); }
+      .page-content td { font-size: calc(var(--text-xs) * var(--fs)); padding: var(--space-sm); }
       .page-content .table-wrapper { margin: var(--space-md) 0; }
-      .page-content h1 { font-size: var(--text-xl); }
-      .page-content h2 { font-size: var(--text-lg); }
-      .page-content h3 { font-size: var(--text-base); }
+      .page-content h1 { font-size: calc(var(--text-xl) * var(--fs)); }
+      .page-content h2 { font-size: calc(var(--text-lg) * var(--fs)); }
+      .page-content h3 { font-size: calc(var(--text-base) * var(--fs)); }
     }
 
     @media print {
@@ -364,7 +374,7 @@
 <meta name="robots" content="index, follow">
 
 
-<meta name="description" content="المنصة العربية للتعليم والمراجع">
+<meta name="description" content="منصة روافد التعليمية">
 
 
 <script type="application/ld+json">
@@ -378,7 +388,7 @@
     "@type": "ImageObject",
     "url": "https://rawafid.jassim.one/images/rawafid-1.png"
   },
-  "description": "المنصة العربية للتعليم والمراجع",
+  "description": "منصة روافد التعليمية",
   "inLanguage": "ar"
 }
 </script>
@@ -667,6 +677,8 @@
         <button id="share-btn" onclick="sharePage()" class="share-btn-top">
           <i class="fas fa-share-alt" aria-hidden="true"></i> مشاركة
         </button>
+        <button id="fontplus-btn" onclick="increaseFontSize()" class="fontplus-btn-top" title="تكبير النص" aria-label="تكبير النص">ض+</button>
+        <button id="fontminus-btn" onclick="decreaseFontSize()" class="fontminus-btn-top" title="تصغير النص" aria-label="تصغير النص">ض-</button>
       </div>
       
     </div>
@@ -916,6 +928,19 @@
     function printContent() {
       window.print();
     }
+
+    function adjustFontSize(delta) {
+      var content = document.getElementById('post-content');
+      if (!content) return;
+      var current = parseFloat(content.style.getPropertyValue('--fs')) || 1;
+      var next = Math.round((current + delta) * 100) / 100;
+      if (next < 0.8) next = 0.8;
+      if (next > 1.5) next = 1.5;
+      content.style.setProperty('--fs', next);
+    }
+
+    function increaseFontSize() { adjustFontSize(0.1); }
+    function decreaseFontSize() { adjustFontSize(-0.1); }
 
     const BASE_URL = "";
     const RELATED = null;
