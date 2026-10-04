@@ -824,8 +824,7 @@
 
     /* === التشغيل === */
     document.addEventListener('DOMContentLoaded', function () {
-      /* إخفاء شاشة التحميل العامة فوراً: الترويسة والمحتوى الثابت مرئية، والتحميل موضعي داخل قسم المقررات */
-      if (typeof rawafidHideLoader === 'function') rawafidHideLoader();
+      /* شاشة التحميل العامة (مع الهيدر) تبقى ظاهرة حتى يكتمل تحميل المقررات والمؤلفين؛ loading.html يتولى الإخفاء بعد اكتمال الجلب */
       loadCourses();
       loadAuthors();
     });

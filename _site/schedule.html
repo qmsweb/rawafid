@@ -393,23 +393,77 @@
 </div>
 
 <script>
-  function rawafidHideLoader() {
+  (function () {
     var overlay = document.getElementById('rawafid-loading-overlay');
-    if (overlay) overlay.classList.add('hidden');
-  }
 
-  function rawafidShowLoader() {
-    var overlay = document.getElementById('rawafid-loading-overlay');
-    if (overlay) overlay.classList.remove('hidden');
-  }
+    var hidden = false;        /* هل الشاشة مخفية بالفعل */
+    var pinned = false;        /* بعد إظهارها يدوياً: تخفى فقط بطلب صريح */
+    var loadDone = (document.readyState === 'complete');
+    var pendingFetches = 0;    /* عدد عمليات جلب البيانات الجارية */
 
-  /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
-  setTimeout(rawafidHideLoader, 6000);
+    function forceHide() {
+      hidden = true;
+      if (overlay) overlay.classList.add('hidden');
+    }
 
-  /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
-  window.addEventListener('pageshow', function (e) {
-    if (e.persisted) rawafidHideLoader();
-  });
+    /* الإخفاء لا يتم إلا بعد اكتمال حدث load وانتهاء كل عمليات الجلب الجارية */
+    function tryHide() {
+      if (!hidden && !pinned && loadDone && pendingFetches <= 0) forceHide();
+    }
+
+    window.rawafidHideLoader = function () {
+      pinned = false;
+      tryHide();
+    };
+
+    window.rawafidShowLoader = function () {
+      pinned = true;
+      hidden = false;
+      if (overlay) overlay.classList.remove('hidden');
+    };
+
+    if (!loadDone) {
+      window.addEventListener('load', function () {
+        loadDone = true;
+        tryHide();
+      });
+    }
+
+    /* تتبع طلبات fetch الصادرة من الصفحة: تبقى شاشة التحميل ظاهرة حتى تنتهي آخر عملية جلب بيانات */
+    if (typeof window.fetch === 'function') {
+      var originalFetch = window.fetch;
+      window.fetch = function () {
+        var request;
+        pendingFetches += 1;
+        try {
+          request = originalFetch.apply(this, arguments);
+        } catch (err) {
+          pendingFetches -= 1;
+          tryHide();
+          throw err;
+        }
+        if (request && typeof request.then === 'function') {
+          request.then(release, release);
+        } else {
+          release();
+        }
+        return request;
+
+        function release() {
+          pendingFetches -= 1;
+          tryHide();
+        }
+      };
+    }
+
+    /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
+    setTimeout(forceHide, 6000);
+
+    /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) forceHide();
+    });
+  })();
 </script>
 
 
@@ -423,9 +477,10 @@
     <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
 
     <ul class="nav-links" id="nav-links">
-      <li><a href="/">الرئيسية</a></li>
+      <li><a href="/">الرئيسة</a></li>
       <li><a href="/blog">المدونة</a></li>
       <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/doc">الأفلام</a></li>
       <li><a href="/contact">تواصل معنا</a></li>
       <li><a href="/about">عن روافد</a></li>
       <li>
