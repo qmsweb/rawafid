@@ -292,21 +292,13 @@ ol {
   width: auto;
 }
 
-/* الشعار: أبيض في الوضع النهاري، أزرق في الوضع الليلي */
+/* الشعار: أبيض دائماً */
 .logo-light {
   display: block;
 }
 
 .logo-dark {
   display: none;
-}
-
-[data-theme="dark"] .logo-light {
-  display: none;
-}
-
-[data-theme="dark"] .logo-dark {
-  display: block;
 }
 
 /* ------------------------------------------------------------
