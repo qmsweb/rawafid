@@ -130,6 +130,19 @@
       align-items: center;
     }
 
+    .ai-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: var(--font-bold);
+      font-size: 0.78rem;
+      padding: 4px 14px;
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+      border: 1px solid var(--rawafid-border);
+      border-radius: 50px;
+    }
+
     .page-title {
       font-size: clamp(1.7rem, 3vw, 2rem);
       font-weight: var(--font-black);
@@ -416,6 +429,11 @@
     <div id="post-meta" class="article-meta">
       {% if page.date %}{% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}{% assign month_index = page.date | date: "%-m" | minus: 1 %}<span><i class="far fa-calendar" aria-hidden="true"></i> {{ page.date | date: "%-d" }} {{ months[month_index] }} {{ page.date | date: "%Y" }}</span>{% endif %}
       {% if page.author %}<span id="post-author" data-author-uid="{{ page.author }}"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name"></span><img class="author-avatar" alt=""></span>{% endif %}
+      {% if page.ai %}
+      {% assign ai_label = page.ai %}
+      {% if page.ai == true or page.ai == "yes" %}{% assign ai_label = "محسّن باستعمال الذكاء الاصطناعي" %}{% endif %}
+      <span class="ai-tag"><i class="fas fa-star" aria-hidden="true"></i> {{ ai_label }}</span>
+      {% endif %}
     </div>
 
     <div id="post-content" class="page-content">
