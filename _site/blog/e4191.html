@@ -104,13 +104,13 @@
     }
 
     .article-meta .author-avatar {
-      display: none;
-      width: 24px;
-      height: 24px;
+      display: inline-block;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       object-fit: cover;
       vertical-align: middle;
-      margin-inline-start: 6px;
+      margin-inline-end: 6px;
     }
 
     #post-author {
@@ -709,7 +709,7 @@
 
     <div id="post-meta" class="article-meta">
       <span><i class="far fa-calendar" aria-hidden="true"></i> 4 أكتوبر 2026</span>
-      <span id="post-author" data-author-uid="jassim"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name"></span><img class="author-avatar" alt=""></span>
+      <span id="post-author" data-author-uid="jassim"><img class="author-avatar" src="/images/default.png" alt="jassim"><span class="author-name"></span></span>
       
       
       
@@ -993,7 +993,6 @@
                 const imgEl = authorEl.querySelector('.author-avatar');
                 if (imgEl) {
                   imgEl.src = author.image;
-                  imgEl.style.display = 'inline-block';
                 }
               }
             }
