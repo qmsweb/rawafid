@@ -116,13 +116,13 @@
     }
 
     .article-meta .author-avatar {
-      display: none;
-      width: 24px;
-      height: 24px;
+      display: inline-block;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       object-fit: cover;
       vertical-align: middle;
-      margin-inline-start: 6px;
+      margin-inline-end: 6px;
     }
 
     #post-author {
@@ -430,7 +430,7 @@
 
     <div id="post-meta" class="article-meta">
       {% if page.date %}{% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}{% assign month_index = page.date | date: "%-m" | minus: 1 %}<span><i class="far fa-calendar" aria-hidden="true"></i> {{ page.date | date: "%-d" }} {{ months[month_index] }} {{ page.date | date: "%Y" }}</span>{% endif %}
-      {% if page.author %}<span id="post-author" data-author-uid="{{ page.author }}"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name"></span><img class="author-avatar" alt=""></span>{% endif %}
+      {% if page.author %}<span id="post-author" data-author-uid="{{ page.author }}"><img class="author-avatar" src="{{ '/images/default.png' | relative_url }}" alt="{{ page.author }}"><span class="author-name"></span></span>{% endif %}
       {% if page.ai %}
       {% assign ai_label = page.ai %}
       {% if page.ai == true or page.ai == "yes" %}{% assign ai_label = "محسّن باستعمال الذكاء الاصطناعي" %}{% endif %}
@@ -509,7 +509,6 @@
                 const imgEl = authorEl.querySelector('.author-avatar');
                 if (imgEl) {
                   imgEl.src = author.image;
-                  imgEl.style.display = 'inline-block';
                 }
               }
             }
