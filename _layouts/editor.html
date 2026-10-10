@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{ page.title | default: "محرر المدونة | منصة روافد" }}</title>
+
+  <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/design-system.css' | relative_url }}" />
+  <link rel="icon" href="{{ '/images/favicon.png' | relative_url }}" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.title }}">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <script>
+    /* منع التكبير/التصغير (Zoom) نهائياً — تجربة تشبه التطبيقات (بدون تعطيل تحديد الكلمات بالنقر المزدوج داخل المحرر) */
+    (function () {
+      document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+      document.addEventListener('gesturechange', function (e) { e.preventDefault(); });
+      document.addEventListener('gestureend', function (e) { e.preventDefault(); });
+
+      document.addEventListener('wheel', function (e) {
+        if (e.ctrlKey) e.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('touchmove', function (e) {
+        if (e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+    })();
+  </script>
+
+  <style>
+    /* ============================================================
+       محرر مقالات المدونة — أنماط خاصة بهذه الصفحة فقط
+       (الطباعة والجداول منسوخة حرفياً من _layouts/blog.html
+       حتى يطابق شكل المحرر شكل المقال المنشور تماماً)
+       ============================================================ */
+
+    .editor-page {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-md) var(--space-xl);
+    }
+
+    html, body { touch-action: manipulation; }
+
+    /* === الترويسة العلوية للصفحة === */
+    .ed-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .ed-heading h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      font-weight: var(--font-black);
+      color: var(--rawafid-primary);
+      line-height: 1.4;
+    }
+
+    .ed-heading p {
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
+      margin-top: var(--space-xs);
+      max-width: 520px;
+    }
+
+    .ed-top-side {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .ed-save-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--rawafid-text-muted);
+      padding: 8px 14px;
+      border-radius: 50px;
+      background: var(--rawafid-surface);
+      border: 1px dashed var(--rawafid-border);
+    }
+
+    .ed-save-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rawafid-success);
+      flex-shrink: 0;
+    }
+
+    /* === الأزرار (بأسلوب أزرار المدونة) === */
+    .ed-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
+      font-size: var(--text-sm);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .ed-btn:hover,
+    .ed-btn:focus-visible {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .ed-btn--primary {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .ed-btn--primary:hover,
+    .ed-btn--primary:focus-visible {
+      background: var(--rawafid-primary-dark);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary-dark);
+    }
+
+    .ed-btn--danger { color: var(--rawafid-error); }
+    .ed-btn--danger:hover,
+    .ed-btn--danger:focus-visible {
+      background: var(--rawafid-error);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-error);
+    }
+
+    /* === بطاقة بيانات المقال === */
+    .ed-meta {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .ed-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--space-md) var(--space-lg);
+    }
+
+    .ed-field { min-width: 0; }
+
+    .ed-field--title { grid-column: 1 / -1; }
+    .ed-field--cover { grid-column: 1 / 5; }
+    .ed-field--checks { grid-column: 5 / -1; }
+
+    .ed-field label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .ed-input,
+    .ed-select {
+      width: 100%;
+      background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-sm);
+      color: var(--rawafid-text);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      padding: 10px 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .ed-input:focus,
+    .ed-select:focus {
+      outline: none;
+      border-color: var(--rawafid-primary);
+    }
+
+    .ed-title-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--rawafid-border);
+      border-radius: 0;
+      color: var(--rawafid-text);
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: var(--font-black);
+      padding: 6px 0 10px;
+      transition: border-color 0.2s ease;
+    }
+
+    .ed-title-input:focus {
+      outline: none;
+      border-bottom-color: var(--rawafid-primary);
+    }
+
+    .ed-date-input { direction: ltr; text-align: right; }
+
+    .ed-hint {
+      font-size: var(--text-xs);
+      color: var(--rawafid-text-muted);
+      margin-top: 6px;
+    }
+
+    .ed-checks-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .ed-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--rawafid-text);
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .ed-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--rawafid-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* === شريط الأدوات === */
+    .ed-toolbar {
+      position: sticky;
+      top: calc(var(--nav-height) + 8px);
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm);
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 22px -14px rgba(0, 0, 0, 0.35);
+      margin-bottom: var(--space-md);
+    }
+
+    .ed-tool {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--rawafid-text);
+      font-weight: var(--font-bold);
+      font-size: var(--text-xs);
+      padding: 7px 13px;
+      border-radius: 50px;
+      background: transparent;
+      border: 1px solid transparent;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .ed-tool:hover,
+    .ed-tool:focus-visible {
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+    }
+
+    .ed-tool.is-active {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .ed-icon-sm { font-size: 0.72em; }
+
+    .ed-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--rawafid-border);
+      margin-inline: var(--space-xs);
+      flex-shrink: 0;
+    }
+
+    /* === لوحة إدراج الجدول === */
+    .ed-pop {
+      position: fixed;
+      z-index: 300;
+      width: 250px;
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+      display: none;
+    }
+
+    .ed-pop.is-open { display: block; }
+
+    .ed-pop-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-sm);
+      font-weight: var(--font-black);
+      color: var(--rawafid-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .ed-pop-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-bottom: var(--space-sm);
+    }
+
+    .ed-pop-row label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text-muted);
+    }
+
+    .ed-num {
+      width: 84px;
+      background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-sm);
+      color: var(--rawafid-text);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      padding: 7px 10px;
+      direction: ltr;
+      text-align: center;
+    }
+
+    .ed-num:focus {
+      outline: none;
+      border-color: var(--rawafid-primary);
+    }
+
+    .ed-pop-actions {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    /* === أدوات الجدول العائمة === */
+    .ed-table-tools {
+      position: fixed;
+      z-index: 290;
+      display: none;
+      align-items: center;
+      gap: 2px;
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: 50px;
+      padding: 4px;
+      box-shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.45);
+    }
+
+    .ed-table-tools.is-open { display: flex; }
+
+    .ed-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--rawafid-text);
+      font-weight: var(--font-bold);
+      font-size: var(--text-xs);
+      padding: 6px 11px;
+      border-radius: 50px;
+      background: transparent;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .ed-mini:hover,
+    .ed-mini:focus-visible {
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+    }
+
+    .ed-mini--danger { color: var(--rawafid-error); }
+    .ed-mini--danger:hover,
+    .ed-mini--danger:focus-visible {
+      background: var(--rawafid-error);
+      color: var(--rawafid-white);
+    }
+
+    /* === سطح التحرير === */
+    .ed-canvas {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-md);
+      transition: border-color 0.2s ease;
+    }
+
+    .ed-canvas:focus-within { border-color: var(--rawafid-primary); }
+
+    .ed-editor { outline: none; }
+
+    .ed-editor:empty::before {
+      content: attr(data-ph);
+      color: var(--rawafid-text-muted);
+      pointer-events: none;
+    }
+
+    .ed-editor td.ed-cell-active,
+    .ed-editor th.ed-cell-active {
+      outline: 2px solid var(--rawafid-primary);
+      outline-offset: -2px;
+    }
+
+    /* === تنسيق محتوى المارك داون (منسوخ حرفياً من _layouts/blog.html) === */
+    .page-content {
+      color: var(--rawafid-text);
+      --fs: 1;
+      font-size: calc(var(--text-base) * var(--fs));
+    }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content h3,
+    .page-content h4 {
+      font-weight: var(--font-bold);
+      color: var(--rawafid-primary);
+      margin-top: var(--space-xl);
+      margin-bottom: var(--space-md);
+      line-height: 1.5;
+    }
+
+    .page-content h1 { font-size: calc(var(--text-2xl) * var(--fs)); }
+    .page-content h2 { font-size: calc(var(--text-xl) * var(--fs)); border-right: 4px solid var(--rawafid-primary); padding-right: var(--space-md); }
+    .page-content h3 { font-size: calc(var(--text-lg) * var(--fs)); }
+    .page-content h4 { font-size: calc(var(--text-base) * var(--fs)); }
+
+    .page-content p {
+      font-size: calc(var(--text-base) * var(--fs));
+      line-height: 1.9;
+      margin-bottom: var(--space-md);
+      text-align: justify;
+    }
+
+    .page-content a {
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .page-content a:hover,
+    .page-content a:focus-visible {
+      opacity: 0.8;
+    }
+
+    .page-content strong { font-weight: var(--font-bold); }
+    .page-content em { font-style: italic; }
+    .page-content del { opacity: 0.6; }
+
+    .page-content ul,
+    .page-content ol {
+      padding-right: var(--space-lg);
+      margin-bottom: var(--space-md);
+      line-height: 2;
+    }
+
+    .page-content li { margin-bottom: var(--space-xs); text-align: justify; }
+    .page-content li::marker { color: var(--rawafid-primary); font-weight: var(--font-bold); }
+
+    .page-content blockquote {
+      background: var(--rawafid-primary-soft);
+      border-right: 4px solid var(--rawafid-primary);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md);
+      margin: var(--space-lg) 0;
+      color: var(--rawafid-text);
+      font-size: calc(var(--text-base) * var(--fs));
+      text-align: justify;
+    }
+
+    .page-content blockquote p { margin-bottom: 0; }
+
+    .page-content code {
+      background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .page-content pre {
+      background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      overflow-x: auto;
+      margin: var(--space-lg) 0;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .page-content pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.88em;
+    }
+
+    .page-content img {
+      max-width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--rawafid-border);
+      display: block;
+      margin: var(--space-xl) auto;
+    }
+
+    .page-content .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      max-width: 100%;
+      margin: var(--space-lg) auto;
+    }
+
+    .page-content table {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: calc(var(--text-sm) * var(--fs));
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--rawafid-surface);
+    }
+
+    .page-content thead th {
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-text);
+      font-weight: var(--font-bold);
+      text-align: right;
+      padding: 12px var(--space-md);
+      border: 0;
+      border-bottom: 1px solid var(--rawafid-border);
+      font-size: calc(var(--text-base) * var(--fs));
+    }
+
+    .page-content th,
+    .page-content td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--rawafid-border);
+      text-align: right;
+    }
+
+    .page-content tbody tr { background: var(--rawafid-surface); }
+    .page-content tbody tr:last-child td { border-bottom: 0; }
+    .page-content td { color: var(--rawafid-text); }
+
+    .page-content hr {
+      border: 0;
+      border-top: 2px dashed var(--rawafid-border);
+      margin: var(--space-xl) 0;
+    }
+
+    .page-content .task-list-item { list-style: none; }
+    .page-content input[type="checkbox"] {
+      margin-left: 8px;
+      accent-color: var(--rawafid-primary);
+    }
+
+    /* === بطاقة التصدير === */
+    .ed-export {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .ed-export-head {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .ed-export-head > i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+      font-size: var(--text-lg);
+      flex-shrink: 0;
+    }
+
+    .ed-export-head h2 {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: var(--font-black);
+      color: var(--rawafid-primary);
+    }
+
+    .ed-export-head p {
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
+      margin-top: var(--space-xs);
+      line-height: 1.8;
+    }
+
+    .ed-file {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      background: var(--rawafid-bg);
+      border: 1px dashed var(--rawafid-border);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      margin-bottom: var(--space-md);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--rawafid-text-muted);
+      direction: ltr;
+      text-align: left;
+    }
+
+    .ed-file-input {
+      flex: 1;
+      min-width: 140px;
+      background: transparent;
+      border: none;
+      color: var(--rawafid-text);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      outline: none;
+      direction: ltr;
+      text-align: left;
+      padding: 2px 0;
+    }
+
+    .ed-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    /* === التنبيهات === */
+    .ed-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 16px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--rawafid-text);
+      color: var(--rawafid-bg);
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      padding: 11px 22px;
+      border-radius: 50px;
+      box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+      z-index: 500;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    .ed-toast.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+
+    .ed-toast i { color: var(--rawafid-accent); flex-shrink: 0; }
+
+    /* === التجاوب === */
+    @media (max-width: 900px) {
+      .editor-page { padding: var(--space-md) var(--space-md) var(--space-xl); }
+    }
+
+    @media (max-width: 600px) {
+      .editor-page { padding: var(--space-md) var(--space-lg) var(--space-xl); }
+      .ed-grid { grid-template-columns: 1fr; gap: var(--space-md); }
+      .ed-field--cover,
+      .ed-field--checks { grid-column: 1 / -1; }
+      .ed-canvas { padding: var(--space-md) var(--space-sm); }
+      .ed-toolbar { gap: 2px; padding: 6px; }
+      .ed-tool { padding: 7px 10px; }
+      .ed-tool .ed-tool-text--long { display: none; }
+      .ed-sep { display: none; }
+
+      /* (منسوخ من _layouts/blog.html ليتطابق المعنى البصري على الجوال) */
+      .page-content p { font-size: calc(var(--text-sm) * var(--fs)); }
+      .page-content table,
+      .page-content th,
+      .page-content td { font-size: calc(var(--text-xs) * var(--fs)); padding: var(--space-sm); }
+      .page-content .table-wrapper { margin: var(--space-md) 0; }
+      .page-content h1 { font-size: calc(var(--text-xl) * var(--fs)); }
+      .page-content h2 { font-size: calc(var(--text-lg) * var(--fs)); }
+      .page-content h3 { font-size: calc(var(--text-base) * var(--fs)); }
+
+      .ed-table-tools { max-width: calc(100vw - 16px); }
+      .ed-mini { padding: 6px 8px; }
+      .ed-toast { bottom: 14px; }
+    }
+
+    @media print {
+      .ed-toolbar,
+      .ed-meta,
+      .ed-export,
+      .ed-pop,
+      .ed-table-tools,
+      .ed-top-side,
+      .ed-save-status {
+        display: none !important;
+      }
+
+      .ed-canvas { border: none; padding: 0; }
+      .ed-editor td.ed-cell-active,
+      .ed-editor th.ed-cell-active { outline: none; }
+    }
+  </style>
+  {% include seo.html %}
+</head>
+<body>
+
+  {% include loading.html %}
+  {% include header.html %}
+
+  <main class="editor-page">
+
+    <div class="ed-top">
+      <div class="ed-heading">
+        <h1>محرر مقالات المدونة</h1>
+        <p>اكتب المقالات مباشرة من المتصفح — الحفظ تلقائي في هذا الجهاز، والتصدير بصيغة المارك داون جاهزة للنشر.</p>
+      </div>
+      <div class="ed-top-side">
+        <span class="ed-save-status">
+          <span class="ed-save-dot" id="ed-save-dot" aria-hidden="true"></span>
+          <span id="ed-status">الحفظ التلقائي مفعّل</span>
+        </span>
+        <a href="{{ '/blog' | relative_url }}" class="ed-btn">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i> رجوع للمدونة
+        </a>
+      </div>
+    </div>
+
+    <section class="ed-meta" id="ed-meta" aria-label="بيانات المقال">
+      <div class="ed-grid">
+        <div class="ed-field ed-field--title">
+          <label for="ed-title">عنوان المقال</label>
+          <input type="text" id="ed-title" class="ed-title-input" placeholder="اكتب عنوان المقال هنا…" autocomplete="off">
+        </div>
+
+        <div class="ed-field">
+          <label for="ed-author">الكاتب</label>
+          <select id="ed-author" class="ed-select">
+            <option value="jassim" selected>جاسم الفارسي</option>
+            <option value="rawafid-edu">روافد التعليمية</option>
+          </select>
+        </div>
+
+        <div class="ed-field">
+          <label for="ed-date">تاريخ النشر</label>
+          <input type="date" id="ed-date" class="ed-input ed-date-input" autocomplete="off">
+        </div>
+
+        <div class="ed-field">
+          <label for="ed-tags">الوسوم</label>
+          <input type="text" id="ed-tags" class="ed-input" placeholder="مثال: النقد الحديث، محاضرات" autocomplete="off">
+          <p class="ed-hint">افصل بين الوسوم بفاصلة</p>
+        </div>
+
+        <div class="ed-field ed-field--cover">
+          <label for="ed-cover">رابط صورة الغلاف (اختياري)</label>
+          <input type="url" id="ed-cover" class="ed-input" placeholder="https://rawafid.jassim.one/images/…" dir="ltr" autocomplete="off">
+        </div>
+
+        <div class="ed-field ed-field--checks">
+          <span class="ed-checks-label">خيارات النشر</span>
+          <label class="ed-check"><input type="checkbox" id="ed-ai"> <span>محسّن باستعمال الذكاء الاصطناعي</span></label>
+          <label class="ed-check"><input type="checkbox" id="ed-hidebtns"> <span>إخفاء أزرار المشاركة والطباعة</span></label>
+          <label class="ed-check"><input type="checkbox" id="ed-visible" checked> <span>ظاهر في قائمة المدونة</span></label>
+        </div>
+      </div>
+    </section>
+
+    <div class="ed-toolbar" id="ed-toolbar" role="toolbar" aria-label="أدوات تنسيق النص">
+      <button type="button" class="ed-tool" data-block="h2" title="عنوان رئيسي" aria-label="عنوان">
+        <i class="fas fa-heading" aria-hidden="true"></i><span>عنوان</span>
+      </button>
+      <button type="button" class="ed-tool" data-block="h3" title="عنوان فرعي" aria-label="عنوان فرعي">
+        <i class="fas fa-heading ed-icon-sm" aria-hidden="true"></i><span>عنوان فرعي</span>
+      </button>
+      <button type="button" class="ed-tool" data-block="p" title="نص عادي" aria-label="نص عادي">
+        <i class="fas fa-paragraph" aria-hidden="true"></i><span class="ed-tool-text--long">نص عادي</span>
+      </button>
+      <button type="button" class="ed-tool" data-block="blockquote" title="اقتباس" aria-label="اقتباس">
+        <i class="fas fa-quote-right" aria-hidden="true"></i><span>اقتباس</span>
+      </button>
+
+      <span class="ed-sep" aria-hidden="true"></span>
+
+      <button type="button" class="ed-tool" data-cmd="bold" title="نص عريض (Ctrl+B)" aria-label="نص عريض">
+        <i class="fas fa-bold" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="ed-tool" data-cmd="italic" title="نص مائل (Ctrl+I)" aria-label="نص مائل">
+        <i class="fas fa-italic" aria-hidden="true"></i>
+      </button>
+
+      <span class="ed-sep" aria-hidden="true"></span>
+
+      <button type="button" class="ed-tool" id="ed-table-btn" title="إدراج جدول" aria-label="إدراج جدول" aria-expanded="false" aria-haspopup="dialog">
+        <i class="fas fa-table" aria-hidden="true"></i><span>إدراج جدول</span>
+      </button>
+    </div>
+
+    <div class="ed-canvas">
+      <div id="ed-editor" class="page-content ed-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="محتوى المقال" spellcheck="true"
+           data-ph="ابدأ الكتابة هنا… استخدم شريط الأدوات أعلاه لإضافة العناوين والاقتباسات والجداول."></div>
+    </div>
+
+    <section class="ed-export" aria-label="تصدير المقال">
+      <div class="ed-export-head">
+        <i class="fas fa-file-export" aria-hidden="true"></i>
+        <div>
+          <h2>تصدير المقال</h2>
+          <p>انسخ المارك داون أو نزّله كملف، ثم أضِفه إلى مجلد <span dir="ltr">_posts</span> وادفعه إلى المستودع ليُنشر تلقائياً. يُولَّد الملف كاملاً مع بيانات YAML الأمامية، ويُقترح اسمه تلقائياً من العنوان.</p>
+        </div>
+      </div>
+      <div class="ed-file" dir="ltr" aria-label="اسم الملف المقترح">
+        <span>_posts/</span><input type="text" id="ed-slug" class="ed-file-input" placeholder="post" aria-label="اسم الملف" autocomplete="off" spellcheck="false"><span>.md</span>
+      </div>
+      <div class="ed-actions">
+        <button type="button" class="ed-btn ed-btn--primary" id="ed-copy">
+          <i class="fas fa-copy" aria-hidden="true"></i> نسخ المارك داون
+        </button>
+        <button type="button" class="ed-btn" id="ed-download">
+          <i class="fas fa-download" aria-hidden="true"></i> تنزيل ملف ‎.md
+        </button>
+        <button type="button" class="ed-btn ed-btn--danger" id="ed-new">
+          <i class="fas fa-trash-can" aria-hidden="true"></i> مسودة جديدة
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="ed-pop" id="ed-pop" role="dialog" aria-label="إدراج جدول" aria-hidden="true">
+    <p class="ed-pop-title"><i class="fas fa-table" aria-hidden="true"></i> إدراج جدول</p>
+    <div class="ed-pop-row">
+      <label for="ed-rows">عدد الصفوف</label>
+      <input type="number" id="ed-rows" class="ed-num" min="1" max="20" value="3">
+    </div>
+    <div class="ed-pop-row">
+      <label for="ed-cols">عدد الأعمدة</label>
+      <input type="number" id="ed-cols" class="ed-num" min="1" max="8" value="3">
+    </div>
+    <div class="ed-pop-actions">
+      <button type="button" class="ed-btn ed-btn--primary" id="ed-pop-ok">إدراج</button>
+      <button type="button" class="ed-btn" id="ed-pop-cancel">إلغاء</button>
+    </div>
+  </div>
+
+  <div class="ed-table-tools" id="ed-table-tools" role="toolbar" aria-label="أدوات الجدول">
+    <button type="button" class="ed-mini" id="edt-addrow" title="إضافة صف" aria-label="إضافة صف"><i class="fas fa-plus" aria-hidden="true"></i> صف</button>
+    <button type="button" class="ed-mini" id="edt-addcol" title="إضافة عمود" aria-label="إضافة عمود"><i class="fas fa-plus" aria-hidden="true"></i> عمود</button>
+    <button type="button" class="ed-mini" id="edt-delrow" title="حذف الصف الحالي" aria-label="حذف الصف الحالي"><i class="fas fa-minus" aria-hidden="true"></i> صف</button>
+    <button type="button" class="ed-mini" id="edt-delcol" title="حذف العمود الحالي" aria-label="حذف العمود الحالي"><i class="fas fa-minus" aria-hidden="true"></i> عمود</button>
+    <button type="button" class="ed-mini ed-mini--danger" id="edt-deltable" title="حذف الجدول بالكامل" aria-label="حذف الجدول بالكامل"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+  </div>
+
+  <div class="ed-toast" id="ed-toast" role="status" aria-live="polite">
+    <i class="fas fa-circle-check" aria-hidden="true"></i><span id="ed-toast-text"></span>
+  </div>
+
+  {% include footer.html %}
+
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var DRAFT_KEY = 'rawafid-editor-draft-v1';
+      var AUTHORS_URL = "{{ '/assets/blogdata/authors.json' | relative_url }}";
+
+      var el = {
+        title: document.getElementById('ed-title'),
+        author: document.getElementById('ed-author'),
+        date: document.getElementById('ed-date'),
+        tags: document.getElementById('ed-tags'),
+        cover: document.getElementById('ed-cover'),
+        ai: document.getElementById('ed-ai'),
+        hideBtns: document.getElementById('ed-hidebtns'),
+        visible: document.getElementById('ed-visible'),
+        slug: document.getElementById('ed-slug'),
+        editor: document.getElementById('ed-editor'),
+        meta: document.getElementById('ed-meta'),
+        status: document.getElementById('ed-status'),
+        pop: document.getElementById('ed-pop'),
+        popRows: document.getElementById('ed-rows'),
+        popCols: document.getElementById('ed-cols'),
+        tableBtn: document.getElementById('ed-table-btn'),
+        tableTools: document.getElementById('ed-table-tools'),
+        toast: document.getElementById('ed-toast'),
+        toastText: document.getElementById('ed-toast-text')
+      };
+
+      /* ========== أدوات مساعدة ========== */
+
+      function todayStr() {
+        try { return new Date().toLocaleDateString('en-CA'); } catch (e) {
+          var d = new Date();
+          return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+        }
+      }
+
+      function slugify(str) {
+        var s = String(str || '')
+          .replace(/[\u064B-\u0652]/g, '')                 /* إزالة التشكيل */
+          .replace(/[^\u0621-\u064Aa-zA-Z0-9\s_-]/g, '')  /* الأحرف العربية واللاتينية والأرقام فقط */
+          .trim()
+          .replace(/[\s_]+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '')
+          .toLowerCase();
+        return s || 'post';
+      }
+
+      function escHtml(t) {
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function escText(t) {
+        return String(t).replace(/([\\*_`])/g, '\\$1');
+      }
+
+      function yamlStr(s) {
+        return '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+      }
+
+      function parseTags(raw) {
+        var seen = {};
+        var out = [];
+        String(raw || '').split(/[,،؛;]/).forEach(function (t) {
+          t = t.trim();
+          if (t && !seen[t]) { seen[t] = 1; out.push(t); }
+        });
+        return out;
+      }
+
+      /* ========== التنبيهات ========== */
+
+      var toastTimer = null;
+
+      function toast(msg) {
+        el.toastText.textContent = msg;
+        el.toast.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { el.toast.classList.remove('is-visible'); }, 2800);
+      }
+
+      /* ========== الحفظ التلقائي (localStorage) ========== */
+
+      function collectDraft() {
+        return {
+          v: 1,
+          title: el.title.value,
+          author: el.author.value,
+          date: el.date.value,
+          tags: el.tags.value,
+          cover: el.cover.value,
+          ai: el.ai.checked,
+          hideButtons: el.hideBtns.checked,
+          visible: el.visible.checked,
+          slug: el.slug.value,
+          slugDirty: el.slug.dataset.dirty === '1',
+          content: el.editor.innerHTML,
+          savedAt: Date.now()
+        };
+      }
+
+      function markSaved() {
+        var t;
+        try { t = new Date().toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' }); }
+        catch (e) { t = new Date().toLocaleTimeString(); }
+        el.status.textContent = 'تم الحفظ تلقائياً • ' + t;
+      }
+
+      function saveDraft() {
+        clearTimeout(saveTimer);
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft()));
+          markSaved();
+        } catch (e) { /* التخزين ممتلئ أو محظور — تجاهل بهدوء */ }
+      }
+
+      var saveTimer = null;
+
+      function queueSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(saveDraft, 500);
+      }
+
+      function restoreDraft() {
+        var raw = null;
+        try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return false; }
+        if (!raw) return false;
+
+        try {
+          var d = JSON.parse(raw);
+          if (!d || typeof d !== 'object') return false;
+
+          el.title.value = d.title || '';
+          el.author.value = d.author || 'jassim';
+          el.date.value = d.date || todayStr();
+          el.tags.value = d.tags || '';
+          el.cover.value = d.cover || '';
+          el.ai.checked = !!d.ai;
+          el.hideBtns.checked = !!d.hideButtons;
+          el.visible.checked = d.visible !== false;
+          if (d.slugDirty) {
+            el.slug.setAttribute('data-dirty', '1');
+            el.slug.value = d.slug || '';
+          } else {
+            el.slug.value = d.slug || (el.title.value.trim() ? slugify(el.title.value) : '');
+          }
+          if (d.content && String(d.content).trim()) el.editor.innerHTML = d.content;
+
+          var hasBody = el.title.value.trim() || el.editor.textContent.trim();
+          return !!hasBody;
+        } catch (e) { return false; }
+      }
+
+      window.addEventListener('beforeunload', saveDraft);
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') saveDraft();
+      });
+
+      /* ========== قائمة الكتّاب (من بيانات الموقع مباشرة) ========== */
+
+      (function loadAuthors() {
+        fetch(AUTHORS_URL + '?v=' + Date.now(), { cache: 'no-store' })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var authors = Array.isArray(data) ? data : (data && data.authors ? data.authors : []);
+            if (!authors.length) return;
+            var known = {};
+            Array.prototype.forEach.call(el.author.options, function (o) { known[o.value] = 1; });
+            var current = el.author.value;
+            authors.forEach(function (a) {
+              if (!a || !a.uid || known[a.uid]) return;
+              known[a.uid] = 1;
+              var opt = document.createElement('option');
+              opt.value = a.uid;
+              opt.textContent = a.name || a.uid;
+              el.author.appendChild(opt);
+            });
+            el.author.value = current;
+          })
+          .catch(function () { /* تعذر جلب الكتّاب — تبقى الخيارات الافتراضية */ });
+      })();
+
+      /* ========== تنفيذ أوامر التنسيق ========== */
+
+      function exec(cmd, val) {
+        el.editor.focus();
+        document.execCommand(cmd, false, val || null);
+        queueSave();
+        refreshToolbar();
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-block]'), function (btn) {
+        btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+        btn.addEventListener('click', function () {
+          exec('formatBlock', '<' + btn.getAttribute('data-block') + '>');
+        });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-cmd]'), function (btn) {
+        btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+        btn.addEventListener('click', function () { exec(btn.getAttribute('data-cmd')); });
+      });
+
+      function selectionNode() {
+        var sel = window.getSelection();
+        if (!sel || !sel.anchorNode) return null;
+        var node = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentNode : sel.anchorNode;
+        if (!node || !el.editor.contains(node)) return null;
+        return node;
+      }
+
+      function currentBlockTag() {
+        var node = selectionNode();
+        while (node && node !== el.editor) {
+          if (node.nodeType === 1 && /^(H1|H2|H3|H4|H5|H6|P|BLOCKQUOTE)$/.test(node.tagName)) {
+            return node.tagName.toLowerCase();
+          }
+          node = node.parentNode;
+        }
+        return '';
+      }
+
+      function refreshToolbar() {
+        var block = currentBlockTag();
+        Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-block]'), function (btn) {
+          btn.classList.toggle('is-active', btn.getAttribute('data-block') === block);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-cmd]'), function (btn) {
+          var on = false;
+          try { on = document.queryCommandState(btn.getAttribute('data-cmd')); } catch (e) {}
+          btn.classList.toggle('is-active', !!on);
+        });
+      }
+
+      /* ========== لصق نص عادي فقط (يحافظ على تنسيق المدونة) ========== */
+
+      el.editor.addEventListener('paste', function (e) {
+        e.preventDefault();
+        var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (!text) return;
+
+        if (text.indexOf('\n') !== -1) {
+          var html = text.split(/\n{2,}/).map(function (p) {
+            p = p.trim();
+            return p ? '<p>' + escHtml(p).replace(/\n/g, '<br>') + '</p>' : '';
+          }).join('');
+          if (html) document.execCommand('insertHTML', false, html);
+        } else {
+          document.execCommand('insertText', false, text);
+        }
+        queueSave();
+      });
+
+      /* ========== إدراج الجداول (بنية HTML مطابقة تماماً لقوالب المدونة) ========== */
+
+      function openPop() {
+        var rect = el.tableBtn.getBoundingClientRect();
+        el.pop.classList.add('is-open');
+        el.pop.setAttribute('aria-hidden', 'false');
+        el.tableBtn.setAttribute('aria-expanded', 'true');
+        var right = Math.max(8, window.innerWidth - rect.right);
+        var top = rect.bottom + 8;
+        if (top + 210 > window.innerHeight) top = Math.max(8, rect.top - 218);
+        el.pop.style.right = right + 'px';
+        el.pop.style.top = top + 'px';
+        el.popRows.focus();
+        el.popRows.select();
+      }
+
+      function closePop() {
+        el.pop.classList.remove('is-open');
+        el.pop.setAttribute('aria-hidden', 'true');
+        el.tableBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      el.tableBtn.addEventListener('click', function () {
+        if (el.pop.classList.contains('is-open')) closePop(); else openPop();
+      });
+
+      document.getElementById('ed-pop-cancel').addEventListener('click', closePop);
+
+      document.getElementById('ed-pop-ok').addEventListener('click', function () {
+        var rows = Math.min(20, Math.max(1, parseInt(el.popRows.value, 10) || 3));
+        var cols = Math.min(8, Math.max(1, parseInt(el.popCols.value, 10) || 3));
+
+        var html = '<div class="table-wrapper"><table><thead><tr>';
+        for (var c = 0; c < cols; c++) html += '<th>عنوان العمود</th>';
+        html += '</tr></thead><tbody>';
+        for (var r = 0; r < rows; r++) {
+          html += '<tr>';
+          for (var k = 0; k < cols; k++) html += '<td>نص</td>';
+          html += '</tr>';
+        }
+        html += '</tbody></table></div><p><br></p>';
+
+        el.editor.focus();
+        document.execCommand('insertHTML', false, html);
+        closePop();
+        queueSave();
+        toast('تم إدراج الجدول — انقر داخل الخلايا لتحريرها');
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!el.pop.classList.contains('is-open')) return;
+        if (el.pop.contains(e.target) || el.tableBtn.contains(e.target)) return;
+        closePop();
+      });
+
+      /* ========== أدوات الجدول العائمة ========== */
+
+      function tableContext() {
+        var node = selectionNode();
+        if (!node || !node.closest) return null;
+        var cell = node.closest('td,th');
+        if (!cell || !el.editor.contains(cell)) return null;
+        var table = cell.closest('table');
+        if (!table || !el.editor.contains(table)) return null;
+        var row = cell.parentNode;
+        return {
+          table: table,
+          row: row,
+          cell: cell,
+          inHead: row.parentNode && row.parentNode.tagName === 'THEAD'
+        };
+      }
+
+      var lastCell = null;
+
+      function updateCellHighlight() {
+        var ctx = tableContext();
+        if (lastCell && (!ctx || lastCell !== ctx.cell)) lastCell.classList.remove('ed-cell-active');
+        if (ctx) {
+          ctx.cell.classList.add('ed-cell-active');
+          lastCell = ctx.cell;
+        } else {
+          lastCell = null;
+        }
+      }
+
+      function positionTableTools() {
+        var ctx = tableContext();
+        if (!ctx) { hideTableTools(); return; }
+        el.tableTools.classList.add('is-open');
+        var rect = ctx.table.getBoundingClientRect();
+        var w = el.tableTools.offsetWidth;
+        var top = rect.top - 46;
+        if (top < 8) top = rect.bottom + 8;
+        var left = rect.left + (rect.width / 2) - (w / 2);
+        left = Math.max(8, Math.min(window.innerWidth - w - 8, left));
+        el.tableTools.style.top = top + 'px';
+        el.tableTools.style.left = left + 'px';
+      }
+
+      function hideTableTools() {
+        el.tableTools.classList.remove('is-open');
+        if (lastCell) { lastCell.classList.remove('ed-cell-active'); lastCell = null; }
+      }
+
+      Array.prototype.forEach.call(el.tableTools.querySelectorAll('.ed-mini'), function (btn) {
+        btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      });
+
+      function afterTableOp() {
+        queueSave();
+        updateCellHighlight();
+        positionTableTools();
+      }
+
+      document.getElementById('edt-addrow').addEventListener('click', function () {
+        var ctx = tableContext();
+        if (!ctx) return;
+        var tr = document.createElement('tr');
+        var cols = ctx.row.cells.length;
+        for (var i = 0; i < cols; i++) {
+          var td = document.createElement('td');
+          td.textContent = 'نص';
+          tr.appendChild(td);
+        }
+        if (ctx.inHead) {
+          ctx.table.tBodies[0].insertBefore(tr, ctx.table.tBodies[0].firstElementChild);
+        } else {
+          ctx.row.parentNode.insertBefore(tr, ctx.row.nextSibling);
+        }
+        afterTableOp();
+      });
+
+      document.getElementById('edt-addcol').addEventListener('click', function () {
+        var ctx = tableContext();
+        if (!ctx) return;
+        var idx = ctx.cell.cellIndex;
+        var rows = ctx.table.rows;
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          if (!row.cells.length) continue;
+          var inHead = row.parentNode && row.parentNode.tagName === 'THEAD';
+          var cell = document.createElement(inHead ? 'th' : 'td');
+          cell.textContent = inHead ? 'عنوان العمود' : 'نص';
+          var ref = idx < row.cells.length - 1 ? row.cells[idx + 1] : null;
+          row.insertBefore(cell, ref);
+        }
+        afterTableOp();
+      });
+
+      document.getElementById('edt-delrow').addEventListener('click', function () {
+        var ctx = tableContext();
+        if (!ctx) return;
+        if (ctx.inHead) {
+          toast('لا يمكن حذف صف الرؤوس — احذف الجدول كاملاً إن أردت');
+          return;
+        }
+        ctx.row.parentNode.removeChild(ctx.row);
+        afterTableOp();
+      });
+
+      document.getElementById('edt-delcol').addEventListener('click', function () {
+        var ctx = tableContext();
+        if (!ctx) return;
+        if (ctx.row.cells.length <= 1) {
+          toast('لا يمكن حذف العمود الوحيد في الجدول');
+          return;
+        }
+        var idx = ctx.cell.cellIndex;
+        var rows = ctx.table.rows;
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].cells[idx]) rows[i].removeChild(rows[i].cells[idx]);
+        }
+        afterTableOp();
+      });
+
+      document.getElementById('edt-deltable').addEventListener('click', function () {
+        var ctx = tableContext();
+        if (!ctx) return;
+        if (!window.confirm('حذف الجدول بالكامل مع محتواه؟')) return;
+        hideTableTools();
+        var wrapper = ctx.table.closest('.table-wrapper') || ctx.table;
+        if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+        if (!el.editor.textContent.trim() && !el.editor.querySelector('table,img,hr')) {
+          el.editor.innerHTML = '<p><br></p>';
+        }
+        queueSave();
+      });
+
+      /* تحديث موقع أدوات الجدول عند التمرير وتغيير الحجم */
+      var rafPending = false;
+
+      function rafReposition() {
+        if (rafPending) return;
+        rafPending = true;
+        window.requestAnimationFrame(function () {
+          rafPending = false;
+          positionTableTools();
+        });
+      }
+
+      window.addEventListener('scroll', rafReposition, { passive: true });
+      window.addEventListener('resize', rafReposition);
+
+      /* تتبع المؤشر: حالة الأزرار + تمييز الخلية + أدوات الجدول */
+      var selTimer = null;
+
+      function onSelectionChange() {
+        clearTimeout(selTimer);
+        selTimer = setTimeout(function () {
+          refreshToolbar();
+          updateCellHighlight();
+          positionTableTools();
+        }, 150);
+      }
+
+      document.addEventListener('selectionchange', onSelectionChange);
+      el.editor.addEventListener('keyup', function () {
+        refreshToolbar();
+        updateCellHighlight();
+        positionTableTools();
+      });
+      el.editor.addEventListener('click', function () {
+        refreshToolbar();
+        updateCellHighlight();
+        positionTableTools();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closePop(); hideTableTools(); }
+      });
+
+      /* ========== تحويل المحتوى إلى المارك داون ========== */
+
+      function inlineMdNodes(nodes) {
+        var out = '';
+        Array.prototype.forEach.call(nodes, function (n) {
+          if (n.nodeType === 3) { out += escText(n.nodeValue); return; }
+          if (n.nodeType !== 1) return;
+          var tag = n.tagName.toLowerCase();
+          var inner;
+          switch (tag) {
+            case 'strong': case 'b':
+              inner = inlineMdNodes(n.childNodes);
+              out += inner ? '**' + inner + '**' : '';
+              break;
+            case 'em': case 'i':
+              inner = inlineMdNodes(n.childNodes);
+              out += inner ? '*' + inner + '*' : '';
+              break;
+            case 'del': case 's': case 'strike':
+              inner = inlineMdNodes(n.childNodes);
+              out += inner ? '~~' + inner + '~~' : '';
+              break;
+            case 'code':
+              out += '`' + n.textContent + '`';
+              break;
+            case 'a':
+              inner = inlineMdNodes(n.childNodes) || n.textContent || 'رابط';
+              out += '[' + inner + '](' + (n.getAttribute('href') || '') + ')';
+              break;
+            case 'img':
+              out += '![' + (n.getAttribute('alt') || '') + '](' + (n.getAttribute('src') || '') + ')';
+              break;
+            case 'br':
+              out += '  \n';
+              break;
+            default:
+              out += inlineMdNodes(n.childNodes);
+          }
+        });
+        return out;
+      }
+
+      function listMd(list, depth) {
+        var lines = [];
+        var idx = 0;
+        var pad = '  '.repeat(depth);
+        var ordered = list.tagName.toLowerCase() === 'ol';
+        Array.prototype.forEach.call(list.children, function (li) {
+          if (li.tagName.toLowerCase() !== 'li') return;
+          idx++;
+          var inlineNodes = [];
+          var nested = [];
+          Array.prototype.forEach.call(li.childNodes, function (n) {
+            if (n.nodeType === 1 && /^(ul|ol)$/.test(n.tagName.toLowerCase())) nested.push(n);
+            else inlineNodes.push(n);
+          });
+          var text = inlineMdNodes(inlineNodes).trim();
+          lines.push(pad + (ordered ? idx + '. ' : '- ') + (text || ''));
+          nested.forEach(function (n) { lines = lines.concat(listMd(n, depth + 1)); });
+        });
+        return lines;
+      }
+
+      function blocksMdArray(node) {
+        var blocks = [];
+        Array.prototype.forEach.call(node.childNodes, function (n) {
+          var md = blockMd(n);
+          if (md && String(md).trim()) blocks.push(String(md).trim());
+        });
+        return blocks;
+      }
+
+      function tableToRawHtml(table) {
+        var html;
+        var parent = table.parentNode;
+        if (parent && parent.nodeType === 1 && parent.classList && parent.classList.contains('table-wrapper')) {
+          html = parent.outerHTML;
+        } else {
+          html = '<div class="table-wrapper">' + table.outerHTML + '</div>';
+        }
+        return html.replace(/>\s*</g, '>\n<');
+      }
+
+      function blockMd(node) {
+        if (node.nodeType === 3) {
+          var t = node.nodeValue.trim();
+          return t ? escText(t) : '';
+        }
+        if (node.nodeType !== 1) return '';
+
+        var tag = node.tagName.toLowerCase();
+        var inner;
+
+        switch (tag) {
+          case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':
+            inner = inlineMdNodes(node.childNodes).trim();
+            return inner ? '#'.repeat(parseInt(tag.charAt(1), 10)) + ' ' + inner : '';
+
+          case 'p':
+            return inlineMdNodes(node.childNodes).trim();
+
+          case 'blockquote':
+            inner = blocksMdArray(node);
+            if (!inner.length) return '>';
+            return inner.join('\n\n').split('\n').map(function (l) { return l ? '> ' + l : '>'; }).join('\n');
+
+          case 'ul': case 'ol':
+            return listMd(node, 0).join('\n');
+
+          case 'hr':
+            return '---';
+
+          case 'pre':
+            return '```\n' + node.textContent.replace(/\n+$/, '') + '\n```';
+
+          case 'table':
+            return tableToRawHtml(node);
+
+          case 'div':
+            if (node.classList && node.classList.contains('table-wrapper')) return tableToRawHtml(node.querySelector('table'));
+            return blocksMdArray(node).join('\n\n');
+
+          case 'br':
+            return '';
+
+          default:
+            return blocksMdArray(node).join('\n\n');
+        }
+      }
+
+      function contentToMd() {
+        var blocks = [];
+        Array.prototype.forEach.call(el.editor.childNodes, function (n) {
+          var md = blockMd(n);
+          if (md && String(md).trim()) blocks.push(String(md).trim());
+        });
+        return blocks.join('\n\n');
+      }
+
+      function buildMarkdown() {
+        var title = el.title.value.trim() || 'مقال بدون عنوان';
+        var date = el.date.value || todayStr();
+
+        var fm = ['---'];
+        fm.push('layout: blog');
+        fm.push('title: ' + yamlStr(title));
+        if (el.hideBtns.checked) fm.push('hide-buttons: "yes"');
+        if (el.visible.checked) fm.push('visible: true');
+        if (el.cover.value.trim()) fm.push('cover_image: ' + yamlStr(el.cover.value.trim()));
+        fm.push('author: ' + yamlStr(el.author.value || 'jassim'));
+        if (el.ai.checked) fm.push('ai: "yes"');
+        fm.push('date: ' + date);
+
+        var tags = parseTags(el.tags.value);
+        if (tags.length) {
+          fm.push('tags:');
+          tags.forEach(function (t) { fm.push('  - ' + yamlStr(t)); });
+        }
+
+        fm.push('---');
+        fm.push('');
+        fm.push(contentToMd());
+
+        return fm.join('\n') + '\n';
+      }
+
+      function buildFileName() {
+        var date = el.date.value || todayStr();
+        var slug = slugify(el.slug.value || el.title.value);
+        return date + '-' + slug + '.md';
+      }
+
+      /* ========== التصدير ========== */
+
+      function fallbackCopy(text, done) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '0';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          document.execCommand('copy');
+          done();
+        } catch (e) {
+          toast('تعذر النسخ — استخدم زر التنزيل بدلاً منه');
+        }
+        document.body.removeChild(ta);
+      }
+
+      document.getElementById('ed-copy').addEventListener('click', function () {
+        saveDraft();
+        var md = buildMarkdown();
+        var done = function () { toast('تم نسخ المارك داون — ألصقه في ملف جديد داخل مجلد _posts'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(md).then(done, function () { fallbackCopy(md, done); });
+        } else {
+          fallbackCopy(md, done);
+        }
+      });
+
+      document.getElementById('ed-download').addEventListener('click', function () {
+        saveDraft();
+        var md = buildMarkdown();
+        var name = buildFileName();
+        try {
+          var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            URL.revokeObjectURL(url);
+            if (a.parentNode) a.parentNode.removeChild(a);
+          }, 800);
+          toast('تم تنزيل "' + name + '" — أضِفه إلى مجلد _posts ثم ادفعه إلى المستودع');
+        } catch (e) {
+          toast('تعذر التنزيل في هذا المتصفح');
+        }
+      });
+
+      document.getElementById('ed-new').addEventListener('click', function () {
+        if (!window.confirm('بدء مسودة جديدة؟ سيُحذف محتوى المسودة الحالية نهائياً من هذا الجهاز.')) return;
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        el.title.value = '';
+        el.author.value = 'jassim';
+        el.date.value = todayStr();
+        el.tags.value = '';
+        el.cover.value = '';
+        el.ai.checked = false;
+        el.hideBtns.checked = false;
+        el.visible.checked = true;
+        el.slug.value = '';
+        el.slug.removeAttribute('data-dirty');
+        el.editor.innerHTML = '';
+        hideTableTools();
+        closePop();
+        el.status.textContent = 'الحفظ التلقائي مفعّل';
+        refreshToolbar();
+        toast('مسودة جديدة جاهزة');
+        el.title.focus();
+      });
+
+      /* ========== الربط بالحقول ========== */
+
+      el.title.addEventListener('input', function () {
+        if (el.slug.dataset.dirty !== '1') {
+          el.slug.value = el.title.value.trim() ? slugify(el.title.value) : '';
+        }
+      });
+
+      el.slug.addEventListener('input', function () {
+        if (el.slug.value.trim()) el.slug.setAttribute('data-dirty', '1');
+        else el.slug.removeAttribute('data-dirty');
+      });
+
+      el.editor.addEventListener('input', queueSave);
+      el.meta.addEventListener('input', queueSave);
+      el.meta.addEventListener('change', queueSave);
+
+      /* ========== التهيئة ========== */
+
+      function init() {
+        el.date.value = todayStr();
+
+        var restored = restoreDraft();
+        if (!restored && !el.slug.value) el.slug.value = '';
+
+        if (typeof window.rawafidHideLoader === 'function') window.rawafidHideLoader();
+
+        if (restored) {
+          toast('تم استرجاع مسودتك المحفوظة تلقائياً');
+          markSaved();
+        }
+
+        refreshToolbar();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+</body>
+</html>
