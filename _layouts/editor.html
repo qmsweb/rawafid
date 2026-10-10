@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- iPad-friendly viewport: allow pinch-zoom, cover notch/safe-area -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{{ page.title | default: "محرر المدونة | منصة روافد" }}</title>
 
   <link rel="stylesheet" href="{{ '/fonts/fonts.css' | relative_url }}" />
@@ -24,874 +25,570 @@
     })();
   </script>
 
-  <script>
-    /* منع التكبير/التصغير (Zoom) نهائياً — تجربة تشبه التطبيقات (بدون تعطيل تحديد الكلمات بالنقر المزدوج داخل المحرر) */
-    (function () {
-      document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
-      document.addEventListener('gesturechange', function (e) { e.preventDefault(); });
-      document.addEventListener('gestureend', function (e) { e.preventDefault(); });
-
-      document.addEventListener('wheel', function (e) {
-        if (e.ctrlKey) e.preventDefault();
-      }, { passive: false });
-
-      document.addEventListener('keydown', function (e) {
-        if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault();
-      }, { passive: false });
-
-      document.addEventListener('touchmove', function (e) {
-        if (e.touches.length > 1) e.preventDefault();
-      }, { passive: false });
-    })();
-  </script>
-
   <style>
     /* ============================================================
-       محرر مقالات المدونة — أنماط خاصة بهذه الصفحة فقط
-       (الطباعة والجداول منسوخة حرفياً من _layouts/blog.html
-       حتى يطابق شكل المحرر شكل المقال المنشور تماماً)
+       محرر روافد — وضع ملء الشاشة بأسلوب Blogger
+       - إخفاء تام للهيدر/الفوتر (لا يتم تضمينهما أصلاً + إخفاء دفاعي)
+       - مساحة عمل تملأ الشاشة 100dvh
+       - محسّن للآيباد (أهداف لمس 44px+، تمرير باللمس، شريط أدوات أفقي)
        ============================================================ */
 
-    .editor-page {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: var(--space-lg) var(--space-md) var(--space-xl);
+    /* إخفاء دفاعي: لو أي include تسرّب هيدر/فوتر عام */
+    body > header, body > footer,
+    .site-header, .site-footer, #site-header, #site-footer { display: none !important; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overscroll-behavior-y: none;
     }
 
-    html, body { touch-action: manipulation; }
-
-    /* === الترويسة العلوية للصفحة === */
-    .ed-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: var(--space-md);
-      margin-bottom: var(--space-md);
-    }
-
-    .ed-heading h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(1.5rem, 3vw, 1.9rem);
-      font-weight: var(--font-black);
-      color: var(--rawafid-primary);
-      line-height: 1.4;
-    }
-
-    .ed-heading p {
-      color: var(--rawafid-text-muted);
-      font-size: var(--text-sm);
-      margin-top: var(--space-xs);
-      max-width: 520px;
-    }
-
-    .ed-top-side {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-    }
-
-    .ed-save-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: var(--text-sm);
-      font-weight: var(--font-medium);
-      color: var(--rawafid-text-muted);
-      padding: 8px 14px;
-      border-radius: 50px;
-      background: var(--rawafid-surface);
-      border: 1px dashed var(--rawafid-border);
-    }
-
-    .ed-save-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--rawafid-success);
-      flex-shrink: 0;
-    }
-
-    /* === الأزرار (بأسلوب أزرار المدونة) === */
-    .ed-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      color: var(--rawafid-primary);
-      font-weight: var(--font-bold);
-      font-size: var(--text-sm);
-      padding: 8px 16px;
-      border-radius: 50px;
-      background: var(--rawafid-surface);
-      border: 1px solid var(--rawafid-border);
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-      cursor: pointer;
-    }
-
-    .ed-btn:hover,
-    .ed-btn:focus-visible {
-      background: var(--rawafid-primary);
-      color: var(--rawafid-white);
-      border-color: var(--rawafid-primary);
-    }
-
-    .ed-btn--primary {
-      background: var(--rawafid-primary);
-      color: var(--rawafid-white);
-      border-color: var(--rawafid-primary);
-    }
-
-    .ed-btn--primary:hover,
-    .ed-btn--primary:focus-visible {
-      background: var(--rawafid-primary-dark);
-      color: var(--rawafid-white);
-      border-color: var(--rawafid-primary-dark);
-    }
-
-    .ed-btn--danger { color: var(--rawafid-error); }
-    .ed-btn--danger:hover,
-    .ed-btn--danger:focus-visible {
-      background: var(--rawafid-error);
-      color: var(--rawafid-white);
-      border-color: var(--rawafid-error);
-    }
-
-    /* === بطاقة بيانات المقال === */
-    .ed-meta {
-      background: var(--rawafid-surface);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-md) var(--space-lg);
-      margin-bottom: var(--space-md);
-    }
-
-    .ed-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: var(--space-md) var(--space-lg);
-    }
-
-    .ed-field { min-width: 0; }
-
-    .ed-field--title { grid-column: 1 / -1; }
-    .ed-field--cover { grid-column: 1 / 5; }
-    .ed-field--checks { grid-column: 5 / -1; }
-
-    .ed-field label {
-      display: block;
-      font-size: var(--text-sm);
-      font-weight: var(--font-bold);
-      color: var(--rawafid-text-muted);
-      margin-bottom: 6px;
-    }
-
-    .ed-input,
-    .ed-select {
-      width: 100%;
+    body {
       background: var(--rawafid-bg);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-sm);
       color: var(--rawafid-text);
-      font-family: inherit;
-      font-size: var(--text-sm);
-      padding: 10px 14px;
-      transition: border-color 0.2s ease;
+      font-family: var(--font-body);
+      /* لا نمنع التكبير هنا (مهم للآيباد) — فقط نمنع الإيماءات المزعجة على الأزرار */
+      -webkit-text-size-adjust: 100%;
     }
 
-    .ed-input:focus,
-    .ed-select:focus {
-      outline: none;
-      border-color: var(--rawafid-primary);
+    /* === هيكل التطبيق بملء الشاشة === */
+    .blogger-app {
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--rawafid-bg);
     }
 
-    .ed-title-input {
+    /* --- الشريط العلوي (App Bar) --- */
+    .bg-topbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      padding-top: calc(8px + env(safe-area-inset-top, 0px));
+      padding-left: calc(12px + env(safe-area-inset-left, 0px));
+      padding-right: calc(12px + env(safe-area-inset-right, 0px));
+      background: var(--rawafid-surface);
+      border-bottom: 1px solid var(--rawafid-border);
+      z-index: 200;
+    }
+
+    .bg-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--rawafid-text);
+      font-size: 1.05rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bg-icon-btn:hover, .bg-icon-btn:focus-visible {
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+    }
+
+    .bg-title-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+    .bg-title-input {
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 2px solid var(--rawafid-border);
-      border-radius: 0;
       color: var(--rawafid-text);
       font-family: var(--font-heading);
-      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
       font-weight: var(--font-black);
-      padding: 6px 0 10px;
-      transition: border-color 0.2s ease;
+      padding: 6px 2px;
+      min-height: 44px;
     }
+    .bg-title-input:focus { outline: none; border-bottom: 2px solid var(--rawafid-primary); }
+    .bg-title-input::placeholder { color: var(--rawafid-text-muted); font-weight: var(--font-medium); }
 
-    .ed-title-input:focus {
-      outline: none;
-      border-bottom-color: var(--rawafid-primary);
-    }
-
-    .ed-date-input { direction: ltr; text-align: right; }
-
-    .ed-hint {
-      font-size: var(--text-xs);
+    .bg-save-status {
+      font-size: 0.75rem;
       color: var(--rawafid-text-muted);
-      margin-top: 6px;
-    }
-
-    .ed-checks-label {
-      display: block;
-      font-size: var(--text-sm);
-      font-weight: var(--font-bold);
-      color: var(--rawafid-text-muted);
-      margin-bottom: 6px;
-    }
-
-    .ed-check {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: var(--text-sm);
-      font-weight: var(--font-medium);
-      color: var(--rawafid-text);
-      cursor: pointer;
-      padding: 4px 0;
-    }
-
-    .ed-check input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--rawafid-primary);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    /* === شريط الأدوات === */
-    .ed-toolbar {
-      position: sticky;
-      top: calc(var(--nav-height) + 8px);
-      z-index: 100;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-xs);
-      padding: var(--space-sm);
-      background: var(--rawafid-surface);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      box-shadow: 0 8px 22px -14px rgba(0, 0, 0, 0.35);
-      margin-bottom: var(--space-md);
-    }
-
-    .ed-tool {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--rawafid-text);
-      font-weight: var(--font-bold);
-      font-size: var(--text-xs);
-      padding: 7px 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bg-save-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rawafid-success); flex-shrink: 0; }
+
+    .bg-top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    .bg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 10px 18px;
       border-radius: 50px;
-      background: transparent;
-      border: 1px solid transparent;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-      cursor: pointer;
-    }
-
-    .ed-tool:hover,
-    .ed-tool:focus-visible {
-      background: var(--rawafid-primary-soft);
-      color: var(--rawafid-primary);
-    }
-
-    .ed-tool.is-active {
-      background: var(--rawafid-primary);
-      color: var(--rawafid-white);
-      border-color: var(--rawafid-primary);
-    }
-
-    .ed-icon-sm { font-size: 0.72em; }
-
-    .ed-sep {
-      width: 1px;
-      height: 24px;
-      background: var(--rawafid-border);
-      margin-inline: var(--space-xs);
-      flex-shrink: 0;
-    }
-
-    /* === لوحة إدراج الجدول === */
-    .ed-pop {
-      position: fixed;
-      z-index: 300;
-      width: 250px;
-      background: var(--rawafid-surface);
       border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-      box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
-      display: none;
+      background: var(--rawafid-surface);
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
+    .bg-btn:hover, .bg-btn:focus-visible { background: var(--rawafid-primary); color: var(--rawafid-white); border-color: var(--rawafid-primary); }
+    .bg-btn--primary { background: var(--rawafid-primary); color: var(--rawafid-white); border-color: var(--rawafid-primary); }
+    .bg-btn--primary:hover, .bg-btn--primary:focus-visible { background: var(--rawafid-primary-dark); border-color: var(--rawafid-primary-dark); }
+    .bg-btn--danger { color: var(--rawafid-error); }
+    .bg-btn--danger:hover, .bg-btn--danger:focus-visible { background: var(--rawafid-error); color: var(--rawafid-white); border-color: var(--rawafid-error); }
 
-    .ed-pop.is-open { display: block; }
-
-    .ed-pop-title {
+    /* --- شريط اسم الملف --- */
+    .bg-filebar {
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: var(--text-sm);
-      font-weight: var(--font-black);
-      color: var(--rawafid-primary);
-      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: var(--rawafid-surface);
+      border-bottom: 1px solid var(--rawafid-border);
+      font-size: 0.8rem;
+      z-index: 190;
     }
-
-    .ed-pop-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-md);
-      margin-bottom: var(--space-sm);
+    .bg-filebar .bg-file-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--rawafid-text-muted); font-weight: var(--font-bold); white-space: nowrap;
     }
-
-    .ed-pop-row label {
-      font-size: var(--text-sm);
-      font-weight: var(--font-bold);
-      color: var(--rawafid-text-muted);
-    }
-
-    .ed-num {
-      width: 84px;
+    .bg-file-pill {
+      flex: 1; min-width: 180px;
+      display: flex; align-items: center; gap: 6px;
       background: var(--rawafid-bg);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-sm);
-      color: var(--rawafid-text);
-      font-family: inherit;
-      font-size: var(--text-sm);
-      padding: 7px 10px;
+      border: 1px dashed var(--rawafid-border);
+      border-radius: 10px;
+      padding: 4px 10px;
       direction: ltr;
-      text-align: center;
     }
-
-    .ed-num:focus {
-      outline: none;
-      border-color: var(--rawafid-primary);
+    .bg-file-input {
+      flex: 1; min-width: 0;
+      background: transparent; border: none; outline: none;
+      color: var(--rawafid-text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 36px;
+      direction: ltr; text-align: left;
     }
-
-    .ed-pop-actions {
-      display: flex;
-      gap: var(--space-sm);
-      margin-top: var(--space-md);
+    .bg-file-input[readonly] { color: var(--rawafid-text-muted); cursor: default; }
+    .bg-file-input:not([readonly]) { color: var(--rawafid-text); background: var(--rawafid-surface); border-radius: 6px; padding-inline: 6px; }
+    .bg-file-edit {
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 44px; padding: 8px 14px;
+      border-radius: 50px; border: 1px solid var(--rawafid-border);
+      background: transparent; color: var(--rawafid-text);
+      font-size: 0.8rem; font-weight: var(--font-bold); font-family: inherit;
+      cursor: pointer; white-space: nowrap;
+      touch-action: manipulation; -webkit-tap-highlight-color: transparent;
     }
+    .bg-file-edit:hover, .bg-file-edit:focus-visible { background: var(--rawafid-primary-soft); color: var(--rawafid-primary); }
+    .bg-file-edit.is-editing { background: var(--rawafid-primary); color: var(--rawafid-white); border-color: var(--rawafid-primary); }
 
-    /* === أدوات الجدول العائمة === */
-    .ed-table-tools {
-      position: fixed;
-      z-index: 290;
-      display: none;
-      align-items: center;
-      gap: 2px;
+    /* --- زر إظهار/إخفاء الإعدادات --- */
+    .bg-meta-toggle-row { flex-shrink: 0; background: var(--rawafid-surface); border-bottom: 1px solid var(--rawafid-border); padding: 0 12px; }
+    .bg-meta-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      background: transparent; border: none; cursor: pointer;
+      min-height: 48px; padding: 6px 0;
+      color: var(--rawafid-text-muted); font-family: inherit; font-size: 0.85rem; font-weight: var(--font-bold);
+      touch-action: manipulation;
+    }
+    .bg-meta-toggle i.fa-chevron-down { transition: transform 0.2s ease; }
+    .bg-meta-toggle[aria-expanded="true"] i.fa-chevron-down { transform: rotate(180deg); }
+
+    .bg-meta-panel {
+      flex-shrink: 0;
+      background: var(--rawafid-surface);
+      border-bottom: 1px solid var(--rawafid-border);
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .bg-meta-panel.is-open { max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .bg-meta-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px 16px; padding: 12px;
+    }
+    .bg-field { min-width: 0; }
+    .bg-field--wide { grid-column: span 2; }
+    .bg-field label { display: block; font-size: 0.8rem; font-weight: var(--font-bold); color: var(--rawafid-text-muted); margin-bottom: 6px; }
+    .bg-input, .bg-select {
+      width: 100%; background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border); border-radius: 8px;
+      color: var(--rawafid-text); font-family: inherit; font-size: 16px; /* 16px لمنع زوم iOS التلقائي */
+      padding: 10px 12px; min-height: 44px;
+    }
+    .bg-input:focus, .bg-select:focus { outline: none; border-color: var(--rawafid-primary); }
+    .bg-date-input { direction: ltr; text-align: right; }
+    .bg-hint { font-size: 0.72rem; color: var(--rawafid-text-muted); margin-top: 4px; }
+    .bg-check { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: var(--font-medium); cursor: pointer; padding: 8px 0; min-height: 44px; }
+    .bg-check input { width: 22px; height: 22px; accent-color: var(--rawafid-primary); cursor: pointer; flex-shrink: 0; }
+
+    /* --- شريط أدوات التنسيق (أفقي قابل للتمرير باللمس) --- */
+    .bg-toolbar {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 10px;
+      background: var(--rawafid-surface);
+      border-bottom: 1px solid var(--rawafid-border);
+      overflow-x: auto; overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      touch-action: pan-x pan-y;
+      z-index: 150;
+    }
+    .bg-toolbar::-webkit-scrollbar { height: 4px; }
+    .bg-toolbar::-webkit-scrollbar-thumb { background: var(--rawafid-border); border-radius: 4px; }
+
+    .bg-tool {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      flex-shrink: 0;
+      min-width: 44px; min-height: 44px;
+      padding: 10px 14px;
+      border-radius: 50px; border: 1px solid transparent;
+      background: transparent; color: var(--rawafid-text);
+      font-weight: var(--font-bold); font-size: 0.82rem; font-family: inherit;
+      cursor: pointer; white-space: nowrap;
+      touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+    }
+    .bg-tool:hover, .bg-tool:focus-visible { background: var(--rawafid-primary-soft); color: var(--rawafid-primary); }
+    .bg-tool.is-active { background: var(--rawafid-primary); color: var(--rawafid-white); border-color: var(--rawafid-primary); }
+    .bg-sep { width: 1px; height: 26px; background: var(--rawafid-border); margin-inline: 4px; flex-shrink: 0; }
+
+    /* --- مساحة الكتابة (تملأ الشاشة) --- */
+    .bg-workspace {
+      flex: 1; min-height: 0;
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x pan-y;
+      padding: 20px 16px calc(32px + env(safe-area-inset-bottom, 0px));
+      background: var(--rawafid-bg);
+    }
+    .bg-sheet {
+      width: 100%; max-width: 820px;
+      margin: 0 auto;
       background: var(--rawafid-surface);
       border: 1px solid var(--rawafid-border);
-      border-radius: 50px;
-      padding: 4px;
-      box-shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.45);
+      border-radius: 12px;
+      padding: 28px 26px;
+      min-height: 100%;
+      box-shadow: 0 10px 30px -18px rgba(0,0,0,0.25);
     }
+    .bg-sheet:focus-within { border-color: var(--rawafid-primary); }
 
-    .ed-table-tools.is-open { display: flex; }
+    .bg-editor { outline: none; font-size: 16px; /* منع زوم iOS */ word-wrap: break-word; }
+    .bg-editor:empty::before { content: attr(data-ph); color: var(--rawafid-text-muted); pointer-events: none; }
+    .bg-editor td.ed-cell-active, .bg-editor th.ed-cell-active { outline: 2px solid var(--rawafid-primary); outline-offset: -2px; }
 
-    .ed-mini {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--rawafid-text);
-      font-weight: var(--font-bold);
-      font-size: var(--text-xs);
-      padding: 6px 11px;
-      border-radius: 50px;
-      background: transparent;
-      transition: background-color 0.2s ease, color 0.2s ease;
-      cursor: pointer;
-      white-space: nowrap;
+    /* --- تنسيق المحتوى (مطابق للمدونة) --- */
+    .page-content { color: var(--rawafid-text); --fs: 1; font-size: calc(var(--text-base) * var(--fs)); }
+    .page-content h1, .page-content h2, .page-content h3, .page-content h4 {
+      font-weight: var(--font-bold); color: var(--rawafid-primary);
+      margin-top: var(--space-xl); margin-bottom: var(--space-md); line-height: 1.5;
     }
-
-    .ed-mini:hover,
-    .ed-mini:focus-visible {
-      background: var(--rawafid-primary-soft);
-      color: var(--rawafid-primary);
-    }
-
-    .ed-mini--danger { color: var(--rawafid-error); }
-    .ed-mini--danger:hover,
-    .ed-mini--danger:focus-visible {
-      background: var(--rawafid-error);
-      color: var(--rawafid-white);
-    }
-
-    /* === سطح التحرير === */
-    .ed-canvas {
-      background: var(--rawafid-surface);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg) var(--space-md);
-      transition: border-color 0.2s ease;
-    }
-
-    .ed-canvas:focus-within { border-color: var(--rawafid-primary); }
-
-    .ed-editor { outline: none; }
-
-    .ed-editor:empty::before {
-      content: attr(data-ph);
-      color: var(--rawafid-text-muted);
-      pointer-events: none;
-    }
-
-    .ed-editor td.ed-cell-active,
-    .ed-editor th.ed-cell-active {
-      outline: 2px solid var(--rawafid-primary);
-      outline-offset: -2px;
-    }
-
-    /* === تنسيق محتوى المارك داون (منسوخ حرفياً من _layouts/blog.html) === */
-    .page-content {
-      color: var(--rawafid-text);
-      --fs: 1;
-      font-size: calc(var(--text-base) * var(--fs));
-    }
-
-    .page-content h1,
-    .page-content h2,
-    .page-content h3,
-    .page-content h4 {
-      font-weight: var(--font-bold);
-      color: var(--rawafid-primary);
-      margin-top: var(--space-xl);
-      margin-bottom: var(--space-md);
-      line-height: 1.5;
-    }
-
     .page-content h1 { font-size: calc(var(--text-2xl) * var(--fs)); }
     .page-content h2 { font-size: calc(var(--text-xl) * var(--fs)); border-right: 4px solid var(--rawafid-primary); padding-right: var(--space-md); }
     .page-content h3 { font-size: calc(var(--text-lg) * var(--fs)); }
     .page-content h4 { font-size: calc(var(--text-base) * var(--fs)); }
-
-    .page-content p {
-      font-size: calc(var(--text-base) * var(--fs));
-      line-height: 1.9;
-      margin-bottom: var(--space-md);
-      text-align: justify;
-    }
-
-    .page-content a {
-      color: var(--rawafid-primary);
-      font-weight: var(--font-bold);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .page-content a:hover,
-    .page-content a:focus-visible {
-      opacity: 0.8;
-    }
-
+    .page-content p { font-size: calc(var(--text-base) * var(--fs)); line-height: 1.9; margin-bottom: var(--space-md); text-align: justify; }
+    .page-content a { color: var(--rawafid-primary); font-weight: var(--font-bold); text-decoration: underline; text-underline-offset: 3px; }
     .page-content strong { font-weight: var(--font-bold); }
     .page-content em { font-style: italic; }
     .page-content del { opacity: 0.6; }
-
-    .page-content ul,
-    .page-content ol {
-      padding-right: var(--space-lg);
-      margin-bottom: var(--space-md);
-      line-height: 2;
-    }
-
+    .page-content ul, .page-content ol { padding-right: var(--space-lg); margin-bottom: var(--space-md); line-height: 2; }
     .page-content li { margin-bottom: var(--space-xs); text-align: justify; }
     .page-content li::marker { color: var(--rawafid-primary); font-weight: var(--font-bold); }
-
     .page-content blockquote {
-      background: var(--rawafid-primary-soft);
-      border-right: 4px solid var(--rawafid-primary);
-      border-radius: var(--radius-sm);
-      padding: var(--space-md);
-      margin: var(--space-lg) 0;
-      color: var(--rawafid-text);
-      font-size: calc(var(--text-base) * var(--fs));
-      text-align: justify;
+      background: var(--rawafid-primary-soft); border-right: 4px solid var(--rawafid-primary);
+      border-radius: var(--radius-sm); padding: var(--space-md); margin: var(--space-lg) 0;
+      color: var(--rawafid-text); font-size: calc(var(--text-base) * var(--fs)); text-align: justify;
     }
-
     .page-content blockquote p { margin-bottom: 0; }
-
     .page-content code {
-      background: var(--rawafid-bg);
-      border: 1px solid var(--rawafid-border);
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-family: var(--font-mono);
-      font-size: 0.88em;
-      direction: ltr;
-      display: inline-block;
+      background: var(--rawafid-bg); border: 1px solid var(--rawafid-border); border-radius: 6px;
+      padding: 2px 8px; font-family: var(--font-mono); font-size: 0.88em; direction: ltr; display: inline-block;
     }
-
     .page-content pre {
-      background: var(--rawafid-bg);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-      overflow-x: auto;
-      margin: var(--space-lg) 0;
-      direction: ltr;
-      text-align: left;
+      background: var(--rawafid-bg); border: 1px solid var(--rawafid-border); border-radius: var(--radius-md);
+      padding: var(--space-md); overflow-x: auto; margin: var(--space-lg) 0; direction: ltr; text-align: left;
+      -webkit-overflow-scrolling: touch;
     }
-
-    .page-content pre code {
-      background: transparent;
-      border: 0;
-      padding: 0;
-      border-radius: 0;
-      font-size: 0.88em;
-    }
-
-    .page-content img {
-      max-width: 100%;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--rawafid-border);
-      display: block;
-      margin: var(--space-xl) auto;
-    }
-
-    .page-content .table-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      max-width: 100%;
-      margin: var(--space-lg) auto;
-    }
-
+    .page-content pre code { background: transparent; border: 0; padding: 0; }
+    .page-content img { max-width: 100%; border-radius: var(--radius-md); border: 1px solid var(--rawafid-border); display: block; margin: var(--space-xl) auto; }
+    .page-content .table-wrapper { width: 100%; overflow-x: auto; max-width: 100%; margin: var(--space-lg) auto; -webkit-overflow-scrolling: touch; }
     .page-content table {
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: calc(var(--text-sm) * var(--fs));
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: var(--rawafid-surface);
+      width: 100%; max-width: 800px; margin: 0 auto;
+      border-collapse: separate; border-spacing: 0; font-size: calc(var(--text-sm) * var(--fs));
+      border: 1px solid var(--rawafid-border); border-radius: var(--radius-md); overflow: hidden; background: var(--rawafid-surface);
     }
-
     .page-content thead th {
-      background: var(--rawafid-primary-soft);
-      color: var(--rawafid-text);
-      font-weight: var(--font-bold);
-      text-align: right;
-      padding: 12px var(--space-md);
-      border: 0;
-      border-bottom: 1px solid var(--rawafid-border);
+      background: var(--rawafid-primary-soft); color: var(--rawafid-text); font-weight: var(--font-bold);
+      text-align: right; padding: 12px var(--space-md); border: 0; border-bottom: 1px solid var(--rawafid-border);
       font-size: calc(var(--text-base) * var(--fs));
     }
-
-    .page-content th,
-    .page-content td {
-      padding: var(--space-sm) var(--space-md);
-      border-bottom: 1px solid var(--rawafid-border);
-      text-align: right;
-    }
-
+    .page-content th, .page-content td { padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--rawafid-border); text-align: right; }
     .page-content tbody tr { background: var(--rawafid-surface); }
     .page-content tbody tr:last-child td { border-bottom: 0; }
     .page-content td { color: var(--rawafid-text); }
+    .page-content hr { border: 0; border-top: 2px dashed var(--rawafid-border); margin: var(--space-xl) 0; }
 
-    .page-content hr {
-      border: 0;
-      border-top: 2px dashed var(--rawafid-border);
-      margin: var(--space-xl) 0;
-    }
-
-    .page-content .task-list-item { list-style: none; }
-    .page-content input[type="checkbox"] {
-      margin-left: 8px;
-      accent-color: var(--rawafid-primary);
-    }
-
-    /* === بطاقة التصدير === */
-    .ed-export {
-      background: var(--rawafid-surface);
-      border: 1px solid var(--rawafid-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-md) var(--space-lg);
-      margin-top: var(--space-lg);
-    }
-
-    .ed-export-head {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-md);
-      margin-bottom: var(--space-md);
-    }
-
-    .ed-export-head > i {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: var(--radius-sm);
-      background: var(--rawafid-primary-soft);
-      color: var(--rawafid-primary);
-      font-size: var(--text-lg);
+    /* --- الشريط السفلي (إجراءات التصدير) --- */
+    .bg-bottombar {
       flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      padding-left: calc(12px + env(safe-area-inset-left, 0px));
+      padding-right: calc(12px + env(safe-area-inset-right, 0px));
+      background: var(--rawafid-surface);
+      border-top: 1px solid var(--rawafid-border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
     }
+    .bg-bottombar .bg-btn { flex-shrink: 0; }
 
-    .ed-export-head h2 {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      font-weight: var(--font-black);
-      color: var(--rawafid-primary);
+    /* --- نافذة الجدول --- */
+    .ed-pop {
+      position: fixed; z-index: 300; width: min(280px, calc(100vw - 24px));
+      background: var(--rawafid-surface); border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md); padding: var(--space-md);
+      box-shadow: 0 18px 40px -16px rgba(0,0,0,0.45);
+      display: none;
     }
-
-    .ed-export-head p {
-      color: var(--rawafid-text-muted);
-      font-size: var(--text-sm);
-      margin-top: var(--space-xs);
-      line-height: 1.8;
+    .ed-pop.is-open { display: block; }
+    .ed-pop-title { display: flex; align-items: center; gap: 8px; font-size: var(--text-sm); font-weight: var(--font-black); color: var(--rawafid-primary); margin-bottom: var(--space-md); }
+    .ed-pop-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); margin-bottom: var(--space-sm); }
+    .ed-pop-row label { font-size: var(--text-sm); font-weight: var(--font-bold); color: var(--rawafid-text-muted); }
+    .ed-num {
+      width: 90px; min-height: 44px; background: var(--rawafid-bg);
+      border: 1px solid var(--rawafid-border); border-radius: var(--radius-sm);
+      color: var(--rawafid-text); font-family: inherit; font-size: 16px;
+      padding: 8px 10px; direction: ltr; text-align: center;
     }
+    .ed-num:focus { outline: none; border-color: var(--rawafid-primary); }
+    .ed-pop-actions { display: flex; gap: var(--space-sm); margin-top: var(--space-md); }
+    .ed-pop-actions .bg-btn { flex: 1; }
 
-    .ed-file {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 4px;
-      background: var(--rawafid-bg);
-      border: 1px dashed var(--rawafid-border);
-      border-radius: var(--radius-sm);
-      padding: 9px 14px;
-      margin-bottom: var(--space-md);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: var(--rawafid-text-muted);
-      direction: ltr;
-      text-align: left;
+    /* --- أدوات الجدول العائمة --- */
+    .ed-table-tools {
+      position: fixed; z-index: 290; display: none; align-items: center; gap: 2px;
+      background: var(--rawafid-surface); border: 1px solid var(--rawafid-border);
+      border-radius: 50px; padding: 4px; box-shadow: 0 14px 34px -14px rgba(0,0,0,0.45);
+      max-width: calc(100vw - 16px); overflow-x: auto; -webkit-overflow-scrolling: touch;
     }
-
-    .ed-file-input {
-      flex: 1;
-      min-width: 140px;
-      background: transparent;
-      border: none;
-      color: var(--rawafid-text);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      outline: none;
-      direction: ltr;
-      text-align: left;
-      padding: 2px 0;
+    .ed-table-tools.is-open { display: flex; }
+    .ed-mini {
+      display: inline-flex; align-items: center; gap: 4px;
+      min-height: 40px; padding: 8px 12px;
+      color: var(--rawafid-text); font-weight: var(--font-bold); font-size: var(--text-xs); font-family: inherit;
+      border: none; border-radius: 50px; background: transparent; cursor: pointer; white-space: nowrap;
+      touch-action: manipulation;
     }
+    .ed-mini:hover, .ed-mini:focus-visible { background: var(--rawafid-primary-soft); color: var(--rawafid-primary); }
+    .ed-mini--danger { color: var(--rawafid-error); }
+    .ed-mini--danger:hover, .ed-mini--danger:focus-visible { background: var(--rawafid-error); color: var(--rawafid-white); }
 
-    .ed-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-    }
-
-    /* === التنبيهات === */
+    /* --- التنبيهات --- */
     .ed-toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); left: 50%;
       transform: translate(-50%, 16px);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--rawafid-text);
-      color: var(--rawafid-bg);
-      font-size: var(--text-sm);
-      font-weight: var(--font-bold);
-      padding: 11px 22px;
-      border-radius: 50px;
-      box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      visibility: hidden;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--rawafid-text); color: var(--rawafid-bg);
+      font-size: var(--text-sm); font-weight: var(--font-bold);
+      padding: 12px 22px; border-radius: 50px;
+      box-shadow: 0 14px 34px -12px rgba(0,0,0,0.5);
+      opacity: 0; visibility: hidden;
       transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
-      z-index: 500;
-      max-width: calc(100vw - 32px);
-      text-align: center;
+      z-index: 500; max-width: calc(100vw - 32px); text-align: center;
+      min-height: 44px;
     }
-
-    .ed-toast.is-visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, 0);
-    }
-
+    .ed-toast.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
     .ed-toast i { color: var(--rawafid-accent); flex-shrink: 0; }
 
-    /* === التجاوب === */
-    @media (max-width: 900px) {
-      .editor-page { padding: var(--space-md) var(--space-md) var(--space-xl); }
+    /* === الآيباد والشاشات المتوسطة === */
+    @media (min-width: 600px) and (max-width: 1180px) {
+      .bg-sheet { max-width: 720px; padding: 32px 30px; }
+      .bg-tool { padding: 10px 16px; }
     }
-
-    @media (max-width: 600px) {
-      .editor-page { padding: var(--space-md) var(--space-lg) var(--space-xl); }
-      .ed-grid { grid-template-columns: 1fr; gap: var(--space-md); }
-      .ed-field--cover,
-      .ed-field--checks { grid-column: 1 / -1; }
-      .ed-canvas { padding: var(--space-md) var(--space-sm); }
-      .ed-toolbar { gap: 2px; padding: 6px; }
-      .ed-tool { padding: 7px 10px; }
-      .ed-tool .ed-tool-text--long { display: none; }
-      .ed-sep { display: none; }
-
-      /* (منسوخ من _layouts/blog.html ليتطابق المعنى البصري على الجوال) */
+    /* الوضع الأفقي للآيباد: عمودان للإعدادات + ورقة أعرض */
+    @media (min-width: 900px) and (orientation: landscape) {
+      .bg-meta-grid { grid-template-columns: repeat(4, 1fr); }
+      .bg-sheet { max-width: 800px; }
+    }
+    @media (max-width: 640px) {
+      .bg-top-actions .bg-btn span.bg-btn-text { display: none; }
+      .bg-top-actions .bg-btn { padding: 10px 12px; }
+      .bg-meta-grid { grid-template-columns: 1fr 1fr; }
+      .bg-field--wide { grid-column: 1 / -1; }
+      .bg-sheet { padding: 20px 14px; border-radius: 10px; }
+      .bg-filebar { font-size: 0.75rem; }
       .page-content p { font-size: calc(var(--text-sm) * var(--fs)); }
-      .page-content table,
-      .page-content th,
-      .page-content td { font-size: calc(var(--text-xs) * var(--fs)); padding: var(--space-sm); }
-      .page-content .table-wrapper { margin: var(--space-md) 0; }
-      .page-content h1 { font-size: calc(var(--text-xl) * var(--fs)); }
-      .page-content h2 { font-size: calc(var(--text-lg) * var(--fs)); }
-      .page-content h3 { font-size: calc(var(--text-base) * var(--fs)); }
-
-      .ed-table-tools { max-width: calc(100vw - 16px); }
-      .ed-mini { padding: 6px 8px; }
-      .ed-toast { bottom: 14px; }
+      .page-content table, .page-content th, .page-content td { font-size: calc(var(--text-xs) * var(--fs)); }
     }
 
     @media print {
-      .ed-toolbar,
-      .ed-meta,
-      .ed-export,
-      .ed-pop,
-      .ed-table-tools,
-      .ed-top-side,
-      .ed-save-status {
-        display: none !important;
-      }
-
-      .ed-canvas { border: none; padding: 0; }
-      .ed-editor td.ed-cell-active,
-      .ed-editor th.ed-cell-active { outline: none; }
+      .bg-topbar, .bg-filebar, .bg-meta-toggle-row, .bg-meta-panel, .bg-toolbar, .bg-bottombar, .ed-pop, .ed-table-tools { display: none !important; }
+      .blogger-app { height: auto; overflow: visible; }
+      .bg-workspace { overflow: visible; }
+      .bg-sheet { border: none; box-shadow: none; max-width: 100%; }
     }
   </style>
   {% include seo.html %}
 </head>
 <body>
 
-  {% include loading.html %}
-  {% include header.html %}
+  <!-- ملاحظة: لا يوجد header/footer عمداً — بيئة خالية من المشتتات -->
 
-  <main class="editor-page">
+  <div class="blogger-app" id="blogger-app">
 
-    <div class="ed-top">
-      <div class="ed-heading">
-        <h1>محرر مقالات المدونة</h1>
-        <p>اكتب المقالات مباشرة من المتصفح — الحفظ تلقائي في هذا الجهاز، والتصدير بصيغة المارك داون جاهزة للنشر.</p>
-      </div>
-      <div class="ed-top-side">
-        <span class="ed-save-status">
-          <span class="ed-save-dot" id="ed-save-dot" aria-hidden="true"></span>
+    <!-- الشريط العلوي -->
+    <header class="bg-topbar">
+      <a class="bg-icon-btn" href="{{ '/blog' | relative_url }}" title="رجوع للمدونة" aria-label="رجوع للمدونة" style="text-decoration:none;">
+        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      </a>
+      <div class="bg-title-wrap">
+        <input type="text" id="ed-title" class="bg-title-input" placeholder="عنوان المقال الجديد…" autocomplete="off" aria-label="عنوان المقال">
+        <span class="bg-save-status">
+          <span class="bg-save-dot" id="ed-save-dot" aria-hidden="true"></span>
           <span id="ed-status">الحفظ التلقائي مفعّل</span>
         </span>
-        <a href="{{ '/blog' | relative_url }}" class="ed-btn">
-          <i class="fas fa-arrow-right" aria-hidden="true"></i> رجوع للمدونة
-        </a>
       </div>
+      <div class="bg-top-actions">
+        <button type="button" class="bg-btn" id="ed-preview-top" title="معاينة" aria-label="معاينة">
+          <i class="fas fa-eye" aria-hidden="true"></i><span class="bg-btn-text">معاينة</span>
+        </button>
+        <button type="button" class="bg-btn bg-btn--primary" id="ed-copy-top" title="نسخ المارك داون" aria-label="نسخ المارك داون">
+          <i class="fas fa-copy" aria-hidden="true"></i><span class="bg-btn-text">نسخ</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- شريط اسم الملف -->
+    <div class="bg-filebar" aria-label="اسم الملف">
+      <span class="bg-file-label"><i class="fas fa-file-code" aria-hidden="true"></i> اسم الملف:</span>
+      <div class="bg-file-pill" dir="ltr">
+        <input type="text" id="ed-filename" class="bg-file-input" readonly
+               value="YYYY-MM-DD-your-title.md" aria-label="اسم الملف الكامل" autocomplete="off" spellcheck="false">
+      </div>
+      <button type="button" class="bg-file-edit" id="ed-filename-edit" aria-pressed="false">
+        <i class="fas fa-pen" aria-hidden="true"></i> تعديل اسم الملف
+      </button>
     </div>
 
-    <section class="ed-meta" id="ed-meta" aria-label="بيانات المقال">
-      <div class="ed-grid">
-        <div class="ed-field ed-field--title">
-          <label for="ed-title">عنوان المقال</label>
-          <input type="text" id="ed-title" class="ed-title-input" placeholder="اكتب عنوان المقال هنا…" autocomplete="off">
-        </div>
-
-        <div class="ed-field">
+    <!-- زر الإعدادات -->
+    <div class="bg-meta-toggle-row">
+      <button type="button" class="bg-meta-toggle" id="ed-meta-toggle" aria-expanded="false" aria-controls="ed-meta-panel">
+        <span><i class="fas fa-sliders" aria-hidden="true"></i> إعدادات المقال (الكاتب، التاريخ، الوسوم، الغلاف)</span>
+        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+      </button>
+    </div>
+    <section class="bg-meta-panel" id="ed-meta-panel" aria-label="بيانات المقال">
+      <div class="bg-meta-grid" id="ed-meta">
+        <div class="bg-field">
           <label for="ed-author">الكاتب</label>
-          <select id="ed-author" class="ed-select">
+          <select id="ed-author" class="bg-select">
             <option value="jassim" selected>جاسم الفارسي</option>
             <option value="rawafid-edu">روافد التعليمية</option>
           </select>
         </div>
-
-        <div class="ed-field">
+        <div class="bg-field">
           <label for="ed-date">تاريخ النشر</label>
-          <input type="date" id="ed-date" class="ed-input ed-date-input" autocomplete="off">
+          <input type="date" id="ed-date" class="bg-input bg-date-input" autocomplete="off">
         </div>
-
-        <div class="ed-field">
+        <div class="bg-field">
           <label for="ed-tags">الوسوم</label>
-          <input type="text" id="ed-tags" class="ed-input" placeholder="مثال: النقد الحديث، محاضرات" autocomplete="off">
-          <p class="ed-hint">افصل بين الوسوم بفاصلة</p>
+          <input type="text" id="ed-tags" class="bg-input" placeholder="مثال: النقد الحديث، محاضرات" autocomplete="off">
+          <p class="bg-hint">افصل بين الوسوم بفاصلة</p>
         </div>
-
-        <div class="ed-field ed-field--cover">
+        <div class="bg-field">
           <label for="ed-cover">رابط صورة الغلاف (اختياري)</label>
-          <input type="url" id="ed-cover" class="ed-input" placeholder="https://rawafid.jassim.one/images/…" dir="ltr" autocomplete="off">
+          <input type="url" id="ed-cover" class="bg-input" placeholder="https://…" dir="ltr" autocomplete="off">
         </div>
-
-        <div class="ed-field ed-field--checks">
-          <span class="ed-checks-label">خيارات النشر</span>
-          <label class="ed-check"><input type="checkbox" id="ed-ai"> <span>محسّن باستعمال الذكاء الاصطناعي</span></label>
-          <label class="ed-check"><input type="checkbox" id="ed-hidebtns"> <span>إخفاء أزرار المشاركة والطباعة</span></label>
-          <label class="ed-check"><input type="checkbox" id="ed-visible" checked> <span>ظاهر في قائمة المدونة</span></label>
+        <div class="bg-field bg-field--wide">
+          <label>خيارات النشر</label>
+          <label class="bg-check"><input type="checkbox" id="ed-ai"> <span>محسّن باستعمال الذكاء الاصطناعي</span></label>
+          <label class="bg-check"><input type="checkbox" id="ed-hidebtns"> <span>إخفاء أزرار المشاركة والطباعة</span></label>
+          <label class="bg-check"><input type="checkbox" id="ed-visible" checked> <span>ظاهر في قائمة المدونة</span></label>
         </div>
+        <!-- حقل slug مخفي للتوافق مع المسودات القديمة -->
+        <input type="hidden" id="ed-slug">
       </div>
     </section>
 
-    <div class="ed-toolbar" id="ed-toolbar" role="toolbar" aria-label="أدوات تنسيق النص">
-      <button type="button" class="ed-tool" data-block="h2" title="عنوان رئيسي" aria-label="عنوان">
+    <!-- شريط الأدوات -->
+    <div class="bg-toolbar" id="ed-toolbar" role="toolbar" aria-label="أدوات تنسيق النص">
+      <button type="button" class="bg-tool" data-block="h2" title="عنوان رئيسي" aria-label="عنوان رئيسي">
         <i class="fas fa-heading" aria-hidden="true"></i><span>عنوان</span>
       </button>
-      <button type="button" class="ed-tool" data-block="h3" title="عنوان فرعي" aria-label="عنوان فرعي">
-        <i class="fas fa-heading ed-icon-sm" aria-hidden="true"></i><span>عنوان فرعي</span>
+      <button type="button" class="bg-tool" data-block="h3" title="عنوان فرعي" aria-label="عنوان فرعي">
+        <i class="fas fa-heading" style="font-size:.72em" aria-hidden="true"></i><span>فرعي</span>
       </button>
-      <button type="button" class="ed-tool" data-block="p" title="نص عادي" aria-label="نص عادي">
-        <i class="fas fa-paragraph" aria-hidden="true"></i><span class="ed-tool-text--long">نص عادي</span>
+      <button type="button" class="bg-tool" data-block="p" title="نص عادي" aria-label="نص عادي">
+        <i class="fas fa-paragraph" aria-hidden="true"></i><span>نص</span>
       </button>
-      <button type="button" class="ed-tool" data-block="blockquote" title="اقتباس" aria-label="اقتباس">
+      <button type="button" class="bg-tool" data-block="blockquote" title="اقتباس" aria-label="اقتباس">
         <i class="fas fa-quote-right" aria-hidden="true"></i><span>اقتباس</span>
       </button>
-
-      <span class="ed-sep" aria-hidden="true"></span>
-
-      <button type="button" class="ed-tool" data-cmd="bold" title="نص عريض (Ctrl+B)" aria-label="نص عريض">
-        <i class="fas fa-bold" aria-hidden="true"></i>
+      <span class="bg-sep" aria-hidden="true"></span>
+      <button type="button" class="bg-tool" data-cmd="bold" title="عريض" aria-label="نص عريض"><i class="fas fa-bold" aria-hidden="true"></i></button>
+      <button type="button" class="bg-tool" data-cmd="italic" title="مائل" aria-label="نص مائل"><i class="fas fa-italic" aria-hidden="true"></i></button>
+      <button type="button" class="bg-tool" data-cmd="insertUnorderedList" title="قائمة نقطية" aria-label="قائمة نقطية"><i class="fas fa-list-ul" aria-hidden="true"></i></button>
+      <button type="button" class="bg-tool" data-cmd="insertOrderedList" title="قائمة مرقمة" aria-label="قائمة مرقمة"><i class="fas fa-list-ol" aria-hidden="true"></i></button>
+      <span class="bg-sep" aria-hidden="true"></span>
+      <button type="button" class="bg-tool" id="ed-link-btn" title="إدراج رابط" aria-label="إدراج رابط">
+        <i class="fas fa-link" aria-hidden="true"></i><span>رابط</span>
       </button>
-      <button type="button" class="ed-tool" data-cmd="italic" title="نص مائل (Ctrl+I)" aria-label="نص مائل">
-        <i class="fas fa-italic" aria-hidden="true"></i>
+      <button type="button" class="bg-tool" id="ed-table-btn" title="إدراج جدول" aria-label="إدراج جدول" aria-expanded="false" aria-haspopup="dialog">
+        <i class="fas fa-table" aria-hidden="true"></i><span>جدول</span>
       </button>
-
-      <span class="ed-sep" aria-hidden="true"></span>
-
-      <button type="button" class="ed-tool" id="ed-table-btn" title="إدراج جدول" aria-label="إدراج جدول" aria-expanded="false" aria-haspopup="dialog">
-        <i class="fas fa-table" aria-hidden="true"></i><span>إدراج جدول</span>
+      <button type="button" class="bg-tool" data-cmd="removeFormat" title="إزالة التنسيق" aria-label="إزالة التنسيق">
+        <i class="fas fa-eraser" aria-hidden="true"></i><span>مسح التنسيق</span>
       </button>
     </div>
 
-    <div class="ed-canvas">
-      <div id="ed-editor" class="page-content ed-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="محتوى المقال" spellcheck="true"
-           data-ph="ابدأ الكتابة هنا… استخدم شريط الأدوات أعلاه لإضافة العناوين والاقتباسات والجداول."></div>
+    <!-- مساحة الكتابة -->
+    <div class="bg-workspace" id="bg-workspace">
+      <div class="bg-sheet">
+        <div id="ed-editor" class="page-content bg-editor" contenteditable="true" role="textbox"
+             aria-multiline="true" aria-label="محتوى المقال" spellcheck="true"
+             data-ph="ابدأ الكتابة هنا… استخدم شريط الأدوات أعلاه للعناوين والاقتباسات والجداول."></div>
+      </div>
     </div>
 
-    <section class="ed-export" aria-label="تصدير المقال">
-      <div class="ed-export-head">
-        <i class="fas fa-file-export" aria-hidden="true"></i>
-        <div>
-          <h2>تصدير المقال</h2>
-          <p>انسخ المارك داون أو نزّله كملف، ثم أضِفه إلى مجلد <span dir="ltr">_posts</span> وادفعه إلى المستودع ليُنشر تلقائياً. يُولَّد الملف كاملاً مع بيانات YAML الأمامية، ويُقترح اسمه تلقائياً من العنوان.</p>
-        </div>
-      </div>
-      <div class="ed-file" dir="ltr" aria-label="اسم الملف المقترح">
-        <span>_posts/</span><input type="text" id="ed-slug" class="ed-file-input" placeholder="post" aria-label="اسم الملف" autocomplete="off" spellcheck="false"><span>.md</span>
-      </div>
-      <div class="ed-actions">
-        <button type="button" class="ed-btn ed-btn--primary" id="ed-copy">
-          <i class="fas fa-copy" aria-hidden="true"></i> نسخ المارك داون
-        </button>
-        <button type="button" class="ed-btn" id="ed-download">
-          <i class="fas fa-download" aria-hidden="true"></i> تنزيل ملف ‎.md
-        </button>
-        <button type="button" class="ed-btn ed-btn--danger" id="ed-new">
-          <i class="fas fa-trash-can" aria-hidden="true"></i> مسودة جديدة
-        </button>
-      </div>
-    </section>
+    <!-- الشريط السفلي -->
+    <footer class="bg-bottombar" aria-label="إجراءات التصدير">
+      <button type="button" class="bg-btn bg-btn--primary" id="ed-copy">
+        <i class="fas fa-copy" aria-hidden="true"></i> نسخ المارك داون
+      </button>
+      <button type="button" class="bg-btn" id="ed-download">
+        <i class="fas fa-download" aria-hidden="true"></i> تنزيل ملف ‎.md
+      </button>
+      <button type="button" class="bg-btn bg-btn--danger" id="ed-new">
+        <i class="fas fa-trash-can" aria-hidden="true"></i> مسودة جديدة
+      </button>
+    </footer>
 
-  </main>
+  </div>
 
   <div class="ed-pop" id="ed-pop" role="dialog" aria-label="إدراج جدول" aria-hidden="true">
     <p class="ed-pop-title"><i class="fas fa-table" aria-hidden="true"></i> إدراج جدول</p>
@@ -904,24 +601,22 @@
       <input type="number" id="ed-cols" class="ed-num" min="1" max="8" value="3">
     </div>
     <div class="ed-pop-actions">
-      <button type="button" class="ed-btn ed-btn--primary" id="ed-pop-ok">إدراج</button>
-      <button type="button" class="ed-btn" id="ed-pop-cancel">إلغاء</button>
+      <button type="button" class="bg-btn bg-btn--primary" id="ed-pop-ok">إدراج</button>
+      <button type="button" class="bg-btn" id="ed-pop-cancel">إلغاء</button>
     </div>
   </div>
 
   <div class="ed-table-tools" id="ed-table-tools" role="toolbar" aria-label="أدوات الجدول">
-    <button type="button" class="ed-mini" id="edt-addrow" title="إضافة صف" aria-label="إضافة صف"><i class="fas fa-plus" aria-hidden="true"></i> صف</button>
-    <button type="button" class="ed-mini" id="edt-addcol" title="إضافة عمود" aria-label="إضافة عمود"><i class="fas fa-plus" aria-hidden="true"></i> عمود</button>
-    <button type="button" class="ed-mini" id="edt-delrow" title="حذف الصف الحالي" aria-label="حذف الصف الحالي"><i class="fas fa-minus" aria-hidden="true"></i> صف</button>
-    <button type="button" class="ed-mini" id="edt-delcol" title="حذف العمود الحالي" aria-label="حذف العمود الحالي"><i class="fas fa-minus" aria-hidden="true"></i> عمود</button>
-    <button type="button" class="ed-mini ed-mini--danger" id="edt-deltable" title="حذف الجدول بالكامل" aria-label="حذف الجدول بالكامل"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+    <button type="button" class="ed-mini" id="edt-addrow"><i class="fas fa-plus" aria-hidden="true"></i> صف</button>
+    <button type="button" class="ed-mini" id="edt-addcol"><i class="fas fa-plus" aria-hidden="true"></i> عمود</button>
+    <button type="button" class="ed-mini" id="edt-delrow"><i class="fas fa-minus" aria-hidden="true"></i> صف</button>
+    <button type="button" class="ed-mini" id="edt-delcol"><i class="fas fa-minus" aria-hidden="true"></i> عمود</button>
+    <button type="button" class="ed-mini ed-mini--danger" id="edt-deltable" title="حذف الجدول" aria-label="حذف الجدول"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
   </div>
 
   <div class="ed-toast" id="ed-toast" role="status" aria-live="polite">
     <i class="fas fa-circle-check" aria-hidden="true"></i><span id="ed-toast-text"></span>
   </div>
-
-  {% include footer.html %}
 
   <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
 
@@ -942,6 +637,8 @@
         hideBtns: document.getElementById('ed-hidebtns'),
         visible: document.getElementById('ed-visible'),
         slug: document.getElementById('ed-slug'),
+        filename: document.getElementById('ed-filename'),
+        filenameEdit: document.getElementById('ed-filename-edit'),
         editor: document.getElementById('ed-editor'),
         meta: document.getElementById('ed-meta'),
         status: document.getElementById('ed-status'),
@@ -951,7 +648,8 @@
         tableBtn: document.getElementById('ed-table-btn'),
         tableTools: document.getElementById('ed-table-tools'),
         toast: document.getElementById('ed-toast'),
-        toastText: document.getElementById('ed-toast-text')
+        toastText: document.getElementById('ed-toast-text'),
+        workspace: document.getElementById('bg-workspace')
       };
 
       /* ========== أدوات مساعدة ========== */
@@ -965,8 +663,8 @@
 
       function slugify(str) {
         var s = String(str || '')
-          .replace(/[\u064B-\u0652]/g, '')                 /* إزالة التشكيل */
-          .replace(/[^\u0621-\u064Aa-zA-Z0-9\s_-]/g, '')  /* الأحرف العربية واللاتينية والأرقام فقط */
+          .replace(/[ً-ٟ]/g, '')
+          .replace(/[^\u0621-\u064Aa-zA-Z0-9\s_-]/g, '')
           .trim()
           .replace(/[\s_]+/g, '-')
           .replace(/-+/g, '-')
@@ -978,18 +676,11 @@
       function escHtml(t) {
         return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
-
-      function escText(t) {
-        return String(t).replace(/([\\*_`])/g, '\\$1');
-      }
-
-      function yamlStr(s) {
-        return '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-      }
+      function escText(t) { return String(t).replace(/([\\*_`])/g, '\\$1'); }
+      function yamlStr(s) { return '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"'; }
 
       function parseTags(raw) {
-        var seen = {};
-        var out = [];
+        var seen = {}, out = [];
         String(raw || '').split(/[,،؛;]/).forEach(function (t) {
           t = t.trim();
           if (t && !seen[t]) { seen[t] = 1; out.push(t); }
@@ -998,9 +689,7 @@
       }
 
       /* ========== التنبيهات ========== */
-
       var toastTimer = null;
-
       function toast(msg) {
         el.toastText.textContent = msg;
         el.toast.classList.add('is-visible');
@@ -1008,57 +697,96 @@
         toastTimer = setTimeout(function () { el.toast.classList.remove('is-visible'); }, 2800);
       }
 
-      /* ========== الحفظ التلقائي (localStorage) ========== */
+      /* ========== حفظ/استرجاع النطاق (Selection/Range) — إصلاح موضع الجدول ========== */
+      var savedRange = null;
 
+      function editorContains(node) {
+        if (!node) return false;
+        if (node === el.editor) return true;
+        try { return !!(el.editor.compareDocumentPosition(node) & 16); }
+        catch (e) { return el.editor.contains ? el.editor.contains(node) : false; }
+      }
+
+      function saveRange() {
+        try {
+          var sel = window.getSelection();
+          if (!sel || sel.rangeCount === 0) return;
+          var r = sel.getRangeAt(0);
+          // احفظ فقط النطاقات داخل المحرر
+          if (editorContains(r.commonAncestorContainer) || editorContains(r.startContainer)) {
+            savedRange = r.cloneRange();
+          }
+        } catch (e) {}
+      }
+
+      function restoreRange() {
+        el.editor.focus({ preventScroll: true });
+        try {
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          if (savedRange && editorContains(savedRange.commonAncestorContainer)) {
+            sel.addRange(savedRange);
+            return true;
+          }
+        } catch (e) {}
+        // احتياطي: ضع المؤشر في نهاية المحرر
+        try {
+          var range = document.createRange();
+          range.selectNodeContents(el.editor);
+          range.collapse(false);
+          var sel2 = window.getSelection();
+          sel2.removeAllRanges();
+          sel2.addRange(range);
+          savedRange = range.cloneRange();
+          return true;
+        } catch (e2) { return false; }
+      }
+
+      /* تتبع مستمر لموضع المؤشر حتى لا يضيع عند فتح النوافذ */
+      document.addEventListener('selectionchange', function () {
+        var a = document.activeElement;
+        // لا تحفظ أثناء الكتابة داخل حقول الإدخال (العنوان/الوسوم…)
+        if (a && a !== el.editor && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return;
+        saveRange();
+      });
+      el.editor.addEventListener('keyup', saveRange);
+      el.editor.addEventListener('click', saveRange);
+      // iPad: اللمس ينقل التركيز — احفظ قبل أن يضيع
+      el.editor.addEventListener('touchend', function () { setTimeout(saveRange, 50); }, { passive: true });
+
+      /* ========== الحفظ التلقائي ========== */
       function collectDraft() {
         return {
           v: 1,
-          title: el.title.value,
-          author: el.author.value,
-          date: el.date.value,
-          tags: el.tags.value,
-          cover: el.cover.value,
-          ai: el.ai.checked,
-          hideButtons: el.hideBtns.checked,
-          visible: el.visible.checked,
-          slug: el.slug.value,
-          slugDirty: el.slug.dataset.dirty === '1',
-          content: el.editor.innerHTML,
-          savedAt: Date.now()
+          title: el.title.value, author: el.author.value, date: el.date.value,
+          tags: el.tags.value, cover: el.cover.value,
+          ai: el.ai.checked, hideButtons: el.hideBtns.checked, visible: el.visible.checked,
+          slug: el.slug.value, filename: el.filename.value,
+          filenameDirty: el.filename.dataset.dirty === '1',
+          content: el.editor.innerHTML, savedAt: Date.now()
         };
       }
-
       function markSaved() {
         var t;
         try { t = new Date().toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' }); }
         catch (e) { t = new Date().toLocaleTimeString(); }
         el.status.textContent = 'تم الحفظ تلقائياً • ' + t;
       }
-
+      var saveTimer = null;
       function saveDraft() {
         clearTimeout(saveTimer);
-        try {
-          localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft()));
-          markSaved();
-        } catch (e) { /* التخزين ممتلئ أو محظور — تجاهل بهدوء */ }
+        try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft())); markSaved(); }
+        catch (e) {}
       }
-
-      var saveTimer = null;
-
-      function queueSave() {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(saveDraft, 500);
-      }
+      function queueSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 500); }
 
       function restoreDraft() {
         var raw = null;
         try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return false; }
         if (!raw) return false;
-
         try {
           var d = JSON.parse(raw);
           if (!d || typeof d !== 'object') return false;
-
           el.title.value = d.title || '';
           el.author.value = d.author || 'jassim';
           el.date.value = d.date || todayStr();
@@ -1067,26 +795,79 @@
           el.ai.checked = !!d.ai;
           el.hideBtns.checked = !!d.hideButtons;
           el.visible.checked = d.visible !== false;
-          if (d.slugDirty) {
-            el.slug.setAttribute('data-dirty', '1');
-            el.slug.value = d.slug || '';
-          } else {
-            el.slug.value = d.slug || (el.title.value.trim() ? slugify(el.title.value) : '');
+          el.slug.value = d.slug || '';
+          if (d.filenameDirty && d.filename) {
+            el.filename.dataset.dirty = '1';
+            el.filename.value = d.filename;
+            setFilenameEditing(false);
           }
           if (d.content && String(d.content).trim()) el.editor.innerHTML = d.content;
-
-          var hasBody = el.title.value.trim() || el.editor.textContent.trim();
-          return !!hasBody;
+          return !!(el.title.value.trim() || el.editor.textContent.trim());
         } catch (e) { return false; }
       }
-
       window.addEventListener('beforeunload', saveDraft);
       document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'hidden') saveDraft();
       });
 
-      /* ========== قائمة الكتّاب (من بيانات الموقع مباشرة) ========== */
+      /* ========== اسم الملف الديناميكي + زر التعديل ========== */
+      function currentSlug() { return slugify(el.slug.value || el.title.value); }
 
+      function buildFileName() {
+        // لو المستخدم عدّل الاسم يدوياً، احترم تعديله كما هو
+        if (el.filename.dataset.dirty === '1' && el.filename.value.trim()) {
+          var v = el.filename.value.trim();
+          return /\.md$/i.test(v) ? v : v + '.md';
+        }
+        var date = el.date.value || todayStr();
+        return date + '-' + currentSlug() + '.md';
+      }
+
+      function refreshFilename() {
+        if (el.filename.dataset.dirty === '1') return; // وضع التحرير اليدوي: لا تعبث
+        el.filename.value = (el.date.value || todayStr()) + '-' + currentSlug() + '.md';
+      }
+
+      function setFilenameEditing(on) {
+        if (on) {
+          el.filename.removeAttribute('readonly');
+          el.filenameEdit.classList.add('is-editing');
+          el.filenameEdit.setAttribute('aria-pressed', 'true');
+          el.filenameEdit.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> تم';
+          el.filename.focus();
+          try { el.filename.select(); } catch (e) {}
+          // iPad: إظهار لوحة المفاتيح يحتاج تركيزاً صريحاً
+          try { el.filename.setSelectionRange(0, el.filename.value.length); } catch (e2) {}
+        } else {
+          el.filename.setAttribute('readonly', '');
+          el.filenameEdit.classList.remove('is-editing');
+          el.filenameEdit.setAttribute('aria-pressed', 'false');
+          el.filenameEdit.innerHTML = '<i class="fas fa-pen" aria-hidden="true"></i> تعديل اسم الملف';
+        }
+      }
+
+      el.filenameEdit.addEventListener('click', function () {
+        var editing = el.filename.hasAttribute('readonly');
+        if (editing) {
+          setFilenameEditing(true);
+          toast('حرّر اسم الملف ثم اضغط "تم"');
+        } else {
+          // تأكيد الاسم اليدوي
+          var v = el.filename.value.trim() || buildFileName();
+          if (!/\.md$/i.test(v)) v += '.md';
+          el.filename.value = v;
+          el.filename.dataset.dirty = '1';
+          setFilenameEditing(false);
+          queueSave();
+          toast('تم حفظ اسم الملف: ' + v);
+        }
+      });
+      el.filename.addEventListener('input', function () {
+        el.filename.dataset.dirty = '1';
+        queueSave();
+      });
+
+      /* ========== قائمة الكتّاب ========== */
       (function loadAuthors() {
         fetch(AUTHORS_URL + '?v=' + Date.now(), { cache: 'no-store' })
           .then(function (r) { return r.json(); })
@@ -1106,107 +887,111 @@
             });
             el.author.value = current;
           })
-          .catch(function () { /* تعذر جلب الكتّاب — تبقى الخيارات الافتراضية */ });
+          .catch(function () {});
       })();
 
-      /* ========== تنفيذ أوامر التنسيق ========== */
-
+      /* ========== أوامر التنسيق ========== */
       function exec(cmd, val) {
-        el.editor.focus();
-        document.execCommand(cmd, false, val || null);
+        restoreRange();
+        try { document.execCommand(cmd, false, val || null); } catch (e) {}
+        saveRange();
         queueSave();
         refreshToolbar();
       }
-
-      Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-block]'), function (btn) {
-        btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
-        btn.addEventListener('click', function () {
-          exec('formatBlock', '<' + btn.getAttribute('data-block') + '>');
-        });
+      Array.prototype.forEach.call(document.querySelectorAll('.bg-tool[data-block]'), function (btn) {
+        btn.addEventListener('mousedown', function (e) { e.preventDefault(); saveRange(); });
+        btn.addEventListener('touchstart', saveRange, { passive: true });
+        btn.addEventListener('click', function () { exec('formatBlock', '<' + btn.getAttribute('data-block') + '>'); });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.bg-tool[data-cmd]'), function (btn) {
+        btn.addEventListener('mousedown', function (e) { e.preventDefault(); saveRange(); });
+        btn.addEventListener('touchstart', saveRange, { passive: true });
+        btn.addEventListener('click', function () { exec(btn.getAttribute('data-cmd')); });
       });
 
-      Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-cmd]'), function (btn) {
-        btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
-        btn.addEventListener('click', function () { exec(btn.getAttribute('data-cmd')); });
+      document.getElementById('ed-link-btn').addEventListener('click', function () {
+        restoreRange();
+        var url = window.prompt('أدخل رابط URL:', 'https://');
+        if (!url) return;
+        url = url.trim();
+        if (!url) return;
+        try { document.execCommand('createLink', false, url); } catch (e) {}
+        saveRange(); queueSave();
       });
 
       function selectionNode() {
         var sel = window.getSelection();
         if (!sel || !sel.anchorNode) return null;
         var node = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentNode : sel.anchorNode;
-        if (!node || !el.editor.contains(node)) return null;
+        if (!node || !editorContains(node)) return null;
         return node;
       }
-
       function currentBlockTag() {
         var node = selectionNode();
         while (node && node !== el.editor) {
-          if (node.nodeType === 1 && /^(H1|H2|H3|H4|H5|H6|P|BLOCKQUOTE)$/.test(node.tagName)) {
-            return node.tagName.toLowerCase();
-          }
+          if (node.nodeType === 1 && /^(H1|H2|H3|H4|H5|H6|P|BLOCKQUOTE)$/.test(node.tagName)) return node.tagName.toLowerCase();
           node = node.parentNode;
         }
         return '';
       }
-
       function refreshToolbar() {
         var block = currentBlockTag();
-        Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-block]'), function (btn) {
+        Array.prototype.forEach.call(document.querySelectorAll('.bg-tool[data-block]'), function (btn) {
           btn.classList.toggle('is-active', btn.getAttribute('data-block') === block);
         });
-        Array.prototype.forEach.call(document.querySelectorAll('.ed-tool[data-cmd]'), function (btn) {
+        Array.prototype.forEach.call(document.querySelectorAll('.bg-tool[data-cmd]'), function (btn) {
           var on = false;
           try { on = document.queryCommandState(btn.getAttribute('data-cmd')); } catch (e) {}
           btn.classList.toggle('is-active', !!on);
         });
       }
 
-      /* ========== لصق نص عادي فقط (يحافظ على تنسيق المدونة) ========== */
-
+      /* لصق نص عادي فقط */
       el.editor.addEventListener('paste', function (e) {
         e.preventDefault();
         var text = (e.clipboardData || window.clipboardData).getData('text/plain');
         if (!text) return;
-
+        restoreRange();
         if (text.indexOf('\n') !== -1) {
           var html = text.split(/\n{2,}/).map(function (p) {
             p = p.trim();
             return p ? '<p>' + escHtml(p).replace(/\n/g, '<br>') + '</p>' : '';
           }).join('');
-          if (html) document.execCommand('insertHTML', false, html);
+          if (html) { try { document.execCommand('insertHTML', false, html); } catch (e2) {} }
         } else {
-          document.execCommand('insertText', false, text);
+          try { document.execCommand('insertText', false, text); } catch (e3) {}
         }
-        queueSave();
+        saveRange(); queueSave();
       });
 
-      /* ========== إدراج الجداول (بنية HTML مطابقة تماماً لقوالب المدونة) ========== */
-
+      /* ========== إدراج الجدول في موضع المؤشر (Selection/Range) — الإصلاح الجوهري ========== */
       function openPop() {
+        saveRange(); // احفظ الموضع قبل أن يسرق الزر التركيز
         var rect = el.tableBtn.getBoundingClientRect();
         el.pop.classList.add('is-open');
         el.pop.setAttribute('aria-hidden', 'false');
         el.tableBtn.setAttribute('aria-expanded', 'true');
+        var top = rect.bottom + window.scrollY + 8;
+        // تموضع RTL: من اليمين
         var right = Math.max(8, window.innerWidth - rect.right);
-        var top = rect.bottom + 8;
-        if (top + 210 > window.innerHeight) top = Math.max(8, rect.top - 218);
+        el.pop.style.top = Math.min(top, (window.scrollY + window.innerHeight) - 240) + 'px';
         el.pop.style.right = right + 'px';
-        el.pop.style.top = top + 'px';
-        el.popRows.focus();
-        el.popRows.select();
+        el.pop.style.left = 'auto';
+        setTimeout(function () { el.popRows.focus(); try { el.popRows.select(); } catch (e) {} }, 50);
       }
-
       function closePop() {
         el.pop.classList.remove('is-open');
         el.pop.setAttribute('aria-hidden', 'true');
         el.tableBtn.setAttribute('aria-expanded', 'false');
       }
 
+      // mousedown يمنع ضياع التحديد عند النقر على زر الجدول (مهم للآيباد)
+      el.tableBtn.addEventListener('mousedown', function (e) { e.preventDefault(); saveRange(); });
+      el.tableBtn.addEventListener('touchstart', saveRange, { passive: true });
       el.tableBtn.addEventListener('click', function () {
         if (el.pop.classList.contains('is-open')) closePop(); else openPop();
       });
-
-      document.getElementById('ed-pop-cancel').addEventListener('click', closePop);
+      document.getElementById('ed-pop-cancel').addEventListener('click', function () { closePop(); restoreRange(); });
 
       document.getElementById('ed-pop-ok').addEventListener('click', function () {
         var rows = Math.min(20, Math.max(1, parseInt(el.popRows.value, 10) || 3));
@@ -1222,11 +1007,43 @@
         }
         html += '</tbody></table></div><p><br></p>';
 
-        el.editor.focus();
-        document.execCommand('insertHTML', false, html);
+        restoreRange(); // استعد موضع المؤشر المحفوظ أولاً
+        var inserted = false;
+        try {
+          var sel = window.getSelection();
+          if (sel && sel.rangeCount > 0) {
+            var range = sel.getRangeAt(0);
+            range.deleteContents();
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            var frag = document.createDocumentFragment();
+            var node, last = null;
+            while ((node = tmp.firstChild)) { last = frag.appendChild(node); }
+            range.insertNode(frag);
+            // ضع المؤشر بعد الجدول مباشرة (داخل الفقرة الجديدة)
+            if (last) {
+              range.setStartAfter(last);
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+              savedRange = range.cloneRange();
+            }
+            inserted = true;
+          }
+        } catch (e) { inserted = false; }
+        if (!inserted) {
+          // احتياطي للمتصفحات القديمة
+          el.editor.focus();
+          try { document.execCommand('insertHTML', false, html); } catch (e2) {}
+        }
         closePop();
+        // مرّر مساحة العمل حتى يظهر الجدول (مفيد في الآيباد)
+        try {
+          var t = el.editor.querySelector('.table-wrapper:last-of-type');
+          if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e3) {}
         queueSave();
-        toast('تم إدراج الجدول — انقر داخل الخلايا لتحريرها');
+        toast('تم إدراج الجدول في موضع المؤشر — انقر داخل الخلايا لتحريرها');
       });
 
       document.addEventListener('click', function (e) {
@@ -1236,245 +1053,153 @@
       });
 
       /* ========== أدوات الجدول العائمة ========== */
-
       function tableContext() {
         var node = selectionNode();
         if (!node || !node.closest) return null;
         var cell = node.closest('td,th');
-        if (!cell || !el.editor.contains(cell)) return null;
+        if (!cell || !editorContains(cell)) return null;
         var table = cell.closest('table');
-        if (!table || !el.editor.contains(table)) return null;
+        if (!table || !editorContains(table)) return null;
         var row = cell.parentNode;
-        return {
-          table: table,
-          row: row,
-          cell: cell,
-          inHead: row.parentNode && row.parentNode.tagName === 'THEAD'
-        };
+        return { table: table, row: row, cell: cell, inHead: row.parentNode && row.parentNode.tagName === 'THEAD' };
       }
-
       var lastCell = null;
-
       function updateCellHighlight() {
         var ctx = tableContext();
         if (lastCell && (!ctx || lastCell !== ctx.cell)) lastCell.classList.remove('ed-cell-active');
-        if (ctx) {
-          ctx.cell.classList.add('ed-cell-active');
-          lastCell = ctx.cell;
-        } else {
-          lastCell = null;
-        }
+        if (ctx) { ctx.cell.classList.add('ed-cell-active'); lastCell = ctx.cell; }
+        else lastCell = null;
       }
-
       function positionTableTools() {
         var ctx = tableContext();
         if (!ctx) { hideTableTools(); return; }
         el.tableTools.classList.add('is-open');
         var rect = ctx.table.getBoundingClientRect();
-        var w = el.tableTools.offsetWidth;
-        var top = rect.top - 46;
+        var w = el.tableTools.offsetWidth || 260;
+        var top = rect.top - 48;
         if (top < 8) top = rect.bottom + 8;
         var left = rect.left + (rect.width / 2) - (w / 2);
         left = Math.max(8, Math.min(window.innerWidth - w - 8, left));
         el.tableTools.style.top = top + 'px';
         el.tableTools.style.left = left + 'px';
       }
-
       function hideTableTools() {
         el.tableTools.classList.remove('is-open');
         if (lastCell) { lastCell.classList.remove('ed-cell-active'); lastCell = null; }
       }
-
       Array.prototype.forEach.call(el.tableTools.querySelectorAll('.ed-mini'), function (btn) {
         btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+        btn.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
       });
-
-      function afterTableOp() {
-        queueSave();
-        updateCellHighlight();
-        positionTableTools();
-      }
+      function afterTableOp() { queueSave(); updateCellHighlight(); positionTableTools(); saveRange(); }
 
       document.getElementById('edt-addrow').addEventListener('click', function () {
-        var ctx = tableContext();
-        if (!ctx) return;
+        var ctx = tableContext(); if (!ctx) return;
         var tr = document.createElement('tr');
-        var cols = ctx.row.cells.length;
-        for (var i = 0; i < cols; i++) {
-          var td = document.createElement('td');
-          td.textContent = 'نص';
-          tr.appendChild(td);
+        for (var i = 0; i < ctx.row.cells.length; i++) {
+          var td = document.createElement('td'); td.textContent = 'نص'; tr.appendChild(td);
         }
-        if (ctx.inHead) {
-          ctx.table.tBodies[0].insertBefore(tr, ctx.table.tBodies[0].firstElementChild);
-        } else {
-          ctx.row.parentNode.insertBefore(tr, ctx.row.nextSibling);
-        }
+        if (ctx.inHead) ctx.table.tBodies[0].insertBefore(tr, ctx.table.tBodies[0].firstElementChild);
+        else ctx.row.parentNode.insertBefore(tr, ctx.row.nextSibling);
         afterTableOp();
       });
-
       document.getElementById('edt-addcol').addEventListener('click', function () {
-        var ctx = tableContext();
-        if (!ctx) return;
-        var idx = ctx.cell.cellIndex;
-        var rows = ctx.table.rows;
+        var ctx = tableContext(); if (!ctx) return;
+        var idx = ctx.cell.cellIndex, rows = ctx.table.rows;
         for (var i = 0; i < rows.length; i++) {
           var row = rows[i];
           if (!row.cells.length) continue;
           var inHead = row.parentNode && row.parentNode.tagName === 'THEAD';
           var cell = document.createElement(inHead ? 'th' : 'td');
           cell.textContent = inHead ? 'عنوان العمود' : 'نص';
-          var ref = idx < row.cells.length - 1 ? row.cells[idx + 1] : null;
-          row.insertBefore(cell, ref);
+          row.insertBefore(cell, idx < row.cells.length - 1 ? row.cells[idx + 1] : null);
         }
         afterTableOp();
       });
-
       document.getElementById('edt-delrow').addEventListener('click', function () {
-        var ctx = tableContext();
-        if (!ctx) return;
-        if (ctx.inHead) {
-          toast('لا يمكن حذف صف الرؤوس — احذف الجدول كاملاً إن أردت');
-          return;
-        }
+        var ctx = tableContext(); if (!ctx) return;
+        if (ctx.inHead) { toast('لا يمكن حذف صف الرؤوس — احذف الجدول كاملاً إن أردت'); return; }
         ctx.row.parentNode.removeChild(ctx.row);
         afterTableOp();
       });
-
       document.getElementById('edt-delcol').addEventListener('click', function () {
-        var ctx = tableContext();
-        if (!ctx) return;
-        if (ctx.row.cells.length <= 1) {
-          toast('لا يمكن حذف العمود الوحيد في الجدول');
-          return;
-        }
-        var idx = ctx.cell.cellIndex;
-        var rows = ctx.table.rows;
-        for (var i = 0; i < rows.length; i++) {
-          if (rows[i].cells[idx]) rows[i].removeChild(rows[i].cells[idx]);
-        }
+        var ctx = tableContext(); if (!ctx) return;
+        if (ctx.row.cells.length <= 1) { toast('لا يمكن حذف العمود الوحيد في الجدول'); return; }
+        var idx = ctx.cell.cellIndex, rows = ctx.table.rows;
+        for (var i = 0; i < rows.length; i++) { if (rows[i].cells[idx]) rows[i].removeChild(rows[i].cells[idx]); }
         afterTableOp();
       });
-
       document.getElementById('edt-deltable').addEventListener('click', function () {
-        var ctx = tableContext();
-        if (!ctx) return;
+        var ctx = tableContext(); if (!ctx) return;
         if (!window.confirm('حذف الجدول بالكامل مع محتواه؟')) return;
         hideTableTools();
         var wrapper = ctx.table.closest('.table-wrapper') || ctx.table;
         if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
-        if (!el.editor.textContent.trim() && !el.editor.querySelector('table,img,hr')) {
-          el.editor.innerHTML = '<p><br></p>';
-        }
+        if (!el.editor.textContent.trim() && !el.editor.querySelector('table,img,hr')) el.editor.innerHTML = '<p><br></p>';
         queueSave();
       });
 
-      /* تحديث موقع أدوات الجدول عند التمرير وتغيير الحجم */
       var rafPending = false;
-
       function rafReposition() {
         if (rafPending) return;
         rafPending = true;
-        window.requestAnimationFrame(function () {
-          rafPending = false;
-          positionTableTools();
-        });
+        window.requestAnimationFrame(function () { rafPending = false; positionTableTools(); });
       }
-
-      window.addEventListener('scroll', rafReposition, { passive: true });
+      el.workspace.addEventListener('scroll', rafReposition, { passive: true });
       window.addEventListener('resize', rafReposition);
+      window.addEventListener('orientationchange', function () { setTimeout(rafReposition, 300); });
 
-      /* تتبع المؤشر: حالة الأزرار + تمييز الخلية + أدوات الجدول */
       var selTimer = null;
-
       function onSelectionChange() {
         clearTimeout(selTimer);
-        selTimer = setTimeout(function () {
-          refreshToolbar();
-          updateCellHighlight();
-          positionTableTools();
-        }, 150);
+        selTimer = setTimeout(function () { refreshToolbar(); updateCellHighlight(); positionTableTools(); }, 150);
       }
-
       document.addEventListener('selectionchange', onSelectionChange);
-      el.editor.addEventListener('keyup', function () {
-        refreshToolbar();
-        updateCellHighlight();
-        positionTableTools();
-      });
-      el.editor.addEventListener('click', function () {
-        refreshToolbar();
-        updateCellHighlight();
-        positionTableTools();
-      });
+      el.editor.addEventListener('keyup', function () { refreshToolbar(); updateCellHighlight(); positionTableTools(); });
+      el.editor.addEventListener('click', function () { refreshToolbar(); updateCellHighlight(); positionTableTools(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closePop(); hideTableTools(); } });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closePop(); hideTableTools(); }
-      });
-
-      /* ========== تحويل المحتوى إلى المارك داون ========== */
-
+      /* ========== تحويل المحتوى إلى مارك داون ========== */
       function inlineMdNodes(nodes) {
         var out = '';
         Array.prototype.forEach.call(nodes, function (n) {
           if (n.nodeType === 3) { out += escText(n.nodeValue); return; }
           if (n.nodeType !== 1) return;
-          var tag = n.tagName.toLowerCase();
-          var inner;
+          var tag = n.tagName.toLowerCase(), inner;
           switch (tag) {
             case 'strong': case 'b':
-              inner = inlineMdNodes(n.childNodes);
-              out += inner ? '**' + inner + '**' : '';
-              break;
+              inner = inlineMdNodes(n.childNodes); out += inner ? '**' + inner + '**' : ''; break;
             case 'em': case 'i':
-              inner = inlineMdNodes(n.childNodes);
-              out += inner ? '*' + inner + '*' : '';
-              break;
+              inner = inlineMdNodes(n.childNodes); out += inner ? '*' + inner + '*' : ''; break;
             case 'del': case 's': case 'strike':
-              inner = inlineMdNodes(n.childNodes);
-              out += inner ? '~~' + inner + '~~' : '';
-              break;
-            case 'code':
-              out += '`' + n.textContent + '`';
-              break;
+              inner = inlineMdNodes(n.childNodes); out += inner ? '~~' + inner + '~~' : ''; break;
+            case 'code': out += '`' + n.textContent + '`'; break;
             case 'a':
               inner = inlineMdNodes(n.childNodes) || n.textContent || 'رابط';
-              out += '[' + inner + '](' + (n.getAttribute('href') || '') + ')';
-              break;
-            case 'img':
-              out += '![' + (n.getAttribute('alt') || '') + '](' + (n.getAttribute('src') || '') + ')';
-              break;
-            case 'br':
-              out += '  \n';
-              break;
-            default:
-              out += inlineMdNodes(n.childNodes);
+              out += '[' + inner + '](' + (n.getAttribute('href') || '') + ')'; break;
+            case 'img': out += '![' + (n.getAttribute('alt') || '') + '](' + (n.getAttribute('src') || '') + ')'; break;
+            case 'br': out += '  \n'; break;
+            default: out += inlineMdNodes(n.childNodes);
           }
         });
         return out;
       }
-
       function listMd(list, depth) {
-        var lines = [];
-        var idx = 0;
-        var pad = '  '.repeat(depth);
+        var lines = [], idx = 0, pad = '  '.repeat(depth);
         var ordered = list.tagName.toLowerCase() === 'ol';
         Array.prototype.forEach.call(list.children, function (li) {
           if (li.tagName.toLowerCase() !== 'li') return;
           idx++;
-          var inlineNodes = [];
-          var nested = [];
+          var inlineNodes = [], nested = [];
           Array.prototype.forEach.call(li.childNodes, function (n) {
             if (n.nodeType === 1 && /^(ul|ol)$/.test(n.tagName.toLowerCase())) nested.push(n);
             else inlineNodes.push(n);
           });
-          var text = inlineMdNodes(inlineNodes).trim();
-          lines.push(pad + (ordered ? idx + '. ' : '- ') + (text || ''));
+          lines.push(pad + (ordered ? idx + '. ' : '- ') + (inlineMdNodes(inlineNodes).trim() || ''));
           nested.forEach(function (n) { lines = lines.concat(listMd(n, depth + 1)); });
         });
         return lines;
       }
-
       function blocksMdArray(node) {
         var blocks = [];
         Array.prototype.forEach.call(node.childNodes, function (n) {
@@ -1483,65 +1208,39 @@
         });
         return blocks;
       }
-
       function tableToRawHtml(table) {
-        var html;
-        var parent = table.parentNode;
-        if (parent && parent.nodeType === 1 && parent.classList && parent.classList.contains('table-wrapper')) {
-          html = parent.outerHTML;
-        } else {
-          html = '<div class="table-wrapper">' + table.outerHTML + '</div>';
-        }
+        var html, parent = table.parentNode;
+        if (parent && parent.nodeType === 1 && parent.classList && parent.classList.contains('table-wrapper')) html = parent.outerHTML;
+        else html = '<div class="table-wrapper">' + table.outerHTML + '</div>';
         return html.replace(/>\s*</g, '>\n<');
       }
-
       function blockMd(node) {
-        if (node.nodeType === 3) {
-          var t = node.nodeValue.trim();
-          return t ? escText(t) : '';
-        }
+        if (node.nodeType === 3) { var t = node.nodeValue.trim(); return t ? escText(t) : ''; }
         if (node.nodeType !== 1) return '';
-
-        var tag = node.tagName.toLowerCase();
-        var inner;
-
+        var tag = node.tagName.toLowerCase(), inner;
         switch (tag) {
           case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':
             inner = inlineMdNodes(node.childNodes).trim();
             return inner ? '#'.repeat(parseInt(tag.charAt(1), 10)) + ' ' + inner : '';
-
-          case 'p':
-            return inlineMdNodes(node.childNodes).trim();
-
+          case 'p': return inlineMdNodes(node.childNodes).trim();
           case 'blockquote':
             inner = blocksMdArray(node);
             if (!inner.length) return '>';
             return inner.join('\n\n').split('\n').map(function (l) { return l ? '> ' + l : '>'; }).join('\n');
-
-          case 'ul': case 'ol':
-            return listMd(node, 0).join('\n');
-
-          case 'hr':
-            return '---';
-
-          case 'pre':
-            return '```\n' + node.textContent.replace(/\n+$/, '') + '\n```';
-
-          case 'table':
-            return tableToRawHtml(node);
-
+          case 'ul': case 'ol': return listMd(node, 0).join('\n');
+          case 'hr': return '---';
+          case 'pre': return '```\n' + node.textContent.replace(/\n+$/, '') + '\n```';
+          case 'table': return tableToRawHtml(node);
           case 'div':
-            if (node.classList && node.classList.contains('table-wrapper')) return tableToRawHtml(node.querySelector('table'));
+            if (node.classList && node.classList.contains('table-wrapper')) {
+              var tbl = node.querySelector('table');
+              return tbl ? tableToRawHtml(tbl) : '';
+            }
             return blocksMdArray(node).join('\n\n');
-
-          case 'br':
-            return '';
-
-          default:
-            return blocksMdArray(node).join('\n\n');
+          case 'br': return '';
+          default: return blocksMdArray(node).join('\n\n');
         }
       }
-
       function contentToMd() {
         var blocks = [];
         Array.prototype.forEach.call(el.editor.childNodes, function (n) {
@@ -1550,11 +1249,9 @@
         });
         return blocks.join('\n\n');
       }
-
       function buildMarkdown() {
         var title = el.title.value.trim() || 'مقال بدون عنوان';
         var date = el.date.value || todayStr();
-
         var fm = ['---'];
         fm.push('layout: blog');
         fm.push('title: ' + yamlStr(title));
@@ -1564,57 +1261,68 @@
         fm.push('author: ' + yamlStr(el.author.value || 'jassim'));
         if (el.ai.checked) fm.push('ai: "yes"');
         fm.push('date: ' + date);
-
         var tags = parseTags(el.tags.value);
         if (tags.length) {
           fm.push('tags:');
           tags.forEach(function (t) { fm.push('  - ' + yamlStr(t)); });
         }
-
-        fm.push('---');
-        fm.push('');
-        fm.push(contentToMd());
-
+        fm.push('---'); fm.push(''); fm.push(contentToMd());
         return fm.join('\n') + '\n';
       }
 
-      function buildFileName() {
-        var date = el.date.value || todayStr();
-        var slug = slugify(el.slug.value || el.title.value);
-        return date + '-' + slug + '.md';
+      /* ========== النسخ إلى الحافظة — الإصلاح الجوهري (يعمل على الآيباد) ========== */
+      function legacyCopy(text) {
+        return new Promise(function (resolve, reject) {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          // يجب أن يكون مرئياً (خارج الشاشة) ليعمل على iOS Safari
+          ta.style.position = 'fixed';
+          ta.style.top = '0'; ta.style.left = '0';
+          ta.style.width = '2em'; ta.style.height = '2em';
+          ta.style.padding = '0'; ta.style.border = 'none'; ta.style.outline = 'none';
+          ta.style.boxShadow = 'none'; ta.style.background = 'transparent';
+          ta.style.opacity = '0.01';
+          // iOS يتطلب contentEditable في بعض الإصدارات
+          ta.contentEditable = 'true';
+          document.body.appendChild(ta);
+          try {
+            ta.focus({ preventScroll: true });
+            ta.select();
+            try { ta.setSelectionRange(0, ta.value.length); } catch (e) {}
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+            document.body.removeChild(ta);
+            // استعد التركيز للمحرر
+            try { restoreRange(); } catch (e3) {}
+            if (ok) resolve(true); else reject(new Error('execCommand failed'));
+          } catch (err) {
+            try { if (ta.parentNode) ta.parentNode.removeChild(ta); } catch (e4) {}
+            reject(err);
+          }
+        });
       }
 
-      /* ========== التصدير ========== */
-
-      function fallbackCopy(text, done) {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.setAttribute('readonly', '');
-        ta.style.position = 'fixed';
-        ta.style.top = '0';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        try {
-          document.execCommand('copy');
-          done();
-        } catch (e) {
-          toast('تعذر النسخ — استخدم زر التنزيل بدلاً منه');
-        }
-        document.body.removeChild(ta);
-      }
-
-      document.getElementById('ed-copy').addEventListener('click', function () {
+      function copyMarkdown() {
         saveDraft();
         var md = buildMarkdown();
+        if (!md || !md.trim()) { toast('لا يوجد محتوى لنسخه بعد'); return; }
         var done = function () { toast('تم نسخ المارك داون — ألصقه في ملف جديد داخل مجلد _posts'); };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(md).then(done, function () { fallbackCopy(md, done); });
-        } else {
-          fallbackCopy(md, done);
+        var fail = function () { toast('تعذر النسخ التلقائي — استخدم زر التنزيل بدلاً منه'); };
+        // Clipboard API يتطلب سياقاً آمناً (HTTPS) — جرّبه أولاً ثم الاحتياطي
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          var p = null;
+          try { p = navigator.clipboard.writeText(md); } catch (e) { p = null; }
+          if (p && typeof p.then === 'function') {
+            p.then(done, function () { legacyCopy(md).then(done, fail); });
+            return;
+          }
         }
-      });
+        legacyCopy(md).then(done, fail);
+      }
+
+      document.getElementById('ed-copy').addEventListener('click', copyMarkdown);
+      document.getElementById('ed-copy-top').addEventListener('click', copyMarkdown);
 
       document.getElementById('ed-download').addEventListener('click', function () {
         saveDraft();
@@ -1624,36 +1332,32 @@
           var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
           var url = URL.createObjectURL(blob);
           var a = document.createElement('a');
-          a.href = url;
-          a.download = name;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function () {
-            URL.revokeObjectURL(url);
-            if (a.parentNode) a.parentNode.removeChild(a);
-          }, 800);
+          a.href = url; a.download = name;
+          document.body.appendChild(a); a.click();
+          setTimeout(function () { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 800);
           toast('تم تنزيل "' + name + '" — أضِفه إلى مجلد _posts ثم ادفعه إلى المستودع');
-        } catch (e) {
-          toast('تعذر التنزيل في هذا المتصفح');
-        }
+        } catch (e) { toast('تعذر التنزيل في هذا المتصفح'); }
+      });
+
+      document.getElementById('ed-preview-top').addEventListener('click', function () {
+        var panel = document.getElementById('ed-meta-panel');
+        var t = document.getElementById('ed-meta-toggle');
+        var open = panel.classList.toggle('is-open');
+        t.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
 
       document.getElementById('ed-new').addEventListener('click', function () {
         if (!window.confirm('بدء مسودة جديدة؟ سيُحذف محتوى المسودة الحالية نهائياً من هذا الجهاز.')) return;
         try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
-        el.title.value = '';
-        el.author.value = 'jassim';
-        el.date.value = todayStr();
-        el.tags.value = '';
-        el.cover.value = '';
-        el.ai.checked = false;
-        el.hideBtns.checked = false;
-        el.visible.checked = true;
+        el.title.value = ''; el.author.value = 'jassim';
+        el.date.value = todayStr(); el.tags.value = ''; el.cover.value = '';
+        el.ai.checked = false; el.hideBtns.checked = false; el.visible.checked = true;
         el.slug.value = '';
-        el.slug.removeAttribute('data-dirty');
+        el.filename.value = todayStr() + '-post.md';
+        delete el.filename.dataset.dirty;
+        setFilenameEditing(false);
         el.editor.innerHTML = '';
-        hideTableTools();
-        closePop();
+        hideTableTools(); closePop();
         el.status.textContent = 'الحفظ التلقائي مفعّل';
         refreshToolbar();
         toast('مسودة جديدة جاهزة');
@@ -1661,45 +1365,37 @@
       });
 
       /* ========== الربط بالحقول ========== */
+      document.getElementById('ed-meta-toggle').addEventListener('click', function () {
+        var panel = document.getElementById('ed-meta-panel');
+        var open = panel.classList.toggle('is-open');
+        this.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
 
       el.title.addEventListener('input', function () {
-        if (el.slug.dataset.dirty !== '1') {
-          el.slug.value = el.title.value.trim() ? slugify(el.title.value) : '';
-        }
+        el.slug.value = slugify(el.title.value);
+        refreshFilename();
+        queueSave();
       });
-
-      el.slug.addEventListener('input', function () {
-        if (el.slug.value.trim()) el.slug.setAttribute('data-dirty', '1');
-        else el.slug.removeAttribute('data-dirty');
-      });
-
+      el.date.addEventListener('change', function () { refreshFilename(); queueSave(); });
+      el.date.addEventListener('input', function () { refreshFilename(); queueSave(); });
       el.editor.addEventListener('input', queueSave);
       el.meta.addEventListener('input', queueSave);
       el.meta.addEventListener('change', queueSave);
 
       /* ========== التهيئة ========== */
-
       function init() {
         el.date.value = todayStr();
-
         var restored = restoreDraft();
-        if (!restored && !el.slug.value) el.slug.value = '';
-
-        if (typeof window.rawafidHideLoader === 'function') window.rawafidHideLoader();
-
-        if (restored) {
-          toast('تم استرجاع مسودتك المحفوظة تلقائياً');
-          markSaved();
+        if (!restored) {
+          el.filename.value = todayStr() + '-post.md';
+        } else if (!el.filename.value) {
+          refreshFilename();
         }
-
         refreshToolbar();
+        if (restored) { toast('تم استرجاع مسودتك المحفوظة تلقائياً'); markSaved(); }
       }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
     })();
   </script>
 
