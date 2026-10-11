@@ -282,6 +282,7 @@
       overflow-x: auto;
       max-width: 100%;
       margin: var(--space-lg) auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .page-content table {
@@ -479,6 +480,15 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       rawafidHideLoader();
+
+      document.querySelectorAll('#post-content table').forEach(function(table) {
+        if (table.parentElement && table.parentElement.classList.contains('table-wrapper')) return;
+        var wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+
       const urlParams = new URLSearchParams(window.location.search);
       const slug = urlParams.get('i');
 
