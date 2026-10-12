@@ -270,12 +270,13 @@
       overflow-x: auto;
       max-width: 100%;
       margin: var(--space-lg) auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .page-content table {
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
+      width: auto;
+      max-width: 100%;
+      margin: 0;
       border-collapse: separate;
       border-spacing: 0;
       font-size: calc(var(--text-sm) * var(--fs));
@@ -318,6 +319,36 @@
       margin-left: 8px;
       accent-color: var(--rawafid-primary);
     }
+
+    /* الخرائط الذهنية (mermaid): تُدرج في الماركداون عبر كتلة mindmap أو mermaid */
+    .page-content .mindmap {
+      width: 100%;
+      overflow-x: auto;
+      margin: var(--space-lg) auto;
+      padding: var(--space-md);
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      text-align: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .page-content .mindmap svg {
+      max-width: 100% !important;
+      height: auto !important;
+      display: block;
+      margin: 0 auto;
+      font-family: var(--font-body);
+    }
+
+    .page-content .mindmap-error {
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
+      text-align: center;
+      padding: var(--space-md);
+    }
+
+    .mindmap-pending { display: none !important; }
 
     .blog-status {
       text-align: center;
@@ -378,6 +409,16 @@
       }
 
       .page-content thead th { background: #f2f2f2 !important; color: #000000 !important; }
+
+      .page-content .mindmap {
+        border: none !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .mindmap-pending { display: block !important; }
     }
   </style>
   
@@ -818,6 +859,15 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       rawafidHideLoader();
+
+      document.querySelectorAll('#post-content table').forEach(function(table) {
+        if (table.parentElement && table.parentElement.classList.contains('table-wrapper')) return;
+        var wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+
       const urlParams = new URLSearchParams(window.location.search);
       const slug = urlParams.get('i');
 
@@ -895,6 +945,127 @@
         relatedBtnText.textContent = 'مقال مرتبط';
       }
     });
+  </script>
+
+  <script>
+    /* إخفاء كتل الخرائط الخام قبل تحميل mermaid لمنع وميض الكود */
+    (function () {
+      var content = document.getElementById('post-content');
+      if (!content) return;
+      content.querySelectorAll('[class*="language-mermaid"], [class*="language-mindmap"]').forEach(function (el) {
+        var wrapper = el.closest('.highlighter-rouge') || el.closest('pre') || el;
+        if (wrapper) wrapper.classList.add('mindmap-pending');
+      });
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+  <script>
+    /* تحويل كتل mindmap/mermaid في الماركداون إلى خرائط ذهنية متوافقة مع الثيم */
+    (function () {
+      'use strict';
+
+      var content = document.getElementById('post-content');
+      if (!content) return;
+
+      function cssVar(name, fallback) {
+        var value = getComputedStyle(document.documentElement).getPropertyValue(name);
+        value = (value || '').trim();
+        return value || fallback;
+      }
+
+      function convertBlocks() {
+        var blocks = content.querySelectorAll('[class*="language-mermaid"], [class*="language-mindmap"]');
+        blocks.forEach(function (el) {
+          var wrapper = el.closest('.mindmap-pending') || el.closest('.highlighter-rouge') || el.closest('pre') || el;
+          if (!wrapper || !wrapper.parentNode) return;
+          var classes = el.className || '';
+          var isMindmap = classes.indexOf('language-mindmap') !== -1 && classes.indexOf('language-mermaid') === -1;
+          var source = el.textContent.replace(/^\s+|\s+$/g, '');
+          if (isMindmap && !/^mindmap\b/.test(source)) {
+            source = 'mindmap\n' + source;
+          }
+          var box = document.createElement('div');
+          box.className = 'mindmap';
+          box.setAttribute('role', 'img');
+          box.setAttribute('data-mermaid-src', source);
+          wrapper.parentNode.replaceChild(box, wrapper);
+        });
+      }
+
+      if (typeof mermaid === 'undefined') {
+        content.querySelectorAll('.mindmap-pending').forEach(function (w) { w.classList.remove('mindmap-pending'); });
+        return;
+      }
+
+      function initializeMermaid() {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'base',
+          themeVariables: {
+            fontFamily: cssVar('--font-body', 'sans-serif'),
+            primaryColor: cssVar('--rawafid-primary-soft', '#eff1ff'),
+            primaryTextColor: cssVar('--rawafid-text', '#2d2d2d'),
+            primaryBorderColor: cssVar('--rawafid-primary', '#1a2ac6'),
+            lineColor: cssVar('--rawafid-primary', '#1a2ac6'),
+            tertiaryColor: cssVar('--rawafid-bg', '#f4f6fb')
+          }
+        });
+      }
+
+      function showError(box, err) {
+        box.classList.add('mindmap-error');
+        box.textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة mermaid.';
+        if (window.console && console.error) console.error('Mindmap render error:', err);
+      }
+
+      function renderMindmaps() {
+        var boxes = Array.prototype.slice.call(content.querySelectorAll('.mindmap'));
+        var index = 0;
+
+        function renderNext() {
+          if (index >= boxes.length) return;
+          var box = boxes[index++];
+          var source = box.getAttribute('data-mermaid-src');
+          if (!source) { renderNext(); return; }
+
+          var id = 'mindmap-' + Date.now() + '-' + index;
+          var result;
+          try {
+            result = mermaid.render(id, source);
+          } catch (err) {
+            showError(box, err);
+            renderNext();
+            return;
+          }
+          result.then(function (out) {
+            box.classList.remove('mindmap-error');
+            box.innerHTML = out.svg;
+            if (typeof out.bindFunctions === 'function') out.bindFunctions(box);
+          }).catch(function (err) {
+            showError(box, err);
+          }).then(renderNext);
+        }
+
+        renderNext();
+      }
+
+      convertBlocks();
+      initializeMermaid();
+      renderMindmaps();
+
+      var currentTheme = document.documentElement.getAttribute('data-theme');
+      var observer = new MutationObserver(function () {
+        var theme = document.documentElement.getAttribute('data-theme');
+        if (theme === currentTheme) return;
+        currentTheme = theme;
+        initializeMermaid();
+        renderMindmaps();
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    })();
   </script>
 
 </body>
