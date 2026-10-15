@@ -331,15 +331,19 @@
       border: 1px solid var(--rawafid-border);
       border-radius: var(--radius-md);
       text-align: center;
+      overflow: hidden;
     }
 
     .mindmap-toolbar {
-      position: absolute;
-      top: var(--space-sm);
-      inset-inline-end: var(--space-sm);
       display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
       gap: 6px;
-      z-index: 2;
+      padding: var(--space-sm);
+      background: var(--rawafid-bg);
+      border-bottom: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
 
     .mindmap-btn {
@@ -369,7 +373,8 @@
     .mindmap-viewport {
       overflow: auto;
       max-height: 75vh;
-      padding: var(--space-md);
+      padding: var(--space-lg);
+      background: var(--rawafid-surface);
       -webkit-overflow-scrolling: touch;
     }
 
@@ -379,6 +384,11 @@
       display: block;
       margin: 0 auto;
       font-family: var(--font-body);
+    }
+
+    .page-content .mindmap svg text,
+    .page-content .mindmap svg tspan {
+      font-family: var(--font-body) !important;
     }
 
     .page-content .mindmap-error {
@@ -1002,10 +1012,111 @@
       var content = document.getElementById('post-content');
       if (!content) return;
 
+      var SVG_NS = 'http://www.w3.org/2000/svg';
+
       function cssVar(name, fallback) {
         var value = getComputedStyle(document.documentElement).getPropertyValue(name);
         value = (value || '').trim();
         return value || fallback;
+      }
+
+      function isDarkMode() {
+        return document.documentElement.getAttribute('data-theme') === 'dark';
+      }
+
+      function parseColor(color) {
+        if (!color) return null;
+        color = String(color).trim();
+        var hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+        if (hex) {
+          var h = hex[1];
+          if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+          return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+        }
+        var rgb = color.match(/^rgba?\(([^)]+)\)$/i);
+        if (rgb) {
+          var parts = rgb[1].split(',').map(function (v) { return parseFloat(v); });
+          if (parts.length >= 3) return [parts[0], parts[1], parts[2]];
+        }
+        return null;
+      }
+
+      function toHex(rgb) {
+        return '#' + rgb.map(function (v) {
+          var s = Math.round(Math.max(0, Math.min(255, v))).toString(16);
+          return s.length < 2 ? '0' + s : s;
+        }).join('');
+      }
+
+      function mix(a, b, t) {
+        var ca = parseColor(a), cb = parseColor(b);
+        if (!ca || !cb) return a;
+        return toHex([0, 1, 2].map(function (i) { return ca[i] + (cb[i] - ca[i]) * t; }));
+      }
+
+      function luminance(rgb) {
+        var c = rgb.map(function (v) {
+          v = v / 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+      }
+
+      function contrastText(bg, darkText) {
+        var rgb = parseColor(bg);
+        if (!rgb) return '#ffffff';
+        return luminance(rgb) > 0.5 ? darkText : '#ffffff';
+      }
+
+      function buildThemeVariables() {
+        var dark = isDarkMode();
+        var primary = cssVar('--rawafid-primary', '#1a2ac6');
+        var surface = cssVar('--rawafid-surface', '#ffffff');
+        var bg = cssVar('--rawafid-bg', '#f4f6fb');
+        var text = cssVar('--rawafid-text', '#2d2d2d');
+        var border = cssVar('--rawafid-border', '#ccd1e0');
+
+        var nodeFill = mix(primary, surface, dark ? 0.58 : 0.84);
+        var nodeBorder = dark ? mix(primary, surface, 0.3) : primary;
+        var lineColor = dark ? mix(primary, surface, 0.4) : mix(primary, surface, 0.2);
+
+        var vars = {
+          fontFamily: cssVar('--font-body', 'sans-serif'),
+          fontSize: '15px',
+          textColor: text,
+          primaryColor: nodeFill,
+          primaryTextColor: text,
+          primaryBorderColor: nodeBorder,
+          secondaryColor: mix(primary, surface, dark ? 0.72 : 0.9),
+          secondaryTextColor: text,
+          secondaryBorderColor: border,
+          tertiaryColor: bg,
+          tertiaryTextColor: text,
+          tertiaryBorderColor: border,
+          lineColor: lineColor,
+          background: surface,
+          mainBkg: nodeFill,
+          nodeBorder: nodeBorder,
+          nodeTextColor: text,
+          clusterBkg: bg,
+          clusterBorder: border,
+          edgeLabelBackground: surface,
+          titleColor: text
+        };
+
+        var tints = dark
+          ? [0, 0.42, 0.58, 0.7, 0.78, 0.84]
+          : [0, 0.74, 0.83, 0.88, 0.92, 0.95];
+
+        for (var i = 0; i < 12; i++) {
+          var tint = tints[Math.min(i, tints.length - 1)];
+          var fill = mix(primary, surface, tint);
+          vars['cScale' + i] = fill;
+          vars['cScaleLabel' + i] = contrastText(fill, text);
+          vars['cScaleInv' + i] = contrastText(fill, text);
+        }
+
+        return vars;
       }
 
       function convertBlocks() {
@@ -1020,7 +1131,7 @@
             source = 'mindmap\n' + source;
           }
           var box = document.createElement('div');
-          box.className = 'mindmap';
+          box.className = 'mindmap mindmap-pending';
           box.setAttribute('role', 'group');
           box.setAttribute('data-mermaid-src', source);
 
@@ -1051,22 +1162,26 @@
           startOnLoad: false,
           securityLevel: 'strict',
           theme: 'base',
-          themeVariables: {
-            fontFamily: cssVar('--font-body', 'sans-serif'),
-            primaryColor: '#eff1ff',
-            primaryTextColor: '#2d2d2d',
-            primaryBorderColor: '#1a2ac6',
-            lineColor: '#1a2ac6',
-            tertiaryColor: '#f4f6fb'
+          themeVariables: buildThemeVariables(),
+          mindmap: {
+            useMaxWidth: true,
+            padding: 14,
+            maxNodeWidth: 240,
+            colorBy: 'depth'
           }
         });
       }
 
       function showError(box, err) {
+        box.classList.remove('mindmap-pending');
         box.classList.add('mindmap-error');
         var viewport = box.querySelector('.mindmap-viewport');
         (viewport || box).textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة mermaid.';
         if (window.console && console.error) console.error('Mindmap render error:', err);
+      }
+
+      function logError(err) {
+        if (window.console && console.error) console.error('Mindmap error:', err);
       }
 
       function applyScale(box, scale) {
@@ -1097,46 +1212,135 @@
         setTimeout(function () { URL.revokeObjectURL(objectUrl); }, 1000);
       }
 
+      function canvasToBlob(canvas, cb) {
+        if (canvas.toBlob) {
+          canvas.toBlob(function (blob) { cb(blob); }, 'image/png');
+          return;
+        }
+        try {
+          var parts = canvas.toDataURL('image/png').split(',');
+          var binary = atob(parts[1]);
+          var bytes = new Uint8Array(binary.length);
+          for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          cb(new Blob([bytes], { type: 'image/png' }));
+        } catch (err) {
+          cb(null);
+        }
+      }
+
+      var exportFontPromise = null;
+      function loadExportFont() {
+        if (exportFontPromise) return exportFontPromise;
+        var base = (typeof BASE_URL === 'string' ? BASE_URL : '');
+        exportFontPromise = fetch(base + '/fonts/thmanyahsans-Regular.otf', { cache: 'force-cache' })
+          .then(function (res) { return res.ok ? res.blob() : null; })
+          .then(function (blob) {
+            if (!blob) return null;
+            return new Promise(function (resolve) {
+              var reader = new FileReader();
+              reader.onload = function () { resolve(reader.result); };
+              reader.onerror = function () { resolve(null); };
+              reader.readAsDataURL(blob);
+            });
+          })
+          .catch(function () { return null; });
+        return exportFontPromise;
+      }
+
+      function embedExportFont(svg, fontDataUrl) {
+        if (!fontDataUrl) return;
+        var style = document.createElementNS(SVG_NS, 'style');
+        style.textContent =
+          "@font-face{font-family:'RawafidExport';src:url(\"" + fontDataUrl + "\") format('opentype');font-weight:400;font-style:normal;}" +
+          "text,tspan{font-family:'RawafidExport','IBM Plex Sans Arabic',sans-serif !important;}";
+        svg.insertBefore(style, svg.firstChild);
+      }
+
       function saveMindmap(box) {
+        if (box.getAttribute('data-mm-saving') === '1') return;
         var svg = box.querySelector('.mindmap-viewport svg') || box.querySelector('svg');
-        if (!svg) return;
+        if (!svg || typeof svg.getBBox !== 'function') return;
+        box.setAttribute('data-mm-saving', '1');
+
+        function done() { box.removeAttribute('data-mm-saving'); }
+
+        var pad = 24;
+        var bounds;
+        try { bounds = svg.getBBox(); } catch (err) { bounds = null; }
         var rect = svg.getBoundingClientRect();
         var vb = svg.viewBox && svg.viewBox.baseVal;
-        var width = (vb && vb.width) ? vb.width : rect.width;
-        var height = (vb && vb.height) ? vb.height : rect.height;
-        if (!width || !height) return;
+        var x, y, width, height;
+        if (bounds && bounds.width > 0 && bounds.height > 0) {
+          x = bounds.x - pad;
+          y = bounds.y - pad;
+          width = bounds.width + pad * 2;
+          height = bounds.height + pad * 2;
+        } else {
+          x = 0;
+          y = 0;
+          width = (vb && vb.width) || rect.width;
+          height = (vb && vb.height) || rect.height;
+        }
+        if (!width || !height) { done(); return; }
 
         var clone = svg.cloneNode(true);
+        clone.removeAttribute('style');
+        clone.removeAttribute('width');
+        clone.removeAttribute('height');
+        clone.setAttribute('xmlns', SVG_NS);
+        clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        clone.setAttribute('viewBox', x + ' ' + y + ' ' + width + ' ' + height);
         clone.setAttribute('width', width);
         clone.setAttribute('height', height);
 
-        var data;
-        try {
-          data = new XMLSerializer().serializeToString(clone);
-        } catch (err) {
-          showError(box, err);
-          return;
-        }
+        var surface = cssVar('--rawafid-surface', '#ffffff');
+        var bg = document.createElementNS(SVG_NS, 'rect');
+        bg.setAttribute('x', x);
+        bg.setAttribute('y', y);
+        bg.setAttribute('width', width);
+        bg.setAttribute('height', height);
+        bg.setAttribute('fill', surface);
+        clone.insertBefore(bg, clone.firstChild);
 
-        var url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml;charset=utf-8' }));
-        var img = new Image();
-        var ratio = 2;
+        loadExportFont().then(function (fontDataUrl) {
+          embedExportFont(clone, fontDataUrl);
 
-        img.onload = function () {
-          var canvas = document.createElement('canvas');
-          canvas.width = Math.round(width * ratio);
-          canvas.height = Math.round(height * ratio);
-          var ctx = canvas.getContext('2d');
-          if (!ctx) { URL.revokeObjectURL(url); return; }
-          ctx.fillStyle = cssVar('--rawafid-surface', '#ffffff');
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          URL.revokeObjectURL(url);
-          canvas.toBlob(function (blob) { if (blob) downloadBlob(blob); }, 'image/png');
-        };
+          var data;
+          try {
+            data = new XMLSerializer().serializeToString(clone);
+          } catch (err) {
+            logError(err);
+            done();
+            return;
+          }
 
-        img.onerror = function () { URL.revokeObjectURL(url); };
-        img.src = url;
+          var url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml;charset=utf-8' }));
+          var img = new Image();
+          var ratio = 2;
+
+          img.onload = function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.round(width * ratio);
+            canvas.height = Math.round(height * ratio);
+            var ctx = canvas.getContext('2d');
+            if (!ctx) { URL.revokeObjectURL(url); done(); return; }
+            ctx.fillStyle = surface;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(url);
+            canvasToBlob(canvas, function (blob) {
+              if (blob) downloadBlob(blob);
+              done();
+            });
+          };
+
+          img.onerror = function () {
+            URL.revokeObjectURL(url);
+            logError(new Error('تعذّر تحويل الخريطة إلى صورة'));
+            done();
+          };
+          img.src = url;
+        });
       }
 
       content.addEventListener('click', function (event) {
@@ -1159,12 +1363,14 @@
         }
       });
 
+      var renderToken = 0;
       function renderMindmaps() {
+        var token = ++renderToken;
         var boxes = Array.prototype.slice.call(content.querySelectorAll('.mindmap'));
         var index = 0;
 
         function renderNext() {
-          if (index >= boxes.length) return;
+          if (token !== renderToken || index >= boxes.length) return;
           var box = boxes[index++];
           var source = box.getAttribute('data-mermaid-src');
           if (!source) { renderNext(); return; }
@@ -1179,7 +1385,9 @@
             return;
           }
           result.then(function (out) {
+            if (token !== renderToken) return;
             box.classList.remove('mindmap-error');
+            box.classList.remove('mindmap-pending');
             var viewport = box.querySelector('.mindmap-viewport');
             if (viewport) {
               viewport.innerHTML = out.svg;
@@ -1193,6 +1401,7 @@
             }
             if (typeof out.bindFunctions === 'function') out.bindFunctions(box);
           }).catch(function (err) {
+            if (token !== renderToken) return;
             showError(box, err);
           }).then(renderNext);
         }
@@ -1201,8 +1410,26 @@
       }
 
       convertBlocks();
-      initializeMermaid();
-      renderMindmaps();
+
+      function whenFontsReady(cb) {
+        if (document.fonts && document.fonts.ready && typeof document.fonts.load === 'function') {
+          var loads = [];
+          try {
+            loads.push(document.fonts.load('400 16px "IBM Plex Sans Arabic"'));
+            loads.push(document.fonts.load('700 16px "IBM Plex Sans Arabic"'));
+          } catch (err) {}
+          Promise.all(loads).catch(function () {}).then(function () {
+            return document.fonts.ready;
+          }).then(function () { cb(); }).catch(function () { cb(); });
+        } else {
+          cb();
+        }
+      }
+
+      whenFontsReady(function () {
+        initializeMermaid();
+        renderMindmaps();
+      });
 
       var currentTheme = document.documentElement.getAttribute('data-theme');
       var observer = new MutationObserver(function () {
