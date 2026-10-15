@@ -322,19 +322,59 @@
 
     /* الخرائط الذهنية (mermaid): تُدرج في الماركداون عبر كتلة mindmap أو mermaid */
     .page-content .mindmap {
-      width: 100%;
-      overflow-x: auto;
-      margin: var(--space-lg) auto;
-      padding: var(--space-md);
+      position: relative;
+      width: calc(100% + 120px);
+      max-width: none;
+      margin: var(--space-lg) -60px;
+      padding: 0;
       background: var(--rawafid-surface);
       border: 1px solid var(--rawafid-border);
       border-radius: var(--radius-md);
       text-align: center;
+    }
+
+    .mindmap-toolbar {
+      position: absolute;
+      top: var(--space-sm);
+      inset-inline-end: var(--space-sm);
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .mindmap-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid var(--rawafid-border);
+      background: var(--rawafid-surface);
+      color: var(--rawafid-primary);
+      font-size: 0.85rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .mindmap-btn:hover,
+    .mindmap-btn:focus-visible {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .mindmap-viewport {
+      overflow: auto;
+      max-height: 75vh;
+      padding: var(--space-md);
       -webkit-overflow-scrolling: touch;
     }
 
     .page-content .mindmap svg {
-      max-width: 100% !important;
+      max-width: 100%;
       height: auto !important;
       display: block;
       margin: 0 auto;
@@ -359,6 +399,10 @@
       align-items: center;
       justify-content: center;
       gap: var(--space-sm);
+    }
+
+    @media (max-width: 1100px) {
+      .page-content .mindmap { width: 100%; margin-left: 0; margin-right: 0; }
     }
 
     @media (max-width: 900px) {
@@ -411,11 +455,21 @@
       .page-content thead th { background: #f2f2f2 !important; color: #000000 !important; }
 
       .page-content .mindmap {
+        width: 100% !important;
+        margin: 0 !important;
         border: none !important;
         padding: 0 !important;
         overflow: visible !important;
         page-break-inside: avoid;
         break-inside: avoid;
+      }
+
+      .mindmap-toolbar { display: none !important; }
+
+      .mindmap-viewport {
+        overflow: visible !important;
+        max-height: none !important;
+        padding: 0 !important;
       }
 
       .mindmap-pending { display: block !important; }
@@ -1133,8 +1187,22 @@
           }
           var box = document.createElement('div');
           box.className = 'mindmap';
-          box.setAttribute('role', 'img');
+          box.setAttribute('role', 'group');
           box.setAttribute('data-mermaid-src', source);
+
+          var toolbar = document.createElement('div');
+          toolbar.className = 'mindmap-toolbar';
+          toolbar.innerHTML =
+            '<button type="button" class="mindmap-btn" data-mm-action="zoom-in" title="تكبير" aria-label="تكبير"><i class="fas fa-magnifying-glass-plus" aria-hidden="true"></i></button>' +
+            '<button type="button" class="mindmap-btn" data-mm-action="zoom-out" title="تصغير" aria-label="تصغير"><i class="fas fa-magnifying-glass-minus" aria-hidden="true"></i></button>' +
+            '<button type="button" class="mindmap-btn" data-mm-action="reset" title="إعادة الضبط" aria-label="إعادة الضبط"><i class="fas fa-rotate-left" aria-hidden="true"></i></button>' +
+            '<button type="button" class="mindmap-btn" data-mm-action="save" title="حفظ كصورة" aria-label="حفظ كصورة"><i class="fas fa-download" aria-hidden="true"></i></button>';
+
+          var viewport = document.createElement('div');
+          viewport.className = 'mindmap-viewport';
+
+          box.appendChild(toolbar);
+          box.appendChild(viewport);
           wrapper.parentNode.replaceChild(box, wrapper);
         });
       }
@@ -1151,20 +1219,111 @@
           theme: 'base',
           themeVariables: {
             fontFamily: cssVar('--font-body', 'sans-serif'),
-            primaryColor: cssVar('--rawafid-primary-soft', '#eff1ff'),
-            primaryTextColor: cssVar('--rawafid-text', '#2d2d2d'),
-            primaryBorderColor: cssVar('--rawafid-primary', '#1a2ac6'),
-            lineColor: cssVar('--rawafid-primary', '#1a2ac6'),
-            tertiaryColor: cssVar('--rawafid-bg', '#f4f6fb')
+            primaryColor: '#eff1ff',
+            primaryTextColor: '#2d2d2d',
+            primaryBorderColor: '#1a2ac6',
+            lineColor: '#1a2ac6',
+            tertiaryColor: '#f4f6fb'
           }
         });
       }
 
       function showError(box, err) {
         box.classList.add('mindmap-error');
-        box.textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة mermaid.';
+        var viewport = box.querySelector('.mindmap-viewport');
+        (viewport || box).textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة mermaid.';
         if (window.console && console.error) console.error('Mindmap render error:', err);
       }
+
+      function applyScale(box, scale) {
+        box.setAttribute('data-mm-scale', scale);
+        var svg = box.querySelector('.mindmap-viewport svg') || box.querySelector('svg');
+        if (!svg) return;
+        svg.style.height = 'auto';
+        if (scale === 1) {
+          svg.style.removeProperty('width');
+          svg.style.removeProperty('max-width');
+          return;
+        }
+        var base = parseFloat(box.getAttribute('data-fit-w')) || 0;
+        if (!base) base = svg.getBoundingClientRect().width;
+        svg.style.maxWidth = 'none';
+        svg.style.width = Math.round(base * scale) + 'px';
+      }
+
+      function downloadBlob(blob) {
+        var name = (document.title || 'mindmap').replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim();
+        var a = document.createElement('a');
+        var objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = name + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(objectUrl); }, 1000);
+      }
+
+      function saveMindmap(box) {
+        var svg = box.querySelector('.mindmap-viewport svg') || box.querySelector('svg');
+        if (!svg) return;
+        var rect = svg.getBoundingClientRect();
+        var vb = svg.viewBox && svg.viewBox.baseVal;
+        var width = (vb && vb.width) ? vb.width : rect.width;
+        var height = (vb && vb.height) ? vb.height : rect.height;
+        if (!width || !height) return;
+
+        var clone = svg.cloneNode(true);
+        clone.setAttribute('width', width);
+        clone.setAttribute('height', height);
+
+        var data;
+        try {
+          data = new XMLSerializer().serializeToString(clone);
+        } catch (err) {
+          showError(box, err);
+          return;
+        }
+
+        var url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml;charset=utf-8' }));
+        var img = new Image();
+        var ratio = 2;
+
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          var ctx = canvas.getContext('2d');
+          if (!ctx) { URL.revokeObjectURL(url); return; }
+          ctx.fillStyle = cssVar('--rawafid-surface', '#ffffff');
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          URL.revokeObjectURL(url);
+          canvas.toBlob(function (blob) { if (blob) downloadBlob(blob); }, 'image/png');
+        };
+
+        img.onerror = function () { URL.revokeObjectURL(url); };
+        img.src = url;
+      }
+
+      content.addEventListener('click', function (event) {
+        var btn = event.target.closest ? event.target.closest('.mindmap-btn') : null;
+        if (!btn) return;
+        var box = btn.closest('.mindmap');
+        if (!box) return;
+        var action = btn.getAttribute('data-mm-action');
+        var scale = parseFloat(box.getAttribute('data-mm-scale')) || 1;
+        if (action === 'zoom-in') {
+          applyScale(box, Math.min(2.5, Math.round((scale + 0.15) * 100) / 100));
+        } else if (action === 'zoom-out') {
+          applyScale(box, Math.max(0.4, Math.round((scale - 0.15) * 100) / 100));
+        } else if (action === 'reset') {
+          applyScale(box, 1);
+          var vp = box.querySelector('.mindmap-viewport');
+          if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
+        } else if (action === 'save') {
+          saveMindmap(box);
+        }
+      });
 
       function renderMindmaps() {
         var boxes = Array.prototype.slice.call(content.querySelectorAll('.mindmap'));
@@ -1187,7 +1346,17 @@
           }
           result.then(function (out) {
             box.classList.remove('mindmap-error');
-            box.innerHTML = out.svg;
+            var viewport = box.querySelector('.mindmap-viewport');
+            if (viewport) {
+              viewport.innerHTML = out.svg;
+              var svg = viewport.querySelector('svg');
+              if (svg) {
+                box.setAttribute('data-fit-w', svg.getBoundingClientRect().width);
+                applyScale(box, parseFloat(box.getAttribute('data-mm-scale')) || 1);
+              }
+            } else {
+              box.innerHTML = out.svg;
+            }
             if (typeof out.bindFunctions === 'function') out.bindFunctions(box);
           }).catch(function (err) {
             showError(box, err);
