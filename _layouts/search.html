@@ -541,6 +541,20 @@
       return prev[b.length];
     }
 
+    function formatResultsCount(count) {
+      if (count === 1) return 'نتيجة واحدة';
+      if (count === 2) return 'نتيجتان';
+      if (count >= 3 && count <= 10) return count + ' نتائج';
+      return count + ' نتيجة';
+    }
+
+    function formatMoreResults(count) {
+      if (count === 1) return 'نتيجة أخرى';
+      if (count === 2) return 'نتيجتان أخريان';
+      if (count >= 3 && count <= 10) return count + ' نتائج أخرى';
+      return count + ' نتيجة أخرى';
+    }
+
     function highlightText(text, query) {
       if (!text || !query) return text || '';
       var words = tokenizeText(query).filter(function(w) { return w.length > 1; });
@@ -754,7 +768,7 @@
         return;
       }
 
-      resultsInfo.textContent = 'تم العثور على ' + totalResults + ' نتيجة لـ «' + currentQuery + '»';
+      resultsInfo.textContent = 'تم العثور على ' + formatResultsCount(totalResults) + ' لـ «' + currentQuery + '»';
       var html = '<div class="results-list">';
 
       if (showCourses) {
@@ -790,7 +804,7 @@
               '</a>';
             });
             if (course.items.length > 5) {
-              html += '<div class="result-more">+' + (course.items.length - 5) + ' نتيجة أخرى</div>';
+              html += '<div class="result-more">+' + formatMoreResults(course.items.length - 5) + '</div>';
             }
             html += '</div></div>';
           } else {
