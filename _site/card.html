@@ -30,6 +30,7 @@
             --btn-text: white;
             --counter-color: rgba(255, 255, 255, 0.9);
             --card-border: 1px solid rgba(255, 255, 255, 0.15);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
             
             /* لون الشعار الافتراضي (أبيض) */
             --logo-color: #ffffff; 
@@ -38,16 +39,20 @@
         /* متغيرات الوضع الفاتح */
         [data-theme="light"] {
             --bg-color: #f0f2f5;
-            --card-gradient: linear-gradient(135deg, #ffffff 0%, #e6e9f0 100%);
-            --card-back-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            --text-color: #2c3e50;
+            /* بطاقة السؤال: تدرّج أزرق */
+            --card-gradient: linear-gradient(135deg, #3b82f6 0%, #1a2ac6 55%, #101f8f 100%);
+            /* بطاقة الإجابة: لون غامق */
+            --card-back-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 60%, #020617 100%);
+            --text-color: #ffffff;
+            --card-hint-color: rgba(255, 255, 255, 0.78);
             --hint-color: rgba(0, 0, 0, 0.5);
-            --blur-bg: radial-gradient(circle, #a8edea 0%, #fed6e3 40%, transparent 70%);
+            --blur-bg: radial-gradient(circle, #93c5fd 0%, #c7d2fe 40%, transparent 70%);
             --btn-bg: rgba(0, 0, 0, 0.05);
             --btn-border: rgba(0, 0, 0, 0.1);
             --btn-text: #2c3e50;
             --counter-color: #2c3e50;
-            --card-border: 1px solid rgba(0, 0, 0, 0.05);
+            --card-border: 1px solid rgba(255, 255, 255, 0.18);
+            --card-shadow: 0 18px 40px rgba(26, 42, 198, 0.28);
 
             /* لون الشعار في الوضع الفاتح */
             --logo-color: #1a2ac6; 
@@ -223,27 +228,32 @@
             max-height: 450px;
             min-height: 300px;
             perspective: 1000px;
+            -webkit-perspective: 1000px;
             cursor: pointer;
         }
 
-        .card {
+        .flash-card {
             width: 100%;
             height: 100%;
             position: relative;
             transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            will-change: transform;
         }
 
-        .card.is-flipped {
+        .flash-card.is-flipped {
             transform: rotateY(180deg);
         }
 
         .card-face {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             border-radius: 20px;
             display: flex;
@@ -255,11 +265,13 @@
             color: var(--text-color);
             background: var(--card-gradient);
             border: var(--card-border);
+            box-shadow: var(--card-shadow);
             user-select: none;
             transition: background 0.4s ease, color 0.4s ease;
         }
 
         .card-back {
+            -webkit-transform: rotateY(180deg);
             transform: rotateY(180deg);
             background: var(--card-back-gradient);
             justify-content: flex-start; 
@@ -278,7 +290,7 @@
         .hint {
             margin-top: 25px;
             font-size: 0.85rem;
-            color: var(--hint-color);
+            color: var(--card-hint-color, var(--hint-color));
         }
 
         .controls {
@@ -446,7 +458,7 @@
     <div class="main-container">
         
         <div class="card-scene" onclick="toggleCard()">
-            <div class="card" id="flashcard">
+            <div class="flash-card" id="flashcard">
                 <div class="card-face card-front">
                     <div class="content-text" id="question-text"></div>
                     <div class="hint">(انقر للإجابة)</div>
@@ -602,7 +614,5 @@
             });
     });
 </script>
-  <script src="/assets/js/theme.js" defer></script>
-
 </body>
 </html>
