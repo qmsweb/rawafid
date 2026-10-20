@@ -320,7 +320,7 @@
       accent-color: var(--rawafid-primary);
     }
 
-    /* الخرائط الذهنية (mermaid): تُدرج في الماركداون عبر كتلة mindmap أو mermaid */
+    /* الخرائط الذهنية (markmap): تُدرج في الماركداون عبر كتلة markmap */
     .page-content .mindmap {
       position: relative;
       width: calc(100% + 120px);
@@ -332,6 +332,17 @@
       border-radius: var(--radius-md);
       text-align: center;
       overflow: hidden;
+    }
+
+    .page-content .mindmap .markmap {
+      --markmap-text-color: var(--rawafid-text);
+      --markmap-circle-open-bg: var(--rawafid-surface);
+      --markmap-code-bg: var(--rawafid-bg);
+      --markmap-code-color: var(--rawafid-text);
+      --markmap-highlight-bg: var(--rawafid-accent);
+      --markmap-font: 400 15px/1.5 var(--font-body);
+      --markmap-a-color: var(--rawafid-primary);
+      --markmap-a-hover-color: var(--rawafid-primary-dark);
     }
 
     .mindmap-toolbar {
@@ -371,24 +382,24 @@
     }
 
     .mindmap-viewport {
-      overflow: auto;
-      max-height: 75vh;
-      padding: var(--space-lg);
+      overflow: hidden;
+      padding: var(--space-sm);
       background: var(--rawafid-surface);
       -webkit-overflow-scrolling: touch;
     }
 
     .page-content .mindmap svg {
-      max-width: 100%;
-      height: auto !important;
+      width: 100%;
+      height: clamp(380px, 62vh, 680px);
       display: block;
       margin: 0 auto;
       font-family: var(--font-body);
+      touch-action: none;
     }
 
-    .page-content .mindmap svg text,
-    .page-content .mindmap svg tspan {
-      font-family: var(--font-body) !important;
+    .page-content .mindmap .markmap-foreign > div {
+      direction: rtl;
+      text-align: right;
     }
 
     .page-content .mindmap-error {
@@ -482,7 +493,11 @@
         padding: 0 !important;
       }
 
-      .mindmap-pending { display: block !important; }
+      .page-content .mindmap svg {
+        height: 600px !important;
+      }
+
+    .mindmap-pending { visibility: hidden; }
     }
   </style>
   
@@ -1012,28 +1027,42 @@
   </script>
 
   <script>
-    /* إخفاء كتل الخرائط الخام قبل تحميل mermaid لمنع وميض الكود */
+    /* إخفاء كتل الخرائط الخام قبل تحميل markmap لمنع وميض الكود */
     (function () {
       var content = document.getElementById('post-content');
       if (!content) return;
-      content.querySelectorAll('[class*="language-mermaid"], [class*="language-mindmap"]').forEach(function (el) {
+      content.querySelectorAll('[class*="language-markmap"]').forEach(function (el) {
         var wrapper = el.closest('.highlighter-rouge') || el.closest('pre') || el;
         if (wrapper) wrapper.classList.add('mindmap-pending');
       });
     })();
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
 
   <script>
-    /* تحويل كتل mindmap/mermaid في الماركداون إلى خرائط ذهنية متوافقة مع الثيم */
+    /* تحويل كتل markmap في الماركداون إلى خرائط ذهنية متوافقة مع الثيم */
     (function () {
       'use strict';
 
       var content = document.getElementById('post-content');
       if (!content) return;
 
+      var blocks = content.querySelectorAll('[class*="language-markmap"]');
+      if (!blocks.length) return;
+
+      var lib = window.markmap;
+      if (!lib || typeof lib.Transformer !== 'function' || typeof lib.Markmap !== 'function') {
+        content.querySelectorAll('.mindmap-pending').forEach(function (w) { w.classList.remove('mindmap-pending'); });
+        return;
+      }
+
       var SVG_NS = 'http://www.w3.org/2000/svg';
+      var transformer = new lib.Transformer();
+      var instances = [];
+      var renderToken = 0;
 
       function cssVar(name, fallback) {
         var value = getComputedStyle(document.documentElement).getPropertyValue(name);
@@ -1075,86 +1104,61 @@
         return toHex([0, 1, 2].map(function (i) { return ca[i] + (cb[i] - ca[i]) * t; }));
       }
 
-      function luminance(rgb) {
-        var c = rgb.map(function (v) {
-          v = v / 255;
-          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-      }
-
-      function contrastText(bg, darkText) {
-        var rgb = parseColor(bg);
-        if (!rgb) return '#ffffff';
-        return luminance(rgb) > 0.5 ? darkText : '#ffffff';
-      }
-
-      function buildThemeVariables() {
-        var dark = isDarkMode();
+      function buildPalette() {
         var primary = cssVar('--rawafid-primary', '#1a2ac6');
+        var primaryDark = cssVar('--rawafid-primary-dark', primary);
+        var accent = cssVar('--rawafid-accent', '#ffcc00');
+        var success = cssVar('--rawafid-success', '#25d366');
+        var error = cssVar('--rawafid-error', '#e74c3c');
         var surface = cssVar('--rawafid-surface', '#ffffff');
-        var bg = cssVar('--rawafid-bg', '#f4f6fb');
         var text = cssVar('--rawafid-text', '#2d2d2d');
-        var border = cssVar('--rawafid-border', '#ccd1e0');
+        var dark = isDarkMode();
+        return [
+          primary,
+          mix(primary, accent, dark ? 0.22 : 0.42),
+          mix(primary, success, dark ? 0.22 : 0.42),
+          mix(primary, error, dark ? 0.25 : 0.35),
+          primaryDark,
+          mix(primary, text, 0.3),
+          mix(primary, surface, 0.3),
+          mix(primary, surface, dark ? 0.55 : 0.68)
+        ];
+      }
 
-        var nodeFill = mix(primary, surface, dark ? 0.58 : 0.84);
-        var nodeBorder = dark ? mix(primary, surface, 0.3) : primary;
-        var lineColor = dark ? mix(primary, surface, 0.4) : mix(primary, surface, 0.2);
-
-        var vars = {
-          fontFamily: cssVar('--font-body', 'sans-serif'),
-          fontSize: '15px',
-          textColor: text,
-          primaryColor: nodeFill,
-          primaryTextColor: text,
-          primaryBorderColor: nodeBorder,
-          secondaryColor: mix(primary, surface, dark ? 0.72 : 0.9),
-          secondaryTextColor: text,
-          secondaryBorderColor: border,
-          tertiaryColor: bg,
-          tertiaryTextColor: text,
-          tertiaryBorderColor: border,
-          lineColor: lineColor,
-          background: surface,
-          mainBkg: nodeFill,
-          nodeBorder: nodeBorder,
-          nodeTextColor: text,
-          clusterBkg: bg,
-          clusterBorder: border,
-          edgeLabelBackground: surface,
-          titleColor: text
+      function buildOptions(frontmatter) {
+        var custom = (frontmatter && frontmatter.markmap) || {};
+        var json = {
+          color: buildPalette(),
+          colorFreezeLevel: 2,
+          duration: 300,
+          maxWidth: 340,
+          initialExpandLevel: -1,
+          spacingHorizontal: 90,
+          spacingVertical: 10,
+          paddingX: 8,
+          lineWidth: 2,
+          zoom: true,
+          pan: true
         };
-
-        var tints = dark
-          ? [0, 0.42, 0.58, 0.7, 0.78, 0.84]
-          : [0, 0.74, 0.83, 0.88, 0.92, 0.95];
-
-        for (var i = 0; i < 12; i++) {
-          var tint = tints[Math.min(i, tints.length - 1)];
-          var fill = mix(primary, surface, tint);
-          vars['cScale' + i] = fill;
-          vars['cScaleLabel' + i] = contrastText(fill, text);
-          vars['cScaleInv' + i] = contrastText(fill, text);
-        }
-
-        return vars;
+        Object.keys(custom).forEach(function (key) {
+          var value = custom[key];
+          if (value !== undefined && value !== null) json[key] = value;
+        });
+        return lib.deriveOptions(json);
       }
 
       function convertBlocks() {
-        var blocks = content.querySelectorAll('[class*="language-mermaid"], [class*="language-mindmap"]');
         blocks.forEach(function (el) {
           var wrapper = el.closest('.mindmap-pending') || el.closest('.highlighter-rouge') || el.closest('pre') || el;
           if (!wrapper || !wrapper.parentNode) return;
-          var classes = el.className || '';
-          var isMindmap = classes.indexOf('language-mindmap') !== -1 && classes.indexOf('language-mermaid') === -1;
           var source = el.textContent.replace(/^\s+|\s+$/g, '');
-          if (isMindmap && !/^mindmap\b/.test(source)) {
-            source = 'mindmap\n' + source;
-          }
+          if (!source) return;
+
           var box = document.createElement('div');
           box.className = 'mindmap mindmap-pending';
           box.setAttribute('role', 'group');
-          box.setAttribute('data-mermaid-src', source);
+          box.setAttribute('aria-label', 'خريطة ذهنية');
+          box.setAttribute('data-markmap-src', source);
 
           var toolbar = document.createElement('div');
           toolbar.className = 'mindmap-toolbar';
@@ -1167,58 +1171,90 @@
           var viewport = document.createElement('div');
           viewport.className = 'mindmap-viewport';
 
+          var svg = document.createElementNS(SVG_NS, 'svg');
+          svg.setAttribute('role', 'img');
+          svg.setAttribute('aria-label', 'خريطة ذهنية');
+
+          viewport.appendChild(svg);
           box.appendChild(toolbar);
           box.appendChild(viewport);
           wrapper.parentNode.replaceChild(box, wrapper);
+
+          instances.push({ box: box, svg: svg, source: source, mm: null });
         });
       }
 
-      if (typeof mermaid === 'undefined') {
-        content.querySelectorAll('.mindmap-pending').forEach(function (w) { w.classList.remove('mindmap-pending'); });
-        return;
+      function showError(item, err) {
+        item.box.classList.remove('mindmap-pending');
+        item.box.classList.add('mindmap-error');
+        var viewport = item.box.querySelector('.mindmap-viewport');
+        if (viewport) viewport.textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة markmap.';
+        if (window.console && console.error) console.error('Markmap render error:', err);
       }
 
-      function initializeMermaid() {
-        mermaid.initialize({
-          startOnLoad: false,
-          securityLevel: 'strict',
-          theme: 'base',
-          themeVariables: buildThemeVariables(),
-          mindmap: {
-            useMaxWidth: true,
-            padding: 14,
-            maxNodeWidth: 240,
-            colorBy: 'depth'
+      function loadAssets(features) {
+        var keys = Object.keys(features || {});
+        if (!keys.length || typeof transformer.getAssets !== 'function') return;
+        var assets = transformer.getAssets(keys);
+        if (!assets) return;
+        if (assets.styles) lib.loadCSS(assets.styles);
+        if (assets.scripts) lib.loadJS(assets.scripts, { getMarkmap: function () { return lib; } });
+      }
+
+      function renderItem(item) {
+        return new Promise(function (resolve) {
+          var result;
+          try {
+            result = transformer.transform(item.source);
+          } catch (err) {
+            showError(item, err);
+            resolve();
+            return;
           }
+
+          loadAssets(result.features);
+          var options = buildOptions(result.frontmatter);
+
+          if (item.mm) {
+            try { item.mm.destroy(); } catch (err) {}
+            item.mm = null;
+          }
+          while (item.svg.firstChild) item.svg.removeChild(item.svg.firstChild);
+
+          var mm = lib.Markmap.create(item.svg, options);
+          item.mm = mm;
+          item.box.classList.remove('mindmap-pending');
+
+          Promise.resolve(mm.setData(result.root, options)).then(function () {
+            item.box.classList.remove('mindmap-error');
+            item.box.removeAttribute('data-mm-scale');
+            mm.fit();
+            resolve();
+          }).catch(function (err) {
+            showError(item, err);
+            resolve();
+          });
         });
       }
 
-      function showError(box, err) {
-        box.classList.remove('mindmap-pending');
-        box.classList.add('mindmap-error');
-        var viewport = box.querySelector('.mindmap-viewport');
-        (viewport || box).textContent = 'تعذّر عرض الخريطة الذهنية، تحقّق من صياغة mermaid.';
-        if (window.console && console.error) console.error('Mindmap render error:', err);
+      function renderAll() {
+        var token = ++renderToken;
+        var chain = Promise.resolve();
+        instances.forEach(function (item) {
+          chain = chain.then(function () {
+            if (token !== renderToken) return;
+            return renderItem(item);
+          });
+        });
+        return chain;
       }
 
-      function logError(err) {
-        if (window.console && console.error) console.error('Mindmap error:', err);
-      }
-
-      function applyScale(box, scale) {
-        box.setAttribute('data-mm-scale', scale);
-        var svg = box.querySelector('.mindmap-viewport svg') || box.querySelector('svg');
-        if (!svg) return;
-        svg.style.height = 'auto';
-        if (scale === 1) {
-          svg.style.removeProperty('width');
-          svg.style.removeProperty('max-width');
-          return;
+      function getScale(item) {
+        try {
+          return window.d3.zoomTransform(item.svg).k || 1;
+        } catch (err) {
+          return 1;
         }
-        var base = parseFloat(box.getAttribute('data-fit-w')) || 0;
-        if (!base) base = svg.getBoundingClientRect().width;
-        svg.style.maxWidth = 'none';
-        svg.style.width = Math.round(base * scale) + 'px';
       }
 
       function downloadBlob(blob) {
@@ -1268,25 +1304,34 @@
         return exportFontPromise;
       }
 
-      function embedExportFont(svg, fontDataUrl) {
-        if (!fontDataUrl) return;
+      function embedExportStyles(svg, fontDataUrl) {
         var style = document.createElementNS(SVG_NS, 'style');
-        style.textContent =
-          "@font-face{font-family:'RawafidExport';src:url(\"" + fontDataUrl + "\") format('opentype');font-weight:400;font-style:normal;}" +
-          "text,tspan{font-family:'RawafidExport','IBM Plex Sans Arabic',sans-serif !important;}";
-        svg.insertBefore(style, svg.firstChild);
+        var text = '.markmap{' +
+          '--markmap-text-color:' + cssVar('--rawafid-text', '#2d2d2d') + ';' +
+          '--markmap-circle-open-bg:' + cssVar('--rawafid-surface', '#ffffff') + ';' +
+          '--markmap-code-bg:' + cssVar('--rawafid-bg', '#f4f6fb') + ';' +
+          '--markmap-code-color:' + cssVar('--rawafid-text', '#2d2d2d') + ';' +
+          '--markmap-font:400 15px/1.5 ' + cssVar('--font-body', 'sans-serif') + ';' +
+          '}' +
+          '.markmap-foreign>div{direction:rtl;text-align:right;}';
+        if (fontDataUrl) {
+          text += "@font-face{font-family:'RawafidExport';src:url(\"" + fontDataUrl + "\") format('opentype');font-weight:400;font-style:normal;}" +
+            ".markmap-foreign,.markmap-foreign *{font-family:'RawafidExport','IBM Plex Sans Arabic',sans-serif !important;}";
+        }
+        style.textContent = text;
+        svg.appendChild(style);
       }
 
-      function saveMindmap(box) {
-        if (box.getAttribute('data-mm-saving') === '1') return;
-        var svg = box.querySelector('.mindmap-viewport svg') || box.querySelector('svg');
+      function saveMindmap(item) {
+        var svg = item.svg;
         if (!svg || typeof svg.getBBox !== 'function') return;
-        box.setAttribute('data-mm-saving', '1');
+        if (item.box.getAttribute('data-mm-saving') === '1') return;
+        item.box.setAttribute('data-mm-saving', '1');
 
-        function done() { box.removeAttribute('data-mm-saving'); }
+        function done() { item.box.removeAttribute('data-mm-saving'); }
 
         var pad = 24;
-        var bounds;
+        var bounds = null;
         try { bounds = svg.getBBox(); } catch (err) { bounds = null; }
         var rect = svg.getBoundingClientRect();
         var vb = svg.viewBox && svg.viewBox.baseVal;
@@ -1324,13 +1369,13 @@
         clone.insertBefore(bg, clone.firstChild);
 
         loadExportFont().then(function (fontDataUrl) {
-          embedExportFont(clone, fontDataUrl);
+          embedExportStyles(clone, fontDataUrl);
 
           var data;
           try {
             data = new XMLSerializer().serializeToString(clone);
           } catch (err) {
-            logError(err);
+            if (window.console && console.error) console.error('Markmap export error:', err);
             done();
             return;
           }
@@ -1357,7 +1402,7 @@
 
           img.onerror = function () {
             URL.revokeObjectURL(url);
-            logError(new Error('تعذّر تحويل الخريطة إلى صورة'));
+            if (window.console && console.error) console.error('Markmap export error: could not rasterize SVG');
             done();
           };
           img.src = url;
@@ -1369,68 +1414,19 @@
         if (!btn) return;
         var box = btn.closest('.mindmap');
         if (!box) return;
+        var item = instances.filter(function (entry) { return entry.box === box; })[0];
+        if (!item || !item.mm) return;
         var action = btn.getAttribute('data-mm-action');
-        var scale = parseFloat(box.getAttribute('data-mm-scale')) || 1;
         if (action === 'zoom-in') {
-          applyScale(box, Math.min(2.5, Math.round((scale + 0.15) * 100) / 100));
+          item.mm.rescale(Math.min(4, getScale(item) * 1.2));
         } else if (action === 'zoom-out') {
-          applyScale(box, Math.max(0.4, Math.round((scale - 0.15) * 100) / 100));
+          item.mm.rescale(Math.max(0.25, getScale(item) / 1.2));
         } else if (action === 'reset') {
-          applyScale(box, 1);
-          var vp = box.querySelector('.mindmap-viewport');
-          if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
+          item.mm.fit();
         } else if (action === 'save') {
-          saveMindmap(box);
+          saveMindmap(item);
         }
       });
-
-      var renderToken = 0;
-      function renderMindmaps() {
-        var token = ++renderToken;
-        var boxes = Array.prototype.slice.call(content.querySelectorAll('.mindmap'));
-        var index = 0;
-
-        function renderNext() {
-          if (token !== renderToken || index >= boxes.length) return;
-          var box = boxes[index++];
-          var source = box.getAttribute('data-mermaid-src');
-          if (!source) { renderNext(); return; }
-
-          var id = 'mindmap-' + Date.now() + '-' + index;
-          var result;
-          try {
-            result = mermaid.render(id, source);
-          } catch (err) {
-            showError(box, err);
-            renderNext();
-            return;
-          }
-          result.then(function (out) {
-            if (token !== renderToken) return;
-            box.classList.remove('mindmap-error');
-            box.classList.remove('mindmap-pending');
-            var viewport = box.querySelector('.mindmap-viewport');
-            if (viewport) {
-              viewport.innerHTML = out.svg;
-              var svg = viewport.querySelector('svg');
-              if (svg) {
-                box.setAttribute('data-fit-w', svg.getBoundingClientRect().width);
-                applyScale(box, parseFloat(box.getAttribute('data-mm-scale')) || 1);
-              }
-            } else {
-              box.innerHTML = out.svg;
-            }
-            if (typeof out.bindFunctions === 'function') out.bindFunctions(box);
-          }).catch(function (err) {
-            if (token !== renderToken) return;
-            showError(box, err);
-          }).then(renderNext);
-        }
-
-        renderNext();
-      }
-
-      convertBlocks();
 
       function whenFontsReady(cb) {
         if (document.fonts && document.fonts.ready && typeof document.fonts.load === 'function') {
@@ -1447,18 +1443,15 @@
         }
       }
 
-      whenFontsReady(function () {
-        initializeMermaid();
-        renderMindmaps();
-      });
+      convertBlocks();
+      whenFontsReady(renderAll);
 
       var currentTheme = document.documentElement.getAttribute('data-theme');
       var observer = new MutationObserver(function () {
         var theme = document.documentElement.getAttribute('data-theme');
         if (theme === currentTheme) return;
         currentTheme = theme;
-        initializeMermaid();
-        renderMindmaps();
+        renderAll();
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     })();
