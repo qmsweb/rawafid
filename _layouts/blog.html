@@ -24,14 +24,31 @@
     {% endif %}
   {% endcapture %}
 
+  {% assign seo_image = first_image_url | strip %}
+  {% if seo_image == "" %}
+    {% assign seo_image = "/images/blog-cover.png" %}
+  {% endif %}
+  {% unless seo_image contains "http" %}
+    {% assign seo_image = seo_image | absolute_url %}
+  {% endunless %}
+
+  {% assign seo_desc = page.description | default: page.excerpt | strip_html | normalize_whitespace | strip %}
+  {% if seo_desc.size < 40 %}
+    {% assign seo_desc = page.content | strip_html | normalize_whitespace | strip %}
+  {% endif %}
+  {% assign seo_desc = seo_desc | truncate: 160 %}
+
   <meta property="og:site_name" content="{{ site.title }}">
   <meta property="og:type" content="article">
   <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="{{ seo_desc }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:image" content="{{ first_image_url | strip }}">
+  <meta property="og:image" content="{{ seo_image }}">
+  <meta property="og:image:alt" content="{{ page.title }}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ page.title }}">
-  <meta name="twitter:image" content="{{ first_image_url | strip }}">
+  <meta name="twitter:description" content="{{ seo_desc }}">
+  <meta name="twitter:image" content="{{ seo_image }}">
 
   <script>
     (function() {
