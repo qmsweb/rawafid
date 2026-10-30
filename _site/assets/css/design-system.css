@@ -734,9 +734,13 @@ html:not([data-theme="dark"]) .menu-toggle[aria-expanded="true"] {
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg) var(--space-md);
     padding: var(--space-lg) 0 var(--space-md);
+  }
+
+  .footer-grid > .footer-col:first-child {
+    grid-column: 1 / -1;
   }
 
   .footer-desc {
