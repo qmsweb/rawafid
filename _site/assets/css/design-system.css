@@ -653,6 +653,16 @@ html:not([data-theme="dark"]) .menu-toggle[aria-expanded="true"] {
     visibility: visible;
   }
 
+  /* الوضع النهاري: القائمة الجانبية الزرقاء بهوية الموقع */
+  html:not([data-theme="dark"]) .nav-links {
+    background-color: var(--rawafid-primary);
+    border-left-color: var(--rawafid-primary-dark);
+  }
+
+  html:not([data-theme="dark"]) .nav-links li {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+  }
+
   .nav-links li {
     border-bottom: 1px solid var(--rawafid-border);
   }
@@ -680,20 +690,30 @@ html:not([data-theme="dark"]) .menu-toggle[aria-expanded="true"] {
     background-color: var(--rawafid-primary-soft);
   }
 
-  /* داخل القائمة الجانبية: نص داكن على خلفية فاتحة في الوضع النهاري */
+  /* داخل القائمة الجانبية: نص أبيض على خلفية زرقاء في الوضع النهاري */
   html:not([data-theme="dark"]) .nav-links a {
-    color: var(--rawafid-text);
+    color: var(--rawafid-white);
   }
 
   html:not([data-theme="dark"]) .nav-links a.active,
   html:not([data-theme="dark"]) .nav-links a:hover,
   html:not([data-theme="dark"]) .nav-links a:focus-visible {
-    color: var(--rawafid-primary);
-    background-color: var(--rawafid-primary-soft);
+    color: var(--rawafid-white);
+    background-color: rgba(255, 255, 255, 0.16);
   }
 
   html:not([data-theme="dark"]) .nav-links a.active {
     border-bottom-color: transparent;
+  }
+
+  html:not([data-theme="dark"]) .nav-links .theme-toggle-mobile {
+    color: var(--rawafid-white);
+  }
+
+  html:not([data-theme="dark"]) .nav-links .theme-toggle-mobile:hover,
+  html:not([data-theme="dark"]) .nav-links .theme-toggle-mobile:focus-visible {
+    color: var(--rawafid-white);
+    background-color: rgba(255, 255, 255, 0.16);
   }
 
   .nav-links .theme-toggle-mobile {

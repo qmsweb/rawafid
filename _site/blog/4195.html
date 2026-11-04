@@ -1033,7 +1033,7 @@
     </div>
 
     <div class="footer-bottom">
-      <span>&copy; 2026 روافد · جميع الحقوق محفوظة</span>
+      <span>&copy; <span id="footer-year">2026</span> روافد · جميع الحقوق محفوظة</span>
       <span class="footer-dev">
         تطوير
         <img src="/images/jassim-logo.png" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
@@ -1041,6 +1041,9 @@
     </div>
   </div>
 </footer>
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
 
 
   <script src="/assets/js/theme.js" defer></script>

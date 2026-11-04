@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>روافد - الرئيسية</title>
+
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  <link rel="stylesheet" href="/assets/css/design-system.css" />
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="preload" as="fetch" href="/assets/data/materials.json" crossorigin>
+  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin>
+
+  <meta property="og:title" content="روافد - الرئيسية">
+  <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
+  <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
+  <meta property="og:url" content="https://rawafid.jassim.one/homet1">
+  <meta property="og:type" content="website">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('rawafed-theme');
+      document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+    })();
+  </script>
+
+  <style>
+    /* === أنماط خاصة بالصفحة الرئيسية === */
+
+    /* بطاقة الذكرى السنوية */
+    .hero-section { margin-top: var(--space-lg); }
+
+    .hero-card {
+      position: relative;
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      border: 1px solid var(--rawafid-primary-dark);
+    }
+
+    .hero-icon {
+      flex-shrink: 0;
+    }
+
+    .hero-icon img {
+      width: 160px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .hero-content { flex: 1; min-width: 0; }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-black);
+      line-height: 1.4;
+      margin-top: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .hero-text {
+      font-size: var(--text-base);
+      line-height: 1.8;
+      opacity: 0.95;
+      max-width: 620px;
+    }
+
+    .hero-num {
+      font-family: var(--font-heading);
+      font-size: 5rem;
+      font-weight: var(--font-black);
+      opacity: 0.15;
+      line-height: 1;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    /* تخطيط الصفحة الرئيسية */
+    .home-layout {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    /* الأدوات */
+    .tools-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .tool-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+      text-decoration: none;
+      text-align: center;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .tool-card:hover,
+    .tool-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .tool-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .tool-card:hover .tool-card-icon,
+    .tool-card:focus-visible .tool-card-icon {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+    }
+
+    .tool-card-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: var(--rawafid-text);
+    }
+
+    /* المقررات */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .view-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--rawafid-primary);
+      font-weight: var(--font-bold);
+      font-size: var(--text-sm);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .view-more-btn:hover,
+    .view-more-btn:focus-visible {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .sticky-filter-container {
+      position: sticky;
+      top: var(--nav-height);
+      z-index: 90;
+      margin-bottom: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--rawafid-border);
+      background: var(--rawafid-bg);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--rawafid-surface);
+      padding: 4px;
+      border-radius: 50px;
+      border: 1px solid var(--rawafid-border);
+      flex-shrink: 0;
+    }
+
+    .view-toggle i {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: var(--text-base);
+      color: var(--rawafid-text-muted);
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    .view-toggle i.active {
+      background-color: var(--rawafid-primary-soft);
+      color: var(--rawafid-primary);
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--rawafid-border);
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+
+    .filter-item {
+      flex: 0 0 auto;
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: var(--rawafid-surface);
+      color: var(--rawafid-text-muted);
+      font-weight: var(--font-bold);
+      font-size: var(--text-sm);
+      border: 1px solid var(--rawafid-border);
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .filter-item:hover,
+    .filter-item:focus-visible {
+      border-color: var(--rawafid-primary);
+      color: var(--rawafid-primary);
+    }
+
+    .filter-item.active {
+      background: var(--rawafid-primary);
+      color: var(--rawafid-white);
+      border-color: var(--rawafid-primary);
+    }
+
+    .courses-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .courses-container.grid-view {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .course-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      text-decoration: none;
+      color: var(--rawafid-text);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .course-card:hover,
+    .course-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .course-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .course-card-info { min-width: 0; }
+
+    .course-card-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      line-height: 1.4;
+    }
+
+    .course-card-code {
+      font-size: var(--text-xs);
+      color: var(--rawafid-text-muted);
+      background: var(--rawafid-bg);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 5px;
+      border: 1px solid var(--rawafid-border);
+    }
+
+    /* المدونة */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .blog-card {
+      background: var(--rawafid-surface);
+      border: 1px solid var(--rawafid-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--rawafid-text);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .blog-card:hover,
+    .blog-card:focus-visible {
+      border-color: var(--rawafid-primary);
+      background-color: var(--rawafid-primary-soft);
+    }
+
+    .blog-card:hover .blog-card-title,
+    .blog-card:focus-visible .blog-card-title {
+      color: var(--rawafid-primary);
+    }
+
+    .blog-card-cover {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: var(--rawafid-bg);
+    }
+
+    .blog-card-body {
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      flex: 1;
+    }
+
+    .blog-card-title {
+      font-size: var(--text-base);
+      font-weight: var(--font-bold);
+      line-height: 1.5;
+      transition: color 0.2s ease;
+    }
+
+    .blog-card-meta {
+      margin-top: auto;
+      font-size: var(--text-xs);
+      color: var(--rawafid-text-muted);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .blog-card-meta i {
+      color: var(--rawafid-primary);
+      margin-inline-end: 3px;
+    }
+
+    /* === التحميل === */
+    /* المحتوى الأساسي يظهر فوراً، وحالة التحميل موضعية داخل قسم المقررات فقط */
+    .courses-loading-state {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: var(--space-xl);
+      color: var(--rawafid-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .courses-loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--rawafid-border);
+      border-top-color: var(--rawafid-primary);
+      border-radius: 50%;
+      animation: courses-spin 0.75s linear infinite;
+    }
+
+    @keyframes courses-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* تخطيط الشاشات الكبيرة: الأدوات في الشريط الجانبي */
+    @media (min-width: 992px) {
+      .container { max-width: var(--container-wide); }
+
+      .home-layout {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        column-gap: var(--space-xl);
+        align-items: start;
+      }
+
+      .home-sidebar {
+        position: sticky;
+        top: calc(var(--nav-height) + var(--space-md));
+      }
+
+      .home-sidebar .tools-list {
+        grid-template-columns: 1fr;
+      }
+
+      .home-sidebar .tool-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 10px 12px;
+        gap: 10px;
+        text-align: right;
+      }
+
+      .home-sidebar .tool-card-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+
+      .home-sidebar .tool-card-name {
+        font-size: var(--text-sm);
+      }
+    }
+
+    /* الاستجابة */
+    @media (max-width: 820px) {
+      .tools-list,
+      .blog-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .courses-container.grid-view { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .hero-card {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-md);
+      }
+
+      .hero-icon img { width: 130px; }
+      .hero-title { font-size: var(--text-xl); }
+      .hero-num {
+        position: absolute;
+        bottom: 8px;
+        left: 14px;
+        font-size: 3.5rem;
+      }
+
+      .tools-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-sm);
+      }
+
+      .tool-card { padding: var(--space-sm) 4px; }
+      .tool-card-icon { width: 44px; height: 44px; font-size: 1.1rem; }
+      .tool-card-name { font-size: var(--text-xs); }
+
+      .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+      }
+
+      .blog-card-cover { aspect-ratio: 16/10; }
+      .blog-card-body { padding: var(--space-sm); }
+      .blog-card-title { font-size: var(--text-sm); }
+      .blog-card-meta { font-size: var(--text-xs); }
+
+      .courses-container.grid-view { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .course-card { padding: var(--space-sm); }
+      .course-card-icon { width: 40px; height: 40px; }
+    }
+  </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/homet1">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="منصة روافد التعليمية لطلبة اللغة العربية بجامعة الشرقية: مقررات دراسية، أدوات تعليمية، مدونة وتقويم أكاديمي.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "منصة روافد التعليمية",
+  "inLanguage": "ar"
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://rawafid.jassim.one/#website",
+  "url": "https://rawafid.jassim.one/",
+  "name": "منصة روافد",
+  "inLanguage": "ar",
+  "publisher": { "@id": "https://rawafid.jassim.one/#organization" },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://rawafid.jassim.one/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+
+
+
+
+
+
+</head>
+<body>
+
+  <!-- === مكون التحميل الموحد (يغطي المحتوى فقط ويبقي الترويسة مرئية) === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: var(--nav-height, 70px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: var(--rawafid-surface, #ffffff);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .rawafid-loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--rawafid-border, #ccd1e0);
+    border-top-color: var(--rawafid-primary, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+
+  .rawafid-loader-text {
+    font-family: var(--font-body, "IBM Plex Sans Arabic", system-ui, sans-serif);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rawafid-text-muted, #666666);
+  }
+
+  .rawafid-loader-dots {
+    display: inline-flex;
+    gap: 4px;
+    direction: ltr;
+    margin-inline-start: 4px;
+  }
+
+  .rawafid-loader-dots span {
+    width: 5px;
+    height: 5px;
+    background: var(--rawafid-primary, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    #rawafid-loading-overlay {
+      top: var(--nav-height, 60px);
+    }
+  }
+</style>
+
+<div id="rawafid-loading-overlay" role="status" aria-live="polite" aria-label="جاري التحميل">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+
+    var hidden = false;        /* هل الشاشة مخفية بالفعل */
+    var pinned = false;        /* بعد إظهارها يدوياً: تخفى فقط بطلب صريح */
+    var loadDone = (document.readyState === 'complete');
+    var pendingFetches = 0;    /* عدد عمليات جلب البيانات الجارية */
+
+    function forceHide() {
+      hidden = true;
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    /* الإخفاء لا يتم إلا بعد اكتمال حدث load وانتهاء كل عمليات الجلب الجارية */
+    function tryHide() {
+      if (!hidden && !pinned && loadDone && pendingFetches <= 0) forceHide();
+    }
+
+    window.rawafidHideLoader = function () {
+      pinned = false;
+      tryHide();
+    };
+
+    window.rawafidShowLoader = function () {
+      pinned = true;
+      hidden = false;
+      if (overlay) overlay.classList.remove('hidden');
+    };
+
+    if (!loadDone) {
+      window.addEventListener('load', function () {
+        loadDone = true;
+        tryHide();
+      });
+    }
+
+    /* تتبع طلبات fetch الصادرة من الصفحة: تبقى شاشة التحميل ظاهرة حتى تنتهي آخر عملية جلب بيانات */
+    if (typeof window.fetch === 'function') {
+      var originalFetch = window.fetch;
+      window.fetch = function () {
+        var request;
+        pendingFetches += 1;
+        try {
+          request = originalFetch.apply(this, arguments);
+        } catch (err) {
+          pendingFetches -= 1;
+          tryHide();
+          throw err;
+        }
+        if (request && typeof request.then === 'function') {
+          request.then(release, release);
+        } else {
+          release();
+        }
+        return request;
+
+        function release() {
+          pendingFetches -= 1;
+          tryHide();
+        }
+      };
+    }
+
+    /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
+    setTimeout(forceHide, 6000);
+
+    /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) forceHide();
+    });
+  })();
+</script>
+
+  <header class="site-header">
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <a href="/" class="logo" aria-label="روافد - الصفحة الرئيسية">
+      <img src="/images/Rawafid-white.png" alt="شعار روافد" class="logo-light" width="120" height="36" loading="eager">
+    </a>
+
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/doc">الأفلام</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="theme-toggle-mobile" id="theme-toggle-mobile" aria-label="تبديل المظهر">
+          <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="12" y1="2" x2="12" y2="4"></line>
+            <line x1="12" y1="20" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+            <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="4" y2="12"></line>
+            <line x1="20" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+            <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+          </svg>
+          <span>المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="/search" class="icon-btn search-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </a>
+
+      <button class="icon-btn theme-toggle" id="theme-toggle" aria-label="تبديل المظهر" title="تبديل المظهر">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="القائمة">
+        <svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+
+  <main class="page-main">
+    <div class="container">
+
+      
+
+      <div id="main-content-area">
+
+        <!-- بطاقة الذكرى السنوية -->
+        
+
+        <div class="home-layout">
+
+          <!-- الأدوات -->
+          <aside class="home-sidebar" aria-labelledby="tools-title">
+            <section class="section" id="tools">
+              <div class="section-head">
+                <h2 id="tools-title" class="section-title"><i class="fas fa-wrench" aria-hidden="true"></i> الأدوات</h2>
+                <a href="/tools" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+              </div>
+              <div class="tools-list">
+                
+                  
+                    <a class="tool-card" href="/tools/gpa">
+                      <div class="tool-card-icon"><i class="fas fa-calculator"></i></div>
+                      <div class="tool-card-name">حاسبة المعدل</div>
+                    </a>
+                  
+                
+                  
+                    <a class="tool-card" href="/tools/calendar">
+                      <div class="tool-card-icon"><i class="fas fa-calendar-alt"></i></div>
+                      <div class="tool-card-name">التقويم الأكاديمي</div>
+                    </a>
+                  
+                
+                  
+                    <a class="tool-card" href="/tools/study-plan">
+                      <div class="tool-card-icon"><i class="fas fa-book-open"></i></div>
+                      <div class="tool-card-name">الخطة الدراسية</div>
+                    </a>
+                  
+                
+                  
+                    <a class="tool-card" href="/tools/tawtheeq-tool">
+                      <div class="tool-card-icon"><i class="fas fa-quote-right"></i></div>
+                      <div class="tool-card-name">توثيق المراجع</div>
+                    </a>
+                  
+                
+                  
+                    <a class="tool-card" href="/tools/wheel">
+                      <div class="tool-card-icon"><i class="fas fa-dharmachakra"></i></div>
+                      <div class="tool-card-name">العجلة الدوارة</div>
+                    </a>
+                  
+                
+                  
+                    <a class="tool-card" href="/tools/qr-maker">
+                      <div class="tool-card-icon"><i class="fas fa-qrcode"></i></div>
+                      <div class="tool-card-name">صانع QR</div>
+                    </a>
+                  
+                
+              </div>
+            </section>
+          </aside>
+
+          <!-- المحتوى الرئيسي -->
+          <div class="home-content">
+
+            <!-- المقررات -->
+            <section class="section" id="courses" aria-labelledby="courses-title">
+              <div class="section-head">
+                <h2 id="courses-title" class="section-title"><i class="fas fa-book-open" aria-hidden="true"></i> المقررات</h2>
+              </div>
+              <div class="sticky-filter-container">
+                <div class="filter-bar" id="filter-bar"></div>
+              </div>
+              <div class="courses-container" id="courses-container">
+                <div class="courses-loading-state">
+                  <div class="courses-loading-spinner"></div>
+                  <span>جاري تحميل المقررات...</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- المدونة -->
+            
+            <section class="section" id="blog" aria-labelledby="blog-title">
+              <div class="section-head">
+                <h2 id="blog-title" class="section-title"><i class="fas fa-newspaper" aria-hidden="true"></i> المدونة</h2>
+                <a href="/blog" class="view-more-btn">عرض المزيد <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+              </div>
+              <div class="blog-grid">
+                
+                  
+                    
+
+                    <a class="blog-card" href="/blog/rwfd3">
+                      
+                      
+                        <img class="blog-card-cover" src="https://rawafid.jassim.one/images/blog/rwfd3.png" alt="" loading="lazy">
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">عام على بداية مشروع روافد</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 24 أكتوبر 2026</span>
+                          
+                          
+                            <span data-author-uid="rawafid-edu"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">rawafid-edu</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                    
+
+                    <a class="blog-card" href="/blog/4182">
+                      
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">التفعيلات الشعرية 1</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 18 أكتوبر 2026</span>
+                          
+                          
+                            <span data-author-uid="jassim"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">jassim</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                    
+
+                    <a class="blog-card" href="/blog/sawamet">
+                      
+                      
+                        <img class="blog-card-cover" src="https://rawafid.jassim.one/images/sawamet-cover.png" alt="" loading="lazy">
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">منصة صوامت</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 4 سبتمبر 2026</span>
+                          
+                          
+                            <span data-author-uid="rawafid-edu"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">rawafid-edu</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                    
+
+                    <a class="blog-card" href="/blog/motanabi">
+                      
+                      
+                        <img class="blog-card-cover" src="https://rawafid.jassim.one/images/mtnbi1.png" alt="" loading="lazy">
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">منصّة رحلة المتنبي</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 4 سبتمبر 2026</span>
+                          
+                          
+                            <span data-author-uid="rawafid-edu"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">rawafid-edu</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                    
+
+                    <a class="blog-card" href="/blog/kanafr">
+                      
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">تحليل نص حديث خنافر</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 17 أبريل 2026</span>
+                          
+                          
+                            <span data-author-uid="rawafid-edu"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">rawafid-edu</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                    
+
+                    <a class="blog-card" href="/blog/3131">
+                      
+                      
+                      <div class="blog-card-body">
+                        <h3 class="blog-card-title">مقارنة بين مدرسة الإحياء ومدرسة الديوان</h3>
+                        <div class="blog-card-meta">
+                          
+                            
+                            
+                            <span><i class="far fa-calendar" aria-hidden="true"></i> 24 نوفمبر 2025</span>
+                          
+                          
+                            <span data-author-uid="jassim"><i class="far fa-user" aria-hidden="true"></i> <span class="author-name">jassim</span></span>
+                          
+                        </div>
+                      </div>
+                    </a>
+                  
+                
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <style>
+  html:not([data-theme="dark"]) .footer-dev-logo,
+  html[data-theme="light"] .footer-dev-logo {
+    filter: brightness(0) saturate(100%);
+  }
+</style>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-col">
+        <img src="/images/rawafid-blue.png" alt="شعار روافد" class="footer-logo" width="100" height="27" style="width: 100px;" loading="lazy">
+        <p class="footer-desc">منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية، حائزة على جائزة أفضل مشروع بحثي عن كلية الآداب والعلوم الإنسانية لعام 2026.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="روابط سريعة">
+        <h3 class="footer-col-title">روابط سريعة</h3>
+        <a href="/">الرئيسة</a>
+        <a href="/blog">المدونة</a>
+        <a href="/doc">الأفلام</a>
+        <a href="/tools">الأدوات</a>
+        <a href="/search">البحث</a>
+      </nav>
+
+      <div class="footer-col">
+        <h3 class="footer-col-title">عن المنصة</h3>
+        <a href="/about">عن روافد</a>
+        <a href="/contact">تواصل معنا</a>
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn" target="_blank" rel="noopener" aria-label="انضم لقناتنا على واتساب">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          <span>انضم لقناتنا</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span id="footer-year">2026</span> روافد · جميع الحقوق محفوظة</span>
+      <span class="footer-dev">
+        تطوير
+        <img src="/images/jassim-logo.png" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
+      </span>
+    </div>
+  </div>
+</footer>
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+
+
+  <script src="/assets/js/theme.js" defer></script>
+
+  <script>
+    /* === المقررات: التحميل + الفلاتر + عرض الشبكة/القائمة === */
+    var allCourses = [];
+    var currentFilter = 'all';
+
+    var MATERIALS_URL = "/assets/data/materials.json";
+    var AUTHORS_URL = "/assets/blogdata/authors.json";
+    var COURSE_BASE = "/course";
+
+    /* جلب JSON بشكل موثوق: يتحقق من نجاح الاستجابة، ويعيد المحاولة من ذاكرة التخزين عند فشل الشبكة */
+    function fetchJSON(url) {
+      function parse(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+        return res.json();
+      }
+      return fetch(url, { cache: 'no-cache' }).then(parse).catch(function () {
+        return fetch(url, { cache: 'force-cache' }).then(parse);
+      });
+    }
+
+    function normalizeCourses(data) {
+      if (Array.isArray(data)) return data;
+      if (data && Array.isArray(data.courses)) return data.courses;
+      if (data && Array.isArray(data.materials)) return data.materials;
+      return [];
+    }
+
+    function escapeHTML(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function showCoursesMessage(text, withRetry) {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+      container.innerHTML = '';
+      var box = document.createElement('div');
+      box.className = 'courses-loading-state';
+      var msg = document.createElement('span');
+      msg.textContent = text;
+      box.appendChild(msg);
+      if (withRetry) {
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.type = 'button';
+        btn.textContent = 'إعادة المحاولة';
+        btn.addEventListener('click', loadCourses);
+        box.appendChild(btn);
+      }
+      container.appendChild(box);
+    }
+
+    function renderCourses() {
+      var container = document.getElementById('courses-container');
+      if (!container) return;
+
+      var filtered = currentFilter === 'all'
+        ? allCourses
+        : allCourses.filter(function (c) { return c.type === currentFilter; });
+
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        showCoursesMessage('لا توجد مقررات في هذا التصنيف.', false);
+        return;
+      }
+
+      /* بناء البطاقات دفعة واحدة عبر Fragment لسرعة العرض */
+      var fragment = document.createDocumentFragment();
+      filtered.forEach(function (item) {
+        var card = document.createElement('a');
+        card.className = 'course-card';
+        card.href = COURSE_BASE + '/' + encodeURIComponent(item.code);
+        var iconColor = item.color || '#1a2ac6';
+        var iconClass = item.icon || 'fa-book';
+        var iconBg = iconColor + '15';
+        card.innerHTML =
+          '<div class="course-card-icon" style="color: ' + iconColor + '; background-color: ' + iconBg + ';">' +
+            '<i class="fas ' + escapeHTML(iconClass) + '"></i>' +
+          '</div>' +
+          '<div class="course-card-info">' +
+            '<div class="course-card-name">' + escapeHTML(item.name) + '</div>' +
+            '<span class="course-card-code">' + escapeHTML(item.code) + '</span>' +
+          '</div>';
+        fragment.appendChild(card);
+      });
+      container.appendChild(fragment);
+    }
+
+    function createFilters(courses) {
+      var filterBar = document.getElementById('filter-bar');
+      if (!filterBar) return;
+      filterBar.innerHTML = '';
+
+      var viewToggle = document.createElement('div');
+      viewToggle.className = 'view-toggle';
+      viewToggle.innerHTML = '<i class="fas fa-list" id="list-view" title="قائمة" role="button" tabindex="0"></i><i class="fas fa-th-large" id="grid-view" title="شبكة" role="button" tabindex="0"></i>';
+      filterBar.appendChild(viewToggle);
+
+      var divider = document.createElement('div');
+      divider.className = 'filter-divider';
+      filterBar.appendChild(divider);
+
+      var types = [];
+      courses.forEach(function (c) {
+        if (c.type && types.indexOf(c.type) === -1) types.push(c.type);
+      });
+      types.unshift('all');
+
+      types.forEach(function (type) {
+        var filterBtn = document.createElement('div');
+        filterBtn.className = 'filter-item';
+        filterBtn.textContent = type === 'all' ? 'الكل' : type;
+        filterBtn.setAttribute('role', 'button');
+        filterBtn.setAttribute('tabindex', '0');
+        if (type === currentFilter) filterBtn.classList.add('active');
+
+        function activate() {
+          filterBar.querySelectorAll('.filter-item').forEach(function (btn) { btn.classList.remove('active'); });
+          filterBtn.classList.add('active');
+          currentFilter = type;
+          renderCourses();
+        }
+
+        filterBtn.addEventListener('click', activate);
+        filterBtn.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        });
+        filterBar.appendChild(filterBtn);
+      });
+
+      var container = document.getElementById('courses-container');
+      var gridBtn = viewToggle.querySelector('#grid-view');
+      var listBtn = viewToggle.querySelector('#list-view');
+
+      function setView(mode, save) {
+        if (mode === 'grid') {
+          container.classList.add('grid-view');
+          gridBtn.classList.add('active');
+          listBtn.classList.remove('active');
+        } else {
+          container.classList.remove('grid-view');
+          listBtn.classList.add('active');
+          gridBtn.classList.remove('active');
+        }
+        if (save) {
+          try { localStorage.setItem('rawafed-courses-view', mode); } catch (e) {}
+        }
+      }
+
+      gridBtn.addEventListener('click', function () { setView('grid', true); });
+      listBtn.addEventListener('click', function () { setView('list', true); });
+
+      var savedMode = null;
+      try { savedMode = localStorage.getItem('rawafed-courses-view'); } catch (e) {}
+      setView(savedMode || (window.innerWidth < 820 ? 'list' : 'grid'), false);
+    }
+
+    function loadCourses() {
+      showCoursesMessage('جاري تحميل المقررات...', false);
+      return fetchJSON(MATERIALS_URL)
+        .then(function (data) {
+          allCourses = normalizeCourses(data);
+          renderCourses();
+          createFilters(allCourses);
+        })
+        .catch(function (err) {
+          console.error('Courses load error:', err);
+          showCoursesMessage('تعذر تحميل المقررات. تحقق من الاتصال بالإنترنت.', true);
+        });
+    }
+
+    /* === أسماء المؤلفين في بطاقات المدونة (مستقل عن تحميل المقررات) === */
+    function resolveAuthors(authorData) {
+      var authors = Array.isArray(authorData) ? authorData : (authorData && authorData.authors ? authorData.authors : []);
+      if (!authors.length) return;
+      document.querySelectorAll('[data-author-uid]').forEach(function (span) {
+        var uid = span.getAttribute('data-author-uid');
+        var author = authors.find(function (a) { return a.uid === uid; });
+        var nameEl = span.querySelector('.author-name');
+        if (author && nameEl) nameEl.textContent = author.name;
+      });
+    }
+
+    function loadAuthors() {
+      fetchJSON(AUTHORS_URL).then(resolveAuthors).catch(function () { /* غير حرج */ });
+    }
+
+    /* === التشغيل === */
+    document.addEventListener('DOMContentLoaded', function () {
+      /* شاشة التحميل العامة (مع الهيدر) تبقى ظاهرة حتى يكتمل تحميل المقررات والمؤلفين؛ loading.html يتولى الإخفاء بعد اكتمال الجلب */
+      loadCourses();
+      loadAuthors();
+    });
+  </script>
+
+</body>
+</html>

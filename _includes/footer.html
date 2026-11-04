@@ -37,7 +37,7 @@
     </div>
 
     <div class="footer-bottom">
-      <span>&copy; {{ site.time | date: '%Y' }} روافد · جميع الحقوق محفوظة</span>
+      <span>&copy; <span id="footer-year">{{ site.time | date: '%Y' }}</span> روافد · جميع الحقوق محفوظة</span>
       <span class="footer-dev">
         تطوير
         <img src="{{ '/images/jassim-logo.png' | relative_url }}" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
@@ -45,3 +45,6 @@
     </div>
   </div>
 </footer>
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>

@@ -512,6 +512,7 @@
       <div id="main-content-area">
 
         <!-- بطاقة الذكرى السنوية -->
+        {% if page.show_anniversary != false %}
         <section class="hero-section" aria-labelledby="hero-title">
           <div class="hero-card">
             <div class="hero-icon">
@@ -525,6 +526,7 @@
             <div class="hero-num" aria-hidden="true">1</div>
           </div>
         </section>
+        {% endif %}
 
         <div class="home-layout">
 
