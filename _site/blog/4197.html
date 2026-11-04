@@ -295,6 +295,7 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       background: var(--rawafid-surface);
+      direction: rtl;
     }
 
     .page-content thead th {
@@ -312,7 +313,9 @@
     .page-content td {
       padding: var(--space-sm) var(--space-md);
       border-bottom: 1px solid var(--rawafid-border);
-      text-align: right;
+      text-align: justify !important;
+      text-align-last: right;
+      direction: rtl;
     }
 
     .page-content tbody tr { background: var(--rawafid-surface); }

@@ -11,9 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <link rel="preload" as="fetch" href="/assets/data/materials.json" crossorigin>
-  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin>
-
-  <meta property="og:title" content="روافد - الرئيسية">
+  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin><link rel="preload" as="fetch" href="/assets/doc/slider.json" type="application/json" fetchpriority="high"><meta property="og:title" content="روافد - الرئيسية">
   <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
   <meta property="og:url" content="https://rawafid.jassim.one/homet1">
@@ -496,6 +494,359 @@
       .course-card { padding: var(--space-sm); }
       .course-card-icon { width: 40px; height: 40px; }
     }
+
+    /* === شريط الأفلام (منسوخ من صفحة وثائقي) === */
+    .home-movie-slider {
+      margin-top: var(--space-lg);
+    }
+
+    .doc-hero {
+      --doc-primary: #1a2ac6;
+      --doc-primary-hover: #1422a5;
+      --doc-hero-height: clamp(480px, 68vh, 690px);
+      position: relative;
+      isolation: isolate;
+      container-type: size;
+      height: var(--doc-hero-height);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      background: #10131f;
+      color: #fff;
+    }
+
+    [data-theme="dark"] .doc-hero {
+      --doc-primary: #7986cb;
+      --doc-primary-hover: #6674bd;
+    }
+
+    .doc-hero [hidden] { display: none !important; }
+
+    .doc-hero .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 10px 22px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--doc-primary);
+      color: #fff;
+      font: inherit;
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .doc-hero .button:hover {
+      background: var(--doc-primary-hover);
+      box-shadow: 0 10px 24px rgba(26, 42, 198, 0.26);
+      transform: translateY(-2px);
+    }
+
+    .doc-hero .button:focus-visible,
+    .doc-hero .hero-arrow:focus-visible,
+    .doc-hero .hero-dot:focus-visible {
+      outline: 3px solid rgba(255, 204, 0, 0.9);
+      outline-offset: 3px;
+    }
+
+    .doc-hero .button-secondary {
+      border-color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+
+    .doc-hero .button-secondary:hover {
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    .doc-hero .hero-backdrop {
+      position: absolute;
+      z-index: -3;
+      inset: 0;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      transform: scale(1.015);
+      transition: opacity 0.45s ease, transform 7s ease;
+    }
+
+    .doc-hero.is-ready .hero-backdrop { opacity: 1; }
+
+    .doc-hero.is-changing .hero-backdrop {
+      opacity: 0;
+      transform: scale(1.045);
+    }
+
+    .doc-hero .hero-overlay {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(5, 7, 18, 0.86), rgba(5, 7, 18, 0.35) 48%, rgba(5, 7, 18, 0.62)),
+        linear-gradient(0deg, rgba(5, 7, 18, 0.78), transparent 55%);
+    }
+
+    .doc-hero .hero-content {
+      width: min(1160px, calc(100% - 40px));
+      max-height: 100%;
+      flex: 0 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-inline: auto;
+      padding: 30px 0 84px;
+      padding-block: clamp(16px, 4cqh, 30px) clamp(52px, 13cqh, 84px);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .doc-hero .hero-content > * { flex: 0 0 auto; }
+
+    .doc-hero .hero-kicker {
+      position: absolute;
+      z-index: 3;
+      top: clamp(16px, 4cqh, 28px);
+      right: clamp(18px, 4vw, 54px);
+      display: -webkit-box;
+      max-width: calc(100% - 36px);
+      padding: 7px 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .doc-hero .hero-logo {
+      display: block;
+      width: min(260px, 56vw);
+      max-height: 180px;
+      max-height: min(180px, 30cqh);
+      margin: 0 auto 14px;
+      object-fit: contain;
+      filter: brightness(0) invert(1) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.55));
+    }
+
+    .doc-hero .hero-title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border: 0;
+      clip-path: inset(50%);
+    }
+
+    .doc-hero .hero-title.is-visible {
+      position: static;
+      display: -webkit-box;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      overflow: hidden;
+      white-space: normal;
+      clip-path: none;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      color: #fff;
+      font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.35;
+      text-wrap: balance;
+    }
+
+    .doc-hero .hero-description {
+      width: min(720px, 100%);
+      min-height: 0;
+      display: -webkit-box;
+      flex: 0 1 auto;
+      margin: 14px auto 0;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: clamp(0.95rem, 1.5vw, 1.16rem);
+      line-height: 1.9;
+    }
+
+    .doc-hero .hero-content:not(:has(.hero-title.is-visible)) .hero-description {
+      margin-top: 6px;
+    }
+
+    .doc-hero .hero-actions {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .doc-hero .hero-share-status {
+      width: 100%;
+      min-height: 1.5em;
+      margin: 14px 0 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .doc-hero .hero-arrow {
+      position: absolute;
+      z-index: 3;
+      top: 50%;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      background: rgba(10, 12, 25, 0.42);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transform: translateY(-50%);
+      backdrop-filter: blur(12px);
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .doc-hero .hero-arrow:hover {
+      background: var(--doc-primary);
+      transform: translateY(-50%) scale(1.06);
+    }
+
+    .doc-hero .hero-prev { right: clamp(18px, 4vw, 54px); }
+    .doc-hero .hero-next { left: clamp(18px, 4vw, 54px); }
+
+    .doc-hero .hero-dots {
+      position: absolute;
+      z-index: 3;
+      right: 50%;
+      bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transform: translateX(50%);
+    }
+
+    .doc-hero .hero-dot {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.48);
+      cursor: pointer;
+      transition: width 0.25s ease, background-color 0.25s ease;
+    }
+
+    .doc-hero .hero-dot.active {
+      width: 30px;
+      background: #ffcc00;
+    }
+
+    @media (max-height: 560px) {
+      .doc-hero { --doc-hero-height: clamp(320px, 64vh, 460px); }
+    }
+
+    @container (max-height: 620px) {
+      .doc-hero .hero-logo { max-height: min(150px, 26cqh); }
+      .doc-hero .hero-title.is-visible {
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+      }
+      .doc-hero .hero-description {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
+    }
+
+    @container (max-height: 460px) {
+      .doc-hero .hero-kicker {
+        top: 12px;
+        padding: 6px 12px;
+      }
+      .doc-hero .hero-description,
+      .doc-hero .hero-share-status { display: none; }
+    }
+
+    @media (max-width: 700px) {
+      .doc-hero .hero-content {
+        width: min(100% - 28px, 1160px);
+        padding: 26px 0 78px;
+        padding-block: clamp(14px, 3.6cqh, 26px) clamp(46px, 11cqh, 78px);
+      }
+      .doc-hero .hero-description { line-height: 1.75; }
+      .doc-hero .hero-arrow {
+        top: auto;
+        bottom: 24px;
+        width: 42px;
+        height: 42px;
+        transform: none;
+      }
+      .doc-hero .hero-arrow:hover { transform: scale(1.05); }
+      .doc-hero .hero-dots { bottom: 38px; }
+      .doc-hero .hero-share {
+        width: 46px;
+        min-height: 46px;
+        padding: 10px;
+        border-radius: 50%;
+      }
+      .doc-hero .hero-share-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .doc-hero .hero-kicker { font-size: 0.75rem; }
+      .doc-hero .hero-actions {
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      .doc-hero .hero-actions .hero-watch { min-width: 0; }
+      .doc-hero .hero-actions .hero-share {
+        flex: 0 0 46px;
+        width: 46px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .doc-hero .hero-backdrop,
+      .doc-hero .button { transition: none; }
+    }
   </style>
   
 
@@ -796,6 +1147,45 @@
       
 
       <div id="main-content-area">
+
+        
+        <!-- شريط الأفلام -->
+        <section
+          class="home-movie-slider"
+          aria-label="أفلام روافد"
+          data-slider-url="/assets/doc/slider.json"
+          data-video-url="/video"
+        >
+          <div class="doc-hero" id="mv-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
+            <img class="hero-backdrop" id="mv-backdrop" alt="" decoding="async" fetchpriority="high">
+            <div class="hero-overlay"></div>
+            <span class="hero-kicker" id="mv-kicker" hidden></span>
+            <div class="hero-content">
+              <img class="hero-logo" id="mv-logo" alt="شعار الفيلم" hidden>
+              <h2 class="hero-title" id="mv-title">جارٍ تحميل الأفلام</h2>
+              <p class="hero-description" id="mv-description">يتم الآن تحميل بيانات الأفلام.</p>
+              <div class="hero-actions">
+                <button class="button button-secondary hero-share" id="mv-share" type="button" hidden>
+                  <i class="fas fa-share-nodes" aria-hidden="true"></i>
+                  <span class="hero-share-label">مشاركة</span>
+                </button>
+                <a class="button hero-watch" id="mv-watch" href="#" hidden>
+                  <i class="fas fa-play" aria-hidden="true"></i>
+                  مشاهدة الفيلم
+                </a>
+              </div>
+              <p class="hero-share-status" id="mv-share-status" role="status" aria-live="polite"></p>
+            </div>
+            <button class="hero-arrow hero-prev" id="mv-prev" type="button" aria-label="الشريحة السابقة" hidden>
+              <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </button>
+            <button class="hero-arrow hero-next" id="mv-next" type="button" aria-label="الشريحة التالية" hidden>
+              <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <div class="hero-dots" id="mv-dots" role="group" aria-label="اختيار الفيلم" hidden></div>
+          </div>
+        </section>
+        
 
         <!-- بطاقة الذكرى السنوية -->
         
@@ -1278,6 +1668,325 @@
       loadAuthors();
     });
   </script>
+
+  
+  <script>
+    (() => {
+      const root = document.querySelector('.home-movie-slider');
+      if (!root) return;
+
+      const hero = document.getElementById('mv-hero');
+      const backdrop = document.getElementById('mv-backdrop');
+      const logo = document.getElementById('mv-logo');
+      const title = document.getElementById('mv-title');
+      const description = document.getElementById('mv-description');
+      const kicker = document.getElementById('mv-kicker');
+      const watch = document.getElementById('mv-watch');
+      const share = document.getElementById('mv-share');
+      const shareStatus = document.getElementById('mv-share-status');
+      const previous = document.getElementById('mv-prev');
+      const next = document.getElementById('mv-next');
+      const dots = document.getElementById('mv-dots');
+      const videoPageUrl = new URL(root.dataset.videoUrl, window.location.origin);
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const JSON_TIMEOUT = 8000;
+      const IMAGE_TIMEOUT = 2500;
+      const HERO_SIZES = '100vw';
+      const CARD_SIZES = '(max-width: 700px) 92vw, (max-width: 1180px) 45vw, 300px';
+      const imageCache = new Map();
+      let slides = [];
+      let activeIndex = 0;
+      let autoplayTimer;
+      let transitionId = 0;
+      let backdropToken = 0;
+      let paused = false;
+      let touchStartX = null;
+      let shareResetTimer;
+
+      const withTimeout = (promise, ms, label) => {
+        let timer;
+        return Promise.race([
+          promise.finally(() => window.clearTimeout(timer)),
+          new Promise((_, reject) => {
+            timer = window.setTimeout(() => reject(new Error(`Timeout: ${label}`)), ms);
+          })
+        ]);
+      };
+
+      const loadJson = async (url) => {
+        let failure;
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          try {
+            const response = await withTimeout(
+              fetch(url, { headers: { Accept: 'application/json' } }),
+              JSON_TIMEOUT,
+              url
+            );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error('Invalid data');
+            return data;
+          } catch (error) {
+            failure = error;
+          }
+        }
+        throw failure;
+      };
+
+      const applyImageSources = (image, source) => {
+        if (!image || !source?.src) return;
+        image.sizes = source.sizes || '';
+        if (source.srcset) image.srcset = source.srcset;
+        else image.removeAttribute('srcset');
+        image.src = source.src;
+      };
+
+      const loadImage = (source) => {
+        const url = source?.src;
+        if (!url) return Promise.resolve(false);
+        const key = `${source.sizes || ''}|${url}`;
+        if (imageCache.has(key)) return imageCache.get(key);
+
+        const pending = new Promise((resolve) => {
+          const image = new Image();
+          const settle = () => {
+            image.removeEventListener('load', settle);
+            image.removeEventListener('error', settle);
+            resolve(image.naturalWidth > 0);
+          };
+          image.sizes = source.sizes || '';
+          if (source.srcset) image.srcset = source.srcset;
+          image.addEventListener('load', settle);
+          image.addEventListener('error', settle);
+          image.src = url;
+          if (image.complete) settle();
+        }).then((loaded) => {
+          if (!loaded) imageCache.delete(key);
+          return loaded;
+        });
+
+        imageCache.set(key, pending);
+        return pending;
+      };
+
+      const primeImage = (source) => withTimeout(loadImage(source), IMAGE_TIMEOUT, 'image').catch(() => false);
+
+      const backdropSource = (movie, sizes) => {
+        if (!movie?.bg) return null;
+        return { src: movie.bg, srcset: movie.bgSrcset, sizes };
+      };
+
+      const updateDots = () => {
+        dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
+          const active = index === activeIndex;
+          dot.classList.toggle('active', active);
+          dot.setAttribute('aria-pressed', String(active));
+        });
+      };
+
+      const showBackdrop = (movie) => {
+        const source = backdropSource(movie, HERO_SIZES);
+        const token = ++backdropToken;
+        hero.classList.remove('is-ready');
+        if (!source) {
+          backdrop.removeAttribute('src');
+          backdrop.removeAttribute('srcset');
+          return;
+        }
+        applyImageSources(backdrop, source);
+        primeImage(source).then((loaded) => {
+          if (loaded && token === backdropToken) hero.classList.add('is-ready');
+        });
+      };
+
+      const getMovieUrl = (movie) => {
+        if (movie.link) return new URL(movie.link, window.location.origin);
+        const url = new URL(videoPageUrl);
+        url.pathname = `${url.pathname.replace(/\/$/, '')}/${encodeURIComponent(movie.id || movie.title || '')}`;
+        url.search = '';
+        url.hash = '';
+        return url;
+      };
+
+      const applySlide = (index) => {
+        activeIndex = (index + slides.length) % slides.length;
+        const slide = slides[activeIndex];
+        const currentTransition = ++transitionId;
+        hero.classList.add('is-changing');
+        return new Promise((resolve) => {
+          window.setTimeout(() => {
+            if (currentTransition !== transitionId) {
+              resolve(false);
+              return;
+            }
+            showBackdrop(slide);
+            if (slide.logoSrcset) logo.srcset = slide.logoSrcset;
+            else logo.removeAttribute('srcset');
+            logo.src = slide.logo || '';
+            logo.alt = `شعار ${slide.title || ''}`;
+            logo.hidden = !slide.logo;
+            title.textContent = slide.title || 'فيلم روافد';
+            title.classList.toggle('is-visible', !slide.logo);
+            description.textContent = slide.desc || '';
+            const movieType = typeof slide.type === 'string' ? slide.type.trim() : '';
+            kicker.textContent = movieType;
+            kicker.hidden = !movieType;
+            const movieUrl = getMovieUrl(slide);
+            const hasMovie = Boolean(slide.link || slide.id);
+            watch.href = movieUrl.href;
+            watch.hidden = !hasMovie;
+            share.hidden = !hasMovie;
+            hero.classList.remove('is-changing');
+            updateDots();
+            const nextSlide = slides[(activeIndex + 1) % slides.length];
+            primeImage(backdropSource(nextSlide, CARD_SIZES));
+            resolve(true);
+          }, reduceMotion.matches ? 0 : 180);
+        });
+      };
+
+      const goTo = (index) => {
+        if (!slides.length) return;
+        applySlide(index);
+        startAutoplay();
+      };
+
+      const startAutoplay = () => {
+        window.clearInterval(autoplayTimer);
+        if (slides.length < 2 || reduceMotion.matches || paused || document.hidden) return;
+        autoplayTimer = window.setInterval(() => applySlide(activeIndex + 1), 6500);
+      };
+
+      const pauseAutoplay = () => {
+        paused = true;
+        window.clearInterval(autoplayTimer);
+      };
+
+      const resumeAutoplay = () => {
+        paused = false;
+        startAutoplay();
+      };
+
+      const copyText = async (text) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.opacity = '0';
+        document.body.append(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        if (!copied) throw new Error('Copy failed');
+      };
+
+      const showShareStatus = (message) => {
+        window.clearTimeout(shareResetTimer);
+        shareStatus.textContent = message;
+        shareResetTimer = window.setTimeout(() => {
+          shareStatus.textContent = '';
+        }, 3000);
+      };
+
+      const shareCurrentMovie = async () => {
+        const movie = slides[activeIndex];
+        if (!movie) return;
+        const shareData = {
+          title: movie.title,
+          text: movie.desc,
+          url: getMovieUrl(movie).href
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+            showShareStatus('تمت المشاركة.');
+            return;
+          }
+          await copyText(shareData.url);
+          showShareStatus('تم نسخ رابط الفيلم.');
+        } catch (error) {
+          if (error.name !== 'AbortError') showShareStatus('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
+        }
+      };
+
+      const buildDots = () => {
+        const fragment = document.createDocumentFragment();
+        slides.forEach((slide, index) => {
+          const dot = document.createElement('button');
+          dot.className = 'hero-dot';
+          dot.type = 'button';
+          dot.setAttribute('aria-label', `عرض ${slide.title || `الشريحة ${index + 1}`}`);
+          dot.addEventListener('click', () => goTo(index));
+          fragment.append(dot);
+        });
+        dots.replaceChildren(fragment);
+        previous.hidden = next.hidden = dots.hidden = slides.length < 2;
+      };
+
+      const showError = () => {
+        title.textContent = 'تعذر تحميل الأفلام';
+        title.classList.add('is-visible');
+        description.textContent = 'حدث خطأ أثناء جلب البيانات. يمكنك تحديث الصفحة والمحاولة مرة أخرى.';
+        kicker.hidden = true;
+        watch.hidden = true;
+        share.hidden = true;
+      };
+
+      previous.addEventListener('click', () => goTo(activeIndex - 1));
+      next.addEventListener('click', () => goTo(activeIndex + 1));
+      share.addEventListener('click', shareCurrentMovie);
+      hero.addEventListener('mouseenter', pauseAutoplay);
+      hero.addEventListener('mouseleave', resumeAutoplay);
+      hero.addEventListener('focusin', pauseAutoplay);
+      hero.addEventListener('focusout', (event) => {
+        if (!hero.contains(event.relatedTarget)) resumeAutoplay();
+      });
+      hero.addEventListener('keydown', (event) => {
+        if (event.target !== hero || slides.length < 2) return;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') event.preventDefault();
+        if (event.key === 'ArrowRight') goTo(activeIndex - 1);
+        if (event.key === 'ArrowLeft') goTo(activeIndex + 1);
+      });
+      dots.addEventListener('keydown', (event) => {
+        if (slides.length < 2 || !['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' ? -1 : 1;
+        const nextIndex = (activeIndex + direction + slides.length) % slides.length;
+        goTo(nextIndex);
+        dots.children[nextIndex]?.focus();
+      });
+      hero.addEventListener('touchstart', (event) => {
+        touchStartX = event.changedTouches[0].clientX;
+        pauseAutoplay();
+      }, { passive: true });
+      hero.addEventListener('touchend', (event) => {
+        if (touchStartX === null) return;
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(distance) > 50) goTo(activeIndex + (distance > 0 ? -1 : 1));
+        touchStartX = null;
+      }, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) window.clearInterval(autoplayTimer);
+        else startAutoplay();
+      });
+
+      loadJson(root.dataset.sliderUrl)
+        .then((data) => {
+          if (!data.length) throw new Error('Empty slider');
+          slides = data;
+          buildDots();
+          applySlide(0);
+          startAutoplay();
+        })
+        .catch(() => showError());
+    })();
+  </script>
+  
 
 </body>
 </html>
