@@ -42,7 +42,7 @@
   --nqd-shell: 1320px;
   --nqd-radius-card: 32px;
   --nqd-radius-pill: 999px;
-  --nqd-font: "IBM Plex Sans Arabic", "Readex Pro", "Thmanyah Sans", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  --nqd-font: "Vazirmatn", "IBM Plex Sans Arabic", "Thmanyah Sans", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
   --nqd-focus: #0b6a5f;
 }
 
@@ -84,6 +84,14 @@ body.nqd-page {
 
 :where(#nqd) :where(h1, h2, h3, h4, p, blockquote, figure) {
   margin: 0;
+}
+
+:where(#nqd) :where(h1, h2, h3, h4) {
+  font-feature-settings: "ss01" 1;
+}
+
+:where(#nqd) :where(.nqd-eyebrow, .nqd-kicker, .nqd-concept__sub, .nqd-pioneer__role, .nqd-pioneer__thesis span, .nqd-lens__row span) {
+  font-feature-settings: "ss01" 1;
 }
 
 :where(#nqd) :where(ul, ol) {
