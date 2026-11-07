@@ -286,7 +286,8 @@
 
     .page-content table {
       width: auto;
-      max-width: 100%;
+      max-width: none;
+      min-width: 100%;
       margin: 0;
       border-collapse: separate;
       border-spacing: 0;
@@ -307,6 +308,7 @@
       border: 0;
       border-bottom: 1px solid var(--rawafid-border);
       font-size: calc(var(--text-base) * var(--fs));
+      white-space: nowrap;
     }
 
     .page-content th,
