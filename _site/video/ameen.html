@@ -351,6 +351,8 @@
 
     .video-page .video-breadcrumb {
       grid-area: breadcrumb;
+      justify-self: start;
+      width: fit-content;
       margin-bottom: 0;
     }
 
@@ -424,7 +426,7 @@
       <p class="movie-description" id="movie-description"></p>
       <div class="video-actions">
         <button class="button" id="share-button" type="button">
-          <i class="fas fa-share-nodes" aria-hidden="true"></i>
+          <i class="fas fa-share-nodes" id="share-button-icon" aria-hidden="true"></i>
           <span id="share-button-text">مشاركة الفيلم</span>
         </button>
         <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
@@ -457,6 +459,9 @@
     const movieTitle = document.getElementById('movie-title');
     const movieDescription = document.getElementById('movie-description');
     const shareButton = document.getElementById('share-button');
+    const shareButtonIcon = document.getElementById('share-button-icon');
+    const shareButtonText = document.getElementById('share-button-text');
+    const shareDefaultLabel = shareButtonText.textContent;
     const shareStatus = document.getElementById('share-status');
     const errorState = document.getElementById('video-error');
     const errorTitle = document.getElementById('video-error-title');
@@ -552,8 +557,22 @@
       if (!copied) throw new Error('Copy failed');
     };
 
-    const showShareStatus = (message) => {
+    const resetShareButton = () => {
+      shareButtonIcon.className = 'fas fa-share-nodes';
+      shareButtonText.textContent = shareDefaultLabel;
+    };
+
+    const showShareSuccess = (message) => {
       window.clearTimeout(shareResetTimer);
+      shareStatus.textContent = '';
+      shareButtonIcon.className = 'fas fa-check';
+      shareButtonText.textContent = message;
+      shareResetTimer = window.setTimeout(resetShareButton, 3000);
+    };
+
+    const showShareError = (message) => {
+      window.clearTimeout(shareResetTimer);
+      resetShareButton();
       shareStatus.textContent = message;
       shareResetTimer = window.setTimeout(() => {
         shareStatus.textContent = '';
@@ -573,13 +592,13 @@
       try {
         if (navigator.share) {
           await navigator.share(shareData);
-          showShareStatus('تمت المشاركة.');
+          showShareSuccess('تمت المشاركة.');
           return;
         }
         await copyText(url.href);
-        showShareStatus('تم نسخ رابط الفيلم.');
+        showShareSuccess('تم نسخ الرابط.');
       } catch (error) {
-        if (error.name !== 'AbortError') showShareStatus('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
+        if (error.name !== 'AbortError') showShareError('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
       }
     };
 
