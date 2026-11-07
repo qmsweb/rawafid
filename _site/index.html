@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>روافد - الذكرى السنوية الأولى</title>
+  <title>روافد - الرئيسة</title>
 
   <link rel="stylesheet" href="/fonts/fonts.css" />
   <link rel="stylesheet" href="/assets/css/design-system.css" />
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <link rel="preload" as="fetch" href="/assets/data/materials.json" crossorigin>
-  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin><meta property="og:title" content="روافد - الذكرى السنوية الأولى">
+  <link rel="preload" as="fetch" href="/assets/blogdata/authors.json" crossorigin><link rel="preload" as="fetch" href="/assets/doc/slider.json" type="application/json" fetchpriority="high"><meta property="og:title" content="روافد - الرئيسة">
   <meta property="og:description" content="منصة تعليمية مجانية خصيصًا لطلبة اللغة العربية بجامعة الشرقية.">
   <meta property="og:image" content="https://rawafid.jassim.one/images/cover.png">
   <meta property="og:url" content="https://rawafid.jassim.one/">
@@ -1150,22 +1150,45 @@
       <div id="main-content-area">
 
         
-
-        <!-- بطاقة الذكرى السنوية -->
-        
-        <section class="hero-section" aria-labelledby="hero-title">
-          <div class="hero-card">
-            <div class="hero-icon">
-              <img src="/images/rawafid-one.png" alt="">
-            </div>
+        <!-- شريط الأفلام -->
+        <section
+          class="home-movie-slider"
+          aria-label="أفلام روافد"
+          data-slider-url="/assets/doc/slider.json"
+          data-video-url="/video"
+        >
+          <div class="doc-hero" id="mv-hero" tabindex="0" aria-live="polite" aria-label="عرض الفيلم">
+            <img class="hero-backdrop" id="mv-backdrop" alt="" decoding="async" fetchpriority="high">
+            <div class="hero-overlay"></div>
+            <span class="hero-kicker" id="mv-kicker" hidden></span>
             <div class="hero-content">
-              <span class="badge"><i class="fas fa-trophy" aria-hidden="true"></i> عامنا الأول</span>
-              <h1 id="hero-title" class="hero-title">الذكرى السنوية الأولى لانطلاقة روافد</h1>
-              <p class="hero-text">عام من العطاء.. شكرًا لكل من ساهم في نموّنا، ونعدكم بمواصلة المسير.</p>
+              <img class="hero-logo" id="mv-logo" alt="شعار الفيلم" hidden>
+              <h2 class="hero-title" id="mv-title">جارٍ تحميل الأفلام</h2>
+              <p class="hero-description" id="mv-description">يتم الآن تحميل بيانات الأفلام.</p>
+              <div class="hero-actions">
+                <button class="button button-secondary hero-share" id="mv-share" type="button" hidden>
+                  <i class="fas fa-share-nodes" aria-hidden="true"></i>
+                  <span class="hero-share-label">مشاركة</span>
+                </button>
+                <a class="button hero-watch" id="mv-watch" href="#" hidden>
+                  <i class="fas fa-play" aria-hidden="true"></i>
+                  مشاهدة الفيلم
+                </a>
+              </div>
+              <p class="hero-share-status" id="mv-share-status" role="status" aria-live="polite"></p>
             </div>
-            <div class="hero-num" aria-hidden="true">1</div>
+            <button class="hero-arrow hero-prev" id="mv-prev" type="button" aria-label="الشريحة السابقة" hidden>
+              <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </button>
+            <button class="hero-arrow hero-next" id="mv-next" type="button" aria-label="الشريحة التالية" hidden>
+              <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <div class="hero-dots" id="mv-dots" role="group" aria-label="اختيار الفيلم" hidden></div>
           </div>
         </section>
+        
+
+        <!-- بطاقة الذكرى السنوية -->
         
 
         <div class="home-layout">
@@ -1647,6 +1670,323 @@
     });
   </script>
 
+  
+  <script>
+    (() => {
+      const root = document.querySelector('.home-movie-slider');
+      if (!root) return;
+
+      const hero = document.getElementById('mv-hero');
+      const backdrop = document.getElementById('mv-backdrop');
+      const logo = document.getElementById('mv-logo');
+      const title = document.getElementById('mv-title');
+      const description = document.getElementById('mv-description');
+      const kicker = document.getElementById('mv-kicker');
+      const watch = document.getElementById('mv-watch');
+      const share = document.getElementById('mv-share');
+      const shareStatus = document.getElementById('mv-share-status');
+      const previous = document.getElementById('mv-prev');
+      const next = document.getElementById('mv-next');
+      const dots = document.getElementById('mv-dots');
+      const videoPageUrl = new URL(root.dataset.videoUrl, window.location.origin);
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const JSON_TIMEOUT = 8000;
+      const IMAGE_TIMEOUT = 2500;
+      const HERO_SIZES = '100vw';
+      const CARD_SIZES = '(max-width: 700px) 92vw, (max-width: 1180px) 45vw, 300px';
+      const imageCache = new Map();
+      let slides = [];
+      let activeIndex = 0;
+      let autoplayTimer;
+      let transitionId = 0;
+      let backdropToken = 0;
+      let paused = false;
+      let touchStartX = null;
+      let shareResetTimer;
+
+      const withTimeout = (promise, ms, label) => {
+        let timer;
+        return Promise.race([
+          promise.finally(() => window.clearTimeout(timer)),
+          new Promise((_, reject) => {
+            timer = window.setTimeout(() => reject(new Error(`Timeout: ${label}`)), ms);
+          })
+        ]);
+      };
+
+      const loadJson = async (url) => {
+        let failure;
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          try {
+            const response = await withTimeout(
+              fetch(url, { headers: { Accept: 'application/json' } }),
+              JSON_TIMEOUT,
+              url
+            );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error('Invalid data');
+            return data;
+          } catch (error) {
+            failure = error;
+          }
+        }
+        throw failure;
+      };
+
+      const applyImageSources = (image, source) => {
+        if (!image || !source?.src) return;
+        image.sizes = source.sizes || '';
+        if (source.srcset) image.srcset = source.srcset;
+        else image.removeAttribute('srcset');
+        image.src = source.src;
+      };
+
+      const loadImage = (source) => {
+        const url = source?.src;
+        if (!url) return Promise.resolve(false);
+        const key = `${source.sizes || ''}|${url}`;
+        if (imageCache.has(key)) return imageCache.get(key);
+
+        const pending = new Promise((resolve) => {
+          const image = new Image();
+          const settle = () => {
+            image.removeEventListener('load', settle);
+            image.removeEventListener('error', settle);
+            resolve(image.naturalWidth > 0);
+          };
+          image.sizes = source.sizes || '';
+          if (source.srcset) image.srcset = source.srcset;
+          image.addEventListener('load', settle);
+          image.addEventListener('error', settle);
+          image.src = url;
+          if (image.complete) settle();
+        }).then((loaded) => {
+          if (!loaded) imageCache.delete(key);
+          return loaded;
+        });
+
+        imageCache.set(key, pending);
+        return pending;
+      };
+
+      const primeImage = (source) => withTimeout(loadImage(source), IMAGE_TIMEOUT, 'image').catch(() => false);
+
+      const backdropSource = (movie, sizes) => {
+        if (!movie?.bg) return null;
+        return { src: movie.bg, srcset: movie.bgSrcset, sizes };
+      };
+
+      const updateDots = () => {
+        dots.querySelectorAll('.hero-dot').forEach((dot, index) => {
+          const active = index === activeIndex;
+          dot.classList.toggle('active', active);
+          dot.setAttribute('aria-pressed', String(active));
+        });
+      };
+
+      const showBackdrop = (movie) => {
+        const source = backdropSource(movie, HERO_SIZES);
+        const token = ++backdropToken;
+        hero.classList.remove('is-ready');
+        if (!source) {
+          backdrop.removeAttribute('src');
+          backdrop.removeAttribute('srcset');
+          return;
+        }
+        applyImageSources(backdrop, source);
+        primeImage(source).then((loaded) => {
+          if (loaded && token === backdropToken) hero.classList.add('is-ready');
+        });
+      };
+
+      const getMovieUrl = (movie) => {
+        if (movie.link) return new URL(movie.link, window.location.origin);
+        const url = new URL(videoPageUrl);
+        url.pathname = `${url.pathname.replace(/\/$/, '')}/${encodeURIComponent(movie.id || movie.title || '')}`;
+        url.search = '';
+        url.hash = '';
+        return url;
+      };
+
+      const applySlide = (index) => {
+        activeIndex = (index + slides.length) % slides.length;
+        const slide = slides[activeIndex];
+        const currentTransition = ++transitionId;
+        hero.classList.add('is-changing');
+        return new Promise((resolve) => {
+          window.setTimeout(() => {
+            if (currentTransition !== transitionId) {
+              resolve(false);
+              return;
+            }
+            showBackdrop(slide);
+            if (slide.logoSrcset) logo.srcset = slide.logoSrcset;
+            else logo.removeAttribute('srcset');
+            logo.src = slide.logo || '';
+            logo.alt = `شعار ${slide.title || ''}`;
+            logo.hidden = !slide.logo;
+            title.textContent = slide.title || 'فيلم روافد';
+            title.classList.toggle('is-visible', !slide.logo);
+            description.textContent = slide.desc || '';
+            const movieType = typeof slide.type === 'string' ? slide.type.trim() : '';
+            kicker.textContent = movieType;
+            kicker.hidden = !movieType;
+            const movieUrl = getMovieUrl(slide);
+            const hasMovie = Boolean(slide.link || slide.id);
+            watch.href = movieUrl.href;
+            watch.hidden = !hasMovie;
+            share.hidden = !hasMovie;
+            hero.classList.remove('is-changing');
+            updateDots();
+            const nextSlide = slides[(activeIndex + 1) % slides.length];
+            primeImage(backdropSource(nextSlide, CARD_SIZES));
+            resolve(true);
+          }, reduceMotion.matches ? 0 : 180);
+        });
+      };
+
+      const goTo = (index) => {
+        if (!slides.length) return;
+        applySlide(index);
+        startAutoplay();
+      };
+
+      const startAutoplay = () => {
+        window.clearInterval(autoplayTimer);
+        if (slides.length < 2 || reduceMotion.matches || paused || document.hidden) return;
+        autoplayTimer = window.setInterval(() => applySlide(activeIndex + 1), 6500);
+      };
+
+      const pauseAutoplay = () => {
+        paused = true;
+        window.clearInterval(autoplayTimer);
+      };
+
+      const resumeAutoplay = () => {
+        paused = false;
+        startAutoplay();
+      };
+
+      const copyText = async (text) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.opacity = '0';
+        document.body.append(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        if (!copied) throw new Error('Copy failed');
+      };
+
+      const showShareStatus = (message) => {
+        window.clearTimeout(shareResetTimer);
+        shareStatus.textContent = message;
+        shareResetTimer = window.setTimeout(() => {
+          shareStatus.textContent = '';
+        }, 3000);
+      };
+
+      const shareCurrentMovie = async () => {
+        const movie = slides[activeIndex];
+        if (!movie) return;
+        const shareData = {
+          title: movie.title,
+          text: movie.desc,
+          url: getMovieUrl(movie).href
+        };
+
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+            showShareStatus('تمت المشاركة.');
+            return;
+          }
+          await copyText(shareData.url);
+          showShareStatus('تم نسخ رابط الفيلم.');
+        } catch (error) {
+          if (error.name !== 'AbortError') showShareStatus('تعذرت المشاركة. حاول نسخ الرابط من المتصفح.');
+        }
+      };
+
+      const buildDots = () => {
+        const fragment = document.createDocumentFragment();
+        slides.forEach((slide, index) => {
+          const dot = document.createElement('button');
+          dot.className = 'hero-dot';
+          dot.type = 'button';
+          dot.setAttribute('aria-label', `عرض ${slide.title || `الشريحة ${index + 1}`}`);
+          dot.addEventListener('click', () => goTo(index));
+          fragment.append(dot);
+        });
+        dots.replaceChildren(fragment);
+        previous.hidden = next.hidden = dots.hidden = slides.length < 2;
+      };
+
+      const showError = () => {
+        title.textContent = 'تعذر تحميل الأفلام';
+        title.classList.add('is-visible');
+        description.textContent = 'حدث خطأ أثناء جلب البيانات. يمكنك تحديث الصفحة والمحاولة مرة أخرى.';
+        kicker.hidden = true;
+        watch.hidden = true;
+        share.hidden = true;
+      };
+
+      previous.addEventListener('click', () => goTo(activeIndex - 1));
+      next.addEventListener('click', () => goTo(activeIndex + 1));
+      share.addEventListener('click', shareCurrentMovie);
+      hero.addEventListener('mouseenter', pauseAutoplay);
+      hero.addEventListener('mouseleave', resumeAutoplay);
+      hero.addEventListener('focusin', pauseAutoplay);
+      hero.addEventListener('focusout', (event) => {
+        if (!hero.contains(event.relatedTarget)) resumeAutoplay();
+      });
+      hero.addEventListener('keydown', (event) => {
+        if (event.target !== hero || slides.length < 2) return;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') event.preventDefault();
+        if (event.key === 'ArrowRight') goTo(activeIndex - 1);
+        if (event.key === 'ArrowLeft') goTo(activeIndex + 1);
+      });
+      dots.addEventListener('keydown', (event) => {
+        if (slides.length < 2 || !['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' ? -1 : 1;
+        const nextIndex = (activeIndex + direction + slides.length) % slides.length;
+        goTo(nextIndex);
+        dots.children[nextIndex]?.focus();
+      });
+      hero.addEventListener('touchstart', (event) => {
+        touchStartX = event.changedTouches[0].clientX;
+        pauseAutoplay();
+      }, { passive: true });
+      hero.addEventListener('touchend', (event) => {
+        if (touchStartX === null) return;
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(distance) > 50) goTo(activeIndex + (distance > 0 ? -1 : 1));
+        touchStartX = null;
+      }, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) window.clearInterval(autoplayTimer);
+        else startAutoplay();
+      });
+
+      loadJson(root.dataset.sliderUrl)
+        .then((data) => {
+          if (!data.length) throw new Error('Empty slider');
+          slides = data;
+          buildDots();
+          applySlide(0);
+          startAutoplay();
+        })
+        .catch(() => showError());
+    })();
+  </script>
   
 
 </body>

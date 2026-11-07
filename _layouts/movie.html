@@ -38,8 +38,47 @@ movie_id: ameen
 
   @media (min-width: 1024px) {
     .video-page {
-      width: min(780px, calc(100% - 40px));
-      margin-inline: min(4vw, 48px) auto;
+      width: min(1180px, calc(100% - 60px));
+      margin-inline: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+      grid-template-areas:
+        "breadcrumb breadcrumb"
+        "video info";
+      align-items: start;
+      gap: 26px;
+      padding-top: 28px;
+    }
+
+    .video-page .video-breadcrumb {
+      grid-area: breadcrumb;
+      margin-bottom: 0;
+    }
+
+    .video-page .video-stage {
+      grid-area: video;
+    }
+
+    .video-page .movie-info-card {
+      grid-area: info;
+      margin-top: 0;
+      grid-template-columns: 1fr;
+      align-content: start;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .video-page .movie-logo-frame {
+      min-height: 100px;
+      padding: 12px;
+    }
+
+    .video-page .movie-info-logo {
+      max-height: 74px;
+    }
+
+    .video-page .video-error {
+      grid-column: 1 / -1;
     }
   }
 </style>
