@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <title>Exam TA419 | روافد</title>
+
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+  <link rel="stylesheet" href="/assets/css/design-system.css" />
+    <link rel="icon" href="/images/favicon.png" type="image/jpg">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<meta property="og:title" content="Exam TA419 - روافد" id="og-title">
+    <meta property="og:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة." id="og-description">
+    <meta property="og:image" content="https://rawafid.jassim.one/images/cover3.png" id="og-image">
+    <meta property="og:url" content="https://rawafid.jassim.one/exam/TA419">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Exam TA419 - روافد">
+    <meta name="twitter:description" content="تصفح مستندات وفيديوهات وملاحظات المقررات الدراسية بسهولة.">
+    <meta name="twitter:image" content="https://rawafid.jassim.one/images/cover3.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+
+    <script>
+        (function() {
+            // منع التكبير/التصغير (Zoom) بشكل نهائي
+            document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+            document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+            document.addEventListener('gestureend', function(e) { e.preventDefault(); });
+
+            document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey) e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault();
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-')) e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
+        })();
+    </script>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('rawafed-theme');
+            document.documentElement.setAttribute('data-theme', ['light','dark'].indexOf(savedTheme) !== -1 ? savedTheme : 'light');
+        })();
+    </script>
+
+    <style>
+        :root {
+            /* ربط هوية الصفحة بنظام التصميم الموحّد (design-system.css) */
+            --primary-color: var(--rawafid-primary);
+            --primary-light: var(--rawafid-primary-soft);
+            --bg-body: var(--rawafid-bg);
+            --bg-card: var(--rawafid-surface);
+            --text-main: var(--rawafid-text);
+            --text-muted: var(--rawafid-text-muted);
+            --border-color: var(--rawafid-border);
+            --text-header: var(--rawafid-text);
+            --radius-lg: 18px;
+            --radius-md: 14px;
+
+            /* خلفيات ثانوية خاصة بهذه الصفحة */
+            --bg-secondary: #f1f3fa;
+            --hover-bg: #e0e7ff;
+
+            /* ألوان الحالة */
+            --correct-bg: #16a34a;
+            --correct-text: #ffffff;
+            --correct-soft: #e7f6ec;
+            --correct-ink: #146c32;
+            --wrong-bg: #dc2626;
+            --wrong-text: #ffffff;
+            --wrong-soft: #fdeaea;
+            --wrong-ink: #a01818;
+            --warning-bg: #f59e0b;
+            --warning-ink: #1e1e2f;
+
+            /* أزرار المقال */
+            --btn-essay-bg: #ffffff;
+            --btn-essay-border: #ccd1e0;
+        }
+
+        /* الوضع الداكن */
+        [data-theme="dark"] {
+            --bg-secondary: #252731;
+            --hover-bg: #2c2e3e;
+
+            --correct-bg: #388e3c;
+            --correct-text: #ffffff;
+            --correct-soft: #12281a;
+            --correct-ink: #7ee2a8;
+            --wrong-bg: #d32f2f;
+            --wrong-text: #ffffff;
+            --wrong-soft: #2a1414;
+            --wrong-ink: #f7a1a1;
+            --warning-bg: #fbbf24;
+            --warning-ink: #1e1e2f;
+
+            --btn-essay-bg: #2c2c2c;
+            --btn-essay-border: #444444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "IBM Plex Sans Arabic", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            font-family: "IBM Plex Sans Arabic", sans-serif;
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 28px 20px 70px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* === بطاقة البداية (Header) — تصميم مسطح مبسّط === */
+        .quiz-front-page {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 26px;
+        }
+
+        .quiz-front-header {
+            padding: 20px 24px 22px;
+            background: linear-gradient(160deg, var(--primary-light) 0%, var(--bg-card) 65%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quiz-front-top {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        /* === تخطيط عمودي (مثل صفحة study-plan): معلومات الاختبار يمين الشاشة === */
+        .exam-split {
+            display: grid;
+            grid-template-columns: 330px 1fr;
+            gap: 26px;
+            align-items: start;
+        }
+        .exam-side,
+        .exam-main { min-width: 0; }
+
+        .exam-side {
+            position: sticky;
+            top: calc(var(--nav-height, 70px) + 24px);
+        }
+        .exam-side .quiz-front-page { margin-bottom: 0; }
+        .exam-actions {
+            margin-top: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-front-header h1 {
+            font-size: clamp(22px, 2.8vw, 30px);
+            font-weight: 800;
+            color: var(--text-header);
+            line-height: 1.5;
+            font-family: "Thmanyah Serif Text", "IBM Plex Sans Arabic", sans-serif;
+            margin-bottom: 14px;
+            text-align: right;
+        }
+
+        .quiz-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .quiz-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 5px 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .quiz-meta-chip b { font-weight: 800; color: var(--primary-color); }
+
+        .quiz-progress-track {
+            height: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        .quiz-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-color);
+            border-radius: 50px;
+            transition: width 0.35s ease;
+        }
+        .quiz-section-indicator {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: 100%;
+            margin-top: 10px;
+            padding: 4px 12px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+        .quiz-section-indicator b { color: var(--primary-color); }
+        .quiz-section-indicator:empty { display: none; }
+
+        .quiz-map-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .quiz-map-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-header);
+        }
+        .quiz-map-head i { color: var(--primary-color); }
+        .quiz-map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+            gap: 8px;
+            max-height: 170px;
+            overflow-y: auto;
+        }
+        .qmap-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+        .qmap-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .qmap-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .qmap-btn.current {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 1px;
+        }
+
+        .quiz-front-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .autosave-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--correct-bg);
+            opacity: 0;
+            transform: translateX(6px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+        }
+        .autosave-hint.visible { opacity: 1; transform: translateX(0); }
+
+        #print-btn {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+            padding: 9px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        #print-btn:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .divider-text {
+            text-align: center;
+            font-size: clamp(17px, 2.2vw, 20px);
+            font-weight: 800;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            margin: 36px 0 22px;
+            padding: 12px 22px;
+        }
+
+        .info-header {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .info-description {
+            font-size: 15px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 14px;
+            line-height: 1.8;
+        }
+
+        .question-item {
+            margin-bottom: 20px;
+            padding: clamp(16px, 2.2vw, 24px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+        }
+        .question-item.info-question { border-style: dashed; }
+
+        /* === حالات التحميل والخطأ === */
+        .skeleton-card {
+            margin-bottom: 20px;
+            padding: clamp(16px, 2.2vw, 24px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+        }
+        .skeleton-line {
+            height: 14px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 37%, var(--bg-secondary) 63%);
+            background-size: 400% 100%;
+            animation: skeletonShimmer 1.4s ease infinite;
+        }
+        .skeleton-line:last-child { margin-bottom: 0; }
+        .skeleton-line.w-90 { width: 90%; }
+        .skeleton-line.w-80 { width: 80%; }
+        .skeleton-line.w-70 { width: 70%; }
+        .skeleton-line.w-60 { width: 60%; }
+        @keyframes skeletonShimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .state-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 40px 24px;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            text-align: center;
+        }
+        .state-card i {
+            font-size: 2rem;
+            color: var(--wrong-bg);
+        }
+        .state-card h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-header);
+        }
+        .state-card p {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            max-width: 420px;
+        }
+        .state-retry-btn {
+            margin-top: 10px;
+            padding: 9px 22px;
+            border-radius: 50px;
+            border: 1.5px solid var(--primary-color);
+            background: var(--primary-light);
+            color: var(--primary-color);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .state-retry-btn:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .question-text {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .question-content-span {
+            flex: 1;
+            text-align: right;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .q-number-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #ffffff;
+            font-size: 0.92rem;
+            font-weight: 800;
+        }
+
+        .question-subtext {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: -10px;
+            margin-bottom: 14px;
+            font-weight: normal;
+            text-align: right;
+        }
+
+        .question-long-text {
+            font-size: 14px;
+            font-weight: normal;
+            color: var(--text-main);
+            margin-top: 10px;
+            margin-bottom: 14px;
+            line-height: 1.8;
+            text-align: justify;
+            width: 100%;
+        }
+
+        /* شارة الدرجات — تظهر دائماً في اليسار */
+        .points-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 3px 11px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            white-space: nowrap;
+            margin-inline-start: auto;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        @media (min-width: 768px) {
+            .choices-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+        }
+
+        .choice-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: right;
+            font-size: 0.97rem;
+            min-height: 48px;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .choice-label:hover {
+            background-color: var(--hover-bg);
+            border-color: var(--primary-color);
+        }
+
+        .choice-label.selected {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .choice-label.correct,
+        .choice-label.wrong { font-weight: 700; }
+
+        .choice-label.correct {
+            background-color: var(--correct-soft);
+            color: var(--correct-ink);
+            border-color: var(--correct-bg);
+        }
+
+        .choice-label.wrong {
+            background-color: var(--wrong-soft);
+            color: var(--wrong-ink);
+            border-color: var(--wrong-bg);
+        }
+
+        .choice-label.correct::after,
+        .choice-label.wrong::after {
+            margin-inline-start: auto;
+            flex-shrink: 0;
+            font-weight: 800;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .choice-label.correct::after { content: "✓"; color: var(--correct-bg); }
+        .choice-label.wrong::after { content: "✗"; color: var(--wrong-bg); }
+
+        .choice-radio {
+            accent-color: var(--primary-color);
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            margin: 0;
+        }
+
+        .print-letter {
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+        .choice-label.selected .print-letter,
+        .choice-label.correct .print-letter,
+        .choice-label.wrong .print-letter { color: inherit; }
+
+        /* === مجموعة الصح والخطأ التفاعلية === */
+        .tf-interactive-container {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            padding: clamp(16px, 2.2vw, 22px);
+            margin-bottom: 20px;
+        }
+
+        .tf-print-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-weight: 800;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            font-size: 1rem;
+        }
+
+        .tf-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .tf-row:last-child { border-bottom: none; }
+
+        .tf-text {
+            flex: 1;
+            font-weight: 600;
+            line-height: 1.7;
+            text-align: right;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-width: 0;
+        }
+        .tf-q-text { flex: 1 1 auto; min-width: 0; }
+
+        .tf-answers {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tf-choice {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1.5px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 7px 13px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+        .tf-choice:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .tf-choice:disabled { cursor: default; opacity: 1; }
+        .tf-choice.selected.tf-choice-true {
+            background-color: var(--correct-soft);
+            border-color: var(--correct-bg);
+            color: var(--correct-ink);
+        }
+        .tf-choice.selected.tf-choice-false {
+            background-color: var(--wrong-soft);
+            border-color: var(--wrong-bg);
+            color: var(--wrong-ink);
+        }
+        .tf-choice.correct,
+        .tf-choice.selected.correct {
+            background-color: var(--correct-soft);
+            border-color: var(--correct-bg);
+            color: var(--correct-ink);
+        }
+        .tf-choice.wrong {
+            background-color: var(--wrong-soft);
+            border-color: var(--wrong-bg);
+            color: var(--wrong-ink);
+        }
+
+        .tf-correct-note {
+            flex-basis: 100%;
+            width: 100%;
+            font-size: 0.86rem;
+            color: var(--correct-bg);
+            font-weight: 700;
+        }
+
+        .essay-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .essay-btn {
+            padding: 9px 18px;
+            border: 1.5px solid var(--btn-essay-border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 0.92rem;
+            background-color: var(--btn-essay-bg);
+            color: var(--primary-color);
+        }
+
+        .essay-btn.selected-essay {
+            border: 2px solid var(--primary-color);
+            background-color: var(--hover-bg);
+            color: var(--primary-color);
+        }
+        .essay-btn.selected-essay::after { content: " ✓"; }
+
+        .essay-answer {
+            margin-top: 14px;
+            padding: 15px 16px;
+            background-color: var(--primary-light);
+            border-radius: 12px;
+            border-right: 4px solid var(--primary-color);
+            display: none;
+            text-align: right;
+            direction: rtl;
+            color: var(--text-main);
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        .essay-answer.open { animation: essayReveal 0.25s ease; }
+        @keyframes essayReveal {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: none; }
+        }
+        .essay-hint {
+            margin-top: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        #submit-btn, #review-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 12px 36px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: "IBM Plex Sans Arabic", sans-serif;
+            background-color: var(--primary-color);
+            transition: opacity 0.2s ease;
+        }
+        #submit-btn:hover, #review-btn:hover { opacity: 0.92; }
+        #review-btn {
+            background-color: var(--warning-bg);
+            color: var(--warning-ink);
+            display: none;
+        }
+        #back-to-result-btn {
+            display: none;
+            padding: 12px 36px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            background-color: var(--bg-card);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        #back-to-result-btn:hover { background-color: var(--primary-light); }
+
+        #result {
+            margin-top: 28px;
+            display: none;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .score-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0 36px;
+        }
+        .score-gauge {
+            position: relative;
+            width: clamp(150px, 20vw, 180px);
+            height: clamp(150px, 20vw, 180px);
+            --gauge-track: var(--border-color);
+        }
+        .score-gauge svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .score-gauge circle {
+            fill: none;
+            stroke-width: 9;
+            stroke-linecap: round;
+        }
+        .score-gauge .gauge-track { stroke: var(--gauge-track); }
+        .score-gauge .gauge-value {
+            stroke: var(--gauge-color);
+            stroke-dasharray: 326.73;
+            stroke-dashoffset: 326.73;
+            transition: stroke-dashoffset 1.2s ease-out, stroke 0.4s ease;
+        }
+        .score-gauge-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--gauge-color);
+        }
+        .result-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .result-grade {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--gauge-color);
+        }
+        .result-message {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .score-details {
+            margin-top: 14px;
+            font-size: 17px;
+            color: var(--text-muted);
+            font-weight: 700;
+            background: var(--bg-secondary);
+            padding: 5px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .result-retry-btn {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 1.5px solid var(--primary-color);
+            background: var(--primary-light);
+            color: var(--primary-color);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .result-retry-btn:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .wrong-answers-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+        @media (min-width: 900px) {
+            .wrong-answers-list {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .wrong-answer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px;
+        }
+
+        .wrong-answer-q {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .wrong-answer-num {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+        .goto-question-btn {
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 50px;
+            border: 1.5px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .goto-question-btn:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+        .question-highlight {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 3px;
+        }
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 11px;
+            gap: 12px;
+        }
+        .answer-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+            min-width: 108px;
+            text-align: center;
+        }
+        .badge-wrong { background-color: var(--wrong-bg); }
+        .badge-correct { background-color: var(--correct-bg); }
+        .answer-text {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .points-lost {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .points-lost strong {
+            color: var(--wrong-bg);
+            font-size: 14px;
+        }
+
+        .question-image {
+            width: 100%;
+            max-width: 480px;
+            margin: 14px 0;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .image-question-container { text-align: center; margin: 14px 0; }
+
+        .instructions-question {
+            margin-bottom: 24px;
+            padding: clamp(16px, 2.4vw, 24px);
+            border: 1px solid var(--border-color);
+            border-right: 5px solid var(--primary-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            text-align: right;
+            color: var(--text-main);
+        }
+
+        .instructions-header {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .instructions-description {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* === النافذة المنبثقة === */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-card); padding: 28px; border-radius: 14px;
+            text-align: center; max-width: 440px; width: 90%;
+            border: 1px solid var(--border-color);
+        }
+        .modal-content h3 { color: var(--primary-color); margin-bottom: 14px; font-size: 21px; }
+        .modal-content p { color: var(--text-main); margin-bottom: 24px; line-height: 1.7; font-size: 15px; }
+        .modal-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .modal-btn {
+            padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;
+            font-weight: 700; font-family: "IBM Plex Sans Arabic", sans-serif; font-size: 14px; transition: opacity 0.2s ease;
+        }
+        .modal-btn.primary-btn { background: var(--primary-color); color: white; }
+        .modal-btn.primary-btn:hover { opacity: 0.9; }
+        .modal-btn.secondary-btn { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+        .modal-btn.secondary-btn:hover { background: var(--hover-bg); }
+
+        /* === متجاوبة === */
+        @media (min-width: 1200px) {
+            .container { max-width: 1280px; }
+        }
+
+        @media (max-width: 1050px) {
+            .exam-split {
+                display: flex;
+                flex-direction: column;
+                gap: 26px;
+                align-items: stretch;
+            }
+            .exam-side { display: contents; }
+            .exam-side .quiz-front-page { margin-bottom: 0; }
+            .exam-main { order: 0; }
+            .exam-actions { order: 1; margin-top: 0; }
+            .quiz-map-grid {
+                display: flex;
+                flex-wrap: nowrap;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding-bottom: 4px;
+            }
+            .qmap-btn { flex: 0 0 36px; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px 14px 60px; }
+        }
+
+        @media (max-width: 640px) {
+            .quiz-front-top { flex-direction: column; align-items: stretch; }
+            #print-btn { justify-content: center; }
+            .quiz-progress-track { min-width: 100%; }
+            .tf-row { flex-direction: column; }
+            .tf-answers { width: 100%; }
+            .tf-choice { flex: 1; justify-content: center; }
+            .tf-row .points-badge { align-self: flex-end; }
+            .score-details { font-size: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 20px; }
+            .choice-label { font-size: 0.92rem; min-height: 0; }
+        }
+
+        button:focus-visible,
+        .qmap-btn:focus-visible,
+        .choice-label:has(input:focus-visible),
+        .choice-radio:focus-visible,
+        .tf-choice:focus-visible,
+        .essay-btn:focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .skeleton-line { animation: none; }
+            .score-gauge .gauge-value,
+            .essay-answer.open { transition: none; animation: none; }
+        }
+    </style>
+  
+
+
+
+
+<link rel="canonical" href="https://rawafid.jassim.one/exam/TA419">
+<meta name="robots" content="index, follow">
+
+
+<meta name="description" content="منصة روافد التعليمية">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://rawafid.jassim.one/#organization",
+  "name": "منصة روافد",
+  "url": "https://rawafid.jassim.one/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://rawafid.jassim.one/images/rawafid-1.png"
+  },
+  "description": "منصة روافد التعليمية",
+  "inLanguage": "ar"
+}
+</script>
+
+
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://rawafid.jassim.one/" },
+    { "@type": "ListItem", "position": 2, "name": "Exam TA419", "item": "https://rawafid.jassim.one/exam/TA419" }
+  ]
+}
+</script>
+
+</head>
+<body>
+    
+    <header class="site-header">
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <a href="/" class="logo" aria-label="روافد - الصفحة الرئيسية">
+      <img src="/images/Rawafid-white.png" alt="شعار روافد" class="logo-light" width="120" height="36" loading="eager">
+    </a>
+
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">الرئيسة</a></li>
+      <li><a href="/blog">المدونة</a></li>
+      <li><a href="/tools">الأدوات</a></li>
+      <li><a href="/doc">الأفلام</a></li>
+      <li><a href="/contact">تواصل معنا</a></li>
+      <li><a href="/about">عن روافد</a></li>
+      <li>
+        <button class="theme-toggle-mobile" id="theme-toggle-mobile" aria-label="تبديل المظهر">
+          <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="12" y1="2" x2="12" y2="4"></line>
+            <line x1="12" y1="20" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+            <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="4" y2="12"></line>
+            <line x1="20" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+            <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+          </svg>
+          <span>المظهر</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="/search" class="icon-btn search-btn" aria-label="بحث" title="بحث">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </a>
+
+      <button class="icon-btn theme-toggle" id="theme-toggle" aria-label="تبديل المظهر" title="تبديل المظهر">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+      </button>
+
+      <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="القائمة">
+        <svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+    <!-- === مكون التحميل الموحد (يغطي المحتوى فقط ويبقي الترويسة مرئية) === -->
+<style>
+  #rawafid-loading-overlay {
+    position: fixed;
+    top: var(--nav-height, 70px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: var(--rawafid-surface, #ffffff);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  #rawafid-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .rawafid-loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--rawafid-border, #ccd1e0);
+    border-top-color: var(--rawafid-primary, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-spin 0.75s linear infinite;
+  }
+
+  .rawafid-loader-text {
+    font-family: var(--font-body, "IBM Plex Sans Arabic", system-ui, sans-serif);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--rawafid-text-muted, #666666);
+  }
+
+  .rawafid-loader-dots {
+    display: inline-flex;
+    gap: 4px;
+    direction: ltr;
+    margin-inline-start: 4px;
+  }
+
+  .rawafid-loader-dots span {
+    width: 5px;
+    height: 5px;
+    background: var(--rawafid-primary, #1a2ac6);
+    border-radius: 50%;
+    animation: rawafid-dot-pulse 1.2s ease-in-out infinite;
+  }
+
+  .rawafid-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .rawafid-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes rawafid-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes rawafid-dot-pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    #rawafid-loading-overlay {
+      top: var(--nav-height, 60px);
+    }
+  }
+</style>
+
+<div id="rawafid-loading-overlay" role="status" aria-live="polite" aria-label="جاري التحميل">
+  <div class="rawafid-loader-spinner"></div>
+  <div class="rawafid-loader-text">
+    جاري التحميل
+    <span class="rawafid-loader-dots">
+      <span></span><span></span><span></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var overlay = document.getElementById('rawafid-loading-overlay');
+
+    var hidden = false;        /* هل الشاشة مخفية بالفعل */
+    var pinned = false;        /* بعد إظهارها يدوياً: تخفى فقط بطلب صريح */
+    var loadDone = (document.readyState === 'complete');
+    var pendingFetches = 0;    /* عدد عمليات جلب البيانات الجارية */
+
+    function forceHide() {
+      hidden = true;
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    /* الإخفاء لا يتم إلا بعد اكتمال حدث load وانتهاء كل عمليات الجلب الجارية */
+    function tryHide() {
+      if (!hidden && !pinned && loadDone && pendingFetches <= 0) forceHide();
+    }
+
+    window.rawafidHideLoader = function () {
+      pinned = false;
+      tryHide();
+    };
+
+    window.rawafidShowLoader = function () {
+      pinned = true;
+      hidden = false;
+      if (overlay) overlay.classList.remove('hidden');
+    };
+
+    if (!loadDone) {
+      window.addEventListener('load', function () {
+        loadDone = true;
+        tryHide();
+      });
+    }
+
+    /* تتبع طلبات fetch الصادرة من الصفحة: تبقى شاشة التحميل ظاهرة حتى تنتهي آخر عملية جلب بيانات */
+    if (typeof window.fetch === 'function') {
+      var originalFetch = window.fetch;
+      window.fetch = function () {
+        var request;
+        pendingFetches += 1;
+        try {
+          request = originalFetch.apply(this, arguments);
+        } catch (err) {
+          pendingFetches -= 1;
+          tryHide();
+          throw err;
+        }
+        if (request && typeof request.then === 'function') {
+          request.then(release, release);
+        } else {
+          release();
+        }
+        return request;
+
+        function release() {
+          pendingFetches -= 1;
+          tryHide();
+        }
+      };
+    }
+
+    /* أمان: إخفاء شاشة التحميل إلزامياً بعد 6 ثوانٍ حتى لو فشل أي سكربت */
+    setTimeout(forceHide, 6000);
+
+    /* إخفاء فوري عند التنقل ذهاباً/إياباً من ذاكرة المتصفح */
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) forceHide();
+    });
+  })();
+</script>
+
+
+    <div class="container">
+        
+        
+
+
+        <div class="exam-split">
+            <aside class="exam-side">
+                <div class="quiz-front-page">
+                    <div class="quiz-front-header">
+                        <div class="quiz-front-top">
+                            <button id="print-btn" onclick="openPrintPage()">
+                                <i class="fa-solid fa-print"></i> نسخة PDF
+                            </button>
+                        </div>
+                        <h1 id="quiz-title">الاختبار</h1>
+                        <div class="quiz-meta">
+                            <span class="quiz-meta-chip"><i class="fa-solid fa-graduation-cap"></i> المقرر: <b id="subject-name"></b></span>
+                            <span class="quiz-meta-chip"><i class="fa-solid fa-tag"></i> رمز المقرر: <b id="subject-code"></b></span>
+                            <span class="quiz-meta-chip"><i class="fa-solid fa-star"></i> الدرجة الكلية: <b id="subject-total-score"></b></span>
+                            <span class="quiz-meta-chip"><i class="fa-solid fa-list-check"></i> <span id="answered-count" aria-live="polite">0</span>/<span id="total-count">0</span> مُجاب</span>
+                        </div>
+                        <div class="quiz-progress-track" id="quiz-progress-track" role="progressbar" aria-label="نسبة الأسئلة المُجابة" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="quiz-progress-bar" id="quiz-progress-bar"></div>
+                        </div>
+                        <div class="quiz-section-indicator" id="section-progress"></div>
+                        <div class="quiz-front-footer">
+                            <span class="autosave-hint" id="autosave-hint" aria-live="polite"><i class="fa-solid fa-circle-check"></i> تم الحفظ تلقائيًا</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quiz-map-card">
+                    <div class="quiz-map-head"><i class="fa-solid fa-table-cells"></i> خريطة الأسئلة</div>
+                    <div class="quiz-map-grid" id="question-map-grid"></div>
+                </div>
+                <div class="exam-actions">
+                    <button id="submit-btn">تأكيد الإجابات</button>
+                    <button id="review-btn">مراجعة الإجابات</button>
+                    <button id="back-to-result-btn"><i class="fa-solid fa-arrow-right"></i> العودة إلى النتيجة</button>
+                </div>
+            </aside>
+
+            <main class="exam-main">
+                <div id="questions-container"></div>
+                <div id="result"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- النافذة المنبثقة للتنبيه بعدم اكتمال الإجابات -->
+    <div id="incomplete-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="incomplete-modal-title" aria-hidden="true">
+        <div class="modal-content" tabindex="-1">
+            <h3 id="incomplete-modal-title">تنبيه</h3>
+            <p>لم تقم بالإجابة على جميع الأسئلة. هل ترغب في مواصلة الحل أم إنهاء الاختبار وعرض تصحيح الأسئلة التي قمت بحلها فقط؟</p>
+            <div class="modal-buttons">
+                <button id="modal-continue-btn" class="modal-btn primary-btn">مواصلة الحل</button>
+                <button id="modal-partial-submit-btn" class="modal-btn secondary-btn">عرض الإجابات بعد التصحيح</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- النافذة المنبثقة للاستعادة التلقائية للتقدم المحفوظ -->
+    <div id="restore-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="restore-modal-title" aria-hidden="true">
+        <div class="modal-content" tabindex="-1">
+            <h3 id="restore-modal-title"><i class="fa-solid fa-rotate-left"></i> استعادة التقدم</h3>
+            <p>وجدنا تقدمًا محفوظًا لهذا الاختبار على هذا الجهاز. هل تريد استعادة إجاباتك السابقة والمتابعة من حيث توقفت؟</p>
+            <div class="modal-buttons">
+                <button id="restore-yes-btn" class="modal-btn primary-btn">استعادة التقدم</button>
+                <button id="restore-no-btn" class="modal-btn secondary-btn">بدء من جديد</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+  html:not([data-theme="dark"]) .footer-dev-logo,
+  html[data-theme="light"] .footer-dev-logo {
+    filter: brightness(0) saturate(100%);
+  }
+</style>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-col">
+        <img src="/images/rawafid-blue.png" alt="شعار روافد" class="footer-logo" width="100" height="27" style="width: 100px;" loading="lazy">
+        <p class="footer-desc">منصة تعليمية مجانية لطلبة اللغة العربية بجامعة الشرقية، حائزة على جائزة أفضل مشروع بحثي عن كلية الآداب والعلوم الإنسانية لعام 2026.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="روابط سريعة">
+        <h3 class="footer-col-title">روابط سريعة</h3>
+        <a href="/">الرئيسة</a>
+        <a href="/blog">المدونة</a>
+        <a href="/doc">الأفلام</a>
+        <a href="/tools">الأدوات</a>
+        <a href="/search">البحث</a>
+      </nav>
+
+      <div class="footer-col">
+        <h3 class="footer-col-title">عن المنصة</h3>
+        <a href="/about">عن روافد</a>
+        <a href="/contact">تواصل معنا</a>
+        <a href="https://whatsapp.com/channel/0029VbBp4c9FMqrbKcP1Fq2m" class="whatsapp-btn" target="_blank" rel="noopener" aria-label="انضم لقناتنا على واتساب">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          <span>انضم لقناتنا</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span id="footer-year">2026</span> روافد · جميع الحقوق محفوظة</span>
+      <span class="footer-dev">
+        تطوير
+        <img src="/images/jassim-logo.png" alt="شعار جاسم الفارسي" class="footer-dev-logo" width="91" height="26" loading="lazy">
+      </span>
+    </div>
+  </div>
+</footer>
+<script>
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+
+
+    <script>
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('rawafed-theme', newTheme);
+        }
+
+        const questionsContainer = document.getElementById('questions-container');
+        const submitButton = document.getElementById('submit-btn');
+        const reviewButton = document.getElementById('review-btn');
+        const backToResultButton = document.getElementById('back-to-result-btn');
+        const resultElement = document.getElementById('result');
+        const quizTitleElement = document.getElementById('quiz-title');
+        const subjectNameElement = document.getElementById('subject-name');
+        const subjectCodeElement = document.getElementById('subject-code');
+        const subjectTotalScoreElement = document.getElementById('subject-total-score');
+        const progressTrackEl = document.getElementById('quiz-progress-track');
+        const sectionProgressEl = document.getElementById('section-progress');
+        const questionMapGrid = document.getElementById('question-map-grid');
+
+        // إعدادات النافذة المنبثقة
+        const incompleteModal = document.getElementById('incomplete-modal');
+        const modalContinueBtn = document.getElementById('modal-continue-btn');
+        const modalPartialSubmitBtn = document.getElementById('modal-partial-submit-btn');
+
+        // إعدادات نافذة استعادة التقدم
+        const restoreModal = document.getElementById('restore-modal');
+        const restoreYesBtn = document.getElementById('restore-yes-btn');
+        const restoreNoBtn = document.getElementById('restore-no-btn');
+        const autosaveHintEl = document.getElementById('autosave-hint');
+        const PROGRESS_KEY_PREFIX = 'rawafed-exam-progress-';
+
+        const arabicLetters = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي'];
+
+        let quizData = [];
+        let currentQuiz = 0;
+        const userAnswers = [];
+        const wrongAnswers = [];
+        let reviewMode = false;
+        let autosaveTimer = null;
+        let sections = [];
+        let sectionByQIndex = {};
+        let activeSectionIndex = 0;
+
+        function getProgressKey() {
+            return PROGRESS_KEY_PREFIX + getExamCode();
+        }
+
+        function showAutosaveHint() {
+            if (!autosaveHintEl) return;
+            autosaveHintEl.classList.add('visible');
+            clearTimeout(autosaveTimer);
+            autosaveTimer = setTimeout(() => autosaveHintEl.classList.remove('visible'), 1800);
+        }
+
+        function saveProgress() {
+            const examCode = getExamCode();
+            if (!examCode) return;
+            try {
+                localStorage.setItem(getProgressKey(), JSON.stringify({
+                    answers: userAnswers,
+                    savedAt: Date.now()
+                }));
+            } catch (e) {}
+            showAutosaveHint();
+        }
+
+        function loadSavedProgressData() {
+            try {
+                const raw = localStorage.getItem(getProgressKey());
+                if (!raw) return null;
+                const data = JSON.parse(raw);
+                if (!data || !Array.isArray(data.answers)) return null;
+                return data;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function hasSavedProgress() {
+            const data = loadSavedProgressData();
+            if (!data) return false;
+            return data.answers.some(a => a !== null && a !== undefined);
+        }
+
+        function restoreSavedProgress() {
+            const data = loadSavedProgressData();
+            if (!data) return;
+            userAnswers.length = 0;
+            data.answers.forEach((a, i) => {
+                if (a !== null && a !== undefined) userAnswers[i] = a;
+            });
+            applySavedAnswers();
+        }
+
+        function clearSavedProgress() {
+            try {
+                localStorage.removeItem(getProgressKey());
+            } catch (e) {}
+        }
+
+        function checkForSavedProgress() {
+            if (reviewMode) return;
+            if (!hasSavedProgress()) return;
+            openModal(restoreModal);
+        }
+
+        function applySavedAnswers() {
+            const quiz = quizData[currentQuiz];
+            if (!quiz || !quiz.questions) return;
+
+            quiz.questions.forEach((q, qIndex) => {
+                const ans = userAnswers[qIndex];
+                if (ans === undefined) return;
+
+                if (q.type === 'tf') {
+                    const tfRow = document.querySelector(`.tf-row[data-question-index="${qIndex}"]`);
+                    if (!tfRow) return;
+
+                    let trueIndex = 0, falseIndex = 1;
+                    if (q.choices) {
+                        const tIdx = q.choices.findIndex(c => c.includes('صح') || c.includes('صواب'));
+                        if (tIdx !== -1) trueIndex = tIdx;
+                        const fIdx = q.choices.findIndex(c => c.includes('خطأ'));
+                        if (fIdx !== -1) falseIndex = fIdx;
+                    }
+
+                    const btnTrue = tfRow.querySelector('.tf-choice-true');
+                    const btnFalse = tfRow.querySelector('.tf-choice-false');
+                    if (ans === trueIndex && btnTrue) {
+                        btnTrue.classList.add('selected');
+                        btnFalse.classList.remove('selected');
+                    } else if (btnFalse) {
+                        btnFalse.classList.add('selected');
+                        btnTrue.classList.remove('selected');
+                    }
+                } else if (q.type === 'essay' || q.type === 'essay-image') {
+                    const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                    if (!questionDiv) return;
+                    const allBtns = questionDiv.querySelectorAll('.essay-btn');
+                    allBtns.forEach(btn => btn.classList.remove('selected-essay'));
+                    const essayHint = questionDiv.querySelector('.essay-hint');
+                    if (essayHint) essayHint.style.display = 'none';
+                    if (ans === 1) {
+                        questionDiv.querySelectorAll('.show-answer-btn').forEach(btn => btn.classList.add('selected-essay'));
+                        const answerDiv = questionDiv.querySelector('.essay-answer');
+                        if (answerDiv) {
+                            answerDiv.style.display = 'block';
+                            answerDiv.classList.add('open');
+                        }
+                    } else if (ans === -1) {
+                        questionDiv.querySelectorAll('.dont-know-btn').forEach(btn => btn.classList.add('selected-essay'));
+                    }
+                } else {
+                    const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                    if (!questionDiv) return;
+                    const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+                    choiceLabels.forEach((label, cIndex) => {
+                        if (cIndex === ans) {
+                            label.classList.add('selected');
+                            const radio = label.querySelector('input[type="radio"]');
+                            if (radio) radio.checked = true;
+                        }
+                    });
+                }
+            });
+            updateProgress();
+        }
+
+        // أحداث أزرار النافذة المنبثقة
+        modalContinueBtn.addEventListener('click', () => {
+            closeModal(incompleteModal);
+        });
+
+        modalPartialSubmitBtn.addEventListener('click', () => {
+            closeModal(incompleteModal);
+            processSubmission(true); // تمرير true للتأكيد على أنه تسليم جزئي
+        });
+
+        restoreYesBtn.addEventListener('click', () => {
+            closeModal(restoreModal);
+            restoreSavedProgress();
+        });
+
+        restoreNoBtn.addEventListener('click', () => {
+            closeModal(restoreModal);
+            clearSavedProgress();
+            userAnswers.length = 0;
+            updateProgress();
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closeModal(modal);
+                    return;
+                }
+                if (event.key !== 'Tab') return;
+                const focusables = modal.querySelectorAll('button');
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            });
+        });
+
+        function openPrintPage() {
+            const examCode = getExamCode();
+            if (!examCode || !quizData[currentQuiz] || !quizData[currentQuiz].questions) {
+                alert('لا توجد أسئلة للطباعة');
+                return;
+            }
+            const base = ("/" || '/');
+            const url = base + 'exam/' + encodeURIComponent(examCode) + '/print';
+            window.open(url, '_blank');
+        }
+
+        function getExamCode() {
+            // رمز الاختبار يُحقن عبر Jekyll في الصفحات النظيفة /exam/CODE
+            const pageExamCode = "TA419";
+            const params = new URLSearchParams(window.location.search);
+            // دعم الروابط القديمة: exam?i=CODE — تحويلها إلى الرابط النظيف /exam/CODE
+            const oldCode = params.get('i');
+            if (oldCode) {
+                const cleanUrl = ("/" || '') + 'exam/' + encodeURIComponent(oldCode);
+                window.location.replace(cleanUrl);
+                return oldCode;
+            }
+            return pageExamCode;
+        }
+
+        function formatPoints(p) {
+            if (p === 1) return 'درجة واحدة';
+            if (p === 2) return 'درجتان';
+            if (p >= 3 && p <= 10) return `${p} درجات`;
+            return `${p} درجة`;
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[ch]));
+        }
+
+        function buildSections() {
+            sections = [];
+            sectionByQIndex = {};
+            const quiz = quizData[currentQuiz];
+            if (!quiz || !quiz.questions) return;
+
+            let current = { title: 'الأسئلة', indexes: [] };
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider) {
+                    if (current.indexes.length) sections.push(current);
+                    current = { title: q.divider, indexes: [] };
+                    return;
+                }
+                if (q.type === 'instructions') {
+                    if (current.indexes.length) sections.push(current);
+                    current = { title: q.mainTitle || 'الأسئلة', indexes: [] };
+                    return;
+                }
+                if (q.type === 'info') {
+                    sectionByQIndex[qIndex] = sections.length;
+                    return;
+                }
+                current.indexes.push(qIndex);
+                sectionByQIndex[qIndex] = sections.length;
+            });
+            if (current.indexes.length) sections.push(current);
+        }
+
+        function getSectionStats() {
+            return sections.map(section => {
+                let answered = 0;
+                section.indexes.forEach(qi => {
+                    if (userAnswers[qi] !== undefined) answered++;
+                });
+                return { title: section.title, total: section.indexes.length, answered: answered };
+            });
+        }
+
+        function renderSectionIndicator() {
+            if (!sectionProgressEl) return;
+            const stats = getSectionStats();
+            const section = stats[activeSectionIndex] || stats[0];
+            if (!section) {
+                sectionProgressEl.textContent = '';
+                return;
+            }
+            sectionProgressEl.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${escapeHtml(section.title)} · <b>${section.answered}/${section.total}</b>`;
+        }
+
+        function renderQuestionMap() {
+            if (!questionMapGrid) return;
+            questionMapGrid.innerHTML = '';
+            const quiz = quizData[currentQuiz];
+            if (!quiz || !quiz.questions) return;
+
+            let number = 0;
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                number++;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'qmap-btn';
+                btn.dataset.qindex = qIndex;
+                btn.textContent = number;
+                btn.setAttribute('aria-label', `الانتقال إلى السؤال ${number}`);
+                btn.addEventListener('click', () => scrollToQuestion(qIndex));
+                questionMapGrid.appendChild(btn);
+            });
+        }
+
+        function scrollToQuestion(qIndex) {
+            if (!reviewMode && resultElement.style.display === 'block') reviewAnswers();
+            const target = document.querySelector(
+                `.question-item[data-question-index="${qIndex}"], .tf-row[data-question-index="${qIndex}"]`
+            );
+            if (!target) return;
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.classList.add('question-highlight');
+            setTimeout(() => target.classList.remove('question-highlight'), 2000);
+        }
+
+        function updateActiveQuestion() {
+            if (!quizData[currentQuiz] || questionsContainer.style.display === 'none') return;
+            const elements = questionsContainer.querySelectorAll('[data-question-index]');
+            if (!elements.length) return;
+
+            const threshold = 170;
+            let active = elements[0];
+            elements.forEach(el => {
+                if (el.getBoundingClientRect().top <= threshold) active = el;
+            });
+
+            const qIndex = Number(active.dataset.questionIndex);
+            activeSectionIndex = Number(active.dataset.sectionIndex) || 0;
+
+            document.querySelectorAll('.qmap-btn.current').forEach(btn => btn.classList.remove('current'));
+            const mapBtn = document.querySelector(`.qmap-btn[data-qindex="${qIndex}"]`);
+            if (mapBtn) mapBtn.classList.add('current');
+
+            renderSectionIndicator();
+        }
+
+        function renderLoadingSkeleton() {
+            const skeletonCard = '<div class="skeleton-card">' +
+                '<div class="skeleton-line w-70"></div>' +
+                '<div class="skeleton-line w-90"></div>' +
+                '<div class="skeleton-line w-80"></div>' +
+                '<div class="skeleton-line w-60"></div>' +
+                '</div>';
+            questionsContainer.innerHTML = skeletonCard.repeat(3);
+        }
+
+        function renderErrorState(message) {
+            questionsContainer.innerHTML = `
+                <div class="state-card">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h3>تعذّر تحميل الاختبار</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <button type="button" class="state-retry-btn">إعادة المحاولة</button>
+                </div>`;
+            const retryBtn = questionsContainer.querySelector('.state-retry-btn');
+            if (retryBtn) retryBtn.addEventListener('click', loadQuizData);
+        }
+
+        function openModal(modal) {
+            if (!modal) return;
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            const focusTarget = modal.querySelector('button');
+            if (focusTarget) setTimeout(() => focusTarget.focus(), 30);
+        }
+
+        function closeModal(modal) {
+            if (!modal) return;
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        async function loadQuizData() {
+            const examCode = getExamCode();
+            if (!examCode) {
+                rawafidHideLoader();
+                renderErrorState('لم يتم تحديد رمز الاختبار.');
+                submitButton.style.display = 'none';
+                return;
+            }
+
+            renderLoadingSkeleton();
+
+            try {
+                const res = await fetch(`/assets/online/${examCode}.yaml`);
+                if (!res.ok) throw new Error('تعذر تحميل بيانات الاختبار');
+                const yamlText = await res.text();
+                quizData = jsyaml.load(yamlText);
+
+                if (quizData[currentQuiz]) {
+                    if (quizData[currentQuiz].title) {
+                        quizTitleElement.textContent = quizData[currentQuiz].title;
+                        document.title = quizData[currentQuiz].title + ' | روافد';
+                    }
+                    
+                    subjectNameElement.textContent = quizData[currentQuiz]['subject-name'] || 'غير محدد';
+                    subjectCodeElement.textContent = quizData[currentQuiz]['subject-code'] || examCode;
+
+                    let totalPoints = 0;
+                    quizData[currentQuiz].questions.forEach(q => {
+                        if (q.divider) return;
+                        if (q.type === 'info') return;
+                        if (q.type === 'instructions') return;
+                        totalPoints += q.points || 1;
+                    });
+                    subjectTotalScoreElement.textContent = totalPoints;
+                }
+                rawafidHideLoader();
+                const quiz = quizData[currentQuiz];
+                if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+                    renderErrorState('لا توجد أسئلة متاحة لهذا الاختبار.');
+                    submitButton.style.display = 'none';
+                    return;
+                }
+                renderAllQuestions();
+                renderQuestionMap();
+                updateProgress();
+                submitButton.style.display = 'block';
+                reviewButton.style.display = 'none';
+                backToResultButton.style.display = 'none';
+                checkForSavedProgress();
+                setTimeout(updateActiveQuestion, 80);
+            } catch (err) {
+                rawafidHideLoader();
+                renderErrorState(err.message);
+                submitButton.style.display = 'none';
+            }
+        }
+
+        function renderAllQuestions() {
+            const quiz = quizData[currentQuiz];
+            if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+                questionsContainer.innerHTML = '<p>لا توجد أسئلة متاحة</p>';
+                submitButton.style.display = 'none';
+                return;
+            }
+
+            buildSections();
+            questionsContainer.innerHTML = '';
+            let questionNumber = 1;
+
+            let currentTfContainer = null;
+
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider || q.type !== 'tf') {
+                    currentTfContainer = null;
+                }
+
+                if (q.divider) {
+                    const dividerDiv = document.createElement('div');
+                    dividerDiv.className = 'divider-text';
+                    dividerDiv.textContent = q.divider;
+                    questionsContainer.appendChild(dividerDiv);
+                    return;
+                }
+                
+                if (q.type === 'instructions') {
+                    const instructionsDiv = document.createElement('div');
+                    instructionsDiv.className = 'instructions-question';
+                    if (q.mainTitle) {
+                        const mainTitle = document.createElement('div');
+                        mainTitle.className = 'instructions-header';
+                        mainTitle.textContent = q.mainTitle;
+                        instructionsDiv.appendChild(mainTitle);
+                    }
+                    if (q.description) {
+                        const description = document.createElement('p');
+                        description.className = 'instructions-description';
+                        description.textContent = q.description;
+                        instructionsDiv.appendChild(description);
+                    }
+                    questionsContainer.appendChild(instructionsDiv);
+                    return; 
+                }
+                
+                if (q.type === 'tf') {
+                    if (!currentTfContainer) {
+                        currentTfContainer = document.createElement('div');
+                        currentTfContainer.className = 'tf-interactive-container';
+                        
+                        const headerDiv = document.createElement('div');
+                        headerDiv.className = 'tf-print-header';
+                        
+                        const titleSpan = document.createElement('span');
+                        titleSpan.textContent = "ضع علامة (✓) أو (✗) أمام العبارات التالية:";
+
+                        let tfTotal = 0;
+                        for (let i = qIndex; i < quiz.questions.length; i++) {
+                            const tfq = quiz.questions[i];
+                            if (tfq.divider || tfq.type !== 'tf') break;
+                            tfTotal += tfq.points || 1;
+                        }
+                        const totalBadge = document.createElement('span');
+                        totalBadge.className = 'points-badge';
+                        totalBadge.textContent = formatPoints(tfTotal);
+
+                        headerDiv.appendChild(titleSpan);
+                        headerDiv.appendChild(totalBadge);
+                        currentTfContainer.appendChild(headerDiv);
+                        
+                        questionsContainer.appendChild(currentTfContainer);
+                    }
+
+                    let trueIndex = 0;
+                    let falseIndex = 1;
+                    if (q.choices) {
+                        const tIdx = q.choices.findIndex(c => c.includes('صح') || c.includes('صواب'));
+                        if (tIdx !== -1) trueIndex = tIdx;
+                        const fIdx = q.choices.findIndex(c => c.includes('خطأ'));
+                        if (fIdx !== -1) falseIndex = fIdx;
+                    }
+
+                    const tfRow = document.createElement('div');
+                    tfRow.className = 'tf-row';
+                    tfRow.dataset.questionIndex = qIndex;
+                    tfRow.dataset.sectionIndex = sectionByQIndex[qIndex] || 0;
+                    
+                    const text = document.createElement('div');
+                    text.className = 'tf-text';
+                    text.innerHTML = `<span class="q-number-badge">${questionNumber}</span><span class="tf-q-text">${q.question.replace(/\n/g, '<br>')}</span>`;
+
+                    if (q.text) {
+                        text.innerHTML += `<div class="question-long-text" style="margin-top: 8px;">${q.text.replace(/\n/g, '<br>')}</div>`;
+                    }
+
+                    const answersWrap = document.createElement('div');
+                    answersWrap.className = 'tf-answers';
+
+                    const btnTrue = document.createElement('button');
+                    btnTrue.type = 'button';
+                    btnTrue.className = 'tf-choice tf-choice-true';
+                    btnTrue.innerHTML = '<i class="fa-solid fa-check"></i><span>صح</span>';
+
+                    const btnFalse = document.createElement('button');
+                    btnFalse.type = 'button';
+                    btnFalse.className = 'tf-choice tf-choice-false';
+                    btnFalse.innerHTML = '<i class="fa-solid fa-xmark"></i><span>خطأ</span>';
+
+                    btnTrue.addEventListener('click', () => {
+                        if (reviewMode) return;
+                        userAnswers[qIndex] = trueIndex;
+                        btnTrue.classList.add('selected');
+                        btnFalse.classList.remove('selected');
+                        updateProgress();
+                        saveProgress();
+                    });
+
+                    btnFalse.addEventListener('click', () => {
+                        if (reviewMode) return;
+                        userAnswers[qIndex] = falseIndex;
+                        btnFalse.classList.add('selected');
+                        btnTrue.classList.remove('selected');
+                        updateProgress();
+                        saveProgress();
+                    });
+
+                    answersWrap.appendChild(btnTrue);
+                    answersWrap.appendChild(btnFalse);
+
+                    tfRow.appendChild(text);
+                    tfRow.appendChild(answersWrap);
+                    
+                    currentTfContainer.appendChild(tfRow);
+                    questionNumber++;
+                    return; 
+                }
+
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                if (q.type === 'info') questionDiv.classList.add('info-question');
+                questionDiv.dataset.questionIndex = qIndex;
+                questionDiv.dataset.sectionIndex = sectionByQIndex[qIndex] || 0;
+
+                if (q.type === 'info') {
+                    if (q.mainTitle) {
+                        const mainTitle = document.createElement('div');
+                        mainTitle.className = 'info-header';
+                        mainTitle.textContent = q.mainTitle;
+                        questionDiv.appendChild(mainTitle);
+                    }
+                    if (q.description) {
+                        const description = document.createElement('p');
+                        description.className = 'info-description';
+                        description.textContent = q.description;
+                        questionDiv.appendChild(description);
+                    }
+                }
+
+                const questionTextDiv = document.createElement('div');
+                questionTextDiv.className = 'question-text';
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'question-content-span';
+                const formattedQuestion = q.question.replace(/\n/g, '<br>');
+                textSpan.innerHTML = `<span class="q-number-badge">${questionNumber}</span><span class="q-content-text">${formattedQuestion}</span>`;
+                questionTextDiv.appendChild(textSpan);
+
+                if (q.type !== 'info') {
+                    const pointsBadge = document.createElement('span');
+                    pointsBadge.className = 'points-badge';
+                    const p = q.points || 1;
+                    pointsBadge.textContent = formatPoints(p);
+                    questionTextDiv.appendChild(pointsBadge);
+                }
+
+                questionDiv.appendChild(questionTextDiv);
+
+                if (q.text) {
+                    const longTextDiv = document.createElement('div');
+                    longTextDiv.className = 'question-long-text';
+                    longTextDiv.innerHTML = q.text.replace(/\n/g, '<br>');
+                    questionDiv.appendChild(longTextDiv);
+                }
+
+                if (q.image) {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-question-container';
+                    const questionImage = document.createElement('img');
+                    questionImage.src = q.image;
+                    questionImage.alt = 'صورة السؤال';
+                    questionImage.className = 'question-image';
+                    imageContainer.appendChild(questionImage);
+                    questionDiv.appendChild(imageContainer);
+                }
+
+                if (q.subtext) {
+                    const subtextParagraph = document.createElement('p');
+                    subtextParagraph.className = 'question-subtext';
+                    subtextParagraph.textContent = q.subtext;
+                    questionDiv.appendChild(subtextParagraph);
+                }
+
+                if (q.type === 'essay' || q.type === 'essay-image') {
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = 'essay-buttons';
+                    const showAnswerBtn = document.createElement('button');
+                    showAnswerBtn.type = 'button';
+                    showAnswerBtn.className = 'essay-btn show-answer-btn';
+                    showAnswerBtn.textContent = 'أعرف الإجابة';
+                    showAnswerBtn.title = 'عرض الإجابة النموذجية';
+                    showAnswerBtn.addEventListener('click', () => selectEssayAnswer(qIndex, 1, showAnswerBtn, dontKnowBtn));
+                    const dontKnowBtn = document.createElement('button');
+                    dontKnowBtn.type = 'button';
+                    dontKnowBtn.className = 'essay-btn dont-know-btn';
+                    dontKnowBtn.textContent = 'لا أعرف';
+                    dontKnowBtn.title = 'تُحتسب ضمن الإجابات التي تحتاج مراجعة';
+                    dontKnowBtn.addEventListener('click', () => selectEssayAnswer(qIndex, -1, dontKnowBtn, showAnswerBtn));
+                    buttonsDiv.appendChild(showAnswerBtn);
+                    buttonsDiv.appendChild(dontKnowBtn);
+                    questionDiv.appendChild(buttonsDiv);
+
+                    const essayHint = document.createElement('p');
+                    essayHint.className = 'essay-hint';
+                    essayHint.textContent = '«لا أعرف» تُحتسب ضمن الإجابات التي تحتاج مراجعة.';
+                    questionDiv.appendChild(essayHint);
+
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'essay-answer';
+                    answerDiv.innerHTML = `<strong>الإجابة:</strong> ${q.answer}`;
+                    questionDiv.appendChild(answerDiv);
+
+                } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                    const choicesDiv = document.createElement('div');
+                    choicesDiv.className = 'choices-container';
+                    q.choices.forEach((choice, cIndex) => {
+                        const label = document.createElement('label');
+                        label.className = 'choice-label';
+                        
+                        const printLetterSpan = document.createElement('span');
+                        printLetterSpan.className = 'print-letter';
+                        const letter = arabicLetters[cIndex] || (cIndex + 1);
+                        printLetterSpan.textContent = letter + '- ';
+                        label.appendChild(printLetterSpan);
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = `question-${qIndex}`;
+                        radio.value = cIndex;
+                        radio.className = 'choice-radio';
+                        radio.addEventListener('change', () => selectChoice(qIndex, cIndex, label));
+                        label.appendChild(radio);
+                        
+                        label.appendChild(document.createTextNode(choice));
+                        choicesDiv.appendChild(label);
+                    });
+                    questionDiv.appendChild(choicesDiv);
+                }
+                questionsContainer.appendChild(questionDiv);
+                questionNumber++;
+            });
+        }
+
+        function selectEssayAnswer(qIndex, choice, selectedBtn, otherBtn) {
+            if (reviewMode) return;
+            userAnswers[qIndex] = choice;
+            const questionDiv = selectedBtn.closest('.question-item');
+            const allBtns = questionDiv.querySelectorAll('.essay-btn');
+            allBtns.forEach(btn => btn.classList.remove('selected-essay'));
+            selectedBtn.classList.add('selected-essay');
+            const hint = questionDiv.querySelector('.essay-hint');
+            if (hint) hint.style.display = 'none';
+            if (choice === 1) {
+                const answerDiv = questionDiv.querySelector('.essay-answer');
+                answerDiv.style.display = 'block';
+                answerDiv.classList.add('open');
+            }
+            updateProgress();
+            saveProgress();
+        }
+
+        function selectChoice(qIndex, cIndex, selectedLabel) {
+            if (reviewMode) return;
+            userAnswers[qIndex] = cIndex;
+            const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+            const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+            choiceLabels.forEach(label => label.classList.remove('selected'));
+            selectedLabel.classList.add('selected');
+            updateProgress();
+            saveProgress();
+        }
+
+        function updateProgress() {
+            if (!quizData[currentQuiz]) return;
+            let answered = 0, total = 0;
+            quizData[currentQuiz].questions.forEach((q, qi) => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                total++;
+                if (userAnswers[qi] !== undefined) answered++;
+            });
+            const countEl = document.getElementById('answered-count');
+            const totalEl = document.getElementById('total-count');
+            const bar = document.getElementById('quiz-progress-bar');
+            const pct = total ? Math.round((answered / total) * 100) : 0;
+            if (countEl) countEl.textContent = answered;
+            if (totalEl) totalEl.textContent = total;
+            if (bar) bar.style.width = pct + '%';
+            if (progressTrackEl) progressTrackEl.setAttribute('aria-valuenow', String(pct));
+
+            document.querySelectorAll('.qmap-btn').forEach(btn => {
+                const isAnswered = userAnswers[Number(btn.dataset.qindex)] !== undefined;
+                btn.classList.toggle('answered', isAnswered);
+                btn.setAttribute('aria-label', `الانتقال إلى السؤال ${btn.textContent}${isAnswered ? ' (تمت الإجابة)' : ''}`);
+            });
+            renderSectionIndicator();
+            updateActiveQuestion();
+        }
+
+        function submitAllAnswers() {
+            const quiz = quizData[currentQuiz];
+            let allAnswered = true;
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                if (userAnswers[qIndex] === undefined) allAnswered = false;
+            });
+
+            // إظهار النافذة المنبثقة بدلاً من رسالة التنبيه العادية
+            if (!allAnswered) {
+                openModal(incompleteModal);
+                return;
+            }
+
+            processSubmission(false); // تسليم كامل
+        }
+
+        function processSubmission(isPartial) {
+            const quiz = quizData[currentQuiz];
+            clearSavedProgress();
+            let earnedPoints = 0;
+            let totalPoints = 0;
+            let questionNumber = 0;
+            wrongAnswers.length = 0;
+
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                questionNumber++;
+                const questionPoints = q.points || 1;
+                totalPoints += questionPoints;
+
+                // في حالة التسليم الجزئي والأسئلة غير المحلولة، لا تتم إضافتها لقائمة الأخطاء
+                if (userAnswers[qIndex] === undefined) {
+                    if (!isPartial) {
+                        wrongAnswers.push({
+                            question: q.question,
+                            userAnswer: "لم تجب",
+                            correctAnswer: q.answer,
+                            points: questionPoints,
+                            qIndex: qIndex,
+                            number: questionNumber
+                        });
+                    }
+                    return; 
+                }
+
+                if (q.type === 'essay' || q.type === 'essay-image') {
+                    if (userAnswers[qIndex] === 1) {
+                        earnedPoints += questionPoints;
+                    } else if (userAnswers[qIndex] === -1) {
+                        wrongAnswers.push({
+                            question: q.question,
+                            userAnswer: "لا أعرف",
+                            correctAnswer: q.answer,
+                            points: questionPoints,
+                            qIndex: qIndex,
+                            number: questionNumber
+                        });
+                    }
+                } else if (q.type === 'mcq' || q.type === 'mcq-image' || q.type === 'tf') {
+                    const userAnswerIndex = userAnswers[qIndex];
+                    const correctAnswerIndex = q.choices ? q.choices.indexOf(q.answer) : (q.answer === 'صح' ? 0 : 1);
+                    if (userAnswerIndex === correctAnswerIndex) {
+                        earnedPoints += questionPoints;
+                    } else {
+                        wrongAnswers.push({
+                            question: q.question,
+                            userAnswer: q.choices && q.choices[userAnswerIndex] ? q.choices[userAnswerIndex] : "إجابة خاطئة",
+                            correctAnswer: q.answer,
+                            points: questionPoints,
+                            qIndex: qIndex,
+                            number: questionNumber
+                        });
+                    }
+                }
+            });
+
+            questionsContainer.style.display = 'none';
+            submitButton.style.display = 'none';
+            reviewButton.style.display = 'block';
+            backToResultButton.style.display = 'none';
+            showResult(earnedPoints, totalPoints);
+            window.scrollTo(0, 0);
+        }
+
+        function getResultTheme(percentage) {
+            if (percentage >= 90) {
+                return { color: 'var(--correct-bg)', grade: 'ممتاز', message: 'أداء استثنائي، واصل التميّز!' };
+            }
+            if (percentage >= 75) {
+                return { color: 'var(--correct-bg)', grade: 'جيد جدًا', message: 'أداء ممتاز، راجع ما تبقّى للوصول إلى الإتقان.' };
+            }
+            if (percentage >= 50) {
+                return { color: 'var(--warning-bg)', grade: 'جيد', message: 'نتيجة مقبولة، راجع الأسئلة الخاطئة لتحسين مستواك.' };
+            }
+            return { color: 'var(--wrong-bg)', grade: 'يحتاج مراجعة', message: 'لا بأس، راجع المادة جيدًا ثم أعد المحاولة.' };
+        }
+
+        function showResult(earnedPoints, totalPoints) {
+            resultElement.style.display = 'block';
+            const percentage = Math.round((earnedPoints * 100) / totalPoints) || 0;
+            const theme = getResultTheme(percentage);
+
+            let resultHTML = `
+                <div class="score-gauge-container" style="--gauge-color: ${theme.color};">
+                    <div class="score-gauge">
+                        <svg viewBox="0 0 120 120" aria-hidden="true">
+                            <circle class="gauge-track" cx="60" cy="60" r="52"></circle>
+                            <circle class="gauge-value" cx="60" cy="60" r="52"></circle>
+                        </svg>
+                        <span class="score-gauge-text">0%</span>
+                    </div>
+                    <div class="result-summary">
+                        <div class="result-grade">${theme.grade}</div>
+                        <div class="result-message">${theme.message}</div>
+                    </div>
+                    <div class="score-details">${earnedPoints} من ${totalPoints} درجة</div>
+                    <button type="button" class="result-retry-btn"><i class="fa-solid fa-rotate-right"></i> إعادة المحاولة</button>
+                </div>
+            `;
+
+            if (wrongAnswers.length > 0) {
+                resultHTML += `
+                    <div style="margin-bottom:20px; font-size:21px; font-weight:bold; color:var(--text-main); border-bottom:2px solid var(--primary-color); padding-bottom:10px; display:inline-block;">
+                        مراجعة الإجابات الخاطئة
+                    </div>
+                    <div class="wrong-answers-list">
+                `;
+
+                wrongAnswers.forEach(ans => {
+                    const formattedQuestion = ans.question.replace(/\n/g, '<br>');
+                    resultHTML += `
+                        <div class="wrong-answer-card">
+                            <div class="wrong-answer-q"><span class="wrong-answer-num">${ans.number}</span><span>${formattedQuestion}</span></div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-wrong">إجابتك</span>
+                                <span class="answer-text">${ans.userAnswer || "لم تجب"}</span>
+                            </div>
+                            <div class="answer-row">
+                                <span class="answer-badge badge-correct">الإجابة الصحيحة</span>
+                                <span class="answer-text">${ans.correctAnswer}</span>
+                            </div>
+                            <div class="points-lost">
+                                الدرجات المفقودة في هذا السؤال: <strong>${ans.points}</strong>
+                            </div>
+                            <button type="button" class="goto-question-btn" data-qindex="${ans.qIndex}">
+                                <i class="fa-solid fa-arrow-left"></i> اذهب للسؤال
+                            </button>
+                        </div>`;
+                });
+                resultHTML += '</div>';
+            } else if (totalPoints > 0) {
+                resultHTML += `
+                    <div style="text-align:center; padding: 20px; background:var(--correct-soft); color:var(--correct-ink); border:1px solid var(--correct-bg); border-radius:12px; font-weight:bold; font-size:18px; margin-top: 20px;">
+                        أحسنت! جميع إجاباتك التي قمت بحلها صحيحة.
+                    </div>`;
+            }
+
+            resultElement.innerHTML = resultHTML;
+
+            const retryBtn = resultElement.querySelector('.result-retry-btn');
+            if (retryBtn) retryBtn.addEventListener('click', retryQuiz);
+
+            resultElement.querySelectorAll('.goto-question-btn').forEach(btn => {
+                btn.addEventListener('click', () => gotoQuestion(Number(btn.dataset.qindex)));
+            });
+
+            setTimeout(() => {
+                const text = document.querySelector('.score-gauge-text');
+                const gaugeValue = document.querySelector('.gauge-value');
+                if (gaugeValue) {
+                    gaugeValue.style.strokeDashoffset = String(326.73 * (1 - percentage / 100));
+                }
+                if (text) {
+                    text.textContent = `${percentage}%`;
+                }
+            }, 100);
+        }
+
+        function retryQuiz() {
+            clearSavedProgress();
+            userAnswers.length = 0;
+            wrongAnswers.length = 0;
+            reviewMode = false;
+            resultElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            questionsContainer.style.display = 'block';
+            activeSectionIndex = 0;
+            renderAllQuestions();
+            renderQuestionMap();
+            updateProgress();
+            submitButton.style.display = 'block';
+            reviewButton.style.display = 'none';
+            backToResultButton.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(updateActiveQuestion, 80);
+        }
+
+        function backToResult() {
+            questionsContainer.style.display = 'none';
+            resultElement.style.display = 'block';
+            submitButton.style.display = 'none';
+            reviewButton.style.display = 'none';
+            backToResultButton.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function gotoQuestion(qIndex) {
+            if (!reviewMode) reviewAnswers();
+            questionsContainer.style.display = 'block';
+            resultElement.style.display = 'none';
+            backToResultButton.style.display = 'block';
+            setTimeout(() => {
+                const target = document.querySelector(
+                    `.question-item[data-question-index="${qIndex}"], .tf-row[data-question-index="${qIndex}"]`
+                );
+                if (!target) return;
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.classList.add('question-highlight');
+                setTimeout(() => target.classList.remove('question-highlight'), 2200);
+            }, 60);
+        }
+
+        function reviewAnswers() {
+            reviewMode = true;
+            questionsContainer.style.display = 'block';
+            resultElement.style.display = 'none';
+            reviewButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            backToResultButton.style.display = 'block';
+
+            const quiz = quizData[currentQuiz];
+            quiz.questions.forEach((q, qIndex) => {
+                if (q.divider || q.type === 'info' || q.type === 'instructions') return;
+                
+                // تخطي الأسئلة التي لم يجب عليها المستخدم في وضع المراجعة
+                if (userAnswers[qIndex] === undefined) return;
+
+                if (q.type === 'tf') {
+                    const tfRow = document.querySelector(`.tf-row[data-question-index="${qIndex}"]`);
+                    if (!tfRow) return;
+
+                    let trueIndex = 0; let falseIndex = 1;
+                    if(q.choices) {
+                        const tIdx = q.choices.findIndex(c => c.includes('صح') || c.includes('صواب'));
+                        if(tIdx !== -1) trueIndex = tIdx;
+                        const fIdx = q.choices.findIndex(c => c.includes('خطأ'));
+                        if(fIdx !== -1) falseIndex = fIdx;
+                    }
+
+                    const userAnswerIndex = userAnswers[qIndex];
+                    const correctAnswerIndex = q.choices ? q.choices.indexOf(q.answer) : trueIndex;
+
+                    const btnTrue = tfRow.querySelector('.tf-choice-true');
+                    const btnFalse = tfRow.querySelector('.tf-choice-false');
+                    if (!btnTrue || !btnFalse) return;
+
+                    btnTrue.disabled = true;
+                    btnFalse.disabled = true;
+
+                    const correctBtn = correctAnswerIndex === trueIndex ? btnTrue : btnFalse;
+                    correctBtn.classList.add('correct');
+                    correctBtn.classList.remove('selected');
+
+                    if (userAnswerIndex !== correctAnswerIndex) {
+                        const wrongBtn = userAnswerIndex === trueIndex ? btnTrue : btnFalse;
+                        wrongBtn.classList.add('wrong');
+                        wrongBtn.classList.remove('selected');
+
+                        const note = document.createElement('div');
+                        note.className = 'tf-correct-note';
+                        const correctLabel = (q.choices && q.choices[correctAnswerIndex]) ? q.choices[correctAnswerIndex] : (correctAnswerIndex === trueIndex ? 'صح' : 'خطأ');
+                        note.innerHTML = `الإجابة الصحيحة: ${correctLabel}`;
+                        tfRow.querySelector('.tf-text').appendChild(note);
+                    } else {
+                        correctBtn.classList.add('selected');
+                    }
+                } else {
+                    const questionDiv = document.querySelector(`.question-item[data-question-index="${qIndex}"]`);
+                    if (q.type === 'essay' || q.type === 'essay-image') {
+                        const answerDiv = questionDiv.querySelector('.essay-answer');
+                        answerDiv.style.display = 'block';
+                        answerDiv.classList.add('open');
+                        const essayButtons = questionDiv.querySelector('.essay-buttons');
+                        essayButtons.style.display = 'none';
+                        const essayHint = questionDiv.querySelector('.essay-hint');
+                        if (essayHint) essayHint.style.display = 'none';
+                    } else if (q.type === 'mcq' || q.type === 'mcq-image') {
+                        const userAnswerIndex = userAnswers[qIndex];
+                        const correctAnswerIndex = q.choices.indexOf(q.answer);
+                        const choiceLabels = questionDiv.querySelectorAll('.choice-label');
+                        choiceLabels.forEach((label, btnIndex) => {
+                            const radio = label.querySelector('input[type="radio"]');
+                            if (btnIndex === correctAnswerIndex) {
+                                label.classList.add('correct');
+                            } else if (btnIndex === userAnswerIndex && btnIndex !== correctAnswerIndex) {
+                                label.classList.add('wrong');
+                            }
+                            radio.disabled = true;
+                        });
+                    }
+                }
+            });
+        }
+
+        submitButton.addEventListener('click', submitAllAnswers);
+        reviewButton.addEventListener('click', reviewAnswers);
+        backToResultButton.addEventListener('click', backToResult);
+
+        let scrollTick = false;
+        window.addEventListener('scroll', () => {
+            if (scrollTick) return;
+            scrollTick = true;
+            requestAnimationFrame(() => {
+                scrollTick = false;
+                updateActiveQuestion();
+            });
+        }, { passive: true });
+
+        loadQuizData();
+    </script>
+  <script src="/assets/js/theme.js" defer></script>
+
+</body>
+</html>
