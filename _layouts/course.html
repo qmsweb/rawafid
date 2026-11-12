@@ -375,6 +375,14 @@
 
     .folder.collapsed > .folder-body { display: none; }
 
+    /* ضمان إخفاء محتوى المجلد المطوي مهما كانت قيمة display في قواعد أخرى */
+    .folder-body[hidden] { display: none !important; }
+
+    /* زر "الكل" يبقى مفتوحاً، وسهمه يدور عندما تكون كل المجلدات الداخلية مغلقة */
+    .folder-master.folders-collapsed > .folder-header .folder-chevron i {
+      transform: rotate(90deg);
+    }
+
     .folder-master > .folder-header {
       background: var(--primary-light);
       border-bottom: 1px solid var(--border-color);
@@ -533,7 +541,6 @@ let courseShareURL = null;
 let currentFilter = 'all';
 let groupDefinitions = new Map();
 let collapsedGroups = new Set();
-let masterCollapsed = false;
 let groupedMode = false;
 let folderIdCounter = 0;
 
@@ -657,15 +664,44 @@ function buildGroups(items) {
   return { groups: groups, ungrouped: ungrouped, hasGroups: groups.length > 0 };
 }
 
+/* طي أو فتح مجلد واحد مع تحديث حالته (الكلاس + aria + الأيقونة + إخفاء العناصر) */
+function setFolderCollapsed(folder, collapsed) {
+  if (!folder) return;
+
+  folder.classList.toggle('collapsed', collapsed);
+
+  const header = folder.querySelector('.folder-header');
+  if (header) header.setAttribute('aria-expanded', String(!collapsed));
+
+  const body = folder.querySelector('.folder-body');
+  if (body) body.hidden = collapsed;
+
+  const iconEl = folder.querySelector('.folder-header .folder-icon i');
+  if (iconEl) iconEl.className = 'fas ' + (collapsed ? 'fa-folder' : 'fa-folder-open');
+}
+
+/* زر "الكل" يدور سهمه عندما تكون كل المجلدات الداخلية مغلقة */
+function syncMasterFolderState(master) {
+  if (!master) return;
+
+  const groupFolders = Array.prototype.slice.call(master.querySelectorAll('.folder-group'));
+  if (!groupFolders.length) return;
+
+  const allCollapsed = groupFolders.every(folder => folder.classList.contains('collapsed'));
+  master.classList.toggle('folders-collapsed', allCollapsed);
+
+  const header = master.querySelector('.folder-header');
+  if (header) header.setAttribute('aria-expanded', String(!allCollapsed));
+}
+
 function createFolderHeader(options) {
   const key = options.key;
   const isMaster = options.isMaster;
-  const collapsed = options.collapsed;
 
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'folder-header';
-  btn.setAttribute('aria-expanded', String(!collapsed));
+  btn.setAttribute('aria-expanded', String(!options.collapsed));
   btn.innerHTML = `
     <span class="folder-chevron" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
     <span class="folder-icon" aria-hidden="true"><i class="fas ${options.icon}"></i></span>
@@ -677,34 +713,39 @@ function createFolderHeader(options) {
     const folder = btn.closest('.folder');
     if (!folder) return;
 
-    const isNowCollapsed = folder.classList.toggle('collapsed');
-    btn.setAttribute('aria-expanded', String(!isNowCollapsed));
+    if (isMaster) {
+      // مجلد "الكل" يبقى مفتوحاً دائماً؛ النقر عليه يفتح أو يغلق المجلدات الداخلية فقط
+      folder.classList.remove('collapsed');
+      const masterBody = folder.querySelector('.folder-body');
+      if (masterBody) masterBody.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
 
-    if (!isMaster) {
-      const iconEl = btn.querySelector('.folder-icon i');
-      if (iconEl) iconEl.className = 'fas ' + (isNowCollapsed ? 'fa-folder' : 'fa-folder-open');
-      if (isNowCollapsed) collapsedGroups.add(key);
-      else collapsedGroups.delete(key);
-    } else {
-      masterCollapsed = isNowCollapsed;
+      const groupFolders = Array.prototype.slice.call(folder.querySelectorAll('.folder-group'));
+      // إذا كان أي مجلد داخلي مفتوحاً فالنقر يغلقها كلها، وإلا يفتحها كلها
+      const collapseThem = groupFolders.some(groupFolder => !groupFolder.classList.contains('collapsed'));
 
-      // زر "الكل" يفتح/يغلق كل المجلدات الداخلية معه
-      folder.querySelectorAll('.folder-group').forEach(groupFolder => {
-        groupFolder.classList.toggle('collapsed', isNowCollapsed);
-
-        const groupHeader = groupFolder.querySelector('.folder-header');
-        if (groupHeader) groupHeader.setAttribute('aria-expanded', String(!isNowCollapsed));
-
-        const groupIcon = groupFolder.querySelector('.folder-icon i');
-        if (groupIcon) groupIcon.className = 'fas ' + (isNowCollapsed ? 'fa-folder' : 'fa-folder-open');
+      groupFolders.forEach(groupFolder => {
+        setFolderCollapsed(groupFolder, collapseThem);
 
         const groupKey = groupFolder.dataset.groupKey;
         if (groupKey) {
-          if (isNowCollapsed) collapsedGroups.add(groupKey);
+          if (collapseThem) collapsedGroups.add(groupKey);
           else collapsedGroups.delete(groupKey);
         }
       });
+
+      syncMasterFolderState(folder);
+      return;
     }
+
+    const isNowCollapsed = !folder.classList.contains('collapsed');
+    setFolderCollapsed(folder, isNowCollapsed);
+
+    if (isNowCollapsed) collapsedGroups.add(key);
+    else collapsedGroups.delete(key);
+
+    // تحديث سهم زر "الكل" ليعكس حالة المجلدات الداخلية
+    syncMasterFolderState(folder.closest('.folder-master'));
   });
 
   return btn;
@@ -728,6 +769,7 @@ function createGroupFolder(group) {
   const body = document.createElement('div');
   body.className = 'folder-body';
   body.id = nextFolderId('folder-group');
+  body.hidden = isCollapsed;
   header.setAttribute('aria-controls', body.id);
 
   const itemsWrap = document.createElement('div');
@@ -913,9 +955,11 @@ function renderMaterials(filter = 'all') {
       return;
   }
 
-  // مجلد "الكل" الرئيسي، مفتوح افتراضياً ويحتوي كل المجموعات والعناصر غير المجمّعة
+  // مجلد "الكل" الرئيسي: يبقى مفتوحاً دائماً ويعرض العناصر غير المجمّعة والمجلدات الداخلية
+  const allGroupsCollapsed = grouping.groups.length > 0 && grouping.groups.every(group => collapsedGroups.has(group.key));
+
   const master = document.createElement('section');
-  master.className = 'folder folder-master' + (masterCollapsed ? ' collapsed' : '');
+  master.className = 'folder folder-master' + (allGroupsCollapsed ? ' folders-collapsed' : '');
 
   const masterHeader = createFolderHeader({
       key: '__all__',
@@ -923,7 +967,7 @@ function renderMaterials(filter = 'all') {
       icon: 'fa-layer-group',
       count: filtered.length,
       isMaster: true,
-      collapsed: masterCollapsed
+      collapsed: allGroupsCollapsed
   });
 
   const masterBody = document.createElement('div');
@@ -1003,7 +1047,6 @@ document.addEventListener('DOMContentLoaded', () => {
       groupDefinitions.forEach(def => {
         if (def.open === false) collapsedGroups.add(def.key);
       });
-      masterCollapsed = false;
       currentFilter = 'all';
 
       const titleEl = document.getElementById('course-title');

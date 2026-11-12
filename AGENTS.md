@@ -49,7 +49,7 @@ Data lives in `assets/`; PowerShell generators (run with `pwsh` from repo root) 
 ]
 ```
 
-Folders are open by default; set `"open": false` to start one collapsed. Groups missing from `groups` use their raw `group` value as the title and appear in first-seen order. The top-level "الكل" folder is open by default and contains everything.
+Folders are open by default; set `"open": false` to start one collapsed. Groups missing from `groups` use their raw `group` value as the title and appear in first-seen order. The top-level "الكل" folder is always open and contains everything; clicking its header only opens/collapses the inner lesson folders (it never hides its own body), so items without `group` stay visible directly under it.
 
 
 ## Design rules (from `.opencode/.agents/rwfd-desinger.md`)
