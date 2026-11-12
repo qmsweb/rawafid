@@ -160,6 +160,34 @@
       border-radius: 50px;
     }
 
+    .ibnfaris-tag {
+      --ibnfaris-tag-bg: #8a6e4b;
+      --ibnfaris-tag-text: #ffffff;
+      --ibnfaris-logo-bg: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: var(--font-bold);
+      font-size: 0.78rem;
+      padding-block: 4px;
+      padding-inline-start: 5px;
+      padding-inline-end: 14px;
+      background: var(--ibnfaris-tag-bg);
+      color: var(--ibnfaris-tag-text);
+      border-radius: 50px;
+    }
+
+    .ibnfaris-tag-logo {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: block;
+      border-radius: 50%;
+      background: var(--ibnfaris-logo-bg);
+      object-fit: contain;
+      padding: 2px;
+    }
+
     .page-title {
       font-size: clamp(1.7rem, 3vw, 2rem);
       font-weight: var(--font-black);
@@ -241,6 +269,9 @@
     }
 
     .page-content li { margin-bottom: var(--space-xs); text-align: justify; }
+    .page-content ul { list-style: disc; }
+    .page-content ul ul { list-style: circle; }
+    .page-content ol { list-style: decimal; }
     .page-content li::marker { color: var(--rawafid-primary); font-weight: var(--font-bold); }
 
     .page-content blockquote {
@@ -572,11 +603,14 @@
 
     <div id="post-meta" class="article-meta">
       {% if page.date %}{% assign months = "يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر" | split: "," %}{% assign month_index = page.date | date: "%-m" | minus: 1 %}<span><i class="far fa-calendar" aria-hidden="true"></i> {{ page.date | date: "%-d" }} {{ months[month_index] }} {{ page.date | date: "%Y" }}</span>{% endif %}
-      {% if page.author %}<span id="post-author" data-author-uid="{{ page.author }}"><img class="author-avatar" src="{{ '/images/default.png' | relative_url }}" alt="{{ page.author }}"><span class="author-name"></span></span>{% endif %}
+      {% if page.author %}{% unless page.ibnfaris %}<span id="post-author" data-author-uid="{{ page.author }}"><img class="author-avatar" src="{{ '/images/default.png' | relative_url }}" alt="{{ page.author }}"><span class="author-name"></span></span>{% endunless %}{% endif %}
       {% if page.ai %}
       {% assign ai_label = page.ai %}
       {% if page.ai == true or page.ai == "yes" %}{% assign ai_label = "محسّن باستعمال الذكاء الاصطناعي" %}{% endif %}
       <span class="ai-tag"><i class="fas fa-star" aria-hidden="true"></i> {{ ai_label }}</span>
+      {% endif %}
+      {% if page.ibnfaris %}
+      <span class="ibnfaris-tag"><img class="ibnfaris-tag-logo" src="{{ '/images/ibnfaris-icon.PNG' | relative_url }}" alt="ابن فارس" width="24" height="24" loading="lazy"><span>بواسطة خدمة ابن فارس</span></span>
       {% endif %}
     </div>
 
