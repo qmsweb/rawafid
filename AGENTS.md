@@ -15,11 +15,12 @@ Data lives in `assets/`; PowerShell generators (run with `pwsh` from repo root) 
 | `assets/data/*.json` | `./generate-details.ps1` | `details/<CODE>/<ID>.md` | yes (push to `assets/data/**`) |
 | `assets/calendar.json` | `./generate-events.ps1` | `_events/<date>.md` (slug = date) | yes (push to `assets/calendar.json`) |
 | `assets/plans/edu.json`, `aadab.json` | `./generate-plan-courses.ps1` | `assets/plans/<plan>/<CODE>.json` + `tools/study-plan/<plan>/<CODE>/index.md` | yes (push to those two files) |
-| `assets/online/*.yaml` | `./generate-exams.ps1` | `exam/<CODE>/index.md` + `exam/<CODE>/print/index.md` | **no workflow — run manually** |
+| `assets/online/*.yaml` | `./generate-exams.ps1` | `exam/<CODE>/index.md` + `exam/<CODE>/print/index.md` + the mirrored `exam2/...` pages | **no workflow — run manually** |
 
 - CI (`.github/workflows/`, windows-latest) auto-commits regenerated pages with `[skip ci]` and pushes back. Don't commit the same generated output by hand for the CI-covered generators — just push the data change.
 - `generate-details.ps1` **skips** `materials.json`, `one.json`, `test.json` in `assets/data/` (helper/test fixtures).
 - `generate-plan-courses.ps1` plan list is hardcoded (`edu`, `aadab`) — adding a plan means editing the script.
+- `generate-exams.ps1` writes both `/exam/<CODE>` (original layout) and `/exam2/<CODE>` (new design in `_layouts/exam2.html`), each with a print page; there is no CI for it.
 - Scripts write UTF-8 **without BOM** and keep Arabic characters unescaped (PS 5.1-compatible `ConvertTo-CleanJson`); preserve that when editing them.
 
 ## Runtime behavior

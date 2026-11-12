@@ -395,6 +395,7 @@
 
     <script>
         const arabicLetters = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي'];
+        const examPathPrefix = "exam";
 
         function getExamCode() {
             const pageExamCode = "EDUC310-Q1";
@@ -623,7 +624,7 @@
                 contentEl.innerHTML = contentHTML;
 
                 new QRCode(document.getElementById('qrcode-container'), {
-                    text: base + 'exam/' + encodeURIComponent(examCode),
+                    text: base + examPathPrefix + '/' + encodeURIComponent(examCode),
                     width: 72,
                     height: 72,
                     colorDark: "#000000",
