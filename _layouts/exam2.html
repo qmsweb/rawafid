@@ -85,8 +85,8 @@
         }
 
         [data-theme="dark"] .ex2-page {
-            /* على اللون الأساسي الفاتح في الوضع الداكن نستخدم نصاً داكناً */
-            --ex2-on-primary: var(--rawafid-bg);
+            /* النص فوق الأزرار الزرقاء أبيض في الوضعين */
+            --ex2-on-primary: var(--rawafid-white);
         }
 
         .ex2-shell {
@@ -104,22 +104,10 @@
             align-items: start;
             padding: clamp(20px, 3.6vw, 32px);
             margin-bottom: 16px;
-            background:
-                radial-gradient(120% 150% at 100% 0%, var(--rawafid-primary-soft) 0%, transparent 58%),
-                var(--rawafid-surface);
+            background: var(--rawafid-surface);
             border: 1px solid var(--rawafid-border);
             border-radius: calc(var(--radius-lg) + 4px);
             overflow: hidden;
-        }
-
-        .ex2-hero::before {
-            content: "";
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 4px;
-            background: linear-gradient(90deg,
-                var(--rawafid-primary),
-                color-mix(in srgb, var(--rawafid-primary) 25%, transparent));
         }
 
         .ex2-hero-main { min-width: 0; }
@@ -385,16 +373,12 @@
         #review-btn,
         #back-to-result-btn { display: none; }
 
-        .ex2-page[data-mode="result"] #submit-btn,
-        .ex2-page[data-mode="review"] #submit-btn { display: none; }
-
         .ex2-page[data-mode="result"] #review-btn { display: inline-flex; }
         .ex2-page[data-mode="review"] #back-to-result-btn { display: inline-flex; }
 
         .ex2-page[data-mode="result"] .ex2-finish,
         .ex2-page[data-mode="review"] .ex2-finish { display: none; }
 
-        .ex2-page:not(.is-ready) #submit-btn,
         .ex2-page:not(.is-ready) .ex2-finish { display: none; }
 
         /* =================== الأقسام والتعليمات =================== */
@@ -1387,7 +1371,7 @@
         .modal-btn.primary-btn {
             background: var(--rawafid-primary);
             border-color: var(--rawafid-primary);
-            color: var(--ex2-on-primary);
+            color: var(--rawafid-white);
         }
         .modal-btn.primary-btn:hover {
             background: var(--rawafid-primary-dark);
@@ -1481,7 +1465,7 @@
             <!-- بطاقة التعريف -->
             <section class="ex2-hero" aria-labelledby="quiz-title">
                 <div class="ex2-hero-main">
-                    <p class="ex2-eyebrow"><i class="fa-solid fa-clipboard-question" aria-hidden="true"></i> اختبار إلكتروني</p>
+                    <p class="ex2-eyebrow"><i class="fa-solid fa-clipboard-question" aria-hidden="true"></i> اختبار تفاعلي</p>
                     <h1 class="ex2-title" id="quiz-title">جارٍ تحميل الاختبار…</h1>
 
                     <div class="ex2-meta">
@@ -1527,7 +1511,6 @@
                         <span class="ex2-toolbar-title" id="toolbar-title">الاختبار</span>
                     </div>
                     <div class="ex2-toolbar-actions">
-                        <button type="button" id="submit-btn" class="ex2-btn ex2-btn-primary">تأكيد الإجابات</button>
                         <button type="button" id="review-btn" class="ex2-btn ex2-btn-soft">مراجعة الإجابات</button>
                         <button type="button" id="back-to-result-btn" class="ex2-btn ex2-btn-ghost">
                             <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> العودة للنتيجة
@@ -1594,7 +1577,6 @@
 
             const pageRoot = document.getElementById('exam-page');
             const questionsContainer = document.getElementById('questions-container');
-            const submitButton = document.getElementById('submit-btn');
             const reviewButton = document.getElementById('review-btn');
             const backToResultButton = document.getElementById('back-to-result-btn');
             const finishButton = document.getElementById('finish-btn');
@@ -2721,7 +2703,6 @@
             }
 
             /* ==================== الأحداث ==================== */
-            submitButton.addEventListener('click', submitAllAnswers);
             reviewButton.addEventListener('click', reviewAnswers);
             backToResultButton.addEventListener('click', backToResult);
             finishButton.addEventListener('click', submitAllAnswers);
