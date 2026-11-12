@@ -40,6 +40,7 @@
       --text-main: #2d2d2d;
       --text-header: #1e1e2f;
       --text-muted: #666666;
+      --text-on-primary: #ffffff;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
       --hover-shadow: 0 20px 40px -5px rgba(26, 42, 198, 0.15);
       --hover-bg: #e0e7ff;
@@ -67,6 +68,7 @@
       --text-main: #e0e0e0;
       --text-header: #ffffff;
       --text-muted: #a0a0a0;
+      --text-on-primary: #121212;
       --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
       --hover-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
       --hover-bg: #2c2e3e;
@@ -322,6 +324,90 @@
       width: 100%; height: 100%; object-fit: cover;
     }
 
+    /* === 6. مجلدات التجميع (Accordion) === */
+    .materials-list.grouped { gap: 14px; }
+
+    .folder {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+    }
+
+    .folder-header {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      padding: 14px 16px; background: transparent; border: 0;
+      color: var(--text-main); cursor: pointer; text-align: right;
+      font-family: inherit; font-size: 1rem;
+      -webkit-appearance: none; appearance: none;
+      transition: background-color 0.2s;
+    }
+    .folder-header:hover { background: var(--hover-bg); }
+    .folder-header:focus-visible {
+      outline: 2px solid var(--primary-color); outline-offset: -2px;
+    }
+
+    .folder-chevron {
+      width: 22px; height: 22px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.85rem;
+    }
+    .folder-chevron i { transition: transform 0.25s ease; }
+    .folder.collapsed > .folder-header .folder-chevron i { transform: rotate(90deg); }
+
+    .folder-icon {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--primary-light); color: var(--primary-color);
+      font-size: 1rem;
+    }
+
+    .folder-title { font-weight: 700; line-height: 1.4; }
+
+    .folder-count {
+      margin-inline-start: auto; flex-shrink: 0;
+      min-width: 30px; padding: 3px 10px; border-radius: 20px;
+      background: var(--bg-body); border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 0.72rem; font-weight: 700;
+      text-align: center;
+    }
+
+    .folder.collapsed > .folder-body { display: none; }
+
+    .folder-master > .folder-header {
+      background: var(--primary-light);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .folder-master > .folder-header:hover { background: var(--hover-bg); }
+    .folder-master > .folder-header .folder-icon {
+      background: var(--primary-color); color: var(--text-on-primary);
+    }
+    .folder-master > .folder-header .folder-count {
+      background: var(--bg-card); color: var(--primary-color);
+      border-color: transparent;
+    }
+    .folder-master.collapsed > .folder-header { border-bottom: 0; }
+
+    .folder-master > .folder-body {
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 14px;
+    }
+
+    .folder-group { background: var(--bg-body); box-shadow: none; }
+    .folder-group > .folder-header { padding: 12px 14px; }
+    .folder-group > .folder-body { padding: 0 14px 14px; }
+
+    .folder-items { display: flex; flex-direction: column; gap: 12px; }
+
+    /* داخل وضع الشبكة: المجلدات تبقى بعرض كامل والعناصر داخلها تُعرض كشبكة */
+    .materials-list.grid-view.grouped { display: flex !important; flex-direction: column; }
+    .materials-list.grid-view.grouped .folder-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
     /* Badges */
     .badge { 
       font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; 
@@ -350,6 +436,15 @@
       .filter-bar { gap: 8px; padding-left: 12px; padding-right: 12px; }
       .filter-item { padding: 8px 16px; font-size: 0.8rem; }
       .view-toggle i { width: 32px; height: 32px; font-size: 0.9rem; }
+
+      .folder-header { padding: 12px; gap: 10px; }
+      .folder-title { font-size: 0.92rem; }
+      .folder-icon { width: 34px; height: 34px; font-size: 0.95rem; }
+      .folder-master > .folder-body { padding: 10px; }
+      .folder-group > .folder-body { padding: 0 10px 10px; }
+      .materials-list.grid-view.grouped .folder-items {
+        grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+      }
     }
   </style>
   
@@ -769,10 +864,17 @@ if (!courseCode && pageCourseCode) {
 }
 // الأساس العام للروابط (يدعم استضافة المشروع داخل مجلد فرعي)
 const siteBaseUrl = "/";
+const detailsBaseUrl = "/details";
 
 let materialsData = [];
 let userToggledView = false; 
 let courseShareURL = null; 
+let currentFilter = 'all';
+let groupDefinitions = new Map();
+let collapsedGroups = new Set();
+let masterCollapsed = false;
+let groupedMode = false;
+let folderIdCounter = 0;
 
 /* ======= 3. دوال مساعدة (للأيقونات) ======= */
 function getIconClass(type) {
@@ -813,28 +915,198 @@ function isInternalVideoUrl(url) {
     }
 }
 
-/* ======= 4. ضبط العرض (شبكة/قائمة) ======= */
+/* ======= 4. دوال التجميع (المجلدات) ======= */
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function nextFolderId(prefix) {
+  folderIdCounter += 1;
+  return prefix + '-' + folderIdCounter;
+}
+
+/* قراءة تعريفات المجموعات الاختيارية من أعلى ملف JSON.
+   يمكن أن تكون المجموعة نصاً مباشراً أو كائناً: { "id": "l1", "title": "...", "open": false } */
+function parseGroupDefinitions(groups) {
+  const map = new Map();
+  if (!Array.isArray(groups)) return map;
+
+  groups.forEach((def, index) => {
+    let key = '';
+    let title = '';
+    let open;
+
+    if (typeof def === 'string') {
+      key = def;
+      title = def;
+    } else if (def && typeof def === 'object') {
+      key = String(def.id ?? def.key ?? def.name ?? def.title ?? '');
+      title = String(def.title ?? def.name ?? def.label ?? key);
+      if (typeof def.open === 'boolean') open = def.open;
+    }
+
+    key = key.trim();
+    if (!key) return;
+    map.set(key, { key: key, title: title.trim() || key, order: index, open: open });
+  });
+
+  return map;
+}
+
+/* تجميع عناصر المقرر حسب الحقل group الموجود في كل عنصر.
+   العناصر التي لا تحمل group تبقى ظاهرة مباشرة تحت مجلد "الكل". */
+function buildGroups(items) {
+  const map = new Map();
+  const ungrouped = [];
+
+  items.forEach(item => {
+    const rawKey = item ? item.group : '';
+    const key = rawKey == null ? '' : String(rawKey).trim();
+
+    if (!key) {
+      ungrouped.push(item);
+      return;
+    }
+
+    let group = map.get(key);
+    if (!group) {
+      const def = groupDefinitions.get(key);
+      group = {
+        key: key,
+        title: def ? def.title : key,
+        order: def ? def.order : Number.MAX_SAFE_INTEGER,
+        insertIndex: map.size,
+        items: []
+      };
+      map.set(key, group);
+    }
+    group.items.push(item);
+  });
+
+  const groups = Array.from(map.values()).sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    return a.insertIndex - b.insertIndex;
+  });
+
+  return { groups: groups, ungrouped: ungrouped, hasGroups: groups.length > 0 };
+}
+
+function createFolderHeader(options) {
+  const key = options.key;
+  const isMaster = options.isMaster;
+  const collapsed = options.collapsed;
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'folder-header';
+  btn.setAttribute('aria-expanded', String(!collapsed));
+  btn.innerHTML = `
+    <span class="folder-chevron" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+    <span class="folder-icon" aria-hidden="true"><i class="fas ${options.icon}"></i></span>
+    <span class="folder-title">${escapeHtml(options.title)}</span>
+    <span class="folder-count">${options.count}</span>
+  `;
+
+  btn.addEventListener('click', function () {
+    const folder = btn.closest('.folder');
+    if (!folder) return;
+
+    const isNowCollapsed = folder.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', String(!isNowCollapsed));
+
+    if (!isMaster) {
+      const iconEl = btn.querySelector('.folder-icon i');
+      if (iconEl) iconEl.className = 'fas ' + (isNowCollapsed ? 'fa-folder' : 'fa-folder-open');
+      if (isNowCollapsed) collapsedGroups.add(key);
+      else collapsedGroups.delete(key);
+    } else {
+      masterCollapsed = isNowCollapsed;
+
+      // زر "الكل" يفتح/يغلق كل المجلدات الداخلية معه
+      folder.querySelectorAll('.folder-group').forEach(groupFolder => {
+        groupFolder.classList.toggle('collapsed', isNowCollapsed);
+
+        const groupHeader = groupFolder.querySelector('.folder-header');
+        if (groupHeader) groupHeader.setAttribute('aria-expanded', String(!isNowCollapsed));
+
+        const groupIcon = groupFolder.querySelector('.folder-icon i');
+        if (groupIcon) groupIcon.className = 'fas ' + (isNowCollapsed ? 'fa-folder' : 'fa-folder-open');
+
+        const groupKey = groupFolder.dataset.groupKey;
+        if (groupKey) {
+          if (isNowCollapsed) collapsedGroups.add(groupKey);
+          else collapsedGroups.delete(groupKey);
+        }
+      });
+    }
+  });
+
+  return btn;
+}
+
+function createGroupFolder(group) {
+  const isCollapsed = collapsedGroups.has(group.key);
+  const folder = document.createElement('section');
+  folder.className = 'folder folder-group' + (isCollapsed ? ' collapsed' : '');
+  folder.dataset.groupKey = group.key;
+
+  const header = createFolderHeader({
+    key: group.key,
+    title: group.title,
+    icon: isCollapsed ? 'fa-folder' : 'fa-folder-open',
+    count: group.items.length,
+    isMaster: false,
+    collapsed: isCollapsed
+  });
+
+  const body = document.createElement('div');
+  body.className = 'folder-body';
+  body.id = nextFolderId('folder-group');
+  header.setAttribute('aria-controls', body.id);
+
+  const itemsWrap = document.createElement('div');
+  itemsWrap.className = 'folder-items';
+  group.items.forEach(item => itemsWrap.appendChild(createMaterialElement(item)));
+
+  body.appendChild(itemsWrap);
+  folder.appendChild(header);
+  folder.appendChild(body);
+  return folder;
+}
+
+/* ======= 5. ضبط العرض (شبكة/قائمة) ======= */
 function setView(view, save = true) {
-  if (view === 'grid') {
-    materialsList.classList.add('grid-view');
-    gridBtn.classList.add('active');
-    listBtn.classList.remove('active');
+  const isGrid = view === 'grid';
+
+  materialsList.classList.toggle('grid-view', isGrid);
+  gridBtn.classList.toggle('active', isGrid);
+  listBtn.classList.toggle('active', !isGrid);
+
+  if (groupedMode) {
+    // إعادة بناء المجلدات بالوضع الجديد مع الحفاظ على حالة الفتح/الإغلاق
+    renderMaterials(currentFilter);
+  } else if (isGrid) {
     reflowGrid();
   } else {
-    materialsList.classList.remove('grid-view');
-    listBtn.classList.add('active');
-    gridBtn.classList.remove('active');
     // تفكيك الأعمدة وإظهار العناصر كقائمة عمودية عادية
     const items = Array.prototype.slice.call(materialsList.querySelectorAll('.material-item'));
     materialsList.innerHTML = '';
     items.forEach(el => materialsList.appendChild(el));
   }
+
   if (save) localStorage.setItem('viewMode', view);
 }
 
 /* إعادة ترتيب أعمدة الشبكة (masonry) حسب عدد الأعمدة الحالي */
 function reflowGrid() {
+  if (groupedMode) return;
   if (!materialsList.classList.contains('grid-view')) return;
+
 
   // تجميع كل عناصر المواد (سواء كانت داخل أعمدة أو أطفالاً مباشرة)
   const items = Array.prototype.slice.call(materialsList.querySelectorAll('.material-item'));
@@ -883,100 +1155,135 @@ function reflowGrid() {
   columns.forEach(col => materialsList.appendChild(col));
 }
 
-/* ======= 5. رسم المواد ======= */
+/* ======= 6. رسم المواد ======= */
+function createMaterialElement(item) {
+  const itemId = item.id ? item.id : '#';
+  // بناء الرابط النظيف على غرار روابط المقرر /course/CODE
+  const detailsUrl = `${detailsBaseUrl}/${encodeURIComponent(courseCode)}/${encodeURIComponent(itemId)}`;
+
+  const el = document.createElement('div');
+  el.className = 'material-item';
+
+  // إضافة كلاس خاص للبطاقات لتطبيق التدرج اللوني
+  if (item.type === 'cards') {
+      el.classList.add('special-card-style');
+  }
+
+  // حدث النقر
+  el.onclick = function() {
+      // في حال وجود مفتاح direct بقيمة yes يتم فتح التدوينة في رابط خاص مباشرة
+      if (item.direct === 'yes' && item.url) {
+          window.location.href = item.url;
+          return;
+      }
+      const targetUrl = item.preview_url || item.url;
+      if ((item.type === 'quizzes' || item.type === 'cards' || item.type === 'links') && targetUrl) {
+          window.location.href = targetUrl;
+      } else if (item.type === 'videos' && isInternalVideoUrl(item.preview_url)) {
+          window.location.href = item.preview_url;
+      } else {
+          window.location.href = detailsUrl;
+      }
+  };
+
+  let imageHTML = '';
+  if (item.image_url) {
+      const imgSrc = item.image_url.startsWith('http') || item.image_url.startsWith('/') ? item.image_url : siteBaseUrl + item.image_url;
+      imageHTML = `<div class="item-image"><img src="${imgSrc}" alt="${item.title}" loading="lazy"></div>`;
+  }
+
+  let badgeHTML = '';
+  const now = Date.now();
+  const timeMs = item['time-ms'];
+  const MS_IN_DAY = 86400000;
+  if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
+    badgeHTML = `<span class="badge badge-new">${item.badgeText}</span>`;
+  } else if (item.badge) {
+    badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
+  }
+
+  let descriptionHTML = '';
+  if (item.description && item.description.trim() !== "") {
+      // التحقق من عدم وجود النجمة * في الوصف
+      if (!item.description.includes('*')) {
+          descriptionHTML = `<p class="item-description-preview">${item.description}</p>`;
+      }
+  }
+
+  el.innerHTML = `
+    <div class="item-header">
+      <div class="item-icon" style="${getIconStyles(item.type)}">
+          <i class="${getIconClass(item.type)}"></i>
+      </div>
+      <div class="item-title-text">
+          <h3>${item.title}</h3>
+      </div>
+    </div>
+    ${descriptionHTML}
+    ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
+    ${imageHTML}
+  `;
+  return el;
+}
+
 function renderMaterials(filter = 'all') {
+  currentFilter = filter;
   materialsList.innerHTML = '';
+  folderIdCounter = 0;
+
   const filtered = filter === 'all' ? materialsData : materialsData.filter(item => item.type === filter);
 
   if (filtered.length === 0) {
+      groupedMode = false;
+      materialsList.classList.remove('grouped');
       materialsList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">لا توجد مواد في هذا القسم.</p>';
       return;
   }
 
-  // استخدام relative_url لضمان صحة الرابط للصفحة الداخلية (رابط نظيف /details/CODE/ID)
-  const detailsBaseUrl = "/details";
+  const grouping = buildGroups(filtered);
+  groupedMode = grouping.hasGroups;
+  materialsList.classList.toggle('grouped', groupedMode);
 
-  const isGrid = materialsList.classList.contains('grid-view');
-
-  // بناء العناصر الفردية
-  const elements = filtered.map(item => {
-    const itemId = item.id ? item.id : '#';
-    // بناء الرابط النظيف على غرار روابط المقرر /course/CODE
-    const detailsUrl = `${detailsBaseUrl}/${encodeURIComponent(courseCode)}/${encodeURIComponent(itemId)}`;
-
-    const el = document.createElement('div');
-    el.className = 'material-item';
-    
-    // إضافة كلاس خاص للبطاقات لتطبيق التدرج اللوني
-    if (item.type === 'cards') {
-        el.classList.add('special-card-style');
-    }
-
-    // حدث النقر
-    el.onclick = function() {
-        // في حال وجود مفتاح direct بقيمة yes يتم فتح التدوينة في رابط خاص مباشرة
-        if (item.direct === 'yes' && item.url) {
-            window.location.href = item.url;
-            return;
-        }
-        const targetUrl = item.preview_url || item.url;
-        if ((item.type === 'quizzes' || item.type === 'cards' || item.type === 'links') && targetUrl) {
-            window.location.href = targetUrl;
-        } else if (item.type === 'videos' && isInternalVideoUrl(item.preview_url)) {
-            window.location.href = item.preview_url;
-        } else {
-            window.location.href = detailsUrl;
-        }
-    };
-
-    let imageHTML = '';
-    if (item.image_url) { 
-        const imgSrc = item.image_url.startsWith('http') || item.image_url.startsWith('/') ? item.image_url : siteBaseUrl + item.image_url;
-        imageHTML = `<div class="item-image"><img src="${imgSrc}" alt="${item.title}" loading="lazy"></div>`;
-    }
-
-    let badgeHTML = '';
-    const now = Date.now();
-    const timeMs = item['time-ms'];
-    const MS_IN_DAY = 86400000;
-    if (item.badge === 'new' && timeMs && (now - timeMs) / MS_IN_DAY <= 14) {
-      badgeHTML = `<span class="badge badge-new">${item.badgeText}</span>`;
-    } else if (item.badge) {
-      badgeHTML = `<span class="badge badge-${item.badge}">${item.badgeText}</span>`;
-    }
-
-    let descriptionHTML = '';
-    if (item.description && item.description.trim() !== "") {
-        // التحقق من عدم وجود النجمة * في الوصف
-        if (!item.description.includes('*')) {
-            descriptionHTML = `<p class="item-description-preview">${item.description}</p>`;
-        }
-    }
-
-    el.innerHTML = `
-      <div class="item-header">
-        <div class="item-icon" style="${getIconStyles(item.type)}">
-            <i class="${getIconClass(item.type)}"></i>
-        </div>
-        <div class="item-title-text">
-            <h3>${item.title}</h3>
-        </div>
-      </div>
-      ${descriptionHTML}
-      ${badgeHTML ? `<div class="badges-container">${badgeHTML}</div>` : ''}
-      ${imageHTML}
-    `;
-    return el;
-  });
-
-  if (!isGrid) {
-    elements.forEach(el => materialsList.appendChild(el));
-    return;
+  // لا توجد مجموعات: العرض القديم كما هو (قائمة أو شبكة masonry)
+  if (!groupedMode) {
+      const elements = filtered.map(createMaterialElement);
+      elements.forEach(el => materialsList.appendChild(el));
+      if (materialsList.classList.contains('grid-view')) reflowGrid();
+      return;
   }
 
-  // وضع الشبكة (masonry): إضافة العناصر ثم توزيعها على أعمدة متوازنة عبر reflowGrid
-  elements.forEach(el => materialsList.appendChild(el));
-  reflowGrid();
+  // مجلد "الكل" الرئيسي، مفتوح افتراضياً ويحتوي كل المجموعات والعناصر غير المجمّعة
+  const master = document.createElement('section');
+  master.className = 'folder folder-master' + (masterCollapsed ? ' collapsed' : '');
+
+  const masterHeader = createFolderHeader({
+      key: '__all__',
+      title: 'الكل',
+      icon: 'fa-layer-group',
+      count: filtered.length,
+      isMaster: true,
+      collapsed: masterCollapsed
+  });
+
+  const masterBody = document.createElement('div');
+  masterBody.className = 'folder-body';
+  masterBody.id = nextFolderId('folder-all');
+  masterHeader.setAttribute('aria-controls', masterBody.id);
+
+  // العناصر غير المرتبطة بمجموعة تظهر مباشرة داخل "الكل"
+  if (grouping.ungrouped.length) {
+      const ungroupedWrap = document.createElement('div');
+      ungroupedWrap.className = 'folder-items';
+      grouping.ungrouped.forEach(item => ungroupedWrap.appendChild(createMaterialElement(item)));
+      masterBody.appendChild(ungroupedWrap);
+  }
+
+  // مجلدات الدروس/الأقسام
+  grouping.groups.forEach(group => masterBody.appendChild(createGroupFolder(group)));
+
+  master.appendChild(masterHeader);
+  master.appendChild(masterBody);
+  materialsList.appendChild(master);
 }
 
 /* ======= 6. تشغيل الصفحة ======= */
@@ -1028,6 +1335,16 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       rawafidHideLoader();
       materialsData = data.items || [];
+
+      // تجهيز تعريفات المجموعات (اختيارية) وحالة الفتح/الإغلاق
+      groupDefinitions = parseGroupDefinitions(data.groups);
+      collapsedGroups = new Set();
+      groupDefinitions.forEach(def => {
+        if (def.open === false) collapsedGroups.add(def.key);
+      });
+      masterCollapsed = false;
+      currentFilter = 'all';
+
       const titleEl = document.getElementById('course-title');
       const codeEl = document.getElementById('course-code');
       const descEl = document.getElementById('course-desc');

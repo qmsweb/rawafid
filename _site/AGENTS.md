@@ -36,6 +36,22 @@ Data lives in `assets/`; PowerShell generators (run with `pwsh` from repo root) 
 - Root `calendar.html` is just a redirect to `/tools/calendar`. Root pages (`index.html`, `about.html`, `tools.html`, …) are Liquid stubs with front matter pointing to layouts in `_layouts/`.
 - Shared styling: `assets/css/design-system.css` (tokens like `--rawafid-primary`, `--rawafid-bg`, `--radius-md`) + `assets/js/theme.js` + fonts from `fonts/`.
 
+## Course grouping (accordion folders)
+
+`_layouts/course.html` groups items into collapsible folders directly from the course JSON — no build step:
+
+- Add `"group": "<group-id>"` to any item in `assets/data/<CODE>.json` to put it inside that folder. Items without `group` stay directly under the top-level "الكل" folder.
+- Optionally define folder titles and order at the top of the file:
+
+```json
+"groups": [
+  { "id": "l1", "title": "الدرس الأول: ...", "open": true }
+]
+```
+
+Folders are open by default; set `"open": false` to start one collapsed. Groups missing from `groups` use their raw `group` value as the title and appear in first-seen order. The top-level "الكل" folder is open by default and contains everything.
+
+
 ## Design rules (from `.opencode/.agents/rwfd-desinger.md`)
 
 - Never hardcode hex colors in elements — use the CSS variables. Site supports dark/light modes.
