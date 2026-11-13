@@ -540,8 +540,12 @@
         padding: 0 !important;
       }
 
+      /* نترك الارتفاع يُحسب من نسبة الخريطة (viewBox) حتى تُطبع كاملة وبحجم مقروء */
       .page-content .mindmap svg {
-        height: 600px !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 380px !important;
+        max-height: none !important;
       }
 
     .mindmap-pending { visibility: hidden; }
@@ -1640,7 +1644,12 @@ markmap:
 
       function canvasToBlob(canvas, cb) {
         if (canvas.toBlob) {
-          canvas.toBlob(function (blob) { cb(blob); }, 'image/png');
+          try {
+            canvas.toBlob(function (blob) { cb(blob); }, 'image/png');
+          } catch (err) {
+            if (window.console && console.error) console.error('Markmap export error:', err);
+            cb(null);
+          }
           return;
         }
         try {
@@ -1682,7 +1691,8 @@ markmap:
           '--markmap-code-color:' + cssVar('--rawafid-text', '#2d2d2d') + ';' +
           '--markmap-font:400 15px/1.5 ' + cssVar('--font-body', 'sans-serif') + ';' +
           '}' +
-          '.markmap-foreign>div{direction:rtl;text-align:right;}';
+          /* بلا text-align:right، لأنها تُخفي نصوص الـ foreignObject عند تحويل SVG إلى صورة في كروم */
+          '.markmap-foreign>div{direction:rtl;}';
         if (fontDataUrl) {
           text += "@font-face{font-family:'RawafidExport';src:url(\"" + fontDataUrl + "\") format('opentype');font-weight:400;font-style:normal;}" +
             ".markmap-foreign,.markmap-foreign *{font-family:'RawafidExport','IBM Plex Sans Arabic',sans-serif !important;}";
@@ -1691,21 +1701,40 @@ markmap:
         svg.appendChild(style);
       }
 
+      /* قياس الخريطة بإحداثياتها الأصلية (بدون تحويل التكبير/التحريك) */
+      function measureContent(svg) {
+        if (!svg || typeof svg.getBBox !== 'function') return null;
+        var group = svg.querySelector('g');
+        var saved = null;
+        if (group && group.hasAttribute('transform')) {
+          saved = group.getAttribute('transform');
+          group.removeAttribute('transform');
+        }
+        var bounds = null;
+        try { bounds = svg.getBBox(); } catch (err) { bounds = null; }
+        if (saved !== null) group.setAttribute('transform', saved);
+        return bounds && bounds.width > 0 && bounds.height > 0 ? bounds : null;
+      }
+
       function saveMindmap(item) {
         var svg = item.svg;
         if (!svg || typeof svg.getBBox !== 'function') return;
         if (item.box.getAttribute('data-mm-saving') === '1') return;
         item.box.setAttribute('data-mm-saving', '1');
 
-        function done() { item.box.removeAttribute('data-mm-saving'); }
+        var finished = false;
+        function done() {
+          if (finished) return;
+          finished = true;
+          item.box.removeAttribute('data-mm-saving');
+        }
 
         var pad = 24;
-        var bounds = null;
-        try { bounds = svg.getBBox(); } catch (err) { bounds = null; }
+        var bounds = measureContent(svg);
         var rect = svg.getBoundingClientRect();
         var vb = svg.viewBox && svg.viewBox.baseVal;
         var x, y, width, height;
-        if (bounds && bounds.width > 0 && bounds.height > 0) {
+        if (bounds) {
           x = bounds.x - pad;
           y = bounds.y - pad;
           width = bounds.width + pad * 2;
@@ -1719,6 +1748,8 @@ markmap:
         if (!width || !height) { done(); return; }
 
         var clone = svg.cloneNode(true);
+        var cloneGroup = clone.querySelector('g');
+        if (cloneGroup) cloneGroup.removeAttribute('transform');
         clone.removeAttribute('style');
         clone.removeAttribute('width');
         clone.removeAttribute('height');
@@ -1737,6 +1768,9 @@ markmap:
         bg.setAttribute('fill', surface);
         clone.insertBefore(bg, clone.firstChild);
 
+        var ratio = Math.min(2, 7000 / Math.max(width, height));
+        if (!isFinite(ratio) || ratio < 1) ratio = 1;
+
         loadExportFont().then(function (fontDataUrl) {
           embedExportStyles(clone, fontDataUrl);
 
@@ -1749,20 +1783,25 @@ markmap:
             return;
           }
 
-          var url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml;charset=utf-8' }));
+          /* data: URL وليس blob: لأن كروم يعدّ صور SVG ذات الـ foreignObject قادمة من blob ملوِّثة للكانفس */
+          var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
           var img = new Image();
-          var ratio = 2;
 
           img.onload = function () {
             var canvas = document.createElement('canvas');
-            canvas.width = Math.round(width * ratio);
-            canvas.height = Math.round(height * ratio);
+            canvas.width = Math.max(1, Math.round(width * ratio));
+            canvas.height = Math.max(1, Math.round(height * ratio));
             var ctx = canvas.getContext('2d');
-            if (!ctx) { URL.revokeObjectURL(url); done(); return; }
-            ctx.fillStyle = surface;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            URL.revokeObjectURL(url);
+            if (!ctx) { done(); return; }
+            try {
+              ctx.fillStyle = surface;
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            } catch (err) {
+              if (window.console && console.error) console.error('Markmap export error:', err);
+              done();
+              return;
+            }
             canvasToBlob(canvas, function (blob) {
               if (blob) downloadBlob(blob);
               done();
@@ -1770,12 +1809,47 @@ markmap:
           };
 
           img.onerror = function () {
-            URL.revokeObjectURL(url);
             if (window.console && console.error) console.error('Markmap export error: could not rasterize SVG');
             done();
           };
           img.src = url;
+        }).catch(function (err) {
+          if (window.console && console.error) console.error('Markmap export error:', err);
+          done();
         });
+      }
+
+      /* عند الطباعة: نضبط viewBox على أبعاد الخريطة كي تُطبع كاملة وبحجم مقروء وتمتد على عدة صفحات */
+      function preparePrint() {
+        instances.forEach(function (item) {
+          var svg = item.svg;
+          if (!svg || !item.mm || typeof svg.getBBox !== 'function') return;
+          var bounds = null;
+          try { bounds = svg.getBBox(); } catch (err) { bounds = null; }
+          if (!bounds || !bounds.width || !bounds.height) return;
+          svg.setAttribute('viewBox', bounds.x + ' ' + bounds.y + ' ' + bounds.width + ' ' + bounds.height);
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        });
+      }
+
+      function cleanupPrint() {
+        instances.forEach(function (item) {
+          var svg = item.svg;
+          if (!svg) return;
+          svg.removeAttribute('viewBox');
+          svg.removeAttribute('preserveAspectRatio');
+        });
+      }
+
+      window.addEventListener('beforeprint', preparePrint);
+      window.addEventListener('afterprint', cleanupPrint);
+      if (window.matchMedia) {
+        var printQuery = window.matchMedia('print');
+        var onPrintChange = function (event) {
+          if (event.matches) preparePrint(); else cleanupPrint();
+        };
+        if (printQuery.addEventListener) printQuery.addEventListener('change', onPrintChange);
+        else if (printQuery.addListener) printQuery.addListener(onPrintChange);
       }
 
       content.addEventListener('click', function (event) {
