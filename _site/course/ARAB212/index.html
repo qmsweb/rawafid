@@ -409,7 +409,15 @@
     .folder-items { display: flex; flex-direction: column; gap: 12px; }
 
     /* داخل وضع الشبكة: المجلدات تبقى بعرض كامل والعناصر داخلها تُعرض كشبكة */
-    .materials-list.grid-view.grouped { display: flex !important; flex-direction: column; }
+    .materials-list.grid-view.grouped {
+      display: flex !important; flex-direction: column;
+      /* إلغاء align-items: start الموروثة من قاعدة الشبكة،
+         وإلا انكمشت حاوية "الكل" بدل أن تمتد بعرض الصفحة كاملاً */
+      align-items: stretch;
+    }
+    .materials-list.grid-view.grouped > .folder {
+      width: 100%; min-width: 0;
+    }
     .materials-list.grid-view.grouped .folder-items {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
