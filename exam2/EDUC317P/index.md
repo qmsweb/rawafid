@@ -1,6 +1,0 @@
----
-layout: exam2
-exam_code: "EDUC317P"
-title: "Exam EDUC317P"
-permalink: /exam2/EDUC317P
----

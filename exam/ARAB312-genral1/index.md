@@ -1,5 +1,5 @@
 ---
-layout: exam
+layout: exam2
 exam_code: "ARAB312-genral1"
 title: "Exam ARAB312-genral1"
 permalink: /exam/ARAB312-genral1

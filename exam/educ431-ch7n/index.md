@@ -1,5 +1,5 @@
 ---
-layout: exam
+layout: exam2
 exam_code: "educ431-ch7n"
 title: "Exam educ431-ch7n"
 permalink: /exam/educ431-ch7n

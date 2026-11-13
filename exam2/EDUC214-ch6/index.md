@@ -1,6 +1,0 @@
----
-layout: exam2
-exam_code: "EDUC214-ch6"
-title: "Exam EDUC214-ch6"
-permalink: /exam2/EDUC214-ch6
----

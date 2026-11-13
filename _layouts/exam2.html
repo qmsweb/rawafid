@@ -1824,7 +1824,7 @@
                 const params = new URLSearchParams(window.location.search);
                 const oldCode = params.get('i');
                 if (oldCode) {
-                    const cleanUrl = ("{{ '/' | relative_url }}" || '') + 'exam2/' + encodeURIComponent(oldCode);
+                    const cleanUrl = ("{{ '/' | relative_url }}" || '') + 'exam/' + encodeURIComponent(oldCode);
                     window.location.replace(cleanUrl);
                     return oldCode;
                 }
@@ -1838,7 +1838,7 @@
                     return;
                 }
                 const base = ("{{ '/' | relative_url }}" || '/');
-                const url = base + 'exam2/' + encodeURIComponent(examCode) + '/print';
+                const url = base + 'exam/' + encodeURIComponent(examCode) + '/print';
                 window.open(url, '_blank');
             }
 
