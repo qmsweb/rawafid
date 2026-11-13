@@ -2,6 +2,18 @@
   "name": "مقرر أدب الطفل",
   "description": "",
   "url": "/c/ARAB419",
+  "groups": [
+    {
+      "id": "l1",
+      "title": "الدرس الأول: نشأة أدب الطفل وتطوره وأهميته",
+      "open": true
+    },
+    {
+      "id": "l2",
+      "title": "الدرس الثاني: وظائف أدب الطفل",
+      "open": true
+    }
+  ],
   "items": [
     {
       "title": "المحاضرة التمهيدية في أدب الطفل - د. محمود الرواحي",
@@ -11,18 +23,76 @@
       "id": "1"
     },
     {
+      "title": "ملخص الدرس الأول: نشأة أدب الطفل وتطوره وأهميته",
+      "description": "",
+      "type": "resources",
+      "direct": "yes",
+      "url": "/blog/4191s",
+      "id": "4191s",
+      "group": "l1",
+      "time-ms": "1794614400000"
+    },
+    {
       "title": "أسئلة الدرس الأول - د. محمود الرواحي",
       "type": "resources",
       "direct": "yes",
       "url": "/blog/4191m",
-      "id": "4191m"
+      "id": "4191m",
+      "group": "l1"
+    },
+    {
+      "title": "اختبار في الدرس الأول",
+      "description": "",
+      "id": "4191e",
+      "type": "quizzes",
+      "group": "l1",
+      "preview_url": "/exam/ARAB419-1",
+      "time-ms": "1794614400000"
+    },
+    {
+      "title": "بطاقات في الدرس الأول",
+      "description": "",
+      "id": "4191c",
+      "type": "cards",
+      "group": "l1",
+      "preview_url": "/card?i=ARAB419-1",
+      "time-ms": "1794614400000"
+    },
+    {
+      "title": "ملخص الدرس الثاني: وظائف أدب الطفل",
+      "description": "",
+      "type": "resources",
+      "direct": "yes",
+      "url": "/blog/4192s",
+      "id": "4192s",
+      "group": "l2",
+      "time-ms": "1794614400000"
     },
     {
       "title": "أسئلة الدرس الثاني - د. محمود الرواحي",
       "type": "resources",
       "direct": "yes",
       "url": "/blog/4192m",
-      "id": "4192m"
+      "id": "4192m",
+      "group": "l2"
+    },
+    {
+      "title": "اختبار في الدرس الثاني ",
+      "description": "",
+      "id": "4192e",
+      "type": "quizzes",
+      "group": "l2",
+      "preview_url": "/exam/ARAB419-2",
+      "time-ms": "1794614400000"
+    },
+    {
+      "title": "بطاقات في الدرس الثاني",
+      "description": "",
+      "id": "4192c",
+      "type": "cards",
+      "group": "l2",
+      "preview_url": "/card?i=ARAB419-2",
+      "time-ms": "1794614400000"
     }
   ]
 }
