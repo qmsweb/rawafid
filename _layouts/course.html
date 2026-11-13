@@ -404,14 +404,15 @@
       transform: rotate(90deg);
     }
 
-    /* تمييز بسيط لرأس "الكل" دون تغيير أبعاده أو تصميمه العام */
-    .folder-master > .folder-header .folder-icon {
-      background: var(--primary-color); color: var(--text-on-primary);
-    }
-    .folder-master > .folder-header .folder-count {
-      background: var(--primary-light); color: var(--primary-color);
+    /* زر "الكل": نص فقط مع دائرة السهم، بلا خلفية أو إطار مرئي */
+    .folder-master > .folder-header {
+      background: transparent;
       border-color: transparent;
+      box-shadow: none;
+      padding: 8px 4px;
     }
+    .folder-master > .folder-header:hover { border-color: transparent; }
+    .folder-master > .folder-header .folder-title { margin-inline-end: auto; }
 
     .folder-items { display: flex; flex-direction: column; gap: 12px; }
 
@@ -719,9 +720,9 @@ function createFolderHeader(options) {
   btn.setAttribute('aria-expanded', String(!options.collapsed));
   btn.innerHTML = `
     <span class="folder-chevron" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-    <span class="folder-icon" aria-hidden="true"><i class="fas ${options.icon}"></i></span>
+    ${isMaster ? '' : `<span class="folder-icon" aria-hidden="true"><i class="fas ${options.icon}"></i></span>`}
     <span class="folder-title">${escapeHtml(options.title)}</span>
-    <span class="folder-count">${options.count}</span>
+    ${isMaster ? '' : `<span class="folder-count">${options.count}</span>`}
   `;
 
   btn.addEventListener('click', function () {
