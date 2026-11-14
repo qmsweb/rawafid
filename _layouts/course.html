@@ -313,6 +313,15 @@
       align-items: stretch;
       gap: 18px;
     }
+
+    /* سطر الفاصل: يمتد بعرض الشبكة وارتفاعه صفر، فيضيف فراغاً
+       واضحاً بين آخر سطر في المجموعة وبطاقة المجلد التالية.
+       يظهر فقط قبل مجلد مفتوح، حتى تبقى المجلدات المطوية متراصّة. */
+    .materials-list.grid-view.grouped .folder-gap:has(+ .folder-group:not(.collapsed)) {
+      display: block;
+      grid-column: 1 / -1;
+      height: 0;
+    }
     .materials-list.grid-view .material-item {
       justify-content: flex-start;
     }
@@ -423,6 +432,10 @@
     .folder-master > .folder-header .folder-title { margin-inline-end: auto; }
 
     .folder-items { display: flex; flex-direction: column; gap: 12px; }
+
+    /* فاصل شبكي قبل كل مجموعة مجلدات: يظهر في وضع الشبكة فقط
+       ويصنع سطراً فارغاً فيتضاعف الفراغ بين المجموعات */
+    .folder-gap { display: none; }
 
     /* داخل وضع الشبكة: المجلدات نفسها تصبح بطاقات داخل الشبكة،
        وزر "الكل" وحده يبقى شريطاً كامل العرض أعلاه.
@@ -842,6 +855,14 @@ function createFolderHeader(options) {
   return btn;
 }
 
+/* فاصل شبكي بين مجموعات المجلدات: سطر فارغ يمنح مسافة واضحة قبل كل مجلد */
+function createFolderGap() {
+  const gap = document.createElement('div');
+  gap.className = 'folder-gap';
+  gap.setAttribute('aria-hidden', 'true');
+  return gap;
+}
+
 function createGroupFolder(group) {
   const isCollapsed = collapsedGroups.has(group.key);
   const folder = document.createElement('section');
@@ -1040,8 +1061,11 @@ function renderMaterials(filter = 'all') {
       masterBody.appendChild(ungroupedWrap);
   }
 
-  // مجلدات الدروس/الأقسام
-  grouping.groups.forEach(group => masterBody.appendChild(createGroupFolder(group)));
+  // مجلدات الدروس/الأقسام (مع فاصل شبكي قبل كل مجموعة)
+  grouping.groups.forEach(group => {
+    masterBody.appendChild(createFolderGap());
+    masterBody.appendChild(createGroupFolder(group));
+  });
 
   master.appendChild(masterHeader);
   master.appendChild(masterBody);
