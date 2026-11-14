@@ -439,6 +439,9 @@
 
     /* بطاقة المجلد داخل الشبكة */
     .materials-list.grid-view.grouped .folder-group > .folder-header {
+      /* كل مجلد يبدأ سطراً جديداً في الشبكة، فيصبح انتماء العناصر إليه
+         واضحاً بترتيب القراءة: كل ما يلي بطاقة المجلد يتبعه حتى المجلد التالي */
+      grid-column-start: 1;
       position: relative;
       flex-direction: column;
       align-items: center;
