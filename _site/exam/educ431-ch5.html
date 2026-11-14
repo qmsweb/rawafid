@@ -316,7 +316,7 @@
         .ex2-toolbar-bottom {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 10px;
         }
 
@@ -367,6 +367,45 @@
         .quiz-section-indicator b { color: var(--rawafid-primary); }
         .quiz-section-indicator:empty { display: none; }
 
+        /* أزرار التنقل بين أقسام الاختبار (تظهر دائمًا في يسار شريط التقدّم) */
+        .ex2-section-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+            margin-inline-start: auto;
+        }
+
+        .ex2-nav-btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--rawafid-border);
+            border-radius: 50%;
+            background: var(--rawafid-bg);
+            color: var(--rawafid-text-muted);
+            font-size: 0.72rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .ex2-nav-btn:hover:not(:disabled) {
+            background: var(--rawafid-primary-soft);
+            border-color: var(--rawafid-primary);
+            color: var(--rawafid-primary);
+        }
+
+        .ex2-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
         /* إظهار/إخفاء أزرار الشريط حسب حالة الصفحة */
         #review-btn,
         #back-to-result-btn { display: none; }
@@ -376,6 +415,8 @@
 
         .ex2-page[data-mode="result"] .ex2-finish,
         .ex2-page[data-mode="review"] .ex2-finish { display: none; }
+
+        .ex2-page[data-mode="result"] .ex2-section-nav { display: none; }
 
         .ex2-page:not(.is-ready) .ex2-finish { display: none; }
 
@@ -1299,7 +1340,9 @@
         }
 
         .question-item,
-        .tf-row {
+        .tf-row,
+        .instructions-question,
+        .divider-text {
             scroll-margin-top: calc(var(--nav-height) + 120px);
         }
 
@@ -1803,6 +1846,14 @@
                         <b id="answered-count" aria-live="polite">0</b>/<span id="total-count">0</span> مُجاب
                     </span>
                     <span class="quiz-section-indicator" id="section-progress"></span>
+                    <div class="ex2-section-nav" role="group" aria-label="التنقل بين أقسام الاختبار">
+                        <button type="button" id="section-prev-btn" class="ex2-nav-btn" aria-label="القسم السابق" title="القسم السابق" disabled>
+                            <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" id="section-next-btn" class="ex2-nav-btn" aria-label="القسم التالي" title="القسم التالي" disabled>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1916,6 +1967,8 @@
             const heroQuestionCountElement = document.getElementById('hero-question-count');
             const progressTrackEl = document.getElementById('quiz-progress-track');
             const sectionProgressEl = document.getElementById('section-progress');
+            const sectionPrevButton = document.getElementById('section-prev-btn');
+            const sectionNextButton = document.getElementById('section-next-btn');
             const autosaveHintEl = document.getElementById('autosave-hint');
 
             const incompleteModal = document.getElementById('incomplete-modal');
@@ -1938,6 +1991,7 @@
             let autosaveTimer = null;
             let sections = [];
             let sectionByQIndex = {};
+            let sectionHeadingByQIndex = {};
             let activeSectionIndex = 0;
 
             /* ==================== حالة الصفحة ==================== */
@@ -2208,6 +2262,7 @@
             function buildSections() {
                 sections = [];
                 sectionByQIndex = {};
+                sectionHeadingByQIndex = {};
                 const quiz = quizData[currentQuiz];
                 if (!quiz || !quiz.questions) return;
 
@@ -2215,11 +2270,13 @@
                 quiz.questions.forEach(function (q, qIndex) {
                     if (q.divider) {
                         if (current.indexes.length) sections.push(current);
+                        sectionHeadingByQIndex[qIndex] = sections.length;
                         current = { title: q.divider, indexes: [] };
                         return;
                     }
                     if (q.type === 'instructions') {
                         if (current.indexes.length) sections.push(current);
+                        sectionHeadingByQIndex[qIndex] = sections.length;
                         current = { title: q.mainTitle || 'الأسئلة', indexes: [] };
                         return;
                     }
@@ -2244,21 +2301,50 @@
             }
 
             function renderSectionIndicator() {
-                if (!sectionProgressEl) return;
                 const stats = getSectionStats();
                 const section = stats[activeSectionIndex] || stats[0];
-                if (!section) {
-                    sectionProgressEl.textContent = '';
-                    return;
+
+                if (sectionProgressEl) {
+                    if (!section) {
+                        sectionProgressEl.textContent = '';
+                    } else {
+                        sectionProgressEl.innerHTML =
+                            escapeHtml(section.title) + ' · <b>' + section.answered + '/' + section.total + '</b>';
+                    }
                 }
-                sectionProgressEl.innerHTML =
-                    '<i class="fa-solid fa-layer-group" aria-hidden="true"></i> ' +
-                    escapeHtml(section.title) + ' · <b>' + section.answered + '/' + section.total + '</b>';
+
+                if (sectionPrevButton) {
+                    sectionPrevButton.disabled = !sections.length || activeSectionIndex <= 0;
+                }
+                if (sectionNextButton) {
+                    sectionNextButton.disabled = !sections.length || activeSectionIndex >= sections.length - 1;
+                }
+            }
+
+            /* الانتقال إلى القسم السابق (-1) أو القسم التالي (+1) */
+            function goToSection(step) {
+                if (!sections.length) return;
+                const target = activeSectionIndex + step;
+                if (target < 0 || target >= sections.length) return;
+
+                let targetEl = questionsContainer.querySelector(
+                    '[data-section-heading-index="' + target + '"]'
+                );
+                if (!targetEl) {
+                    targetEl = questionsContainer.querySelector(
+                        '[data-section-index="' + target + '"]'
+                    );
+                }
+                if (!targetEl) return;
+
+                activeSectionIndex = target;
+                renderSectionIndicator();
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
             function updateActiveQuestion() {
                 if (!quizData[currentQuiz] || questionsContainer.style.display === 'none') return;
-                const elements = questionsContainer.querySelectorAll('[data-question-index]');
+                const elements = questionsContainer.querySelectorAll('[data-question-index], [data-section-index]');
                 if (!elements.length) return;
 
                 const threshold = 200;
@@ -2393,6 +2479,11 @@
                     if (q.divider) {
                         const dividerDiv = document.createElement('div');
                         dividerDiv.className = 'divider-text';
+                        const dividerSection = sectionHeadingByQIndex[qIndex];
+                        if (typeof dividerSection === 'number' && dividerSection < sections.length) {
+                            dividerDiv.dataset.sectionIndex = String(dividerSection);
+                            dividerDiv.dataset.sectionHeadingIndex = String(dividerSection);
+                        }
                         dividerDiv.textContent = q.divider;
                         questionsContainer.appendChild(dividerDiv);
                         return;
@@ -2401,6 +2492,11 @@
                     if (q.type === 'instructions') {
                         const instructionsDiv = document.createElement('div');
                         instructionsDiv.className = 'instructions-question';
+                        const instructionsSection = sectionHeadingByQIndex[qIndex];
+                        if (typeof instructionsSection === 'number' && instructionsSection < sections.length) {
+                            instructionsDiv.dataset.sectionIndex = String(instructionsSection);
+                            instructionsDiv.dataset.sectionHeadingIndex = String(instructionsSection);
+                        }
                         if (q.mainTitle) {
                             const mainTitle = document.createElement('div');
                             mainTitle.className = 'instructions-header';
@@ -3032,6 +3128,12 @@
             reviewButton.addEventListener('click', reviewAnswers);
             backToResultButton.addEventListener('click', backToResult);
             finishButton.addEventListener('click', submitAllAnswers);
+            if (sectionPrevButton) {
+                sectionPrevButton.addEventListener('click', function () { goToSection(-1); });
+            }
+            if (sectionNextButton) {
+                sectionNextButton.addEventListener('click', function () { goToSection(1); });
+            }
             document.getElementById('print-btn').addEventListener('click', openPrintPage);
 
             let scrollTick = false;
