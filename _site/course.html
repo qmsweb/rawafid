@@ -306,6 +306,13 @@
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 18px; align-items: start;
     }
+    /* داخل المجلدات: تتساوى ارتفاعات البطاقات في السطر الواحد فتصطف
+       الحواف السفلية، ونُبقي المسافة 18px (قاعدة .grouped القديمة
+       كانت تجعلها 12px في الشبكة) */
+    .materials-list.grid-view.grouped {
+      align-items: stretch;
+      gap: 18px;
+    }
     .materials-list.grid-view .material-item {
       justify-content: flex-start;
     }
@@ -439,9 +446,6 @@
 
     /* بطاقة المجلد داخل الشبكة */
     .materials-list.grid-view.grouped .folder-group > .folder-header {
-      /* كل مجلد يبدأ سطراً جديداً في الشبكة، فيصبح انتماء العناصر إليه
-         واضحاً بترتيب القراءة: كل ما يلي بطاقة المجلد يتبعه حتى المجلد التالي */
-      grid-column-start: 1;
       position: relative;
       flex-direction: column;
       align-items: center;
@@ -449,7 +453,31 @@
       text-align: center;
       gap: 10px;
       min-height: 150px;
-      padding: 18px;
+      padding: 16px;
+    }
+    /* المجلد المفتوح يبدأ سطراً جديداً ويمتد ليكمل خانات الصف:
+       (عدد عناصره + عدد الأعمدة التي تشغلها بطاقته) من مضاعفات عدد الأعمدة،
+       فلا تبقى خانات فارغة في نهاية المجموعة */
+    .materials-list.grid-view.grouped .folder-group:not(.collapsed) > .folder-header {
+      grid-column: 1 / span var(--folder-span, 1);
+    }
+    /* عندما تمتد البطاقة أكثر من عمود واحد تصبح أفقية كرأس للمجموعة */
+    .materials-list.grid-view.grouped .folder-group:not(.collapsed) > .folder-header.is-wide {
+      flex-direction: row;
+      justify-content: flex-start;
+      text-align: right;
+      gap: 12px;
+      min-height: 0;
+      padding: 16px;
+    }
+    .materials-list.grid-view.grouped .folder-group:not(.collapsed) > .folder-header.is-wide .folder-title {
+      flex: 1;
+      -webkit-line-clamp: 2;
+    }
+    .materials-list.grid-view.grouped .folder-group:not(.collapsed) > .folder-header.is-wide .folder-chevron {
+      position: static;
+      margin-inline-start: 8px;
+      width: 32px; height: 32px; font-size: 0.8rem;
     }
     .materials-list.grid-view.grouped .folder-group > .folder-header .folder-icon {
       width: 48px; height: 48px; font-size: 1.35rem;
@@ -1185,6 +1213,36 @@ function setView(view, save = true) {
   if (save) localStorage.setItem('viewMode', view);
 }
 
+/* عدد الأعمدة الفعلي في الشبكة (يطابق قواعد CSS نفسها) */
+function getGridColumns() {
+  if (window.innerWidth <= 768) return 2; // الجوال: عمودان ثابتان
+  const width = materialsList.clientWidth;
+  if (!width) return 1;
+  const gap = 18;
+  return Math.max(1, Math.floor((width + gap) / (240 + gap)));
+}
+
+/* تمديد بطاقة كل مجلد مفتوح لتملأ بقية صفها:
+   نجعل (عدد عناصر المجموعة + عدد الأعمدة التي تشغلها البطاقة)
+   من مضاعفات عدد الأعمدة، فلا تبقى خانات فارغة بعد آخر عنصر. */
+function updateFolderSpans() {
+  const folders = materialsList.querySelectorAll('.folder-group');
+  if (!folders.length) return;
+
+  const cols = getGridColumns();
+
+  folders.forEach(function (folder) {
+    const count = folder.querySelectorAll('.material-item').length;
+    let span = (cols - (count % cols)) % cols;
+    if (span === 0) span = cols;
+
+    const header = folder.querySelector('.folder-header');
+    if (!header) return;
+    header.style.setProperty('--folder-span', String(span));
+    header.classList.toggle('is-wide', span > 1);
+  });
+}
+
 /* ======= 6. رسم المواد ======= */
 function createMaterialElement(item) {
   const itemId = item.id ? item.id : '#';
@@ -1315,6 +1373,9 @@ function renderMaterials(filter = 'all') {
   master.appendChild(masterHeader);
   master.appendChild(masterBody);
   materialsList.appendChild(master);
+
+  // ضبط امتدادات بطاقات المجلدات بعد بناء الشبكة
+  updateFolderSpans();
 }
 
 /* ======= 6. تشغيل الصفحة ======= */
@@ -1341,6 +1402,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   applyDefaultView();
+
+  // إعادة حساب امتدادات بطاقات المجلدات عند تغيّر عرض الشبكة فقط
+  // (بلا قياس ارتفاعات ولا إعادة بناء، فلا يحدث وميض أو لاق)
+  if (typeof ResizeObserver !== 'undefined') {
+    let lastGridWidth = -1;
+    const gridObserver = new ResizeObserver(function (entries) {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width === lastGridWidth) return;
+      lastGridWidth = width;
+      updateFolderSpans();
+    });
+    gridObserver.observe(materialsList);
+  }
 
   if (!courseCode) {
     materialsList.innerHTML = '<p style="text-align:center; padding:20px; color:var(--text-muted);">⚠️ يرجى اختيار مقرر لعرض محتوياته.</p>';
