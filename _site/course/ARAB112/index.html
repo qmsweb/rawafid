@@ -280,7 +280,10 @@
     }
 
     .item-description-preview {
-      font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;
+      /* تباعد أسطر أوسع (1.8 بدل 1.5) مع مساحة سفلية بسيطة، لأن الحروف
+         العربية ذات النوازل (ج، ح، ي) كانت تُقتطع في آخر سطر بسبب
+         -webkit-line-clamp مع overflow: hidden */
+      font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; padding-bottom: 2px;
       margin-right: 54px; margin-bottom: 10px;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
